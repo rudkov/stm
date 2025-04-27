@@ -1,0 +1,46 @@
+.event-item {
+    margin: 6px;
+    padding: 6px;
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow:none;
+
+    max-width: 100%;
+
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.event-item:hover {
+    cursor: pointer;
+    box-shadow:inset 0 0 0 99999px rgba(0,0,0,0.05);
+}
+
+.event-item--selected {
+    outline: 2px solid rgb(24, 144, 255);
+}
+
+.event-item--selected-chunk {
+    outline: 2px solid rgba(24, 144, 255, 0.5);
+}
+
+.event-item--time {
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.event-item--title {
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.event-item--talent {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.event-item--talent::before {
+    content: "• ";
+}

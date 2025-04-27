@@ -1,0 +1,185 @@
+/* Inputs */
+.input--contained {
+    background-color: rgba(0, 0, 0, 0.05);
+    height: 36px;
+    padding-left: 8px;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 6px;
+}
+
+.input--contained input {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.input--contained input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* Buttons */
+.button--primary,
+.button--text,
+.button--icon,
+.button--invisible {
+    display: block;
+}
+
+.button--primary,
+.button--text,
+.button--icon {
+    min-height: 36px;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+.button--primary {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    background-color: #1890FF;
+}
+
+.button--primary:hover {
+    background-color: #0670D3 !important;
+}
+
+.button--text {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    color: #1890FF;
+}
+
+.button--text:hover {
+    color: #1890FF !important;
+    background-color: rgba(24, 144, 255, 0.1) !important;
+    border: 1px solid rgba(0, 0, 0, 0) !important;
+}
+
+.button--danger {
+    color: rgba(255, 77, 79, 1) !important;
+}
+
+.button--danger:hover {
+    color: rgba(255, 77, 79, 1) !important;
+    background-color: rgba(255, 77, 79, 0.1) !important;
+}
+
+.button--icon {
+    min-width: 36px;
+    color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.button--icon:hover {
+    box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0) !important;
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.button--icon--active {
+    color: #1890ff !important;
+}
+
+.button--icon--active:hover {
+    color: #1890ff !important;
+}
+
+.button--icon:disabled {
+    border: 1px solid rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0.2) !important;
+    box-shadow: none;
+}
+
+.button--primary:disabled,
+.button--text:disabled {
+    cursor: default !important;
+    transition: color 0.2s;
+}
+
+.button--primary:disabled {
+    color: #fff !important;
+    background-color: rgba(24, 144, 255, 0.3) !important;
+    border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.button--text:disabled {
+    color: rgba(24, 144, 255, 0.3) !important;
+    background-color: #fff;
+    border: 1px solid rgba(24, 144, 255, 0.3);
+}
+
+.button--text:disabled:hover {
+    background-color: #fff !important;
+}
+
+.button--invisible {
+    padding: 4px 6px;
+    margin: -4px -6px;
+    border-radius: 6px;
+    border: none;
+    box-shadow: none;
+    height: auto;
+}
+
+.button--invisible:hover {
+    color: #000 !important;
+    box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.05);
+}
+
+/* Overriding antd form items */
+
+.ant-form-item {
+    margin-bottom: auto;
+}
+
+input,
+textarea {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.form-item--border-bottom input,
+.form-item--border-bottom textarea,
+.form-item--border-bottom .ant-picker {
+    margin: 0;
+    padding: 0;
+    /* padding-bottom: 2px;
+    margin-bottom: -2px; */
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px #E5E5E5 solid;
+}
+
+.form-item--border-bottom .ant-select-selector {
+    height: auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0;
+    border-bottom: 1px #E5E5E5 solid !important;
+}
+
+.ant-select:hover .ant-select-selector {
+    border-bottom: 1px solid rgba(24, 144, 255, 1) !important;
+}
+
+.form-item--border-bottom .ant-form-item-control-input {
+    min-height: auto;
+}
+
+.ant-form-item-control-input-content,
+.ant-form-item-control-input-content input,
+.ant-form-item-control-input-content textarea,
+.ant-form-item-control-input-content .ant-picker-input>input,
+.ant-form-item-control-input-content .ant-select-single .ant-select-selector .ant-select-selection-item,
+.ant-form-item-control-input-content .ant-select-single .ant-select-selector:after,
+.ant-form-item-control-input-content .ant-select-selection-placeholder {
+    line-height: 20px !important;
+}
+
+.ant-select-selection-item,
+.ant-form-item-control-input-content {
+    display: flex;
+}

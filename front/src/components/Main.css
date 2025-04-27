@@ -1,0 +1,12 @@
+.main {
+    display: grid;
+    grid-template-columns: 180px auto;
+    grid-template-rows: 100vh;
+    background-color: var(--background-primary);
+    transition-property: grid-template-columns;
+    transition-duration: 140ms;
+}
+
+.main_menu-collapsed {
+    grid-template-columns: 60px auto;
+}

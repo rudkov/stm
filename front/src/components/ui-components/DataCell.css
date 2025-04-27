@@ -1,0 +1,30 @@
+.datacell--label {
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 4px;
+}
+
+.datacell--value-icon {
+    margin-top: 1px;
+    margin-right: 8px;
+}
+
+.datacell--value-icon svg {
+    display: block;
+}
+
+.datacell--value-container {
+    display: flex;
+}
+
+.datacell--value {
+    white-space: pre-wrap;
+    width: 100%;
+}
+
+.datacell--value-placeholder {
+    color: rgba(0,0,0,0.5);
+    font-size: 12px;
+    line-height: 16px;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="messenger-gradient" cx="-1063.62" cy="315.57" fx="-1063.62" fy="315.57" r=".02"
+      gradientTransform="translate(850900.08 -252439.13) scale(800)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#09f" />
+      <stop offset=".61" stop-color="#a033ff" />
+      <stop offset=".93" stop-color="#ff5280" />
+      <stop offset="1" stop-color="#ff7061" />
+    </radialGradient>
+  </defs>
+  <path fill="url(#messenger-gradient)"
+    d="m9,2.41c-3.83,0-6.8,2.81-6.8,6.59,0,1.98.81,3.7,2.13,4.88.11.1.18.24.18.39l.04,1.21c.01.39.41.64.76.48l1.35-.6c.11-.05.24-.06.36-.03.62.17,1.28.26,1.97.26,3.83,0,6.8-2.81,6.8-6.59s-2.97-6.59-6.8-6.59Z" />
+  <path fill="#fff"
+    d="m4.92,10.93l2-3.17c.32-.51,1-.63,1.47-.27l1.59,1.19c.15.11.35.11.49,0l2.15-1.63c.29-.22.66.13.47.43l-2,3.17c-.32.51-1,.63-1.48.27l-1.59-1.19c-.15-.11-.35-.11-.49,0l-2.15,1.63c-.28.22-.66-.13-.47-.43Z" />
+</svg>

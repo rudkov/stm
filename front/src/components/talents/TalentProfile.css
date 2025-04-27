@@ -1,0 +1,15 @@
+.talent-profile--current-location-button {
+    box-shadow: none;
+    border-color: rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 4px 6px;
+    height: auto;
+}
+
+.invisible-bottom-border {
+    border-bottom: 1px solid rgba(0,0,0,0);
+}
+
+.select-text-with-icon {
+    display: flex;
+}

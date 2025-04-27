@@ -1,0 +1,42 @@
+.notification--item {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    width: 300px;
+    animation: showItem 0.25s;
+    animation-fill-mode: forwards;
+}
+
+.notification--item-white {
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.88);
+    box-shadow: 0 0 12px rgba(0,0,0,0.25);
+}
+
+.notification--item-black {
+    background-color: rgba(0,0,0,0.85);
+    color: #fff;
+}
+
+@keyframes showItem {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hideItem {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.notification--item.exit {
+    animation: hideItem 0.25s;
+    animation-fill-mode: forwards;
+}

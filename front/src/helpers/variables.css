@@ -1,0 +1,52 @@
+:root {
+    --border-radius: 6px;
+    --border-radius-big: 12px;
+    --scrollbar-color: rgba(0, 0, 0, 0.1);
+
+    --background-primary: #F7F7F7;
+    --background-secondary: #FFF;
+
+    --text-primary: rgba(0, 0, 0, 0.9);
+
+    --icon-primary: rgba(0, 0, 0, 0.4);
+    --icon-secondary: rgba(0, 0, 0, 0.2);
+
+    --accent: #1890ff;
+    --red: #EC0A0A;
+
+    --menu-item-icon-color: rgba(0, 0, 0, 0.4);
+    --menu-item-text-color: rgba(0, 0, 0, 0.6);
+    --menu-item-background-color-active: rgba(0, 0, 0, 0.04);
+    --menu-item-hover-box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.06);
+
+    --filter-icon-inactive-checkbox-color: rgba(0, 0, 0, 0.05);
+    --filter-icon-active-checkbox-color: var(--accent);
+
+    --avatar-background-color: rgba(0, 0, 0, 0.1);
+    --avatar-text-color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] {
+    --scrollbar-color: rgba(255, 255, 255, 0.1);
+
+    --background-primary: #171717;
+    --background-secondary: rgba(255, 255, 255, 0.01);
+
+    --text-primary: rgba(255, 255, 255, 0.85);
+
+    --icon-primary: rgba(255, 255, 255, 0.4);
+    --icon-secondary: rgba(255, 255, 255, 0.15);
+
+    --red: #D71515;
+
+    --menu-item-icon-color: rgba(255, 255, 255, 0.4);
+    --menu-item-text-color: rgba(255, 255, 255, 0.6);
+    --menu-item-background-color-active: rgba(255, 255, 255, 0.04);
+    --menu-item-hover-box-shadow: inset 0 0 0 99999px rgba(255, 255, 255, 0.06);
+
+    --filter-icon-inactive-checkbox-color: rgba(255, 255, 255, 0.05);
+    --filter-icon-active-checkbox-color: var(--accent);
+
+    --avatar-background-color: rgba(255, 255, 255, 0.1);
+    --avatar-text-color: rgba(255, 255, 255, 0.4);
+}

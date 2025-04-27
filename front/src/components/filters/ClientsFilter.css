@@ -1,0 +1,18 @@
+.clients-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.clients-filter__clients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.clients-filter__checkbox-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Search" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-346, -22)" id="Group-52">
+            <g transform="translate(76, 16)">
+                <g id="Search" transform="translate(270, 6)">
+                    <rect id="Background" x="0" y="0" width="24" height="24"></rect>
+                    <path
+                        d="M10.5,15 C8.019,15 6,12.981 6,10.5 C6,8.019 8.019,6 10.5,6 C12.981,6 15,8.019 15,10.5 C15,12.981 12.981,15 10.5,15 M10.5,4 C6.91,4 4,6.91 4,10.5 C4,14.09 6.91,17 10.5,17 C11.934,17 13.255,16.53 14.329,15.744 L18.293,19.707 L19.707,18.293 L15.744,14.329 C16.53,13.255 17,11.934 17,10.5 C17,6.91 14.09,4 10.5,4"
+                        id="Shape" fill="#9B9B9B"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

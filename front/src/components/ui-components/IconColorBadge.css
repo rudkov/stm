@@ -1,0 +1,126 @@
+.color--badge {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #E5E5E5;
+}
+
+.color--badge-select {
+    display: inline-block;    
+    margin-right: 8px;
+    position: relative;
+    top: 1px;
+}
+
+
+/* talent hair */
+.color--hair--black {
+    background-color: #2C1C19;
+}
+
+.color--hair--brown {
+    background-color: #683A38;
+}
+
+.color--hair--auburn {
+    background-color: #924327;
+}
+
+.color--hair--red {
+    background-color: #BA5837;
+}
+
+.color--hair--blond {
+    background-color: #FFF8EB;
+}
+
+/* talent eyes */
+.color--eyes--brown {
+    background-color: #79360A;
+}
+
+.color--eyes--amber {
+    background-color: #A56730;
+}
+
+.color--eyes--hazel {
+    background-color: #A98849;
+}
+
+.color--eyes--green {
+    background-color: #758066;
+}
+
+.color--eyes--blue {
+    background-color: #6D93A7;
+}
+
+.color--eyes--gray {
+    background-color: #969A9E;
+}
+
+.color--eyes--two-different-colors {
+    background-color: #758066;
+}
+
+.color--eyes--two-different-colors::before {
+    position: relative;
+    content: '';
+    border-bottom: 16px solid #969A9E;
+    border-left: 16px solid transparent;
+    top: -18px;
+}
+
+.color--eyes--two-different-colors::after {
+    position: relative;
+    display: block;
+    content: '';
+    top: -21px;
+    left: -1px;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid #E5E5E5;
+}
+
+/* talent skin */
+.color--skin--light {
+    background-color: #EFD5CB;
+}
+
+.color--skin--dark {
+    background-color: #804B48;
+}
+
+/* event type */
+.color--event--book_out {
+    background-color: #E3E3E3;
+}
+
+.color--event--casting {
+    background-color: #C9DAFA;
+}
+
+.color--event--go_see {
+    background-color: #FAE0B5;
+}
+
+.color--event--job {
+    background-color: #BEEEB7;
+}
+
+.color--event--note {
+    background-color: #ECECEC;
+}
+
+.color--event--option {
+    background-color: #B7E5EB;
+}
+
+.color--event--test {
+    background-color: #F6CACA;
+}
+
+.color--event--fitting {
+    background-color: #DFCFE5;
+}

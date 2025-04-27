@@ -1,0 +1,41 @@
+.calendar-day {
+    border: 1px solid #f0f0f0;
+    vertical-align: top;
+    padding: 0;
+    width: 14.29%;
+    color: rgba(0, 0, 0, 0.88);
+}
+
+.calendar-day--weekday {
+    font-size: 12px;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.calendar-day--date-container {
+    text-align: center;
+}
+
+.calendar-day--date {
+    font-size: 12px;
+    text-align: center;
+    color: #000;
+    margin: 4px;
+    display: inline-block;
+    min-width: 23px;
+    padding: 2px;
+    border-radius: 6px;
+}
+
+.calendar-day--date--other-month {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.calendar-day--date--today {
+    background-color: #1890ff;
+    font-weight: bold;
+    color: #fff;
+}

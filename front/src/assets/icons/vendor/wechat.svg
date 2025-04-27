@@ -1,0 +1,38 @@
+<svg width="18px" height="18px"
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+    <defs>
+        <linearGradient id="linear-gradient" x1="-862" y1="493.56" x2="-862" y2="494.49"
+            gradientTransform="matrix(10.86 0 0 -9.55 9366.18 4725.18)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#78d431" />
+            <stop offset="1" stop-color="#9eee69" />
+            <stop offset="1" stop-color="#9eee69" />
+        </linearGradient>
+        <linearGradient id="linear-gradient-2" x1="-844.25" y1="483.01" x2="-844.25" y2="483.94"
+            gradientTransform="matrix(9.03 0 0 -8.02 7632.33 3889.89)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#e4e6e6" />
+            <stop offset="1" stop-color="#f5f5ff" />
+        </linearGradient>
+        <style>.cls-3,.cls-4{fill-rule:evenodd}.cls-3{fill:#187e28}.cls-4{fill:#858c8c}</style>
+    </defs>
+    <g id="Talent">
+        <g id="Assets">
+            <g id="Social-Media-Icons_Telegram" data-name="Social-Media-Icons/Telegram">
+                <path id="Rectangle" style="fill:none" d="M0 0h18v18H0z" />
+                <g id="symbol">
+                    <path
+                        d="M1.5 7.51c0 1.35.74 2.59 1.88 3.41.1.07.15.17.15.3 0 .03-.02.08-.02.12-.08.33-.23.88-.25.9-.02.05-.03.08-.03.13 0 .1.08.18.18.18.03 0 .07-.02.1-.03l1.19-.68c.08-.05.18-.08.28-.08.05 0 .12 0 .17.02.55.17 1.16.25 1.78.25 3 0 5.43-2.02 5.43-4.51S9.93 3.01 6.93 3.01 1.5 5.02 1.5 7.51"
+                        style="fill-rule:evenodd;fill:url(#linear-gradient)" />
+                    <path
+                        d="M11.99 14.67c.52 0 1.02-.07 1.47-.2.03-.02.08-.02.13-.02.08 0 .17.03.23.07l.99.57s.05.03.08.03c.08 0 .15-.07.15-.15 0-.03-.02-.07-.02-.12 0-.02-.13-.47-.2-.76-.02-.03-.02-.07-.02-.1 0-.1.05-.19.13-.25.95-.69 1.55-1.72 1.55-2.86 0-2.09-2.02-3.78-4.51-3.78s-4.51 1.68-4.51 3.78 2.02 3.78 4.51 3.78z"
+                        style="fill:url(#linear-gradient-2);fill-rule:evenodd" />
+                    <path class="cls-3"
+                        d="M5.82 6.05c0 .39-.31.7-.7.7s-.7-.31-.7-.7.31-.7.7-.7.7.31.7.7M9.44 6.05c0 .39-.31.7-.7.7s-.7-.31-.7-.7.31-.7.7-.7.7.31.7.7" />
+                    <path class="cls-4"
+                        d="M12.92 9.72c0 .34.27.61.61.61s.61-.27.61-.61-.27-.61-.61-.61-.61.27-.61.61M9.92 9.72c0 .34.27.61.61.61s.61-.27.61-.61-.27-.61-.61-.61-.61.27-.61.61" />
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,32 @@
+.contact-profile--main--container {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 0px;
+    align-items: start;
+    padding: 16px;
+    margin-bottom: -16px;
+    background-color: #fff;
+
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 1;
+}
+
+.contact-profile--main--left {
+    justify-self: start;
+}
+
+.contact-profile--main--right {
+    justify-self: end;
+}
+
+.contact-profile--main--trobber {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.contact-profile--main--content--text {
+    margin: 4px 0;
+}
+                        

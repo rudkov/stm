@@ -1,0 +1,24 @@
+.talent-username {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.talent-username__avatar {
+    font-size: 12px;
+    font-weight: bold;
+    width: 22px;
+    height: 22px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: var(--avatar-background-color);
+    color: var(--avatar-text-color);
+}
+
+.talent-username__name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--text-primary);
+}

@@ -1,0 +1,54 @@
+.talents-container {
+    display: grid;
+    grid-template-columns: 240px auto;
+    height: 100vh;
+    gap: 6px;
+}
+
+.talents-container__filters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100vh;
+    overflow: auto;
+    padding: 12px 0;
+}
+
+.talents-container__list {
+    height: 100vh;
+    padding: 12px 0;
+}
+
+.talents-container__list-section {
+    gap: 6px;
+    padding: 6px 0 6px 6px;
+}
+
+.talents-list__item {
+    border-radius: var(--border-radius);
+    padding: 6px;
+    text-decoration: none;
+    display: flex;
+}
+
+.talents-list__item:hover {
+    box-shadow: var(--menu-item-hover-box-shadow);
+}
+
+.talents-list__item.active {
+    background-color: var(--menu-item-background-color-active);
+}
+
+.talents-list-item__in-town {
+    margin-left: auto;
+    font-size: 0;
+    border: none;
+    color: var(--icon-secondary);
+}
+
+.talents-list__header {
+    padding-right: 6px;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}

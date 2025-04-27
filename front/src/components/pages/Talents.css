@@ -1,0 +1,11 @@
+.talents-page {
+    display: grid;
+    grid-template-columns: 480px auto;
+    height: 100vh;
+    gap: 12px;
+}
+
+.talent-profile {
+    height: 100vh;
+    padding: 12px 12px 12px 0;
+}

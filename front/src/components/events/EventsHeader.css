@@ -1,0 +1,10 @@
+.controls-group {
+    display: flex;
+    font-size: 0;
+}
+
+.controls-group--title {
+    font-size: 20px;
+    line-height: 34px;
+    font-weight: 600;
+}

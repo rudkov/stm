@@ -1,0 +1,46 @@
+.event-info--container {
+    padding: 8px;
+}
+
+.event-info--input-title {
+    font-weight: bold;
+}
+
+.event-info--type-badge {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    margin-right: 4px;
+    position: relative;
+    top: 2px;
+}
+
+.event-info--section-header {
+    font-weight: bold;
+    padding-left: 11px;
+}
+
+.event-info--section-content {
+    padding: 6px 2px;
+}
+
+.event-info--top-bar {
+    display: flex;
+    align-items: flex-end;
+}
+
+.event-info--controls-group {
+    font-size: 0;
+    display: flex;
+    padding-bottom: 8px;
+}
+
+.event-info--controls-group-right {
+    margin-left: auto;
+}
+
+.event-info--controls-group-with-gap {
+    gap: 8px;
+}

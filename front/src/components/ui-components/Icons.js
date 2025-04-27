@@ -1,0 +1,27 @@
+import IconFacebook from '../../assets/icons/vendor/facebook.svg';
+import IconInstagram  from '../../assets/icons/vendor/instagram.svg';
+import IconTiktok from '../../assets/icons/vendor/tiktok.svg';
+import IconTwitter from '../../assets/icons/vendor/twitter.svg';
+import IconWechat from '../../assets/icons/vendor/wechat.svg';
+import IconYoutube  from '../../assets/icons/vendor/youtube.svg';
+
+
+import IconFacebookMessenger from '../../assets/icons/vendor/facebook-messenger.svg';
+import IconTelegram from '../../assets/icons/vendor/telegram.svg';
+import IconWhatsapp from '../../assets/icons/vendor/whatsapp.svg';
+
+
+export const SocialMediaIcons = {
+    'facebook': <img src={IconFacebook} alt="Facebook icon" />,
+    'instagram': <img src={IconInstagram} alt="Instagram icon" />,
+    'tiktok': <img src={IconTiktok} alt="Tiktok icon" />,
+    'twitter': <img src={IconTwitter} alt="Twitter icon" />,
+    'wechat': <img src={IconWechat} alt="Wechat icon" />,
+    'youtube': <img src={IconYoutube} alt="Youtube icon" />,
+};
+
+export const MessengersIcons = {
+    'facebook-messenger': <img src={IconFacebookMessenger} alt="Facebook Messenger icon" />,
+    'telegram': <img src={IconTelegram} alt="Telegram icon" />,
+    'whatsapp': <img src={IconWhatsapp} alt="WhatsApp icon" />,
+};
