@@ -5,11 +5,16 @@ const initialState = {
     items: [],
 };
 
-export const fetchTalents = createAsyncThunk('talents/fetchTalents', async () => {
+export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (args = {}) => {
     try {
         const response = await axios({
-            method: 'get',
-            url: '/api/v1/talents',
+            method: 'post',
+            url: '/api/v1/talents/search',
+            data: {
+                genders: args?.genders,
+                hairColors: args?.hairColors,
+                managers: args?.managers,
+            },
         });
         return response.data;
     } catch (err) {

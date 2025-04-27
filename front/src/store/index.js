@@ -8,6 +8,7 @@ import contactReducer from "./contacts/contact";
 import contactsReducer from "./contacts/contacts";
 import companiesReducer from "./contacts/companies";
 import clientsReducer from "./clients/clients";
+import usersReducer from "./users/users";
 
 const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
         contacts: contactsReducer,
         companies: companiesReducer,
         clients: clientsReducer,
+        users: usersReducer,
     },
 });
 

@@ -2,6 +2,9 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-primary);
 }
 
 .filter__header {
@@ -23,7 +26,6 @@
 }
 
 .filter-header__title {
-    font-size: 14px;
     color: var(--text-primary);
 }
 

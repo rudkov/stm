@@ -12,7 +12,10 @@ import ScrollableView from '../ui-components/ScrollableView';
 
 import TalentUsername from './components/TalentUsername';
 
+import GendersFilter from '../filters/GendersFilter';
 import InTownFilter from '../filters/InTownFilter';
+import HairColorFilter from '../filters/HairColorFilter';
+import ManagersFilter from '../filters/ManagersFilter';
 
 import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
@@ -29,9 +32,17 @@ function TalentsList(props) {
         inTownOnly: JSON.parse(sessionStorage.getItem('talentsPage.talentsList.query.inTownOnly')) ?? false,
     });
 
+    const [filteredGenders, setFilteredGenders] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredGenders')) ?? []);
+    const [filteredHairColors, setFilteredHairColors] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredHairColors')) ?? []);
+    const [filteredManagers, setFilteredManagers] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredManagers')) ?? []);
+
     useEffect(() => {
-        dispatch(fetchTalents());
-    }, [dispatch]);
+        dispatch(fetchTalents({
+            genders: filteredGenders,
+            hairColors: filteredHairColors,
+            managers: filteredManagers,
+        }));
+    }, [dispatch, filteredGenders, filteredHairColors, filteredManagers]);
 
     useEffect(() => {
         setTalents(filterTalents([...fetchedTalents], query));
@@ -83,6 +94,21 @@ function TalentsList(props) {
                         uniqueName='talentsPage.inTownFilter'
                         selectedItem={query.inTownOnly}
                         setFiltered={setInTownOnly}
+                    />
+                    <ManagersFilter
+                        uniqueName='talentsPage.managersFilter'
+                        selectedItems={filteredManagers}
+                        setFiltered={setFilteredManagers}
+                    />
+                    <GendersFilter
+                        uniqueName='talentsPage.gendersFilter'
+                        selectedItems={filteredGenders}
+                        setFiltered={setFilteredGenders}
+                    />
+                    <HairColorFilter
+                        uniqueName='talentsPage.hairColorFilter'
+                        selectedItems={filteredHairColors}
+                        setFiltered={setFilteredHairColors}
                     />
                 </ScrollableView.Body>
             </ScrollableView>

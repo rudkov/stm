@@ -35,7 +35,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('teams', 'TeamController@store');
 
         //talents
-        Route::get('talents', 'TalentController@index');
+        Route::post('talents/search', 'TalentController@index');
 
         //talent current location
         Route::put('talents/{id}/locations/current', 'TalentController@updateCurrentLocation');
@@ -51,6 +51,9 @@ Route::group(['prefix' => 'v1'], function () {
 
         //event
         Route::get('events/{id}', 'EventController@show');
+
+        //users
+        Route::post('users/search', 'UserController@index');
 
         // Route::apiResource('talents', TalentController::class);
     });

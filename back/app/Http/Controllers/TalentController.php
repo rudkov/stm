@@ -51,11 +51,20 @@ class TalentController extends Controller
         return $talent;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $raw_talents = DB::table('talents')
             ->where('talents.team_id', Auth::user()->team->id)
             ->whereNull('talents.deleted_at')
+            ->when($request->genders, function ($query, $gender) {
+                return $query->whereIn('talents.gender_id', $gender);
+            })
+            ->when($request->hairColors, function ($query, $hairColor) {
+                return $query->whereIn('talents.hair_color_id', $hairColor);
+            })
+            ->when($request->managers, function ($query, $manager) {
+                return $query->whereIn('talents.created_by', $manager);
+            })
             ->orderBy('talents.first_name', 'asc')
             ->orderBy('talents.last_name', 'asc')
             ->get(['talents.id', 'talents.first_name', 'talents.last_name', 'talents.current_location']);
