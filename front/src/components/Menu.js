@@ -45,10 +45,10 @@ function Menu(props) {
                 </Tooltip>
             </div>
             <div className='menu__items menu__items-bottom'>
-                <Tooltip title={props.isCollapsed ? 'Logout' : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>
+                <Tooltip title={props.isCollapsed ? 'Log out' : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>
                     <NavLink to='logout' className='menu-item'>
                         <div className='menu-item__icon'><IconLogout /></div>
-                        <div className='menu-item__text'>Logout</div>
+                        <div className='menu-item__text'>Log out</div>
                     </NavLink>
                 </Tooltip>
                 <Tooltip title={props.isCollapsed ? ((theme === 'dark') ? 'Light mode' : 'Dark mode') : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>
