@@ -15,6 +15,11 @@ use function PHPUnit\Framework\isNull;
 
 class ContactController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Contact::class);
+    }
+
     private function getContactById($id)
     {
         $contact = Contact::where('id', $id)
@@ -80,11 +85,6 @@ class ContactController extends Controller
     public function show(Request $request, $id)
     {
         $contact = $this->getContactById($id);
-
-        if ($request->user()->cannot('view', $contact)) {
-            abort(403);
-        }
-
         return $contact;
     }
 
@@ -98,10 +98,6 @@ class ContactController extends Controller
                 'messengers',
             ])
             ->firstOrFail();
-
-        if ($request->user()->cannot('update', $contact)) {
-            abort(403);
-        }
 
         $contact->updated_by = Auth::user()->id;
 
@@ -253,10 +249,6 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->user()->cannot('create', Contact::class)) {
-            abort(403);
-        }
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -334,10 +326,6 @@ class ContactController extends Controller
     {
         $contact = Contact::where('id', $id)
             ->firstOrFail();
-
-        if ($request->user()->cannot('delete', $contact)) {
-            abort(403);
-        }
 
         $contact->updated_by = Auth::user()->id;
         $contact->delete();
