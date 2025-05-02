@@ -34,7 +34,7 @@ class ContactControllerTest extends TestCase
     public function test_store_contact_requires_first_name_and_last_name()
     {
         $response = $this->actingAs($this->user)
-            ->postJson('/api/v1/contacts', [
+            ->postJson(route('contacts.store'), [
                 'first_name' => '',
                 'last_name' => '',
             ]);
@@ -46,7 +46,7 @@ class ContactControllerTest extends TestCase
     public function test_store_contact_with_minimal_data()
     {
         $response = $this->actingAs($this->user)
-            ->postJson('/api/v1/contacts', [
+            ->postJson(route('contacts.store'), [
                 'first_name' => 'John',
                 'last_name' => 'Doe',
             ]);
@@ -75,7 +75,7 @@ class ContactControllerTest extends TestCase
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
         $response = $this->actingAs($this->user)
-            ->postJson('/api/v1/contacts', [
+            ->postJson(route('contacts.store'), [
                 'first_name' => 'John',
                 'last_name' => 'Doe',
                 'comment' => 'Test comment',
@@ -149,7 +149,7 @@ class ContactControllerTest extends TestCase
 
     public function test_unauthorized_user_cannot_create_contact()
     {
-        $response = $this->postJson('/api/v1/contacts', [
+        $response = $this->postJson(route('contacts.store'), [
                 'first_name' => 'John',
                 'last_name' => 'Doe',
             ]);

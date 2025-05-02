@@ -26,14 +26,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('clients', 'ClientController@index');
 
         //contacts
-        Route::get('contacts', 'ContactController@index');
-
-        //contact
-        Route::get('contacts/{id}', 'ContactController@show');
-        Route::put('contacts/{id}', 'ContactController@update');
-        Route::post('contacts', 'ContactController@store');
-        Route::delete('contacts/{id}', 'ContactController@destroy');
-
+        Route::apiResource('contacts', 'ContactController');
+        
         //companies
         Route::get('companies', 'CompanyController@index');
 
