@@ -11,31 +11,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\isNull;
 
 class ContactController extends Controller
 {
     public function __construct()
     {
         $this->authorizeResource(Contact::class);
-    }
-
-    private function getContactById($id)
-    {
-        $contact = Contact::where('id', $id)
-            ->with([
-                'companies',
-                'phones',
-                'phones.type',
-                'emails',
-                'emails.type',
-                'messengers',
-                'messengers.type',
-                'createdBy',
-                'updatedBy',
-            ])
-            ->firstOrFail();
-        return $contact;
     }
 
     public function index()
@@ -82,23 +63,23 @@ class ContactController extends Controller
         return $contacts;
     }
 
-    public function show(Request $request, $id)
+    public function show(Contact $contact)
     {
-        $contact = $this->getContactById($id);
+        $contact->load('companies',
+            'phones',
+            'phones.type',
+            'emails',
+            'emails.type',
+            'messengers',
+            'messengers.type',
+            'createdBy',
+            'updatedBy',
+        );
         return $contact;
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Contact $contact)
     {
-        $contact = Contact::where('id', $id)
-            ->with([
-                'companies',
-                'phones',
-                'emails',
-                'messengers',
-            ])
-            ->firstOrFail();
-
         $contact->updated_by = Auth::user()->id;
 
         //COMPANIES & JOB TITLES START
@@ -242,9 +223,7 @@ class ContactController extends Controller
             $contact->update($request->all());
         });
 
-        $contact = $this->getContactById($id);
-
-        return response()->json($contact, 200);
+        return response()->json($this->show($contact), 200);
     }
 
     public function store(Request $request)
@@ -317,16 +296,11 @@ class ContactController extends Controller
             }
         });
 
-        $contact = $this->getContactById($contact->id);
-
-        return response()->json($contact, 201);
+        return response()->json($this->show($contact), 201);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, Contact $contact)
     {
-        $contact = Contact::where('id', $id)
-            ->firstOrFail();
-
         $contact->updated_by = Auth::user()->id;
         $contact->delete();
         return response()->json(null, 204);
