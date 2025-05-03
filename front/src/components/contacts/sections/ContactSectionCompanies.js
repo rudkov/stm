@@ -35,7 +35,7 @@ function ContactSectionCompanies(props) {
                 <div className='info-panel--section_1col text-regular'>
                     {
                         contact.companies?.map((item, index) => {
-                            return <div key={"contact_company_" + item.id}>{item.name}<span className='text-light'> – {item.pivot.job_title}</span></div>;
+                            return <div key={"contact_company_" + item.id}>{item.name}<span className='text-light'> – {item.job_title}</span></div>;
                         })
                     }
                 </div>
@@ -46,7 +46,7 @@ function ContactSectionCompanies(props) {
                     <Form.List
                         name="companies"
                         initialValue={[
-                            { id: null, pivot: { job_title: '' } }
+                            { id: null, job_title: '' }
                         ]}
                     >
                         {(fields, { add, remove }) => (
@@ -69,7 +69,7 @@ function ContactSectionCompanies(props) {
                                                 </Form.Item>
                                                 <Form.Item
                                                     {...restField}
-                                                    name={[name, "pivot", "job_title"]}
+                                                    name={[name, "job_title"]}
                                                     style={{ width: '40%' }}
                                                 >
                                                     <TextArea autoSize={{ minRows: 1 }} placeholder="Job title" />

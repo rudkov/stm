@@ -34,12 +34,12 @@ class ContactController extends Controller
             ->whereNull('contacts.deleted_at')
             ->orderBy('contacts.first_name', 'asc')
             ->orderBy('contacts.last_name', 'asc')
-            ->orderBy('companies.name', 'asc')
+            ->orderBy('companies.name', 'asc') 
             ->orderBy('email_types.weight', 'ASC')
             ->orderBy('phone_types.weight', 'ASC')
             ->select([
                 'contacts.id',
-                'contacts.first_name',
+                'contacts.first_name', 
                 'contacts.last_name',
                 'contact_emails.info as email',
                 'email_types.weight as email_weight',
@@ -74,7 +74,7 @@ class ContactController extends Controller
             'createdBy',
             'updatedBy',
         );
-        return $contact;
+        return $contact->toResource();
     }
 
     public function update(Request $request, Contact $contact)
@@ -83,8 +83,8 @@ class ContactController extends Controller
 
         //COMPANIES & JOB TITLES START
         $companies = array();
-        foreach ($request->companies as $company) {
-            $companies[$company['id']] = ['job_title' => $company['pivot']['job_title']];
+        foreach (collect($request->companies) as $company) {
+            $companies[$company['id']] = ['job_title' => $company['job_title']];
         }
         $contact->companies()->sync($companies);
         //COMPANIES & JOB TITLES END
@@ -221,7 +221,7 @@ class ContactController extends Controller
 
             $contact->update($request->all());
         });
-
+        
         return response()->json($this->show($contact), 200);
     }
 
@@ -259,7 +259,7 @@ class ContactController extends Controller
             //COMPANIES & JOB TITLES START
             $companies = array();
             foreach (collect($request->companies) as $company) {
-                $companies[$company['id']] = ['job_title' => $company['pivot']['job_title']];
+                $companies[$company['id']] = ['job_title' => $company['job_title']];
             }
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END

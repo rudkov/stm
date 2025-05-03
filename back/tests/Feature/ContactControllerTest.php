@@ -82,9 +82,7 @@ class ContactControllerTest extends TestCase
                 'companies' => [
                     [
                         'id' => $company->id,
-                        'pivot' => [
-                            'job_title' => 'Developer'
-                        ]
+                        'job_title' => 'Developer'
                     ]
                 ],
                 'phones' => [
