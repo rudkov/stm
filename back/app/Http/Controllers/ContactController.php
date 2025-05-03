@@ -10,7 +10,7 @@ use App\Models\ContactPhone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Resources\ContactCollection;
 
 class ContactController extends Controller
 {
@@ -21,8 +21,8 @@ class ContactController extends Controller
 
     public function index()
     {
-        $raw_contacts = DB::table('contacts')
-            ->where('contacts.team_id', Auth::user()->team->id)
+        $innerQuery = DB::table('contacts')
+            ->where('contacts.team_id', Auth::user()->team_id)
             ->leftJoin('contact_emails', 'contacts.id', '=', 'contact_emails.contact_id')
             ->leftJoin('email_types', 'email_types.id', '=', 'contact_emails.email_type_id')
             ->leftJoin('contact_phones', 'contacts.id', '=', 'contact_phones.contact_id')
@@ -35,9 +35,9 @@ class ContactController extends Controller
             ->orderBy('contacts.first_name', 'asc')
             ->orderBy('contacts.last_name', 'asc')
             ->orderBy('companies.name', 'asc')
-            ->orderBy('email_types.weight', 'desc')
-            ->orderBy('phone_types.weight', 'desc')
-            ->get([
+            ->orderBy('email_types.weight', 'ASC')
+            ->orderBy('phone_types.weight', 'ASC')
+            ->select([
                 'contacts.id',
                 'contacts.first_name',
                 'contacts.last_name',
@@ -46,21 +46,20 @@ class ContactController extends Controller
                 'contact_phones.info as phone',
                 'phone_types.weight as phone_weight',
                 'company_contact.job_title as job_title',
-                'companies.name as company_name'
+                'companies.name as company_name',
+                DB::raw('ROW_NUMBER() OVER (PARTITION BY contacts.id 
+                        ORDER BY email_types.weight ASC, 
+                                 phone_types.weight ASC
+                ) AS row_num')
+
             ]);
-
-        $contacts = array();
-        foreach ($raw_contacts as $contact) {
-            $contacts[$contact->id]['id'] = $contact->id;
-            $contacts[$contact->id]['name'] = trim($contact->first_name . ' ' . $contact->last_name);
-            $contacts[$contact->id]['email'] = $contact->email;
-            $contacts[$contact->id]['phone'] = $contact->phone;
-            $contacts[$contact->id]['job_title'] = $contact->job_title;
-            $contacts[$contact->id]['company_name'] = $contact->company_name;
-        }
-        $contacts = array_values($contacts);
-
-        return $contacts;
+        $contacts = DB::table(function($query) use ($innerQuery) {
+            $query->fromSub($innerQuery, 'ranked_contacts');
+        })
+        ->where('row_num', 1)
+        ->get();
+        
+        return new ContactCollection($contacts);
     }
 
     public function show(Contact $contact)
