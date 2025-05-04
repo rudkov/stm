@@ -22,7 +22,7 @@ alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 ```
 Reload the terminal window.
 
-### In the ```stm-frontend``` Folder
+### In the ```back``` Folder
 ```bash
 composer update
 ```
