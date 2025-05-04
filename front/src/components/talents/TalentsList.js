@@ -12,7 +12,7 @@ import TalentUsername from './components/TalentUsername';
 
 import InTownFilter from '../filters/InTownFilter';
 
-import { ReactComponent as IconInTown } from '../../assets/icons/in-town-16.svg';
+import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
 
 function TalentsList() {

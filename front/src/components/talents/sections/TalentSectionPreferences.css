@@ -1,0 +1,7 @@
+.talent-section-preferences__grid {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 8px;
+    grid-template-columns: 140px auto;
+    grid-template-rows: repeat(6, 1fr);
+}

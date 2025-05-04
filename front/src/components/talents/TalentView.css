@@ -1,0 +1,116 @@
+.talent-profile {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    container-type: inline-size;
+}
+
+.talent-profile__body {
+    padding: 0 6px 12px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    grid-template-areas:
+        'notes              contacts         body'
+        'primary-info       preferences      body'
+        'region-languages   food-allergies   body'
+        'social-media       addresses        relatives'
+        'biography          achievements     performance-skills'
+        'system-info        system-info      system-info'
+    ;
+}
+
+@container (max-width: 900px) {
+    .talent-profile__body {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            'notes              notes'
+            'primary-info       body'
+            'food-allergies     body'
+            'contacts           body'
+            'region-languages   preferences'
+            'social-media       addresses'
+            'relatives          biography'
+            'achievements       performance-skills'
+            'system-info        system-info'
+        ;
+    }
+}
+
+@container (max-width: 660px) {
+    .talent-profile__body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'notes'
+            'primary-info'
+            'food-allergies'
+            'body'
+            'contacts'
+            'region-languages'
+            'preferences'
+            'social-media'
+            'addresses'
+            'relatives'
+            'biography'
+            'achievements'
+            'performance-skills'
+            'system-info'
+        ;
+    }
+}
+
+.talent-section__primary-info {
+    grid-area: primary-info;
+}
+
+.talent-section__notes {
+    grid-area: notes;
+}
+
+.talent-section__body {
+    grid-area: body;
+}
+
+.talent-section__food-allergies {
+    grid-area: food-allergies;
+}
+
+.talent-section__region-languages {
+    grid-area: region-languages;
+}
+
+.talent-section__contacts {
+    grid-area: contacts;
+}
+
+.talent-section__addresses {
+    grid-area: addresses;
+}
+
+.talent-section__social-media {
+    grid-area: social-media;
+}
+
+.talent-section__relatives {
+    grid-area: relatives;
+}
+
+.talent-section__preferences {
+    grid-area: preferences;
+}
+
+.talent-section__achievements {
+    grid-area: achievements;
+}
+
+.talent-section__performance-skills {
+    grid-area: performance-skills;
+}
+
+.talent-section__biography {
+    grid-area: biography;
+}
+
+.talent-section__system-info {
+    grid-area: system-info;
+}

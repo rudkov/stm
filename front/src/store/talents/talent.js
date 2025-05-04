@@ -92,8 +92,12 @@ const prepareTalent = (state, values) => {
     let item = values;
 
     item.full_name = values.first_name.concat(' ', values.last_name);
-    item.birth_date = values.birth_date ? dayjs(values.birth_date).format(dateFormat) : null;
-    item.age = values.birth_date ? dayjs().diff(dayjs(values.birth_date, dateFormat), 'years') : null;
+    item.legal_full_name = values.legal_first_name.concat(' ', values.legal_last_name);
+
+    const birthDate = values.birth_date ? dayjs(values.birth_date, dateFormat) : null;
+    item.birth_date = birthDate ? birthDate.format(dateFormat) : null;
+    item.age = birthDate ? dayjs().diff(birthDate, 'years') : null;
+
     item.is_lifestyle = (values.is_lifestyle === 1) ? "Lifestyle" : (values.is_lifestyle === 0) ? "Fashion" : null;
     item.gender_id = values.gender_id || '';
 
@@ -125,17 +129,17 @@ const prepareTalent = (state, values) => {
 
     item.is_accent = (values.is_accent === 1) ? "Yes" : (values.is_accent === 0) ? "No" : null;
 
-    item.is_lingerie = (values.is_lingerie === 1) ? "Yes" : (values.is_lingerie === 0) ? "No" : null;
-    item.is_nude = (values.is_nude === 1) ? "Yes" : (values.is_nude === 0) ? "No" : null;
-    item.is_fur = (values.is_fur === 1) ? "Yes" : (values.is_fur === 0) ? "No" : null;
-    item.is_liquor_ads = (values.is_liquor_ads === 1) ? "Yes" : (values.is_liquor_ads === 0) ? "No" : null;
-    item.is_smoking_ads = (values.is_smoking_ads === 1) ? "Yes" : (values.is_smoking_ads === 0) ? "No" : null;
-    item.is_gambling_ads = (values.is_gambling_ads === 1) ? "Yes" : (values.is_gambling_ads === 0) ? "No" : null;
-    item.is_faithbased_ads = (values.is_faithbased_ads === 1) ? "Yes" : (values.is_faithbased_ads === 0) ? "No" : null;
-    item.is_political_ads = (values.is_political_ads === 1) ? "Yes" : (values.is_political_ads === 0) ? "No" : null;
-    item.is_topless = (values.is_topless === 1) ? "Yes" : (values.is_topless === 0) ? "No" : null;
-    item.is_swimwear = (values.is_swimwear === 1) ? "Yes" : (values.is_swimwear === 0) ? "No" : null;
-    item.is_sports = (values.is_sports === 1) ? "Yes" : (values.is_sports === 0) ? "No" : null;
+    item.is_lingerie = (values.is_lingerie === 1) ? "yes" : (values.is_lingerie === 0) ? "no" : null;
+    item.is_nude = (values.is_nude === 1) ? "yes" : (values.is_nude === 0) ? "no" : null;
+    item.is_fur = (values.is_fur === 1) ? "yes" : (values.is_fur === 0) ? "no" : null;
+    item.is_liquor_ads = (values.is_liquor_ads === 1) ? "yes" : (values.is_liquor_ads === 0) ? "no" : null;
+    item.is_smoking_ads = (values.is_smoking_ads === 1) ? "yes" : (values.is_smoking_ads === 0) ? "no" : null;
+    item.is_gambling_ads = (values.is_gambling_ads === 1) ? "yes" : (values.is_gambling_ads === 0) ? "no" : null;
+    item.is_faithbased_ads = (values.is_faithbased_ads === 1) ? "yes" : (values.is_faithbased_ads === 0) ? "no" : null;
+    item.is_political_ads = (values.is_political_ads === 1) ? "yes" : (values.is_political_ads === 0) ? "no" : null;
+    item.is_topless = (values.is_topless === 1) ? "yes" : (values.is_topless === 0) ? "no" : null;
+    item.is_swimwear = (values.is_swimwear === 1) ? "yes" : (values.is_swimwear === 0) ? "no" : null;
+    item.is_sports = (values.is_sports === 1) ? "yes" : (values.is_sports === 0) ? "no" : null;
 
     item.achievements = values.achievements || '';
     item.performance_skills = values.performance_skills || '';

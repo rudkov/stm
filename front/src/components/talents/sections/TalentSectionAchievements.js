@@ -1,42 +1,13 @@
-import '../../../helpers/info-panel.css';
-import '../../../helpers/shared.css';
-
-import { useSelector } from 'react-redux';
-
-import { Form, Input } from 'antd';
-
-import { getTalent } from '../../../store/talents/talent';
-import DataCell from '../../ui-components/DataCell';
+import NestedSection from '../../ui-components/NestedSection';
 
 function TalentSectionAchievements(props) {
-    const talent = useSelector(getTalent);
-
-    const { TextArea } = Input;
+    const talent = props.talent;
 
     return (
-        <div className='info-panel--section'>
-            <div className='info-panel--section--header'>
-                <div className='info-panel--section--title text-regular'>Achievements</div>
-            </div>
-            <div className={`${!props.editMode ? "" : "hidden"}`}>
-                <div className='info-panel--section_1col text-regular'>
-                    <DataCell
-                        value={talent.achievements}
-                    />
-                </div>
-            </div>
-            <div className={`${props.editMode ? "" : "hidden"}`}>
-                <div className='info-panel--section_1col text-regular'>
-                    <DataCell
-                        value={
-                            <Form.Item name='achievements'>
-                                <TextArea autoSize={{ minRows: 1 }} />
-                            </Form.Item>
-                        }
-                    />
-                </div>
-            </div>
-        </div>
+        <NestedSection className={props.className}>
+            <NestedSection.Header>Achievements</NestedSection.Header>
+            <NestedSection.Body>{talent.achievements}</NestedSection.Body>
+        </NestedSection>
     );
 }
 

@@ -1,17 +1,17 @@
 .color--badge {
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
-    border: 1px solid #E5E5E5;
+    width: 14px;
+    height: 14px;
+    font-size: 0;
+    border: 1px solid var(--icon-color-badge-border);
+    border-radius: 3px;
 }
 
 .color--badge-select {
-    display: inline-block;    
+    display: inline-block;
     margin-right: 8px;
     position: relative;
     top: 1px;
 }
-
 
 /* talent hair */
 .color--hair--black {
@@ -66,21 +66,9 @@
 .color--eyes--two-different-colors::before {
     position: relative;
     content: '';
-    border-bottom: 16px solid #969A9E;
-    border-left: 16px solid transparent;
-    top: -18px;
-}
-
-.color--eyes--two-different-colors::after {
-    position: relative;
-    display: block;
-    content: '';
-    top: -21px;
-    left: -1px;
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 1px solid #E5E5E5;
+    border-bottom: 12px solid #969A9E;
+    border-left: 12px solid transparent;
+    border-radius: 2px;
 }
 
 /* talent skin */

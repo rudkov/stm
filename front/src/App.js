@@ -22,7 +22,8 @@ import Events from './components/pages/Events';
 import EventInfo from './components/events/EventInfo';
 
 import Talents from './components/pages/Talents';
-import TalentProfile from './components/talents/TalentProfile';
+// import TalentProfile from './components/talents/TalentProfile';
+import TalentView from './components/talents/TalentView';
 
 import NewTeam from './components/teams/NewTeam';
 
@@ -56,8 +57,8 @@ function App() {
                                     </Route>
 
                                     <Route path='talents' element={<Talents />}>
-                                        <Route path=':id' element={<TalentProfile />} />
-                                        <Route path='new' element={<TalentProfile newTalent={true} />} />
+                                        <Route path=':id' element={<TalentView />} />
+                                        <Route path='new' element={<TalentView newTalent={true} />} />
                                     </Route>
 
                                 </Route>

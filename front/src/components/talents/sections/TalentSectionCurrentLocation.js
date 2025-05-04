@@ -1,4 +1,3 @@
-import '../TalentProfile.css';
 import '../../../helpers/shared.css';
 import '../../../helpers/form.css';
 
@@ -8,19 +7,19 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as IconClose } from '../../../assets/icons/close.svg';
 
-import { getTalent, updateCurrentLocation, getCurrentLocationResponse } from '../../../store/talents/talent';
+import { updateCurrentLocation, getCurrentLocationResponse } from '../../../store/talents/talent';
 import { fetchTalents } from '../../../store/talents/talents';
 
 import TalentLocation from '../components/TalentLocation';
 
-function TalentSectionCurrentLocation() {
+function TalentSectionCurrentLocation(props) {
 
     const dispatch = useDispatch();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
 
-    const talent = useSelector(getTalent);
+    const talent = props.talent;
     const currentLocationResponse = useSelector(getCurrentLocationResponse);
 
     const showModal = () => {

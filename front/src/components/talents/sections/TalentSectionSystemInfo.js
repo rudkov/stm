@@ -1,27 +1,21 @@
-import '../../../helpers/info-panel.css';
 import '../../../helpers/shared.css';
 
-import { useSelector } from 'react-redux';
+import NestedSection from '../../ui-components/NestedSection';
 
-import { getTalent } from '../../../store/talents/talent';
-import DataCell from '../../ui-components/DataCell';
-
-function TalentSectionSystemInfo() {
-    const talent = useSelector(getTalent);
+function TalentSectionSystemInfo(props) {
+    const talent = props.talent;
 
     return (
-        <div className='info-panel--section info-panel--system-info'>
-            <div className='info-panel--section_2col text-regular'>
-                <DataCell
-                    label='Updated'
-                    value={talent.updated_by?.name + ' · ' + talent.updated_at}
-                />
-                <DataCell
-                    label='Created'
-                    value={talent.created_by?.name + ' · ' + talent.created_at}
-                />
-            </div>
-        </div>
+        <NestedSection className={`nested-section__system-info ${props.className}`}>
+            <NestedSection.Body>
+                <div className='nested-section__grid'>
+                    <div>
+                        Last updated by {talent.updated_by?.name} on {talent.updated_at}.
+                        Created by {talent.created_by?.name} on {talent.created_at}.
+                    </div>
+                </div>
+            </NestedSection.Body>
+        </NestedSection>
     );
 }
 

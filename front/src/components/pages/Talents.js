@@ -9,11 +9,9 @@ function Talents() {
     return (
         <div className='talents-page'>
             <TalentsList />
-            <div className='talent-profile'>
+            <div className='talents-page__right-column'>
                 <div className='section-primary'>
-                    <div className='scrollbar-y'>
-                        <Outlet />
-                    </div>
+                    <Outlet />
                 </div>
             </div>
         </div>

@@ -1,46 +1,29 @@
-.talent-profile--main--container {
-    display: grid;
-    grid-template-columns: auto auto;
-    column-gap: 0px;
-    align-items: start;
-    padding: 16px 16px 16px 11px;
-    margin-bottom: -16px;
-    background-color: #fff;
-
-    position: sticky;
-    width: 100%;
-    top: 0;
-    z-index: 1;
+.talent-section-main {
+    display: flex;
+    flex-direction: row;
+    padding: 12px;
 }
 
-.talent-profile--main--left {
-    justify-self: start;
+.talent-section-main__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
 }
 
-.talent-profile--main--right {
-    justify-self: end;
+.talent-section-main__controls {
+    margin-left: auto;
 }
 
-.talent-profile--main--trobber {
+.talent-section-main__header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+}
+
+.talent-section-main__talent_name {
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.5);
-}
-
-.talent-profile--main {
-    display: grid;
-    grid-template-columns: 80px auto;
-    column-gap: 12px;
-    /* margin: 0 16px 36px 11px; */
-}
-
-.talent-profile--main--content--text {
-    margin: 4px 0;
-}
-                            
-.talent-profile--main--content {
-    /* align-self: center; */
-}
-
-.talent-profile--main--content > div {
-    /* margin: 8px 0; */
+    font-weight: 700;
+    color: var(--text-primary);
 }

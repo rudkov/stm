@@ -1,93 +1,31 @@
-import '../../../helpers/form.css';
-import '../../../helpers/info-panel.css';
-import '../../../helpers/shared.css';
+import NestedSection from '../../ui-components/NestedSection';
 
-import { useSelector } from 'react-redux';
-
-import { Form, Input, Select, Space } from 'antd';
-
-import { getTalent } from '../../../store/talents/talent';
-import { useSettings } from '../../../context/SettingsContext';
-
-import DataCell from '../../ui-components/DataCell';
 import { SocialMediaIcons } from '../../ui-components/Icons';
 
-import { ReactComponent as IconCrossInCircle } from '../../../assets/icons/cross-in-circle.svg';
-
-
-import Button from '../../buttons/Button';
-
 function TalentSectionSocialMedia(props) {
-    const talent = useSelector(getTalent);
-    const { settings } = useSettings();
-
-    const { Option } = Select;
-    const { TextArea } = Input;
+    const talent = props.talent;
 
     return (
-        <div>
-            <div className='info-panel--section--header'>
-                <div className='info-panel--section--title text-regular'>Social Media</div>
-            </div>
-            <div className={`${!props.editMode ? "" : "hidden"}`}>
-                <div className='info-panel--section_1col text-regular'>
+        <NestedSection className={props.className}>
+            <NestedSection.Header>Social Media</NestedSection.Header>
+            <NestedSection.Body>
+                <div className='nested-section__grid'>
                     {
-                        talent.social_medias?.map((item, index) => {
-                            return <DataCell
-                                icon={SocialMediaIcons[item.type?.system_name]}
-                                key={`talent_social_media_.${item.id}`}
-                                label={item.type?.name}
-                                value={<a href={`${item.type?.url + item.info}`} target='_blank' rel='noreferrer'>{item.info}</a>}
-                            />;
+                        talent.social_medias?.map((socialMedia) => {
+                            return (
+                                <div className='nested-section__cell' key={`talent.socialMedia.` + socialMedia.id}>
+                                    <div className='text-light'>{socialMedia.type?.name}</div>
+                                    <div className='nested-section__item_with_icon ellipsis'>
+                                        <div className='nested-section__icon'>{SocialMediaIcons[socialMedia.type?.system_name]}</div>
+                                        {<a href={`${socialMedia.type?.url + socialMedia.info}`} className='ellipsis' target='_blank' rel='noreferrer'>{socialMedia.info}</a>}
+                                    </div>
+                                </div>
+                            );
                         })
                     }
                 </div>
-            </div>
-            <div className={`${props.editMode ? "" : "hidden"}`}>
-                <div className='info-panel--section_1col text-regular'>
-
-                    <Form.List
-                        name="social_medias"
-                        initialValue={[
-                            { social_media_type_id: null, info: '' }
-                        ]}
-                    >
-                        {(fields, { add, remove }) => (
-                            <>
-                                {fields.map(({ key, name, ...restField }) => (
-
-                                    <DataCell
-                                        key={`talent_social_media_.${key}`}
-                                        value={
-                                            <Space.Compact>
-                                                <Form.Item {...restField} name={[name, "social_media_type_id"]} style={{ width: '30%' }}>
-                                                    <Select allowClear>
-                                                        {
-                                                            settings.social_media_types.map((item, index) => {
-                                                                return <Option value={item.id} key={`social_media_type_.${item.id}`}><div className='select--badge select--badge-select'>{SocialMediaIcons[item.system_name]}</div>{item.name}</Option>;
-                                                            })
-                                                        }
-                                                    </Select>
-                                                </Form.Item>
-                                                <Form.Item {...restField} name={[name, "info"]} style={{ width: '60%' }}>
-                                                    <TextArea autoSize={{ minRows: 1 }} placeholder="Username" />
-                                                </Form.Item>
-                                                <Button key='talent.social_medias.remove' icon={IconCrossInCircle} isSmall={true} onClick={() => remove(name)} />
-                                            </Space.Compact>
-                                        }
-                                    />
-
-                                ))}
-                                <Form.Item>
-                                    <Button key='talent.social_medias.add' title='Add social media' onClick={() => add()} />
-                                </Form.Item>
-                            </>
-                        )}
-                    </Form.List>
-
-                </div>
-            </div>
-        </div>
+            </NestedSection.Body>
+        </NestedSection>
     );
 }
 

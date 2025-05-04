@@ -5,13 +5,15 @@
 
     --background-primary: #F7F7F7;
     --background-secondary: #FFF;
+    --background-tertiary: #F7F7F7;
 
     --text-primary: rgba(0, 0, 0, 0.9);
+    --text-secondary: rgba(0, 0, 0, 0.5);
 
     --icon-primary: rgba(0, 0, 0, 0.4);
     --icon-secondary: rgba(0, 0, 0, 0.2);
 
-    --accent: #1890ff;
+    --accent: #0067c7;
     --red: #EC0A0A;
 
     --menu-item-icon-color: rgba(0, 0, 0, 0.4);
@@ -24,19 +26,24 @@
 
     --avatar-background-color: rgba(0, 0, 0, 0.1);
     --avatar-text-color: rgba(0, 0, 0, 0.4);
+
+    --icon-color-badge-border: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="dark"] {
     --scrollbar-color: rgba(255, 255, 255, 0.1);
 
     --background-primary: #171717;
-    --background-secondary: rgba(255, 255, 255, 0.01);
+    --background-secondary: rgba(255, 255, 255, 0.02);
+    --background-tertiary: rgba(255, 255, 255, 0.02);
 
     --text-primary: rgba(255, 255, 255, 0.85);
+    --text-secondary: rgba(255, 255, 255, 0.5);
 
     --icon-primary: rgba(255, 255, 255, 0.4);
     --icon-secondary: rgba(255, 255, 255, 0.15);
 
+    --accent: #71bbff;
     --red: #D71515;
 
     --menu-item-icon-color: rgba(255, 255, 255, 0.4);
@@ -49,4 +56,6 @@
 
     --avatar-background-color: rgba(255, 255, 255, 0.1);
     --avatar-text-color: rgba(255, 255, 255, 0.4);
+
+    --icon-color-badge-border: rgba(255, 255, 255, 0.1);
 }

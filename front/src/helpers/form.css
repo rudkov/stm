@@ -121,6 +121,7 @@
     border: none;
     box-shadow: none;
     height: auto;
+    background: none;
 }
 
 .button--invisible:hover {

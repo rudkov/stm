@@ -1,5 +1,6 @@
-//This one is commented out because if it is not it overrides child filters.
-//Instead include the import of Filter.css in the child filter.
+//The import for 'Filter.css' is intentionally commented out in this file.
+//This is because it would override styles in child components.
+//Instead, the CSS file should be imported directly in each child component that needs it.
 //import './Filter.css';
 import '../../helpers/shared.css';
 
