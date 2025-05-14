@@ -1,0 +1,25 @@
+.talent-section-form-contacts__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.talent-section-form-contacts__item {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.talent-section-form-contacts__data {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4px;
+    width: 100%;
+}
+
+.talent-section-form-contacts__controls {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}

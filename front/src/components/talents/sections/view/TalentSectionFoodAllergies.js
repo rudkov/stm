@@ -1,4 +1,4 @@
-import NestedSection from '../../ui-components/NestedSection';
+import NestedSection from '../../../ui-components/NestedSection';
 
 function TalentSectionFoodAllergies(props) {
     const talent = props.talent;
@@ -10,7 +10,15 @@ function TalentSectionFoodAllergies(props) {
                 <div className='nested-section__grid'>
                     <div className='nested-section__cell'>
                         <div className='text-light'>Vegetarian</div>
-                        <div>{talent.is_vegetarian}</div>
+                        <div>
+                            {
+                                talent.is_vegetarian === 1
+                                    ? 'Yes'
+                                    : talent.is_vegetarian === 0
+                                        ? 'No'
+                                        : ''
+                            }
+                        </div>
                     </div>
                     <div className='nested-section__cell'>
                         <div className='text-light'>Allergies</div>

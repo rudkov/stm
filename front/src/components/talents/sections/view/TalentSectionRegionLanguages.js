@@ -1,6 +1,6 @@
-import NestedSection from '../../ui-components/NestedSection';
+import NestedSection from '../../../ui-components/NestedSection';
 
-import { Flag } from '../../ui-components/Flag';
+import { Flag } from '../../../ui-components/Flag';
 
 function TalentSectionRegionLanguages(props) {
     const talent = props.talent;
@@ -41,7 +41,15 @@ function TalentSectionRegionLanguages(props) {
                     </div>
                     <div className='nested-section__cell'>
                         <div className='text-light'>Accent</div>
-                        <div>{talent.is_accent}</div>
+                        <div>
+                            {
+                                talent.is_accent === 1
+                                    ? 'Yes'
+                                    : talent.is_accent === 0
+                                        ? 'No'
+                                        : ''
+                            }
+                        </div>
                     </div>
                 </div>
             </NestedSection.Body>

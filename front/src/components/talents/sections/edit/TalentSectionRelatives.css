@@ -1,0 +1,19 @@
+.talent-section-form-relatives__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.talent-section-form-relatives__item {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.talent-section-form-relatives__data {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}

@@ -1,6 +1,6 @@
-import NestedSection from '../../ui-components/NestedSection';
+import NestedSection from '../../../ui-components/NestedSection';
 
-import { SocialMediaIcons } from '../../ui-components/Icons';
+import { SocialMediaIcons } from '../../../ui-components/Icons';
 
 function TalentSectionSocialMedia(props) {
     const talent = props.talent;

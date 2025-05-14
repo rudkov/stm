@@ -1,6 +1,6 @@
-import NestedSection from '../../ui-components/NestedSection';
+import NestedSection from '../../../ui-components/NestedSection';
 
-import { MessengersIcons } from '../../ui-components/Icons';
+import { MessengersIcons } from '../../../ui-components/Icons';
 
 function TalentSectionContacts(props) {
     const talent = props.talent;

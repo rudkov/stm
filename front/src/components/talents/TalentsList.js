@@ -15,7 +15,7 @@ import InTownFilter from '../filters/InTownFilter';
 import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
 
-function TalentsList() {
+function TalentsList(props) {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const fetchedTalents = useSelector(getTalents);
@@ -98,11 +98,9 @@ function TalentsList() {
                                 />
                             </Form.Item>
                         </Form>
-                        <NavLink to='new'>
-                            <Button type='primary' icon={<IconAdd />} />
-                        </NavLink>
+                        <Button type='primary' icon={<IconAdd />} onClick={props.createTalent} />
                     </div>
-                    <div className='scrollbar-y'>
+                    <div className='talents-list__body scrollbar-y'>
                         {result}
                     </div>
                 </div>

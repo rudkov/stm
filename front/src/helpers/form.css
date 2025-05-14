@@ -1,19 +1,18 @@
-/* Inputs */
-.input--contained {
-    background-color: rgba(0, 0, 0, 0.05);
-    height: 36px;
-    padding-left: 8px;
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 6px;
+.select-option-with-icon {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
 }
 
-.input--contained input {
-    background-color: rgba(0, 0, 0, 0);
+/* Override Antd styles */
+
+.ant-btn-color-primary,
+.ant-btn-color-default {
+    box-shadow: none;
 }
 
-.input--contained input::placeholder {
-    color: rgba(0, 0, 0, 0.5);
-}
+/* TODO: Everything below is old, needs to be refactored and removed */
 
 /* Buttons */
 .button--primary,

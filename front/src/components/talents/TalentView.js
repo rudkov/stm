@@ -1,30 +1,27 @@
 import './TalentView.css';
 import '../../helpers/shared.css';
 
-import { useParams } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 
 import { getTalent, fetchTalentById } from '../../store/talents/talent';
 
-import TalentSectionAchievements from './sections/TalentSectionAchievements';
-import TalentSectionAddresses from './sections/TalentSectionAddresses';
-import TalentSectionBiography from './sections/TalentSectionBiography';
-import TalentSectionBody from './sections/TalentSectionBody';
-import TalentSectionContacts from './sections/TalentSectionContacts';
-import TalentSectionFoodAllergies from './sections/TalentSectionFoodAllergies';
-import TalentSectionMain from './sections/TalentSectionMain';
-import TalentSectionNotes from './sections/TalentSectionNotes';
-import TalentSectionPerformanceSkills from './sections/TalentSectionPerformanceSkills';
-import TalentSectionPreferences from './sections/TalentSectionPreferences';
-import TalentSectionPrimaryInfo from './sections/TalentSectionPrimaryInfo';
-import TalentSectionRegionLanguages from './sections/TalentSectionRegionLanguages';
-import TalentSectionRelatives from './sections/TalentSectionRelatives';
-import TalentSectionSocialMedia from './sections/TalentSectionSocialMedia';
-import TalentSectionSystemInfo from './sections/TalentSectionSystemInfo';
-
-// TODO: Fix a bug: when I open a talent and then click on create new talent (change URL) –
-// the URL changes, but the view doesn't reload because it contains old data.
+import TalentSectionAchievements from './sections/view/TalentSectionAchievements';
+import TalentSectionAddresses from './sections/view/TalentSectionAddresses';
+import TalentSectionBiography from './sections/view/TalentSectionBiography';
+import TalentSectionBody from './sections/view/TalentSectionBody';
+import TalentSectionContacts from './sections/view/TalentSectionContacts';
+import TalentSectionFoodAllergies from './sections/view/TalentSectionFoodAllergies';
+import TalentSectionMain from './sections/view/TalentSectionMain';
+import TalentSectionNotes from './sections/view/TalentSectionNotes';
+import TalentSectionPerformanceSkills from './sections/view/TalentSectionPerformanceSkills';
+import TalentSectionPreferences from './sections/view/TalentSectionPreferences';
+import TalentSectionPrimaryInfo from './sections/view/TalentSectionPrimaryInfo';
+import TalentSectionRegionLanguages from './sections/view/TalentSectionRegionLanguages';
+import TalentSectionRelatives from './sections/view/TalentSectionRelatives';
+import TalentSectionSocialMedia from './sections/view/TalentSectionSocialMedia';
+import TalentSectionSystemInfo from './sections/view/TalentSectionSystemInfo';
 
 function TalentView(props) {
     const dispatch = useDispatch();
@@ -32,6 +29,7 @@ function TalentView(props) {
     const talent = useSelector(getTalent);
     const [talentId, setTalentId] = useState(null);
     const scrollContainerRef = useRef(null);
+    const context = useOutletContext();
 
     useEffect(() => {
         if (props.talentId)
@@ -41,8 +39,9 @@ function TalentView(props) {
     }, [params.id, props.talentId]);
 
     useEffect(() => {
-        if (talentId !== null)
+        if (talentId) {
             dispatch(fetchTalentById(talentId));
+        }
     }, [talentId]);
 
     useEffect(() => {
@@ -50,17 +49,16 @@ function TalentView(props) {
             scrollContainerRef.current.scrollTop = 0;
     }, [talent]);
 
-    const editAction = () => {
-        console.log('edit me');
-    }
-
     let result = null;
 
-    if (talent && Object.getPrototypeOf(talent) === Object.prototype) {
+    if (
+        talent
+        && Object.getPrototypeOf(talent) === Object.prototype
+    ) {
         result =
             <div className='talent-profile'>
                 <div className='talent-profile__header'>
-                    <TalentSectionMain talent={talent} editAction={editAction} />
+                    <TalentSectionMain talent={talent} editAction={context?.editTalent} />
                 </div>
                 <div ref={scrollContainerRef} className='talent-profile__body scrollbar-y'>
                     <TalentSectionAchievements talent={talent} className='talent-section__achievements' />

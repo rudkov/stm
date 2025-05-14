@@ -1,6 +1,6 @@
-import '../../../helpers/shared.css';
+import '../../../../helpers/shared.css';
 
-import NestedSection from '../../ui-components/NestedSection';
+import NestedSection from '../../../ui-components/NestedSection';
 
 function TalentSectionPrimaryInfo(props) {
     const talent = props.talent;
@@ -16,7 +16,14 @@ function TalentSectionPrimaryInfo(props) {
                     </div>
                     <div className='nested-section__cell'>
                         <div className='text-light'>Birth date</div>
-                        <div>{talent.birth_date}<span className='text-light'><span className="text-separator">·</span>{talent.age} y.o.</span></div>
+                        <div>
+                            {talent.birth_date}
+                            {
+                                talent.birth_date
+                                    ? <span className='text-light'><span className="text-separator">·</span>{talent.age} y.o.</span>
+                                    : ''
+                            }
+                        </div>
                     </div>
                     <div className='nested-section__cell'>
                         <div className='text-light'>Gender</div>

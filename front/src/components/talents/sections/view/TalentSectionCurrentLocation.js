@@ -1,16 +1,16 @@
-import '../../../helpers/shared.css';
-import '../../../helpers/form.css';
+import '../../../../helpers/shared.css';
+import '../../../../helpers/form.css';
 
 import { Form, Input, Button, Modal } from 'antd';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ReactComponent as IconClose } from '../../../assets/icons/close.svg';
+import { ReactComponent as IconClose } from '../../../../assets/icons/close.svg';
 
-import { updateCurrentLocation, getCurrentLocationResponse } from '../../../store/talents/talent';
-import { fetchTalents } from '../../../store/talents/talents';
+import { updateCurrentLocation, getCurrentLocationResponse } from '../../../../store/talents/talent';
+import { fetchTalents } from '../../../../store/talents/talents';
 
-import TalentLocation from '../components/TalentLocation';
+import TalentLocation from '../../components/TalentLocation';
 
 function TalentSectionCurrentLocation(props) {
 

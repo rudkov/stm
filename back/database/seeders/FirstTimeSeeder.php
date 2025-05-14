@@ -477,7 +477,7 @@ class FirstTimeSeeder extends Seeder
             ['TikTok', '', 'tiktok'],
             ['Twitter', '', 'twitter'],
             ['WeChat', '', 'wechat'],
-            ['Youtube', '', 'youtube'],
+            ['YouTube', '', 'youtube'],
         ];
 
         foreach ($items as $item) {

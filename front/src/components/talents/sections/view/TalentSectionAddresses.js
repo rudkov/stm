@@ -1,4 +1,4 @@
-import NestedSection from '../../ui-components/NestedSection';
+import NestedSection from '../../../ui-components/NestedSection';
 
 function TalentSectionAddresses(props) {
     const talent = props.talent;

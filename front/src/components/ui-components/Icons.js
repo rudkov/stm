@@ -28,6 +28,6 @@ export const SocialMediaIcons = {
 };
 
 export const YesNoIcons = {
-    'yes': <img src={IconYes} alt='Yes icon' />,
-    'no': <img src={IconNo} alt='No icon' />,
+    0: <img src={IconNo} alt='No icon' />,
+    1: <img src={IconYes} alt='Yes icon' />,
 };

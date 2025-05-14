@@ -1,0 +1,59 @@
+import { Form, Radio } from 'antd';
+
+import NestedSection from '../../../ui-components/NestedSection';
+
+function TalentSectionPreferences(props) {
+    const yesNoOptions = [
+        {
+            value: 1,
+            label: 'Yes'
+        },
+        {
+            value: 0,
+            label: 'No'
+        },
+    ];
+
+    return (
+        <NestedSection className={props.className} id={props.id}>
+            <NestedSection.Header>Preferences</NestedSection.Header>
+            <NestedSection.Body>
+                <Form.Item label='Faithbased ads' name='is_faithbased_ads'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Fur' name='is_fur'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Gambling ads' name='is_gambling_ads'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Lingerie' name='is_lingerie'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Liquor ads' name='is_liquor_ads'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Nude' name='is_nude'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Political ads' name='is_political_ads'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Smoking ads' name='is_smoking_ads'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Sports' name='is_sports'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Swimwear' name='is_swimwear'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+                <Form.Item label='Topless' name='is_topless'>
+                    <Radio.Group options={yesNoOptions} />
+                </Form.Item>
+            </NestedSection.Body>
+        </NestedSection>
+    );
+}
+
+export default TalentSectionPreferences;
