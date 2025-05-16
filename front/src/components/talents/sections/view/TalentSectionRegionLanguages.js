@@ -10,7 +10,7 @@ function TalentSectionRegionLanguages(props) {
             <NestedSection.Header>Region & Languages</NestedSection.Header>
             <NestedSection.Body>
                 <div className='nested-section__grid'>
-                    <div className='nested-section__cell'>
+                    <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Citizenships</div>
                         <div className='nested-section__column'>
                             {
@@ -25,7 +25,7 @@ function TalentSectionRegionLanguages(props) {
                             }
                         </div>
                     </div>
-                    <div className='nested-section__cell'>
+                    <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Languages</div>
                         <div className='nested-section__column'>
                             {
@@ -39,7 +39,7 @@ function TalentSectionRegionLanguages(props) {
                             }
                         </div>
                     </div>
-                    <div className='nested-section__cell'>
+                    <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Accent</div>
                         <div>
                             {

@@ -1,19 +1,19 @@
 .talent-section-form-social-media__body {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .talent-section-form-social-media__item {
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 4px;
     align-items: flex-start;
 }
 
 .talent-section-form-social-media__data {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 140px auto;
     gap: 4px;
     width: 100%;
 }

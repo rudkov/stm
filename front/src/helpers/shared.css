@@ -60,36 +60,3 @@
     display: flex;
     flex-direction: column;
 }
-
-.scrollbar-y {
-    overflow-x: hidden !important;
-    overflow-y: scroll !important;
-    height: 100%;
-}
-
-.scrollbar-y::-webkit-scrollbar {
-    visibility: hidden;
-    background: transparent;
-    height: 6px;
-    width: 6px;
-}
-
-.scrollbar-y::-webkit-scrollbar-thumb {
-    border: none;
-    box-shadow: none;
-    background: none;
-    border-radius: 3px;
-    min-height: 40px;
-}
-
-.scrollbar-y::-webkit-scrollbar-thumb:hover,
-.scrollbar-y:hover::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-color);
-}
-
-.scrollbar-y:hover::-webkit-scrollbar,
-.scrollbar-y:hover::-webkit-scrollbar-thumb,
-.scrollbar-y:hover ::-webkit-scrollbar,
-.scrollbar-y:hover ::-webkit-scrollbar-thumb {
-    visibility: visible;
-}

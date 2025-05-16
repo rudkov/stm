@@ -7,6 +7,8 @@ import { useEffect, useState, useRef } from 'react';
 
 import { getTalent, fetchTalentById } from '../../store/talents/talent';
 
+import ScrollableView from '../ui-components/ScrollableView';
+
 import TalentSectionAchievements from './sections/view/TalentSectionAchievements';
 import TalentSectionAddresses from './sections/view/TalentSectionAddresses';
 import TalentSectionBiography from './sections/view/TalentSectionBiography';
@@ -56,11 +58,11 @@ function TalentView(props) {
         && Object.getPrototypeOf(talent) === Object.prototype
     ) {
         result =
-            <div className='talent-profile'>
-                <div className='talent-profile__header'>
+            <ScrollableView className='talent-profile'>
+                <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
                     <TalentSectionMain talent={talent} editAction={context?.editTalent} />
-                </div>
-                <div ref={scrollContainerRef} className='talent-profile__body scrollbar-y'>
+                </ScrollableView.Header>
+                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='talent-profile__body'>
                     <TalentSectionAchievements talent={talent} className='talent-section__achievements' />
                     <TalentSectionAddresses talent={talent} className='talent-section__addresses' />
                     <TalentSectionBiography talent={talent} className='talent-section__biography' />
@@ -75,8 +77,8 @@ function TalentView(props) {
                     <TalentSectionRelatives talent={talent} className='talent-section__relatives' />
                     <TalentSectionSocialMedia talent={talent} className='talent-section__social-media' />
                     <TalentSectionSystemInfo talent={talent} className='talent-section__system-info' />
-                </div>
-            </div>
+                </ScrollableView.Body>
+            </ScrollableView>
             ;
     }
 

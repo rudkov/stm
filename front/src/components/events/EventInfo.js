@@ -23,7 +23,6 @@ import EventSectionChunks from './sections/EventSectionChunks';
 import EventSectionClient from './sections/EventSectionClient';
 import EventSectionSystemInfo from './sections/EventSectionSystemInfo';
 
-// import TalentProfile from '../talents/TalentProfile';
 import TalentView from '../talents/TalentView';
 
 function EventInfo(props) {

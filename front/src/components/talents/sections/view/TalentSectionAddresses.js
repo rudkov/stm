@@ -11,7 +11,7 @@ function TalentSectionAddresses(props) {
                     {
                         talent.addresses?.map((address) => {
                             return (
-                                <div className='nested-section__cell' key={`talent.address.` + address.id}>
+                                <div className='nested-section__cell-horizontal' key={`talent.address.` + address.id}>
                                     <div className='text-light'>{address.type?.name}</div>
                                     <div>{address.info}</div>
                                 </div>

@@ -8,7 +8,7 @@ function TalentSectionFoodAllergies(props) {
             <NestedSection.Header>Food & Allergies</NestedSection.Header>
             <NestedSection.Body>
                 <div className='nested-section__grid'>
-                    <div className='nested-section__cell'>
+                    <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Vegetarian</div>
                         <div>
                             {
@@ -20,7 +20,7 @@ function TalentSectionFoodAllergies(props) {
                             }
                         </div>
                     </div>
-                    <div className='nested-section__cell'>
+                    <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Allergies</div>
                         <div>{talent.allergies}</div>
                     </div>

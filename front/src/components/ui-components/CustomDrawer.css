@@ -15,29 +15,6 @@
     background-color: var(--drawer-mask) !important;
 }
 
-.custom-drawer__header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    border-bottom: 1px solid var(--divider-color);
-}
-
-.custom-drawer__body {
-    padding: 0;
-    overflow: hidden;
-}
-
-.custom-drawer__title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.custom-drawer__controls {
-    margin-left: auto;
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
+.custom-drawer__close-button .ant-btn-icon {
+    color: var(--menu-item-icon-color);
 }

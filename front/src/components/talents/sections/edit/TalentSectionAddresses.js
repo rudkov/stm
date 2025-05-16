@@ -6,7 +6,7 @@ import { useSettings } from '../../../../context/SettingsContext';
 
 import NestedSection from '../../../ui-components/NestedSection';
 
-import { ReactComponent as IconDelete } from '../../../../assets/icons/delete.svg';
+import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20x20.svg';
 
 function TalentSectionAddresses(props) {
     const { settings } = useSettings();

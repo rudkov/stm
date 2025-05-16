@@ -1,17 +1,28 @@
 import './TalentForm.css';
 
-import { Anchor, Form } from 'antd';
+import { Anchor, Button, Form, Modal, Popconfirm } from 'antd';
 
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 
-import { getTalent, fetchTalentById, getCreateResponse, getUpdateResponse, createTalent, updateTalentById, talentActions } from '../../store/talents/talent';
+import {
+    fetchTalentById, getTalent,
+    createTalent, getCreateResponse,
+    updateTalentById, getUpdateResponse,
+    deleteTalentById, getDeleteResponse,
+    talentActions
+} from '../../store/talents/talent';
 import { fetchTalents } from '../../store/talents/talents';
 
 import CustomDrawer from '../ui-components/CustomDrawer';
+import ScrollableView from '../ui-components/ScrollableView';
+
 import { useNotification } from '../notifications/NotificationProvider';
+
+import { LoadingOutlined } from '@ant-design/icons';
+import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
 
 import TalentSectionAchievements from './sections/edit/TalentSectionAchievements';
 import TalentSectionAddresses from './sections/edit/TalentSectionAddresses';
@@ -27,6 +38,8 @@ import TalentSectionRegionLanguages from './sections/edit/TalentSectionRegionLan
 import TalentSectionRelatives from './sections/edit/TalentSectionRelatives';
 import TalentSectionSocialMedia from './sections/edit/TalentSectionSocialMedia';
 
+//TODO: Implement scrolling to a section that a user wants to edit
+
 function TalentForm(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -34,10 +47,13 @@ function TalentForm(props) {
     const talent = useSelector(getTalent);
     const createResponse = useSelector(getCreateResponse);
     const updateResponse = useSelector(getUpdateResponse);
-    const containerRef = useRef(null);
+    const deleteResponse = useSelector(getDeleteResponse);
     const getContainer = () => containerRef.current;
+    const containerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [formTitle, setFormTitle] = useState();
+    const [originalFormValues, setOriginalFormValues] = useState();
+    const [isConfirmClosingModalOpen, setIsConfirmClosingModalOpen] = useState(false);
     const showNotification = useNotification();
 
     const initForm = (values) => {
@@ -111,6 +127,7 @@ function TalentForm(props) {
             performance_skills: values.performance_skills || '',
             biography: values.biography || '',
         });
+        setOriginalFormValues(form.getFieldsValue(true));
     };
 
     const submitForm = (formValues) => {
@@ -209,6 +226,11 @@ function TalentForm(props) {
         },
     ];
 
+    const deleteTalent = () => {
+        setIsLoading(true);
+        dispatch(deleteTalentById({ talentId: talent.id }));
+    };
+
     useEffect(() => {
         if (!props.isNewTalent && talent.id) {
             dispatch(fetchTalentById(talent.id));
@@ -223,7 +245,7 @@ function TalentForm(props) {
             setFormTitle(talent.full_name);
             initForm(talent);
         }
-    }, [props.isNewTalent, talent, props.anchor]);
+    }, [props.isNewTalent, talent, props.anchor, form]);
 
     const anchorClicked = (e, link) => {
         e.preventDefault();
@@ -245,7 +267,7 @@ function TalentForm(props) {
     useEffect(() => {
         if (createResponse.status === 'fulfilled') {
             setIsLoading(false);
-            showNotification({ type: "SUCCESS", message: "Changes saved" });
+            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
             dispatch(fetchTalents());
             dispatch(talentActions.resetResponse('create'));
             navigate('/app/talents/' + createResponse.talentId);
@@ -256,62 +278,145 @@ function TalentForm(props) {
     useEffect(() => {
         if (updateResponse.status === 'fulfilled') {
             setIsLoading(false);
-            showNotification({ type: "SUCCESS", message: "Changes saved" });
+            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
             dispatch(fetchTalents());
             dispatch(talentActions.resetResponse('update'));
             props.closeForm();
         }
     }, [updateResponse]);
 
-    //TODO: cover Delete method after trying to implement Header and Body for CustomDrawer
+    useEffect(() => {
+        if (deleteResponse.status === 'fulfilled') {
+            setIsLoading(false);
+            showNotification({ type: 'SUCCESS', message: 'Talent deleted' });
+            dispatch(fetchTalents());
+            dispatch(talentActions.resetResponse('delete'));
+            navigate('/app/talents', { replace: true });
+            props.closeForm();
+        }
+    }, [deleteResponse]);
 
     const handleDrawerSubmit = () => {
         form.submit();
     };
 
+    const closeForm = () => {
+        const currentFormValues = form.getFieldsValue(true);
+        const hasChanged = JSON.stringify(currentFormValues) !== JSON.stringify(originalFormValues);
+        hasChanged ? setIsConfirmClosingModalOpen(true) : props.closeForm();
+    };
+
+    const handleConfirmClosingModalSaveChanges = () => {
+        form.submit();
+        setIsConfirmClosingModalOpen(false);
+    };
+
+    const handleConfirmClosingModalDiscardChanges = () => {
+        setIsConfirmClosingModalOpen(false);
+        props.closeForm();
+        form.setFieldsValue(originalFormValues);
+    };
+
+    const handleConfirmClosingModalCloseModal = () => {
+        setIsConfirmClosingModalOpen(false);
+    };
+
     return (
-        <Form
-            name='talent'
-            form={form}
-            preserve={true}
-            onFinish={submitForm}
-        >
-            <CustomDrawer
-                open={props.open}
-                title={formTitle}
-                onClose={props.closeForm}
-                onSubmit={handleDrawerSubmit}
-                loading={isLoading}
-                width={768}
+        <>
+            <Form
+                name='talent'
+                form={form}
+                preserve={true}
+                colon={false}
+                onFinish={submitForm}
+                disabled={isLoading}
             >
-                <div ref={containerRef} className='talent-form scrollbar-y'>
-                    <div className='talent-form__sidebar'>
-                        <Anchor
-                            getContainer={getContainer}
-                            items={anchorItems}
-                            offsetTop={12}
-                            affix={true}
-                            onClick={anchorClicked}
-                        />
-                    </div>
-                    <div className='talent-form__body'>
-                        <TalentSectionNotes id='notes' />
-                        <TalentSectionPrimaryInfo id='primary-info' />
-                        <TalentSectionFoodAllergies id='food-allergies' />
-                        <TalentSectionBody id='body' />
-                        <TalentSectionContacts id='contacts' form={form} />
-                        <TalentSectionRegionLanguages id='region-languages' />
-                        <TalentSectionPreferences id='preferences' />
-                        <TalentSectionSocialMedia id='social-media' />
-                        <TalentSectionAddresses id='addresses' />
-                        <TalentSectionRelatives id='relatives' />
-                        <TalentSectionBiography id='biography' />
-                        <TalentSectionAchievements id='achievements' />
-                        <TalentSectionPerformanceSkills id='performance-skills' />
-                    </div>
-                </div>
-            </CustomDrawer>
-        </Form>
+                <CustomDrawer
+                    open={props.open}
+                    onClose={closeForm}
+                    width={768}
+                >
+                    <ScrollableView ref={containerRef}>
+                        <ScrollableView.Header className='talent-form-header'>
+                            <div className='talent-form-header__title'>
+                                {formTitle}
+                            </div>
+                            <div className='talent-form-header__controls'>
+                                <LoadingOutlined className={`talent-form-header__throbber ${isLoading ? '' : 'hidden'}`} />
+                                <Popconfirm
+                                    title='Delete Talent?'
+                                    onConfirm={deleteTalent}
+                                    okText='Delete'
+                                    cancelText='Cancel'
+                                >
+                                    <Button danger>Delete</Button>
+                                </Popconfirm>
+                                <Button type='primary' onClick={handleDrawerSubmit}>Save</Button>
+                                <Button type='text' icon={<IconClose />} onClick={closeForm} className='custom-drawer__close-button' />
+                            </div>
+                        </ScrollableView.Header>
+                        <ScrollableView.Body className='talent-form'>
+                            <div className='talent-form__sidebar'>
+                                <Anchor
+                                    getContainer={getContainer}
+                                    items={anchorItems}
+                                    offsetTop={12}
+                                    affix={true}
+                                    onClick={anchorClicked}
+                                />
+                            </div>
+                            <div className='talent-form__body'>
+                                <TalentSectionNotes id='notes' />
+                                <TalentSectionPrimaryInfo id='primary-info' />
+                                <TalentSectionFoodAllergies id='food-allergies' />
+                                <TalentSectionBody id='body' />
+                                <TalentSectionContacts id='contacts' form={form} />
+                                <TalentSectionRegionLanguages id='region-languages' />
+                                <TalentSectionPreferences id='preferences' />
+                                <TalentSectionSocialMedia id='social-media' />
+                                <TalentSectionAddresses id='addresses' />
+                                <TalentSectionRelatives id='relatives' />
+                                <TalentSectionBiography id='biography' />
+                                <TalentSectionAchievements id='achievements' />
+                                <TalentSectionPerformanceSkills id='performance-skills' />
+                            </div>
+                        </ScrollableView.Body>
+                    </ScrollableView>
+                </CustomDrawer>
+            </Form>
+            <Modal
+                title='Save Changes?'
+                closable={true}
+                open={isConfirmClosingModalOpen}
+                zIndex={2000}
+                onOk={handleConfirmClosingModalSaveChanges}
+                onCancel={handleConfirmClosingModalCloseModal}
+                footer={[
+                    <Button
+                        key='back'
+                        onClick={handleConfirmClosingModalCloseModal}
+                    >
+                        Cancel
+                    </Button>,
+                    <Button
+                        key='discard'
+                        type='default'
+                        onClick={handleConfirmClosingModalDiscardChanges}
+                    >
+                        Don't Save
+                    </Button>,
+                    <Button
+                        key='submit'
+                        type='primary'
+                        onClick={handleConfirmClosingModalSaveChanges}
+                    >
+                        Save
+                    </Button>
+                ]}
+            >
+                <p>Your changes will be lost if you don't save them.</p>
+            </Modal>
+        </>
     );
 };
 

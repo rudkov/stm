@@ -13,7 +13,7 @@ function TalentSectionSocialMedia(props) {
                     {
                         talent.social_medias?.map((socialMedia) => {
                             return (
-                                <div className='nested-section__cell' key={`talent.socialMedia.` + socialMedia.id}>
+                                <div className='nested-section__cell-horizontal' key={`talent.socialMedia.` + socialMedia.id}>
                                     <div className='text-light'>{socialMedia.type?.name}</div>
                                     <div className='nested-section__item_with_icon ellipsis'>
                                         <div className='nested-section__icon'>{SocialMediaIcons[socialMedia.type?.system_name]}</div>

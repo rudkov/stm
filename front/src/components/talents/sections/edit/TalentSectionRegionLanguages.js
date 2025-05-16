@@ -24,8 +24,8 @@ function TalentSectionRegionLanguages(props) {
     return (
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Region & Languages</NestedSection.Header>
-            <NestedSection.Body>
-                <Form.Item label='Citizenships' name='citizenships'>
+            <NestedSection.Body className='nested-section__column'>
+                <Form.Item className='talent-form-row__left-label' label='Citizenships' name='citizenships'>
                     <Select
                         mode='multiple'
                         optionFilterProp='label'
@@ -42,7 +42,7 @@ function TalentSectionRegionLanguages(props) {
                         )}
                     />
                 </Form.Item>
-                <Form.Item label='Languages' name='languages'>
+                <Form.Item className='talent-form-row__left-label' label='Languages' name='languages'>
                     <Select
                         mode='multiple'
                         optionFilterProp='label'
@@ -52,7 +52,7 @@ function TalentSectionRegionLanguages(props) {
                         }))}
                     />
                 </Form.Item>
-                <Form.Item label='Accent' name='is_accent'>
+                <Form.Item className='talent-form-row__left-label' label='Accent' name='is_accent'>
                     <Radio.Group options={yesNoOptions} />
                 </Form.Item>
             </NestedSection.Body>

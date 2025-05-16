@@ -13,7 +13,7 @@ function TalentSectionContacts(props) {
                     {
                         talent.phones?.map((phone) => {
                             return (
-                                <div className='nested-section__cell' key={`talent.phone.` + phone.id}>
+                                <div className='nested-section__cell-horizontal' key={`talent.phone.` + phone.id}>
                                     <div className='text-light'>{phone.type?.name}</div>
                                     <div className='ellipsis'>{phone.info}</div>
                                 </div>
@@ -23,7 +23,7 @@ function TalentSectionContacts(props) {
                     {
                         talent.emails?.map((email) => {
                             return (
-                                <div className='nested-section__cell' key={`talent.email.` + email.id}>
+                                <div className='nested-section__cell-horizontal' key={`talent.email.` + email.id}>
                                     <div className='text-light'>{email.type?.name}</div>
                                     <div className='ellipsis'>{<a href={`mailto:${email.info}`}>{email.info}</a>}</div>
                                 </div>
@@ -33,7 +33,7 @@ function TalentSectionContacts(props) {
                     {
                         talent.messengers?.map((messenger) => {
                             return (
-                                <div className='nested-section__cell' key={`talent.messenger.` + messenger.id}>
+                                <div className='nested-section__cell-horizontal' key={`talent.messenger.` + messenger.id}>
                                     <div className='text-light'>{messenger.type?.name}</div>
                                     <div className='nested-section__item_with_icon ellipsis'>
                                         <div className='nested-section__icon'>{MessengersIcons[messenger.type?.system_name]}</div>

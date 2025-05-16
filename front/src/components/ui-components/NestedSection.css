@@ -29,10 +29,16 @@
     overflow: hidden;
 }
 
-.nested-section__cell {
+.nested-section__cell-horizontal {
     display: grid;
     grid-template-columns: 140px auto;
     gap: 12px;
+}
+
+.nested-section__cell-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .nested-section__item_with_icon {
