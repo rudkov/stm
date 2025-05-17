@@ -1,12 +1,6 @@
 .managers-filter {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-}
-
-.managers-filter__managers-list {
-    display: flex;
-    flex-direction: column;
     gap: 2px;
 }
 
@@ -15,4 +9,3 @@
     overflow: hidden;
     white-space: nowrap;
 }
-

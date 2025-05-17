@@ -1,5 +1,5 @@
 import './Filter.css';
-import './HairColorFilter.css';
+import './EyeColorFilter.css';
 
 import Filter from './Filter';
 
@@ -7,42 +7,42 @@ import { useSettings } from '../../context/SettingsContext';
 
 import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
 
-function HairColorFilter(props) {
+function EyeColorFilter(props) {
     const { settings } = useSettings();
-    const hairColors = settings.talent_hair_colors;
+    const eyeColors = settings.talent_eye_colors;
 
     const toggleItem = (item) => {
         let items = [...props.selectedItems];
         const index = items.indexOf(item);
         index === -1 ? items.push(item) : items.splice(index, 1);
         props.setFiltered(items);
-        sessionStorage.setItem('talentsPage.filteredHairColors', JSON.stringify(items));
+        sessionStorage.setItem('talentsPage.filteredEyeColors', JSON.stringify(items));
     }
 
     const clearFilter = (item) => {
         const items = [];
         props.setFiltered(items);
-        sessionStorage.setItem('talentsPage.filteredHairColors', JSON.stringify(items));
+        sessionStorage.setItem('talentsPage.filteredEyeColors', JSON.stringify(items));
     }
 
     let result = null;
 
-    if (hairColors && Object.keys(hairColors).length > 0) {
-        result = hairColors.map((hairColor, index) => {
+    if (eyeColors && Object.keys(eyeColors).length > 0) {
+        result = eyeColors.map((eyeColor, index) => {
             return (
                 <div
                     className='filter__checkbox-item'
-                    key={'filter.hairColors.' + hairColor.id}
-                    onClick={toggleItem.bind(this, hairColor.id)}
+                    key={'filter.eyeColors.' + eyeColor.id}
+                    onClick={toggleItem.bind(this, eyeColor.id)}
                 >
                     <div className='filter__checkbox'>
                         {
-                            props.selectedItems?.includes(hairColor.id)
+                            props.selectedItems?.includes(eyeColor.id)
                                 ? <div className='filter__check'><IconCheckSmall /></div>
                                 : ''
                         }
                     </div>
-                    <div>{hairColor.name}</div>
+                    <div>{eyeColor.name}</div>
                 </div>
             );
         });
@@ -50,16 +50,16 @@ function HairColorFilter(props) {
 
     return (
         <Filter
-            title='Hair Color'
+            title='Eye Color'
             uniqueName={props.uniqueName}
             applied={props.selectedItems && Object.keys(props.selectedItems).length > 0}
             clearFilter={clearFilter}
         >
-            <div className='hair-color-filter'>
+            <div className='eye-color-filter'>
                 {result}
             </div>
         </Filter>
     );
 }
 
-export default HairColorFilter;
+export default EyeColorFilter;

@@ -12,11 +12,14 @@
     border-radius: var(--border-radius);
     padding: 0 6px 0 8px;
     height: 36px;
-    cursor: pointer;
     display: flex;
 }
 
-.filter__header:hover:not(:has(.filter-header__button:hover)) {
+.filter__header_collapsable {
+    cursor: pointer;
+}
+
+.filter__header_collapsable:hover:not(:has(.filter-header__button:hover)) {
     box-shadow: var(--menu-item-hover-box-shadow);
 }
 

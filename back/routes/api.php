@@ -52,6 +52,9 @@ Route::group(['prefix' => 'v1'], function () {
         //event
         Route::get('events/{id}', 'EventController@show');
 
+        //locations
+        Route::get('locations', 'locationController@index');
+
         //users
         Route::post('users/search', 'UserController@index');
 

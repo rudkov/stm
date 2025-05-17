@@ -50,7 +50,7 @@ function GendersFilter(props) {
 
     return (
         <Filter
-            title='Genders'
+            title='Gender'
             uniqueName={props.uniqueName}
             applied={props.selectedItems && Object.keys(props.selectedItems).length > 0}
             clearFilter={clearFilter}

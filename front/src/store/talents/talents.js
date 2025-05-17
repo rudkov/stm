@@ -11,9 +11,16 @@ export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (args
             method: 'post',
             url: '/api/v1/talents/search',
             data: {
+                bust: args?.bust,
+                eyeColors: args?.eyeColors,
                 genders: args?.genders,
                 hairColors: args?.hairColors,
+                heights: args?.heights,
+                hips: args?.hips,
                 managers: args?.managers,
+                skinColors: args?.skinColors,
+                waists: args?.waists,
+                weights: args?.weights,
             },
         });
         return response.data;
@@ -21,70 +28,6 @@ export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (args
         return err.message;
     }
 });
-
-export const sortTalents = (items, order) => {
-    if (order.column === 'name') {
-        if (order.asc) {
-            items.sort((a, b) => a.name?.localeCompare(b.name));
-        }
-        else {
-            items.sort((a, b) => b.name?.localeCompare(a.name));
-        }
-    }
-    else if (order.column === 'location') {
-        items.sort((a, b) => {
-            if (a.location === null) {
-                return order.asc ? -1 : 1;
-            }
-
-            if (b.location === null) {
-                return order.asc ? 1 : -1;
-            }
-
-            if (a.location === b.location) {
-                return 0;
-            }
-
-            return a.location < b.location ? order.asc ? -1 : 1 : order.asc ? 1 : -1;
-        });
-    }
-    else if (order.column === 'email') {
-        items.sort((a, b) => {
-            if (!a?.email || a.email === null) {
-                return order.asc ? 1 : -1;
-            }
-
-            if (!b?.email || b.email === null) {
-                return order.asc ? -1 : 1;
-            }
-
-            if (a.email === b.email) {
-                return 0;
-            }
-
-            return a.email < b.email ? order.asc ? -1 : 1 : order.asc ? 1 : -1;
-        });
-    }
-    else if (order.column === 'phone') {
-        items.sort((a, b) => {
-            if (!a?.phone || a.phone === null) {
-                return order.asc ? 1 : -1;
-            }
-
-            if (!b?.phone || b.phone === null) {
-                return order.asc ? -1 : 1;
-            }
-
-            if (a.phone === b.phone) {
-                return 0;
-            }
-
-            return a.phone < b.phone ? order.asc ? -1 : 1 : order.asc ? 1 : -1;
-        });
-    }
-
-    return items;
-};
 
 export const filterTalents = (items, query) => {
     if (query.inTownOnly) {
@@ -98,20 +41,20 @@ export const filterTalents = (items, query) => {
 
         items = items.filter((item) => {
             let r = false;
-
             if (item.name?.toLowerCase().includes(searchString)) {
                 r = true;
             }
-            else if (item.location?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            else if (item.email?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            else if (item.phone?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
             return r;
+        });
+    }
+
+    if (query.locations && Object.keys(query.locations).length > 0) {
+        const locations = query.locations;
+        items = items.filter((item) => {
+            if (locations.includes(null) && item.location === null) {
+                return true;
+            }
+            return item.location !== null && locations.includes(item.location);
         });
     }
 

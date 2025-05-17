@@ -1,7 +1,8 @@
 import './Filter.css';
-import './InTownFilter.css';
 
 import Filter from './Filter';
+
+import { Switch } from 'antd';
 
 function InTownFilter(props) {
     const toggleItem = (item) => {
@@ -19,11 +20,11 @@ function InTownFilter(props) {
     return (
         <Filter
             title='In Town'
-            type='switch'
+            contentInHeader={true}
             uniqueName={props.uniqueName}
             applied={props.selectedItem}
-            toggleItem={toggleItem}
         >
+            <Switch size='small' onChange={toggleItem} checked={props.selectedItem} />
         </Filter>
     );
 }

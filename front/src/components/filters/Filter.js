@@ -12,7 +12,7 @@ import { ReactComponent as IconCrossInCircle } from '../../assets/icons/cross-in
 import { ReactComponent as IconChevronUp } from '../../assets/icons/chevron-up.svg';
 import { ReactComponent as IconChevronDown } from '../../assets/icons/chevron-down.svg';
 
-function Filter(props) {
+function Filter({ children, className = '', ...props }) {
     const [collapsed, setCollapsed] = useState(JSON.parse(localStorage.getItem(props.uniqueName)) ?? false);
 
     const toggleFilter = () => {
@@ -25,51 +25,40 @@ function Filter(props) {
         props.clearFilter(item);
     }
 
-    let result;
-
-    switch (props.type) {
-        case 'switch':
-            result =
-                <div className='filter'>
-                    <div className='filter__header' onClick={props.toggleItem}>
-                        <div className='filter-header__left'>
-                            <div className='filter-header__title'>{props.title}</div>
-                            {props.applied ? <div className='icon filter-header__badge'><IconCircle /></div> : ''}
-                        </div>
-                        <div className='filter-header__right'>
-                            <Switch size='small' onChange={props.toggleItem} checked={props.applied} />
-                        </div>
-                    </div>
+    return (
+        <div className='filter'>
+            <div className={`filter__header ${!props.contentInHeader ? 'filter__header_collapsable' : ''}`} onClick={props.contentInHeader !== true ? toggleFilter : null}>
+                <div className='filter-header__left'>
+                    <div className='filter-header__title'>{props.title}</div>
+                    {props.applied ? <div className='icon filter-header__badge'><IconCircle /></div> : ''}
                 </div>
-                ;
-            break;
-        default:
-            result =
-                <div className='filter'>
-                    <div className='filter__header' onClick={toggleFilter}>
-                        <div className='filter-header__left'>
-                            <div className='filter-header__title'>{props.title}</div>
-                            {props.applied ? <div className='icon filter-header__badge'><IconCircle /></div> : ''}
-                        </div>
-                        <div className='filter-header__right'>
-                            {props.applied ? (
-                                <Tooltip title='Clear filter' placement='bottom' arrow={false} mouseEnterDelay={0.5}>
-                                    <button onClick={clearFilter} className='filter-header__button'>
-                                        <div className='icon filter-header__icon'><IconCrossInCircle /></div>
-                                    </button>
-                                </Tooltip>
-                            ) : ''}
-                            {collapsed ? <div className='icon filter-header__icon'><IconChevronDown /></div> : <div className='icon filter-header__icon'><IconChevronUp /></div>}
-                        </div>
-                    </div>
-                    <div className={`filter__body ${collapsed ? 'filter__body_hidden' : ''}`}>
-                        {props.children}
-                    </div>
+                <div className='filter-header__right'>
+                    {props.contentInHeader !== true ? (
+                        props.applied ? (
+                            <Tooltip title='Clear filter' placement='bottom' arrow={false} mouseEnterDelay={0.5}>
+                                <button onClick={clearFilter} className='filter-header__button'>
+                                    <div className='icon filter-header__icon'><IconCrossInCircle /></div>
+                                </button>
+                            </Tooltip>
+                        ) : ''
+                    ) : (
+                        collapsed ? null : children
+                    )}
+                    {props.contentInHeader !== true && (
+                        collapsed ?
+                            <div className='icon filter-header__icon'><IconChevronDown /></div> :
+                            <div className='icon filter-header__icon'><IconChevronUp /></div>
+                    )}
                 </div>
-                ;
-    }
-
-    return result;
+            </div>
+            {props.contentInHeader !== true ?
+                <div className={`filter__body ${collapsed ? 'filter__body_hidden' : ''}`}>
+                    {children}
+                </div>
+                : ''
+            }
+        </div>
+    );
 }
 
 export default Filter;
