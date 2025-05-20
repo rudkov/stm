@@ -62,16 +62,25 @@ class TalentController extends Controller
                 }
                 return $query;
             })
-            ->when($request->eyeColors, function ($query, $eyeColor) {
+            ->when($request->cupSize, function ($query, $cupSize) {
+                return $query->whereIn('talents.cup_size_id', $cupSize);
+            })
+            ->when($request->dressSize, function ($query, $dressSize) {
+                return $query->whereIn('talents.dress_size_id', $dressSize);
+            })
+            ->when($request->eyeColor, function ($query, $eyeColor) {
                 return $query->whereIn('talents.eye_color_id', $eyeColor);
             })
             ->when($request->genders, function ($query, $gender) {
                 return $query->whereIn('talents.gender_id', $gender);
             })
-            ->when($request->hairColors, function ($query, $hairColor) {
+            ->when($request->hairColor, function ($query, $hairColor) {
                 return $query->whereIn('talents.hair_color_id', $hairColor);
             })
-            ->when($request->heights, function ($query, $height) {
+            ->when($request->hairLength, function ($query, $hairLength) {
+                return $query->whereIn('talents.hair_length_id', $hairLength);
+            })
+            ->when($request->height, function ($query, $height) {
                 if (count($height) === 2) {
                     return $query->whereBetween('talents.height_cm', [$height[0], $height[1]]);
                 }
@@ -86,16 +95,52 @@ class TalentController extends Controller
             ->when($request->managers, function ($query, $manager) {
                 return $query->whereIn('talents.created_by', $manager);
             })
-            ->when($request->skinColors, function ($query, $skinColor) {
+            ->when($request->noContacts, function ($query, $noContacts) {
+                if ($noContacts === true || $noContacts === 'true') {
+                    return $query->whereNotExists(function ($subquery) {
+                        $subquery->select(DB::raw(1))
+                            ->from('talent_emails')
+                            ->whereColumn('talent_emails.talent_id', 'talents.id');
+                    })
+                        ->whereNotExists(function ($subquery) {
+                            $subquery->select(DB::raw(1))
+                                ->from('talent_messengers')
+                                ->whereColumn('talent_messengers.talent_id', 'talents.id');
+                        })
+                        ->whereNotExists(function ($subquery) {
+                            $subquery->select(DB::raw(1))
+                                ->from('talent_phones')
+                                ->whereColumn('talent_phones.talent_id', 'talents.id');
+                        })
+                    ;
+                }
+                return $query;
+            })
+            ->when($request->preferences, function ($query, $preferences) {
+                foreach ($preferences as $preference) {
+                    $query->where('talents.' . $preference, 1);
+                }
+                return $query;
+            })
+            ->when($request->skinColor, function ($query, $skinColor) {
                 return $query->whereIn('talents.skin_color_id', $skinColor);
             })
-            ->when($request->waists, function ($query, $waist) {
+            ->when($request->shirtSize, function ($query, $shirtSize) {
+                return $query->whereIn('talents.shirt_size_id', $shirtSize);
+            })
+            ->when($request->shoeSize, function ($query, $shoeSize) {
+                return $query->whereIn('talents.shoe_size_id', $shoeSize);
+            })
+            ->when($request->suitCut, function ($query, $suitCut) {
+                return $query->whereIn('talents.suit_cut_id', $suitCut);
+            })
+            ->when($request->waist, function ($query, $waist) {
                 if (count($waist) === 2) {
                     return $query->whereBetween('talents.waist_cm', [$waist[0], $waist[1]]);
                 }
                 return $query;
             })
-            ->when($request->weights, function ($query, $weight) {
+            ->when($request->weight, function ($query, $weight) {
                 if (count($weight) === 2) {
                     return $query->whereBetween('talents.weight_kg', [$weight[0], $weight[1]]);
                 }

@@ -28,13 +28,13 @@ function ManagersFilter(props) {
         const index = items.indexOf(item);
         index === -1 ? items.push(item) : items.splice(index, 1);
         props.setFiltered(items);
-        sessionStorage.setItem('talentsPage.filteredManagers', JSON.stringify(items));
+        sessionStorage.setItem(props.uniqueName, JSON.stringify(items));
     }
 
     const clearFilter = (item) => {
         const items = [];
         props.setFiltered(items);
-        sessionStorage.setItem('talentsPage.filteredManagers', JSON.stringify(items));
+        sessionStorage.setItem(props.uniqueName, JSON.stringify(items));
     }
 
     let result = null;

@@ -12,18 +12,12 @@ import ScrollableView from '../ui-components/ScrollableView';
 
 import TalentUsername from './components/TalentUsername';
 
-import BustFilter from '../filters/BustFilter';
-import EyeColorFilter from '../filters/EyeColorFilter';
+import BodyFilter from '../filters/BodyFilter';
 import GendersFilter from '../filters/GendersFilter';
-import InTownFilter from '../filters/InTownFilter';
-import HairColorFilter from '../filters/HairColorFilter';
-import HeightFilter from '../filters/HeightFilter';
-import HipsFilter from '../filters/HipsFilter';
 import LocationsFilter from '../filters/LocationsFilter';
 import ManagersFilter from '../filters/ManagersFilter';
-import SkinColorFilter from '../filters/SkinColorFilter';
-import WaistFilter from '../filters/WaistFilter';
-import WeightFilter from '../filters/WeightFilter';
+import NoContactsFilter from '../filters/NoContactsFilter';
+import PreferencesFilter from '../filters/PreferencesFilter';
 
 import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
@@ -35,49 +29,42 @@ function TalentsList(props) {
     const [talents, setTalents] = useState([]);
     const scrollContainerRef = useRef(null);
 
+    const filterNames = {
+        body: 'talents.filters.body',
+        genders: 'talents.filters.genders',
+        locations: 'talents.filters.locations',
+        managers: 'talents.filters.managers',
+        noContacts: 'talents.filters.noContacts',
+        preferences: 'talents.filters.preferences',
+    };
+
     const [query, setQuery] = useState({
-        searchString: sessionStorage.getItem('talentsPage.talentsList.query.searchString') ?? '',
-        inTownOnly: JSON.parse(sessionStorage.getItem('talentsPage.talentsList.query.inTownOnly')) ?? false,
-        locations: JSON.parse(sessionStorage.getItem('talentsPage.filteredLocations')) ?? [],
+        searchString: sessionStorage.getItem('talents.list.search') ?? '',
+        locations: JSON.parse(sessionStorage.getItem('talents.filters.locations')) ?? [],
     });
 
-    const [filteredBust, setFilteredBust] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredBust')) ?? []);
-    const [filteredEyeColors, setFilteredEyeColors] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredEyeColors')) ?? []);
-    const [filteredGenders, setFilteredGenders] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredGenders')) ?? []);
-    const [filteredHairColors, setFilteredHairColors] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredHairColors')) ?? []);
-    const [filteredHeights, setFilteredHeights] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredHeights')) ?? []);
-    const [filteredHips, setFilteredHips] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredHips')) ?? []);
-    const [filteredLocations, setFilteredLocations] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredLocations')) ?? []);
-    const [filteredManagers, setFilteredManagers] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredManagers')) ?? []);
-    const [filteredSkinColors, setFilteredSkinColors] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredSkinColors')) ?? []);
-    const [filteredWaists, setFilteredWaists] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredWaists')) ?? []);
-    const [filteredWeights, setFilteredWeights] = useState(JSON.parse(sessionStorage.getItem('talentsPage.filteredWeights')) ?? []);
+    const [bodyFilter, setBodyFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.body)) ?? []);
+    const [gendersFilter, setGendersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.genders)) ?? []);
+    const [locationsFilter, setLocationsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.locations)) ?? []);
+    const [managersFilter, setManagersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.managers)) ?? []);
+    const [noContactsFilter, setNoContactsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.noContacts)) ?? false);
+    const [preferencesFilter, setPreferencesFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.preferences)) ?? []);
 
     useEffect(() => {
         dispatch(fetchTalents({
-            bust: filteredBust,
-            eyeColors: filteredEyeColors,
-            genders: filteredGenders,
-            hairColors: filteredHairColors,
-            heights: filteredHeights,
-            hips: filteredHips,
-            managers: filteredManagers,
-            skinColors: filteredSkinColors,
-            waists: filteredWaists,
-            weights: filteredWeights,
+            body: bodyFilter,
+            genders: gendersFilter,
+            managers: managersFilter,
+            noContacts: noContactsFilter,
+            preferences: preferencesFilter,
         }));
     }, [
         dispatch,
-        filteredBust,
-        filteredEyeColors,
-        filteredGenders,
-        filteredHairColors,
-        filteredHeights,
-        filteredHips,
-        filteredManagers,
-        filteredSkinColors,
-        filteredWaists,
-        filteredWeights,
+        bodyFilter,
+        gendersFilter,
+        managersFilter,
+        noContactsFilter,
+        preferencesFilter,
     ]);
 
     useEffect(() => {
@@ -87,28 +74,17 @@ function TalentsList(props) {
     const searchTalents = (item) => {
         setQuery({
             searchString: item.search,
-            inTownOnly: query.inTownOnly,
             locations: query.locations,
         });
-        sessionStorage.setItem('talentsPage.talentsList.query.searchString', item.search);
-    }
-
-    const setInTownOnly = (item) => {
-        setQuery({
-            searchString: query.searchString,
-            inTownOnly: item,
-            locations: query.locations,
-        });
-        sessionStorage.setItem('talentsPage.talentsList.query.inTownOnly', item);
+        sessionStorage.setItem('talents.list.search', item.search);
     }
 
     useEffect(() => {
         setQuery({
             searchString: query.searchString,
-            inTownOnly: query.inTownOnly,
-            locations: filteredLocations,
+            locations: locationsFilter,
         });
-    }, [filteredLocations]);
+    }, [locationsFilter]);
 
     let result = null;
 
@@ -136,65 +112,35 @@ function TalentsList(props) {
         <div className='talents-container'>
             <ScrollableView>
                 <ScrollableView.Body className='talents-container__filters'>
-                    <InTownFilter
-                        uniqueName='talentsPage.inTownFilter'
-                        selectedItem={query.inTownOnly}
-                        setFiltered={setInTownOnly}
-                    />
                     <LocationsFilter
-                        uniqueName='talentsPage.locationsFilter'
-                        selectedItems={filteredLocations}
-                        setFiltered={setFilteredLocations}
+                        uniqueName={filterNames.locations}
+                        selectedItems={locationsFilter}
+                        setFiltered={setLocationsFilter}
                     />
                     <ManagersFilter
-                        uniqueName='talentsPage.managersFilter'
-                        selectedItems={filteredManagers}
-                        setFiltered={setFilteredManagers}
+                        uniqueName={filterNames.managers}
+                        selectedItems={managersFilter}
+                        setFiltered={setManagersFilter}
                     />
                     <GendersFilter
-                        uniqueName='talentsPage.gendersFilter'
-                        selectedItems={filteredGenders}
-                        setFiltered={setFilteredGenders}
+                        uniqueName={filterNames.genders}
+                        selectedItems={gendersFilter}
+                        setFiltered={setGendersFilter}
                     />
-                    <BustFilter
-                        uniqueName='talentsPage.bustFilter'
-                        selectedItems={filteredBust}
-                        setFiltered={setFilteredBust}
+                    <BodyFilter
+                        uniqueName={filterNames.body}
+                        selectedValues={bodyFilter}
+                        setValues={setBodyFilter}
                     />
-                    <HeightFilter
-                        uniqueName='talentsPage.heightFilter'
-                        selectedItems={filteredHeights}
-                        setFiltered={setFilteredHeights}
+                    <PreferencesFilter
+                        uniqueName={filterNames.preferences}
+                        selectedItems={preferencesFilter}
+                        setFiltered={setPreferencesFilter}
                     />
-                    <HipsFilter
-                        uniqueName='talentsPage.hipsFilter'
-                        selectedItems={filteredHips}
-                        setFiltered={setFilteredHips}
-                    />
-                    <WaistFilter
-                        uniqueName='talentsPage.waistFilter'
-                        selectedItems={filteredWaists}
-                        setFiltered={setFilteredWaists}
-                    />
-                    <WeightFilter
-                        uniqueName='talentsPage.weightFilter'
-                        selectedItems={filteredWeights}
-                        setFiltered={setFilteredWeights}
-                    />
-                    <EyeColorFilter
-                        uniqueName='talentsPage.eyeColorFilter'
-                        selectedItems={filteredEyeColors}
-                        setFiltered={setFilteredEyeColors}
-                    />
-                    <HairColorFilter
-                        uniqueName='talentsPage.hairColorFilter'
-                        selectedItems={filteredHairColors}
-                        setFiltered={setFilteredHairColors}
-                    />
-                    <SkinColorFilter
-                        uniqueName='talentsPage.skinColorFilter'
-                        selectedItems={filteredSkinColors}
-                        setFiltered={setFilteredSkinColors}
+                    <NoContactsFilter
+                        uniqueName={filterNames.noContacts}
+                        value={noContactsFilter}
+                        setValue={setNoContactsFilter}
                     />
                 </ScrollableView.Body>
             </ScrollableView>

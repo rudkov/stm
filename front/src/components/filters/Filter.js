@@ -52,7 +52,7 @@ function Filter({ children, className = '', ...props }) {
                 </div>
             </div>
             {props.contentInHeader !== true ?
-                <div className={`filter__body ${collapsed ? 'filter__body_hidden' : ''}`}>
+                <div className={`filter__body ${className} ${collapsed ? 'filter__body_hidden' : ''}`}>
                     {children}
                 </div>
                 : ''
