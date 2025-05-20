@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ContactEmail extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'email_type_id',
+        'info',
+    ];
 
     public function contacts()
     {

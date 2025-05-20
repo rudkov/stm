@@ -2,41 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CompanyContact;
 use App\Models\Contact;
-use App\Models\ContactEmail;
-use App\Models\ContactMessenger;
-use App\Models\ContactPhone;
+use App\Http\Requests\ContactRequest;
+use App\Http\Resources\ContactCollection;
+use function App\Helpers\sync_has_many;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\isNull;
 
 class ContactController extends Controller
 {
-    private function getContactById($id)
+    public function __construct()
     {
-        $contact = Contact::where('id', $id)
-            ->with([
-                'companies',
-                'phones',
-                'phones.type',
-                'emails',
-                'emails.type',
-                'messengers',
-                'messengers.type',
-                'createdBy',
-                'updatedBy',
-            ])
-            ->firstOrFail();
-        return $contact;
+        $this->authorizeResource(Contact::class);
     }
 
     public function index()
     {
-        $raw_contacts = DB::table('contacts')
-            ->where('contacts.team_id', Auth::user()->team->id)
+        $innerQuery = DB::table('contacts')
+            ->where('contacts.team_id', Auth::user()->team_id)
             ->leftJoin('contact_emails', 'contacts.id', '=', 'contact_emails.contact_id')
             ->leftJoin('email_types', 'email_types.id', '=', 'contact_emails.email_type_id')
             ->leftJoin('contact_phones', 'contacts.id', '=', 'contact_phones.contact_id')
@@ -48,239 +34,82 @@ class ContactController extends Controller
             ->whereNull('contacts.deleted_at')
             ->orderBy('contacts.first_name', 'asc')
             ->orderBy('contacts.last_name', 'asc')
-            ->orderBy('companies.name', 'asc')
-            ->orderBy('email_types.weight', 'desc')
-            ->orderBy('phone_types.weight', 'desc')
-            ->get([
+            ->orderBy('companies.name', 'asc') 
+            ->orderBy('email_types.weight', 'ASC')
+            ->orderBy('phone_types.weight', 'ASC')
+            ->select([
                 'contacts.id',
-                'contacts.first_name',
+                'contacts.first_name', 
                 'contacts.last_name',
                 'contact_emails.info as email',
                 'email_types.weight as email_weight',
                 'contact_phones.info as phone',
                 'phone_types.weight as phone_weight',
                 'company_contact.job_title as job_title',
-                'companies.name as company_name'
+                'companies.name as company_name',
+                DB::raw('ROW_NUMBER() OVER (PARTITION BY contacts.id 
+                        ORDER BY email_types.weight ASC, 
+                                 phone_types.weight ASC
+                ) AS row_num')
+
             ]);
-
-        $contacts = array();
-        foreach ($raw_contacts as $contact) {
-            $contacts[$contact->id]['id'] = $contact->id;
-            $contacts[$contact->id]['name'] = trim($contact->first_name . ' ' . $contact->last_name);
-            $contacts[$contact->id]['email'] = $contact->email;
-            $contacts[$contact->id]['phone'] = $contact->phone;
-            $contacts[$contact->id]['job_title'] = $contact->job_title;
-            $contacts[$contact->id]['company_name'] = $contact->company_name;
-        }
-        $contacts = array_values($contacts);
-
-        return $contacts;
+        $contacts = DB::table(function($query) use ($innerQuery) {
+            $query->fromSub($innerQuery, 'ranked_contacts');
+        })
+        ->where('row_num', 1)
+        ->get();
+        
+        return new ContactCollection($contacts);
     }
 
-    public function show(Request $request, $id)
+    public function show(Contact $contact)
     {
-        $contact = $this->getContactById($id);
-
-        if ($request->user()->cannot('view', $contact)) {
-            abort(403);
-        }
-
-        return $contact;
+        $contact->load('companies',
+            'phones',
+            'phones.type',
+            'emails',
+            'emails.type',
+            'messengers',
+            'messengers.type',
+            'createdBy',
+            'updatedBy',
+        );
+        return $contact->toResource();
     }
 
-    public function update(Request $request, $id)
+    public function update(ContactRequest $request, Contact $contact)
     {
-        $contact = Contact::where('id', $id)
-            ->with([
-                'companies',
-                'phones',
-                'emails',
-                'messengers',
-            ])
-            ->firstOrFail();
+        // Process the validated data
+        $validated = $request->validated();
+        DB::transaction(function () use ($contact, $validated) {
+            $contact->updated_by = Auth::user()->id;
+            $contact->update($validated);
 
-        if ($request->user()->cannot('update', $contact)) {
-            abort(403);
-        }
-
-        $contact->updated_by = Auth::user()->id;
-
-        //COMPANIES & JOB TITLES START
-        $companies = array();
-        foreach ($request->companies as $company) {
-            $companies[$company['id']] = ['job_title' => $company['pivot']['job_title']];
-        }
-        $contact->companies()->sync($companies);
-        //COMPANIES & JOB TITLES END
-
-        //PHONES START
-        $phones['upsert'] = array();
-        $phones['delete'] = array();
-
-        $newPhones = collect($request->phones);
-        $oldPhones = collect($contact->phones);
-
-        foreach ($oldPhones as $phone) {
-            if (!$newPhones->contains('id', $phone['id'])) {
-                $phones['delete'][] = $phone['id'];
+            //COMPANIES & JOB TITLES START
+            $companies = array();
+            foreach (collect($validated['companies'] ?? []) as $company) {
+                $companies[$company['id']] = ['job_title' => $company['job_title']];
             }
-        }
+            $contact->companies()->sync($companies);
+            //COMPANIES & JOB TITLES END
 
-        foreach ($newPhones as $phone) {
-            if (array_key_exists('id', $phone)) {
-                $oldPhone = ContactPhone::where('id', $phone['id'])->firstOrFail();
-
-                if (@$phone['phone_type_id'] || @$phone['info']) {
-                    if (
-                        $oldPhone['phone_type_id'] != @$phone['phone_type_id'] ||
-                        $oldPhone['info'] != @$phone['info']
-                    ) {
-                        $oldPhone->phone_type_id = @$phone['phone_type_id'];
-                        $oldPhone->info = @$phone['info'];
-                        $phones['upsert'][] = $oldPhone;
-                    }
-                } else {
-                    $phones['delete'][] = $phone['id'];
-                }
-            } else {
-                if (@$phone['phone_type_id'] || @$phone['info']) {
-                    $newPhone = new ContactPhone();
-                    $newPhone->phone_type_id = @$phone['phone_type_id'];
-                    $newPhone->info = @$phone['info'];
-                    $phones['upsert'][] = $newPhone;
-                }
-            }
-        }
-        //PHONES END
-
-        //EMAILS START
-        $emails['upsert'] = array();
-        $emails['delete'] = array();
-
-        $newEmails = collect($request->emails);
-        $oldEmails = collect($contact->emails);
-
-        foreach ($oldEmails as $email) {
-            if (!$newEmails->contains('id', $email['id'])) {
-                $emails['delete'][] = $email['id'];
-            }
-        }
-
-        foreach ($newEmails as $email) {
-            if (array_key_exists('id', $email)) {
-                $oldEmail = ContactEmail::where('id', $email['id'])->firstOrFail();
-
-                if (@$email['email_type_id'] || @$email['info']) {
-                    if (
-                        $oldEmail['email_type_id'] != @$email['email_type_id'] ||
-                        $oldEmail['info'] != @$email['info']
-                    ) {
-                        $oldEmail->email_type_id = @$email['email_type_id'];
-                        $oldEmail->info = @$email['info'];
-                        $emails['upsert'][] = $oldEmail;
-                    }
-                } else {
-                    $emails['delete'][] = $email['id'];
-                }
-            } else {
-                if (@$email['email_type_id'] || @$email['info']) {
-                    $newEmail = new ContactEmail();
-                    $newEmail->email_type_id = @$email['email_type_id'];
-                    $newEmail->info = @$email['info'];
-                    $emails['upsert'][] = $newEmail;
-                }
-            }
-        }
-        //EMAILS END
-
-        //MESSENGERS START
-        $messengers['upsert'] = array();
-        $messengers['delete'] = array();
-
-        $newMessengers = collect($request->messengers);
-        $oldMessengers = collect($contact->messengers);
-
-        foreach ($oldMessengers as $item) {
-            if (!$newMessengers->contains('id', $item['id'])) {
-                $messengers['delete'][] = $item['id'];
-            }
-        }
-
-        foreach ($newMessengers as $item) {
-            if (array_key_exists('id', $item)) {
-                $oldMessenger = ContactMessenger::where('id', $item['id'])->firstOrFail();
-
-                if (@$item['messenger_type_id'] || @$item['info']) {
-                    if (
-                        $oldMessenger['messenger_type_id'] != @$item['messenger_type_id'] ||
-                        $oldMessenger['info'] != @$item['info']
-                    ) {
-                        $oldMessenger->messenger_type_id = @$item['messenger_type_id'];
-                        $oldMessenger->info = @$item['info'];
-                        $messengers['upsert'][] = $oldMessenger;
-                    }
-                } else {
-                    $messengers['delete'][] = $item['id'];
-                }
-            } else {
-                if (@$item['messenger_type_id'] || @$item['info']) {
-                    $newMessenger = new ContactMessenger();
-                    $newMessenger->messenger_type_id = @$item['messenger_type_id'];
-                    $newMessenger->info = @$item['info'];
-                    $messengers['upsert'][] = $newMessenger;
-                }
-            }
-        }
-        //MESSENGERS END
-
-        DB::transaction(function () use ($contact, $request, $phones, $emails, $messengers) {
-            $contact->phones()->whereIn('id', $phones['delete'])->delete();
-            $contact->phones()->saveMany($phones['upsert']);
-
-            $contact->emails()->whereIn('id', $emails['delete'])->delete();
-            $contact->emails()->saveMany($emails['upsert']);
-
-            $contact->messengers()->whereIn('id', $messengers['delete'])->delete();
-            $contact->messengers()->saveMany($messengers['upsert']);
-
-            $contact->update($request->all());
+            sync_has_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
+            sync_has_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_has_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
-
-        $contact = $this->getContactById($id);
-
-        return response()->json($contact, 200);
+        
+        return $this->show($contact);
     }
 
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        if ($request->user()->cannot('create', Contact::class)) {
-            abort(403);
-        }
-
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'comment' => 'nullable|string',
-            'companies' => 'array|nullable',
-            'companies.*.id' => 'required|exists:companies,id',
-            'companies.*.pivot.job_title' => 'nullable|string|max:255',
-            'phones' => 'array|nullable',
-            'phones.*.phone_type_id' => 'required|exists:phone_types,id',
-            'phones.*.info' => 'required|string|max:255',
-            'emails' => 'array|nullable',
-            'emails.*.email_type_id' => 'required|exists:email_types,id',
-            'emails.*.info' => 'required|email|max:255',
-            'messengers' => 'array|nullable',
-            'messengers.*.messenger_type_id' => 'required|exists:messenger_types,id',
-            'messengers.*.info' => 'required|string|max:255',
-        ]);
-
         $contact = new Contact();
+        $validated = $request->validated();
 
-        DB::transaction(function () use ($contact, $request) {
+        DB::transaction(function () use ($contact, $validated) {
             $user = Auth::user();
 
-            $contact->fill($request->all());
+            $contact->fill($validated);
             $contact->team_id = $user->team->id;
             $contact->created_by = $user->id;
             $contact->updated_by = $user->id;
@@ -288,57 +117,22 @@ class ContactController extends Controller
 
             //COMPANIES & JOB TITLES START
             $companies = array();
-            foreach (collect($request->companies) as $company) {
-                $companies[$company['id']] = ['job_title' => $company['pivot']['job_title']];
+            foreach (collect($validated['companies'] ?? []) as $company) {
+                $companies[$company['id']] = ['job_title' => $company['job_title']];
             }
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            $newPhones = collect($request->phones);
-            foreach ($newPhones as $phone) {
-                if (@$phone['phone_type_id'] || @$phone['info']) {
-                    $newPhone = new ContactPhone();
-                    $newPhone->phone_type_id = @$phone['phone_type_id'];
-                    $newPhone->info = @$phone['info'];
-                    $contact->phones()->save($newPhone);
-                }
-            }
-
-            $newEmails = collect($request->emails);
-            foreach ($newEmails as $email) {
-                if (@$email['email_type_id'] || @$email['info']) {
-                    $newEmail = new ContactEmail();
-                    $newEmail->email_type_id = @$email['email_type_id'];
-                    $newEmail->info = @$email['info'];
-                    $contact->emails()->save($newEmail);
-                }
-            }
-
-            $newMessengers = collect($request->messengers);
-            foreach ($newMessengers as $item) {
-                if (@$item['messenger_type_id'] || @$item['info']) {
-                    $newMessenger = new ContactMessenger();
-                    $newMessenger->messenger_type_id = @$item['messenger_type_id'];
-                    $newMessenger->info = @$item['info'];
-                    $contact->messengers()->save($newMessenger);
-                }
-            }
+            sync_has_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
+            sync_has_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_has_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
 
-        $contact = $this->getContactById($contact->id);
-
-        return response()->json($contact, 201);
+        return $this->show($contact);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Contact $contact)
     {
-        $contact = Contact::where('id', $id)
-            ->firstOrFail();
-
-        if ($request->user()->cannot('delete', $contact)) {
-            abort(403);
-        }
-
         $contact->updated_by = Auth::user()->id;
         $contact->delete();
         return response()->json(null, 204);

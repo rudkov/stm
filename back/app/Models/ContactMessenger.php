@@ -9,6 +9,11 @@ class ContactMessenger extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'messenger_type_id',
+        'info',
+    ];
+
     public function contacts()
     {
         return $this->belongsTo(Contact::class);
