@@ -21,7 +21,7 @@ class TalentMessengerFactory extends Factory
         $messengerTypes = MessengerType::all();
 
         foreach ($talents as $talent) {
-            $randomMessengerTypes = $messengerTypes->random(rand(1, 3));
+            $randomMessengerTypes = $messengerTypes->random(rand(1, count($messengerTypes)));
 
             foreach ($randomMessengerTypes as $randomMessengerType) {
                 $talent->messengers()->saveMany([

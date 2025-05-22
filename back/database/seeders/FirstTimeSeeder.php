@@ -474,10 +474,9 @@ class FirstTimeSeeder extends Seeder
         $items = [
             ['Facebook', 'https://www.facebook.com/', 'facebook'],
             ['Instagram', 'https://www.instagram.com/', 'instagram'],
-            ['TikTok', '', 'tiktok'],
-            ['Twitter', '', 'twitter'],
-            ['WeChat', '', 'wechat'],
-            ['Youtube', '', 'youtube'],
+            ['TikTok', 'https://www.tiktok.com/', 'tiktok'],
+            ['X', 'https://x.com/', 'twitter'],
+            ['YouTube', 'https://www.youtube.com/', 'youtube'],
         ];
 
         foreach ($items as $item) {
@@ -492,8 +491,9 @@ class FirstTimeSeeder extends Seeder
     public function messengerTypes()
     {
         $items = [
-            ['Messenger', '', 'facebook-messenger'],
+            ['Messenger', 'https://m.me/', 'facebook-messenger'],
             ['Telegram', 'https://t.me/', 'telegram'],
+            ['WeChat', '', 'wechat'],
             ['WhatsApp', 'https://wa.me/', 'whatsapp'],
         ];
 
