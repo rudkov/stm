@@ -21,7 +21,7 @@ class TalentSocialMediaFactory extends Factory
         $socialMediaTypes = SocialMediaType::all();
 
         foreach ($talents as $talent) {
-            $randomSocialMediaTypes = $socialMediaTypes->random(rand(1, 6));
+            $randomSocialMediaTypes = $socialMediaTypes->random(rand(1, 5));
 
             foreach ($randomSocialMediaTypes as $randomSocialMediaType) {
                 $talent->socialMedias()->saveMany([
