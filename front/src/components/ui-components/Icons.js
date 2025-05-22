@@ -13,18 +13,18 @@ import IconNo from '../../assets/icons/no.svg';
 import IconYes from '../../assets/icons/yes.svg';
 
 export const MessengersIcons = {
-    'facebook-messenger': <img src={IconFacebookMessenger} alt='Facebook Messenger icon' />,
-    'telegram': <img src={IconTelegram} alt='Telegram icon' />,
-    'whatsapp': <img src={IconWhatsapp} alt='WhatsApp icon' />,
+    'facebook-messenger': <img src={IconFacebookMessenger} alt="Facebook Messenger icon" />,
+    'telegram': <img src={IconTelegram} alt="Telegram icon" />,
+    'wechat': <img src={IconWechat} alt="WeChat icon" />,
+    'whatsapp': <img src={IconWhatsapp} alt="WhatsApp icon" />,
 };
 
 export const SocialMediaIcons = {
-    'facebook': <img src={IconFacebook} alt='Facebook icon' />,
-    'instagram': <img src={IconInstagram} alt='Instagram icon' />,
-    'tiktok': <img src={IconTiktok} alt='Tiktok icon' />,
-    'twitter': <img src={IconTwitter} alt='Twitter icon' />,
-    'wechat': <img src={IconWechat} alt='Wechat icon' />,
-    'youtube': <img src={IconYoutube} alt='Youtube icon' />,
+    'facebook': <img src={IconFacebook} alt="Facebook icon" />,
+    'instagram': <img src={IconInstagram} alt="Instagram icon" />,
+    'tiktok': <img src={IconTiktok} alt="TikTok icon" />,
+    'twitter': <img src={IconTwitter} alt="X icon" />,
+    'youtube': <img src={IconYoutube} alt="YouTube icon" />,
 };
 
 export const YesNoIcons = {
