@@ -23,7 +23,7 @@ import EventSectionChunks from './sections/EventSectionChunks';
 import EventSectionClient from './sections/EventSectionClient';
 import EventSectionSystemInfo from './sections/EventSectionSystemInfo';
 
-import TalentProfile from '../talents/TalentProfile';
+import TalentView from '../talents/TalentView';
 
 function EventInfo(props) {
     const dispatch = useDispatch();
@@ -46,7 +46,7 @@ function EventInfo(props) {
     };
 
     const initForm = () => {
-        console.log(event);
+        // console.log(event);
         form.setFieldsValue({
             title: event.title || '',
             event_type_id: event.event_type_id,
@@ -194,7 +194,7 @@ function EventInfo(props) {
                 open={talentInfoOpen}
                 width={600}
             >
-                <TalentProfile talentId={talentInfoId} />
+                <TalentView talentId={talentInfoId} />
             </Drawer>
         </>
     );

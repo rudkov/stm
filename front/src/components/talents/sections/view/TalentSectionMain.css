@@ -1,0 +1,29 @@
+.talent-section-main {
+    display: flex;
+    flex-direction: row;
+    padding: 12px;
+}
+
+.talent-section-main__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.talent-section-main__controls {
+    margin-left: auto;
+}
+
+.talent-section-main__header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+}
+
+.talent-section-main__talent_name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}

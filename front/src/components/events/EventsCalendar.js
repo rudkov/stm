@@ -12,10 +12,11 @@ import DayItem from './DayItem';
 
 import { getEvents, fetchEvents } from '../../store/events/events';
 
+import ScrollableView from '../ui-components/ScrollableView';
+
 import ClientsFilter from '../filters/ClientsFilter';
 import EventTypesFilter from '../filters/EventTypesFilter';
 import TalentsFilter from '../filters/TalentsFilter';
-
 
 function EventsCalendar() {
     const dispatch = useDispatch();
@@ -112,23 +113,25 @@ function EventsCalendar() {
     }
     return (
         <div className='events-calendar-page'>
-            <div className='events-calendar-page__filters scrollbar-y'>
-                <EventTypesFilter
-                    uniqueName='eventsPage.eventTypesFilter'
-                    selectedItems={filteredEventTypes}
-                    setFiltered={setFilteredEventTypes}
-                />
-                <TalentsFilter
-                    uniqueName='eventsPage.talentsFilter'
-                    selectedItems={filteredTalents}
-                    setFiltered={setFilteredTalents}
-                />
-                <ClientsFilter
-                    uniqueName='eventsPage.clientsFilter'
-                    selectedItems={filteredClients}
-                    setFiltered={setFilteredClients}
-                />
-            </div>
+            <ScrollableView>
+                <ScrollableView.Body className='events-calendar-page__filters'>
+                    <EventTypesFilter
+                        uniqueName='eventsPage.eventTypesFilter'
+                        selectedItems={filteredEventTypes}
+                        setFiltered={setFilteredEventTypes}
+                    />
+                    <TalentsFilter
+                        uniqueName='eventsPage.talentsFilter'
+                        selectedItems={filteredTalents}
+                        setFiltered={setFilteredTalents}
+                    />
+                    <ClientsFilter
+                        uniqueName='eventsPage.clientsFilter'
+                        selectedItems={filteredClients}
+                        setFiltered={setFilteredClients}
+                    />
+                </ScrollableView.Body>
+            </ScrollableView>
             <div className='events-calendar'>
                 {result}
             </div>

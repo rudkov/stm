@@ -1,0 +1,20 @@
+.talent-location {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.talent-location__icon {
+    padding: 0;
+    font-size: 0;
+    border: none;
+    color: var(--icon-primary);
+}
+
+.talent-location__icon svg {
+    display: block;
+}
+
+.talent-location__text {
+    color: var(--text-primary);
+}

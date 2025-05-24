@@ -1,0 +1,20 @@
+.custom-drawer {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: var(--drawer-background);
+    border-radius: var(--border-radius-big);
+    box-shadow:
+        0 0 2px 0 rgba(0, 0, 0, 0.05),
+        0 0 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+.custom-drawer__mask {
+    background-color: var(--drawer-mask) !important;
+}
+
+.custom-drawer__close-button .ant-btn-icon {
+    color: var(--menu-item-icon-color);
+}

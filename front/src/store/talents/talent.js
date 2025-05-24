@@ -6,7 +6,9 @@ import measurementsConverter from "../../helpers/measurements-converter";
 
 //TODO: Below is a temporary solution. We need to place date format into user settings.
 //TODO: this format also appears in all date time antd controls. To double check
-const dateFormat = 'DD.MM.YYYY';
+
+const inputDateFormat = 'YYYY-MM-DD';
+const outputDateFormat = 'DD.MM.YYYY';
 const dateTimeFormat = 'DD.MM.YYYY, HH:mm';
 
 const initialState = {
@@ -91,9 +93,13 @@ export const updateCurrentLocation = createAsyncThunk('talent/updateCurrentLocat
 const prepareTalent = (state, values) => {
     let item = values;
 
-    item.full_name = values.first_name.concat(' ', values.last_name);
-    item.birth_date = values.birth_date ? dayjs(values.birth_date).format(dateFormat) : null;
-    item.age = values.birth_date ? dayjs().diff(dayjs(values.birth_date, dateFormat), 'years') : null;
+    item.full_name = (values.first_name || '').concat(' ', values.last_name || '').trim();
+    item.legal_full_name = (values.legal_first_name || '').concat(' ', values.legal_last_name || '').trim();
+
+    const birthDate = values.birth_date ? dayjs(values.birth_date, inputDateFormat) : null;
+    item.birth_date = birthDate ? birthDate.format(outputDateFormat) : null;
+    item.age = birthDate ? dayjs().diff(birthDate, 'years') : null;
+
     item.is_lifestyle = (values.is_lifestyle === 1) ? "Lifestyle" : (values.is_lifestyle === 0) ? "Fashion" : null;
     item.gender_id = values.gender_id || '';
 
@@ -106,7 +112,7 @@ const prepareTalent = (state, values) => {
     item.suit_cut_id = values.suit_cut_id || '';
     item.dress_size_id = values.dress_size_id || '';
     item.skin_color_id = values.skin_color_id || '';
-    item.is_ears_pierced = (values.is_ears_pierced === 1) ? "Yes" : (values.is_ears_pierced === 0) ? "No" : null;
+    item.is_ears_pierced = values.is_ears_pierced ?? null;
     item.height_cm = values.height_cm || '';
     item.height_in = measurementsConverter(values.height_cm, 'ft in');
     item.bust_cm = values.bust_cm || '';
@@ -121,21 +127,21 @@ const prepareTalent = (state, values) => {
     item.tattoos = values.tattoos || '';
     item.piercings = values.piercings || '';
 
-    item.is_vegetarian = (values.is_vegetarian === 1) ? "Yes" : (values.is_vegetarian === 0) ? "No" : null;
+    item.is_vegetarian = values.is_vegetarian ?? null;
 
-    item.is_accent = (values.is_accent === 1) ? "Yes" : (values.is_accent === 0) ? "No" : null;
+    item.is_accent = values.is_accent ?? null;
 
-    item.is_lingerie = (values.is_lingerie === 1) ? "Yes" : (values.is_lingerie === 0) ? "No" : null;
-    item.is_nude = (values.is_nude === 1) ? "Yes" : (values.is_nude === 0) ? "No" : null;
-    item.is_fur = (values.is_fur === 1) ? "Yes" : (values.is_fur === 0) ? "No" : null;
-    item.is_liquor_ads = (values.is_liquor_ads === 1) ? "Yes" : (values.is_liquor_ads === 0) ? "No" : null;
-    item.is_smoking_ads = (values.is_smoking_ads === 1) ? "Yes" : (values.is_smoking_ads === 0) ? "No" : null;
-    item.is_gambling_ads = (values.is_gambling_ads === 1) ? "Yes" : (values.is_gambling_ads === 0) ? "No" : null;
-    item.is_faithbased_ads = (values.is_faithbased_ads === 1) ? "Yes" : (values.is_faithbased_ads === 0) ? "No" : null;
-    item.is_political_ads = (values.is_political_ads === 1) ? "Yes" : (values.is_political_ads === 0) ? "No" : null;
-    item.is_topless = (values.is_topless === 1) ? "Yes" : (values.is_topless === 0) ? "No" : null;
-    item.is_swimwear = (values.is_swimwear === 1) ? "Yes" : (values.is_swimwear === 0) ? "No" : null;
-    item.is_sports = (values.is_sports === 1) ? "Yes" : (values.is_sports === 0) ? "No" : null;
+    item.is_lingerie = values.is_lingerie ?? null;
+    item.is_nude = values.is_nude ?? null;
+    item.is_fur = values.is_fur ?? null;
+    item.is_liquor_ads = values.is_liquor_ads ?? null;
+    item.is_smoking_ads = values.is_smoking_ads ?? null;
+    item.is_gambling_ads = values.is_gambling_ads ?? null;
+    item.is_faithbased_ads = values.is_faithbased_ads ?? null;
+    item.is_political_ads = values.is_political_ads ?? null;
+    item.is_topless = values.is_topless ?? null;
+    item.is_swimwear = values.is_swimwear ?? null;
+    item.is_sports = values.is_sports ?? null;
 
     item.achievements = values.achievements || '';
     item.performance_skills = values.performance_skills || '';
@@ -227,33 +233,22 @@ const talentSlice = createSlice({
             return initialState;
         },
         resetResponse(state, responseName) {
-            if (responseName.payload === 'delete') {
-                state.deleteResponse.status = '';
-            }
-            else if (responseName.payload === 'create') {
-                state.createResponse.status = '';
+            switch (responseName.payload) {
+                case 'create':
+                    state.createResponse.status = null;
+                    break;
+                case 'update':
+                    state.updateResponse.status = null;
+                    break;
+                case 'delete':
+                    state.deleteResponse.status = null;
+                    break;
             }
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchTalentById.fulfilled, (state, action) => {
-                prepareTalent(state, action.payload);
-            })
-
-            .addCase(updateCurrentLocation.pending, (state, action) => {
-                state.currentLocationResponse.status = 'pending';
-            })
-            .addCase(updateCurrentLocation.fulfilled, (state, action) => {
-                state.currentLocationResponse.status = 'fulfilled';
-                prepareTalent(state, action.payload);
-            })
-
-            .addCase(updateTalentById.pending, (state, action) => {
-                state.updateResponse.status = 'pending';
-            })
-            .addCase(updateTalentById.fulfilled, (state, action) => {
-                state.updateResponse.status = 'fulfilled';
                 prepareTalent(state, action.payload);
             })
 
@@ -265,11 +260,27 @@ const talentSlice = createSlice({
                 state.createResponse.talentId = action.payload.id;
             })
 
+            .addCase(updateTalentById.pending, (state, action) => {
+                state.updateResponse.status = 'pending';
+            })
+            .addCase(updateTalentById.fulfilled, (state, action) => {
+                state.updateResponse.status = 'fulfilled';
+                prepareTalent(state, action.payload);
+            })
+
             .addCase(deleteTalentById.pending, (state, action) => {
                 state.deleteResponse.status = 'pending';
             })
             .addCase(deleteTalentById.fulfilled, (state, action) => {
                 state.deleteResponse.status = 'fulfilled';
+            })
+
+            .addCase(updateCurrentLocation.pending, (state, action) => {
+                state.currentLocationResponse.status = 'pending';
+            })
+            .addCase(updateCurrentLocation.fulfilled, (state, action) => {
+                state.currentLocationResponse.status = 'fulfilled';
+                prepareTalent(state, action.payload);
             })
     }
 });

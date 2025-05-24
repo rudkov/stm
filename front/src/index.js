@@ -29,5 +29,5 @@ root.render(
                 <App />
             </ThemeProvider>
         </Provider>
-    </BrowserRouter >
+    </BrowserRouter>
 );

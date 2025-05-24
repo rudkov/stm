@@ -1,25 +1,28 @@
 import './TalentsList.css';
 import '../../helpers/shared.css';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import { Form, Input, Tooltip, Button } from 'antd';
 
 import { getTalents, fetchTalents, filterTalents } from '../../store/talents/talents';
 
+import ScrollableView from '../ui-components/ScrollableView';
+
 import TalentUsername from './components/TalentUsername';
 
 import InTownFilter from '../filters/InTownFilter';
 
-import { ReactComponent as IconInTown } from '../../assets/icons/in-town-16.svg';
+import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
 
-function TalentsList() {
+function TalentsList(props) {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const fetchedTalents = useSelector(getTalents);
     const [talents, setTalents] = useState([]);
+    const scrollContainerRef = useRef(null);
 
     const [query, setQuery] = useState({
         searchString: sessionStorage.getItem('talentsPage.talentsList.query.searchString') ?? '',
@@ -74,16 +77,18 @@ function TalentsList() {
 
     return (
         <div className='talents-container'>
-            <div className='talents-container__filters scrollbar-y'>
-                <InTownFilter
-                    uniqueName='talentsPage.inTownFilter'
-                    selectedItem={query.inTownOnly}
-                    setFiltered={setInTownOnly}
-                />
-            </div>
+            <ScrollableView>
+                <ScrollableView.Body className='talents-container__filters'>
+                    <InTownFilter
+                        uniqueName='talentsPage.inTownFilter'
+                        selectedItem={query.inTownOnly}
+                        setFiltered={setInTownOnly}
+                    />
+                </ScrollableView.Body>
+            </ScrollableView>
             <div className='talents-container__list'>
-                <div className='talents-container__list-section section-primary'>
-                    <div className='talents-list__header'>
+                <ScrollableView scrollContainerRef={scrollContainerRef} className='talents-container__list-section section-primary'>
+                    <ScrollableView.Header className='talents-list__header'>
                         <Form
                             form={form}
                             name='talents.search.form'
@@ -98,14 +103,12 @@ function TalentsList() {
                                 />
                             </Form.Item>
                         </Form>
-                        <NavLink to='new'>
-                            <Button type='primary' icon={<IconAdd />} />
-                        </NavLink>
-                    </div>
-                    <div className='scrollbar-y'>
+                        <Button type='primary' icon={<IconAdd />} onClick={props.createTalent} />
+                    </ScrollableView.Header>
+                    <ScrollableView.Body className='talents-list__body'>
                         {result}
-                    </div>
-                </div>
+                    </ScrollableView.Body>
+                </ScrollableView>
             </div>
         </div>
     );
