@@ -4,7 +4,7 @@ import { Anchor, Button, Form, Modal, Popconfirm } from 'antd';
 
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import dayjs from 'dayjs';
 
 import {
@@ -38,8 +38,6 @@ import TalentSectionRegionLanguages from './sections/edit/TalentSectionRegionLan
 import TalentSectionRelatives from './sections/edit/TalentSectionRelatives';
 import TalentSectionSocialMedia from './sections/edit/TalentSectionSocialMedia';
 
-//TODO: Implement scrolling to a section that a user wants to edit
-
 function TalentForm(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -55,8 +53,10 @@ function TalentForm(props) {
     const [originalFormValues, setOriginalFormValues] = useState();
     const [isConfirmClosingModalOpen, setIsConfirmClosingModalOpen] = useState(false);
     const showNotification = useNotification();
+    
+    const { isNewTalent, open: isFormOpen, closeForm: onClose } = props;
 
-    const initForm = (values) => {
+    const initForm = useCallback((values) => {
         form.setFieldsValue({
             first_name: values.first_name || '',
             last_name: values.last_name || '',
@@ -128,7 +128,7 @@ function TalentForm(props) {
             biography: values.biography || '',
         });
         setOriginalFormValues(form.getFieldsValue(true));
-    };
+    }, [form]);
 
     const submitForm = (formValues) => {
         setIsLoading(true);
@@ -150,7 +150,7 @@ function TalentForm(props) {
         values.suit_cut_id = values.suit_cut_id ?? null;
         values.dress_size_id = values.dress_size_id ?? null;
 
-        if (props.isNewTalent) {
+        if (isNewTalent) {
             dispatch(createTalent({ values: values }));
         }
         else {
@@ -232,20 +232,52 @@ function TalentForm(props) {
     };
 
     useEffect(() => {
-        if (!props.isNewTalent && talent.id) {
+        if (!isNewTalent && talent.id && isFormOpen) {
             dispatch(fetchTalentById(talent.id));
         }
-    }, [props.isNewTalent, talent.id, dispatch]);
+    }, [isNewTalent, talent.id, isFormOpen, dispatch]);
 
     useEffect(() => {
-        if (props.isNewTalent) {
+        if (isNewTalent) {
             setFormTitle('New Talent');
             initForm({});
         } else if (talent.id) {
             setFormTitle(talent.full_name);
             initForm(talent);
         }
-    }, [props.isNewTalent, talent, props.anchor, form]);
+    }, [isNewTalent, talent, form, initForm]);
+
+    useEffect(() => {
+        if (createResponse.status === 'fulfilled') {
+            setIsLoading(false);
+            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
+            dispatch(fetchTalents());
+            dispatch(talentActions.resetResponse('create'));
+            navigate('/app/talents/' + createResponse.talentId);
+            onClose();
+        }
+    }, [createResponse, dispatch, navigate, onClose, showNotification]);
+
+    useEffect(() => {
+        if (updateResponse.status === 'fulfilled') {
+            setIsLoading(false);
+            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
+            dispatch(fetchTalents());
+            dispatch(talentActions.resetResponse('update'));
+            onClose();
+        }
+    }, [updateResponse, dispatch, onClose, showNotification]);
+
+    useEffect(() => {
+        if (deleteResponse.status === 'fulfilled') {
+            setIsLoading(false);
+            showNotification({ type: 'SUCCESS', message: 'Talent deleted' });
+            dispatch(fetchTalents());
+            dispatch(talentActions.resetResponse('delete'));
+            navigate('/app/talents', { replace: true });
+            onClose();
+        }
+    }, [deleteResponse, dispatch, navigate, onClose, showNotification]);
 
     const anchorClicked = (e, link) => {
         e.preventDefault();
@@ -264,38 +296,6 @@ function TalentForm(props) {
         }
     };
 
-    useEffect(() => {
-        if (createResponse.status === 'fulfilled') {
-            setIsLoading(false);
-            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
-            dispatch(fetchTalents());
-            dispatch(talentActions.resetResponse('create'));
-            navigate('/app/talents/' + createResponse.talentId);
-            props.closeForm();
-        }
-    }, [createResponse]);
-
-    useEffect(() => {
-        if (updateResponse.status === 'fulfilled') {
-            setIsLoading(false);
-            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
-            dispatch(fetchTalents());
-            dispatch(talentActions.resetResponse('update'));
-            props.closeForm();
-        }
-    }, [updateResponse]);
-
-    useEffect(() => {
-        if (deleteResponse.status === 'fulfilled') {
-            setIsLoading(false);
-            showNotification({ type: 'SUCCESS', message: 'Talent deleted' });
-            dispatch(fetchTalents());
-            dispatch(talentActions.resetResponse('delete'));
-            navigate('/app/talents', { replace: true });
-            props.closeForm();
-        }
-    }, [deleteResponse]);
-
     const handleDrawerSubmit = () => {
         form.submit();
     };
@@ -303,7 +303,7 @@ function TalentForm(props) {
     const closeForm = () => {
         const currentFormValues = form.getFieldsValue(true);
         const hasChanged = JSON.stringify(currentFormValues) !== JSON.stringify(originalFormValues);
-        hasChanged ? setIsConfirmClosingModalOpen(true) : props.closeForm();
+        hasChanged ? setIsConfirmClosingModalOpen(true) : onClose();
     };
 
     const handleConfirmClosingModalSaveChanges = () => {
@@ -313,7 +313,7 @@ function TalentForm(props) {
 
     const handleConfirmClosingModalDiscardChanges = () => {
         setIsConfirmClosingModalOpen(false);
-        props.closeForm();
+        onClose();
         form.setFieldsValue(originalFormValues);
     };
 
@@ -332,7 +332,7 @@ function TalentForm(props) {
                 disabled={isLoading}
             >
                 <CustomDrawer
-                    open={props.open}
+                    open={isFormOpen}
                     onClose={closeForm}
                     width={768}
                 >
