@@ -1,5 +1,10 @@
 import { DatePicker, Form, Input, Select, Radio } from 'antd';
 
+import { useEffect, useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers, getUsers } from '../../../../store/users/users';
+
 import { useSettings } from '../../../../context/SettingsContext';
 
 import NestedSection from '../../../ui-components/NestedSection';
@@ -7,6 +12,17 @@ import NestedSection from '../../../ui-components/NestedSection';
 function TalentSectionPrimaryInfo(props) {
     const { settings } = useSettings();
     const outputDateFormat = 'DD.MM.YYYY';
+    const dispatch = useDispatch();
+    const fetchedUsers = useSelector(getUsers);
+    const [managers, setManagers] = useState([]);
+
+    useEffect(() => {
+        dispatch(fetchUsers());
+    }, [dispatch]);
+
+    useEffect(() => {
+        setManagers([...fetchedUsers]);
+    }, [fetchedUsers]);
 
     const lifestyleOrFashion = [
         {
@@ -56,6 +72,9 @@ function TalentSectionPrimaryInfo(props) {
                 </div> */}
                 <Form.Item className='talent-form-row__left-label' label='Lifestyle/fashion' name='is_lifestyle'>
                     <Radio.Group options={lifestyleOrFashion} />
+                </Form.Item>
+                <Form.Item className='talent-form-row__left-label' label='Manager' name='manager_id'>
+                    <Select options={managers.map(item => ({ label: item.name, value: item.id }))} />
                 </Form.Item>
             </NestedSection.Body>
         </NestedSection>

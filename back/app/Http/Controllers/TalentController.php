@@ -34,6 +34,7 @@ class TalentController extends Controller
                 'languages',
                 'relatives',
                 'relatives.type',
+                'manager',
                 'createdBy',
                 'updatedBy',
                 'addresses',
@@ -112,7 +113,6 @@ class TalentController extends Controller
         }
 
         $raw_talents = $query
-            ->leftJoin('users', 'talents.created_by', '=', 'users.id')
             ->orderBy('talents.first_name')
             ->orderBy('talents.last_name')
             ->get([
@@ -120,8 +120,7 @@ class TalentController extends Controller
                 'talents.first_name',
                 'talents.last_name',
                 'talents.current_location',
-                'users.id as manager_id',
-                'users.name as manager_name'
+                'talents.manager_id',
             ]);
 
         $talents = array();
@@ -462,6 +461,7 @@ class TalentController extends Controller
             $talent->team_id = $user->team->id;
             $talent->created_by = $user->id;
             $talent->updated_by = $user->id;
+            $talent->manager_id = $request->manager_id;
             $talent->save();
 
             $newRelatives = collect($request->relatives);
@@ -581,7 +581,7 @@ class TalentController extends Controller
     public function managers()
     {
         $uniqueManagers = DB::table('talents')
-            ->leftJoin('users', 'talents.created_by', '=', 'users.id')
+            ->leftJoin('users', 'talents.manager_id', '=', 'users.id')
             ->where('talents.team_id', Auth::user()->team->id)
             ->whereNull('talents.deleted_at')
             ->distinct()

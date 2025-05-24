@@ -49,6 +49,7 @@ class Talent extends Model
         'mother_agency_id',
         'marital_status_id',
         'is_lifestyle',
+        'manager_id',
 
         'hair_color_id',
         'hair_length_id',
@@ -68,7 +69,7 @@ class Talent extends Model
         'scars',
         'tattoos',
         'piercings',
-        
+
         'is_vegetarian',
         'allergies',
         'is_accent',
@@ -105,7 +106,7 @@ class Talent extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-    
+
     public function events()
     {
         return $this->belongsToMany(Event::class);
@@ -180,7 +181,7 @@ class Talent extends Model
     {
         return $this->belongsToMany(Language::class, 'talent_language', 'talent_id', 'language_id');
     }
-    
+
     public function addresses()
     {
         return $this->hasMany(TalentAddress::class);
@@ -204,5 +205,10 @@ class Talent extends Model
     public function messengers()
     {
         return $this->hasMany(TalentMessenger::class);
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
     }
 }

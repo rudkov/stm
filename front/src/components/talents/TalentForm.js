@@ -46,6 +46,7 @@ function TalentForm(props) {
     const createResponse = useSelector(getCreateResponse);
     const updateResponse = useSelector(getUpdateResponse);
     const deleteResponse = useSelector(getDeleteResponse);
+    const user_id = useSelector((state) => state.auth.user_id);
     const getContainer = () => containerRef.current;
     const containerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -67,6 +68,7 @@ function TalentForm(props) {
             marital_status_id: values.marital_status_id || '',
             is_lifestyle: values.is_lifestyle,
             gender_id: values.gender_id || '',
+            manager_id: values.manager_id || user_id,
 
             comment: values.comment || '',
 
