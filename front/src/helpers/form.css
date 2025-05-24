@@ -15,6 +15,14 @@
 
 /* TODO: Everything below is old, needs to be refactored and removed */
 
+.ant-form-item .ant-form-item-control-input {
+    min-height: auto;
+}
+
+.ant-slider {
+    margin: 0 7px;
+}
+
 /* Buttons */
 .button--primary,
 .button--text,

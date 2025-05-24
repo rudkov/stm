@@ -51,14 +51,70 @@ class TalentController extends Controller
         return $talent;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $raw_talents = DB::table('talents')
-            ->where('talents.team_id', Auth::user()->team->id)
-            ->whereNull('talents.deleted_at')
-            ->orderBy('talents.first_name', 'asc')
-            ->orderBy('talents.last_name', 'asc')
-            ->get(['talents.id', 'talents.first_name', 'talents.last_name', 'talents.current_location']);
+        $query = DB::table('talents')
+                    ->where('talents.team_id', Auth::user()->team->id)
+                    ->whereNull('talents.deleted_at');
+        
+        // Simple filters
+        $filters = [
+            'cup_size_id'    => 'cupSize',
+            'dress_size_id'  => 'dressSize',
+            'eye_color_id'   => 'eyeColor',
+            'gender_id'      => 'genders',
+            'hair_color_id'  => 'hairColor',
+            'hair_length_id' => 'hairLength',
+            'skin_color_id'  => 'skinColor',
+            'shirt_size_id'  => 'shirtSize',
+            'shoe_size_id'   => 'shoeSize',
+            'suit_cut_id'    => 'suitCut',
+            'created_by'     => 'managers',
+        ];
+        
+        foreach ($filters as $column => $param) {
+            if (!empty($request->$param)) {
+                $query->whereIn("talents.$column", $request->$param);
+            }
+        }
+        
+        // Ranges (between)
+        $rangeFilters = [
+            'bust_cm'   => 'bust',
+            'height_cm' => 'height',
+            'hips_cm'   => 'hips',
+            'waist_cm'  => 'waist',
+            'weight_kg' => 'weight',
+        ];
+        
+        foreach ($rangeFilters as $column => $param) {
+            if (!empty($request->$param) && count($request->$param) === 2) {
+                $query->whereBetween("talents.$column", $request->$param);
+            }
+        }
+        
+        // No contact info
+        if ($request->noContacts === true || $request->noContacts === 'true') {
+            $query->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('talent_emails')->whereColumn('talent_emails.talent_id', 'talents.id');
+            })->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('talent_messengers')->whereColumn('talent_messengers.talent_id', 'talents.id');
+            })->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('talent_phones')->whereColumn('talent_phones.talent_id', 'talents.id');
+            });
+        }
+        
+        // Preferences (bool)
+        if (!empty($request->preferences)) {
+            foreach ($request->preferences as $preference) {
+                $query->where("talents.$preference", 1);
+            }
+        }
+        
+        $raw_talents = $query
+                    ->orderBy('talents.first_name')
+                    ->orderBy('talents.last_name')
+                    ->get(['talents.id', 'talents.first_name', 'talents.last_name', 'talents.current_location']);
 
         $talents = array();
         foreach ($raw_talents as $talent) {

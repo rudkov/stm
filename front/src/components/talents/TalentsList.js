@@ -12,7 +12,12 @@ import ScrollableView from '../ui-components/ScrollableView';
 
 import TalentUsername from './components/TalentUsername';
 
-import InTownFilter from '../filters/InTownFilter';
+import BodyFilter from '../filters/BodyFilter';
+import GendersFilter from '../filters/GendersFilter';
+import LocationsFilter from '../filters/LocationsFilter';
+import ManagersFilter from '../filters/ManagersFilter';
+import NoContactsFilter from '../filters/NoContactsFilter';
+import PreferencesFilter from '../filters/PreferencesFilter';
 
 import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
@@ -24,14 +29,43 @@ function TalentsList(props) {
     const [talents, setTalents] = useState([]);
     const scrollContainerRef = useRef(null);
 
+    const filterNames = {
+        body: 'talents.filters.body',
+        genders: 'talents.filters.genders',
+        locations: 'talents.filters.locations',
+        managers: 'talents.filters.managers',
+        noContacts: 'talents.filters.noContacts',
+        preferences: 'talents.filters.preferences',
+    };
+
     const [query, setQuery] = useState({
-        searchString: sessionStorage.getItem('talentsPage.talentsList.query.searchString') ?? '',
-        inTownOnly: JSON.parse(sessionStorage.getItem('talentsPage.talentsList.query.inTownOnly')) ?? false,
+        searchString: sessionStorage.getItem('talents.list.search') ?? '',
+        locations: JSON.parse(sessionStorage.getItem('talents.filters.locations')) ?? [],
     });
 
+    const [bodyFilter, setBodyFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.body)) ?? []);
+    const [gendersFilter, setGendersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.genders)) ?? []);
+    const [locationsFilter, setLocationsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.locations)) ?? []);
+    const [managersFilter, setManagersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.managers)) ?? []);
+    const [noContactsFilter, setNoContactsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.noContacts)) ?? false);
+    const [preferencesFilter, setPreferencesFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.preferences)) ?? []);
+
     useEffect(() => {
-        dispatch(fetchTalents());
-    }, [dispatch]);
+        dispatch(fetchTalents({
+            body: bodyFilter,
+            genders: gendersFilter,
+            managers: managersFilter,
+            noContacts: noContactsFilter,
+            preferences: preferencesFilter,
+        }));
+    }, [
+        dispatch,
+        bodyFilter,
+        gendersFilter,
+        managersFilter,
+        noContactsFilter,
+        preferencesFilter,
+    ]);
 
     useEffect(() => {
         setTalents(filterTalents([...fetchedTalents], query));
@@ -40,18 +74,17 @@ function TalentsList(props) {
     const searchTalents = (item) => {
         setQuery({
             searchString: item.search,
-            inTownOnly: query.inTownOnly,
+            locations: query.locations,
         });
-        sessionStorage.setItem('talentsPage.talentsList.query.searchString', item.search);
+        sessionStorage.setItem('talents.list.search', item.search);
     }
 
-    const setInTownOnly = (item) => {
+    useEffect(() => {
         setQuery({
             searchString: query.searchString,
-            inTownOnly: item,
+            locations: locationsFilter,
         });
-        sessionStorage.setItem('talentsPage.talentsList.query.inTownOnly', item);
-    }
+    }, [locationsFilter]);
 
     let result = null;
 
@@ -79,10 +112,35 @@ function TalentsList(props) {
         <div className='talents-container'>
             <ScrollableView>
                 <ScrollableView.Body className='talents-container__filters'>
-                    <InTownFilter
-                        uniqueName='talentsPage.inTownFilter'
-                        selectedItem={query.inTownOnly}
-                        setFiltered={setInTownOnly}
+                    <LocationsFilter
+                        uniqueName={filterNames.locations}
+                        selectedItems={locationsFilter}
+                        setFiltered={setLocationsFilter}
+                    />
+                    <ManagersFilter
+                        uniqueName={filterNames.managers}
+                        selectedItems={managersFilter}
+                        setFiltered={setManagersFilter}
+                    />
+                    <GendersFilter
+                        uniqueName={filterNames.genders}
+                        selectedItems={gendersFilter}
+                        setFiltered={setGendersFilter}
+                    />
+                    <BodyFilter
+                        uniqueName={filterNames.body}
+                        selectedValues={bodyFilter}
+                        setValues={setBodyFilter}
+                    />
+                    <PreferencesFilter
+                        uniqueName={filterNames.preferences}
+                        selectedItems={preferencesFilter}
+                        setFiltered={setPreferencesFilter}
+                    />
+                    <NoContactsFilter
+                        uniqueName={filterNames.noContacts}
+                        value={noContactsFilter}
+                        setValue={setNoContactsFilter}
                     />
                 </ScrollableView.Body>
             </ScrollableView>
