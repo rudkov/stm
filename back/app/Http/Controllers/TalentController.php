@@ -54,9 +54,9 @@ class TalentController extends Controller
     public function index(Request $request)
     {
         $query = DB::table('talents')
-                    ->where('talents.team_id', Auth::user()->team->id)
-                    ->whereNull('talents.deleted_at');
-        
+            ->where('talents.team_id', Auth::user()->team->id)
+            ->whereNull('talents.deleted_at');
+
         // Simple filters
         $filters = [
             'cup_size_id'    => 'cupSize',
@@ -71,13 +71,13 @@ class TalentController extends Controller
             'suit_cut_id'    => 'suitCut',
             'created_by'     => 'managers',
         ];
-        
+
         foreach ($filters as $column => $param) {
             if (!empty($request->$param)) {
                 $query->whereIn("talents.$column", $request->$param);
             }
         }
-        
+
         // Ranges (between)
         $rangeFilters = [
             'bust_cm'   => 'bust',
@@ -86,13 +86,13 @@ class TalentController extends Controller
             'waist_cm'  => 'waist',
             'weight_kg' => 'weight',
         ];
-        
+
         foreach ($rangeFilters as $column => $param) {
             if (!empty($request->$param) && count($request->$param) === 2) {
                 $query->whereBetween("talents.$column", $request->$param);
             }
         }
-        
+
         // No contact info
         if ($request->noContacts === true || $request->noContacts === 'true') {
             $query->whereNotExists(function ($sub) {
@@ -103,24 +103,33 @@ class TalentController extends Controller
                 $sub->select(DB::raw(1))->from('talent_phones')->whereColumn('talent_phones.talent_id', 'talents.id');
             });
         }
-        
+
         // Preferences (bool)
         if (!empty($request->preferences)) {
             foreach ($request->preferences as $preference) {
                 $query->where("talents.$preference", 1);
             }
         }
-        
+
         $raw_talents = $query
-                    ->orderBy('talents.first_name')
-                    ->orderBy('talents.last_name')
-                    ->get(['talents.id', 'talents.first_name', 'talents.last_name', 'talents.current_location']);
+            ->leftJoin('users', 'talents.created_by', '=', 'users.id')
+            ->orderBy('talents.first_name')
+            ->orderBy('talents.last_name')
+            ->get([
+                'talents.id',
+                'talents.first_name',
+                'talents.last_name',
+                'talents.current_location',
+                'users.id as manager_id',
+                'users.name as manager_name'
+            ]);
 
         $talents = array();
         foreach ($raw_talents as $talent) {
             $talents[$talent->id]['id'] = $talent->id;
             $talents[$talent->id]['name'] = trim($talent->first_name . ' ' . $talent->last_name);
             $talents[$talent->id]['location'] = $talent->current_location;
+            $talents[$talent->id]['manager_id'] = $talent->manager_id;
         }
         $talents = array_values($talents);
 
@@ -555,5 +564,29 @@ class TalentController extends Controller
         $talent = $this->getTalentById($id);
 
         return response()->json($talent, 200);
+    }
+
+    public function locations()
+    {
+        $uniqueLocations = DB::table('talents')
+            ->select('current_location')
+            ->where('team_id', Auth::user()->team->id)
+            ->whereNull('talents.deleted_at')
+            ->distinct()
+            ->orderByRaw('CASE WHEN current_location IS NULL THEN 0 ELSE 1 END, current_location')
+            ->pluck('current_location');
+        return $uniqueLocations;
+    }
+
+    public function managers()
+    {
+        $uniqueManagers = DB::table('talents')
+            ->leftJoin('users', 'talents.created_by', '=', 'users.id')
+            ->where('talents.team_id', Auth::user()->team->id)
+            ->whereNull('talents.deleted_at')
+            ->distinct()
+            ->orderBy('users.name')
+            ->get(['users.id', 'users.name']);
+        return $uniqueManagers;
     }
 }

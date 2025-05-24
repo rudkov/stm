@@ -51,7 +51,6 @@ function TalentsList(props) {
         dispatch(fetchTalents({
             body: bodyFilter,
             genders: gendersFilter,
-            managers: managersFilter,
             noContacts: noContactsFilter,
             preferences: preferencesFilter,
         }));
@@ -59,14 +58,22 @@ function TalentsList(props) {
         dispatch,
         bodyFilter,
         gendersFilter,
-        managersFilter,
         noContactsFilter,
         preferencesFilter,
     ]);
 
     useEffect(() => {
-        setTalents(filterTalents([...fetchedTalents], { searchString, locations: locationsFilter }));
-    }, [fetchedTalents, searchString, locationsFilter]);
+        setTalents(
+            filterTalents(
+                [...fetchedTalents],
+                {
+                    searchString,
+                    locations: locationsFilter,
+                    managers: managersFilter
+                }
+            )
+        );
+    }, [fetchedTalents, searchString, locationsFilter, managersFilter]);
 
     const searchTalents = (item) => {
         setSearchString(item.search);

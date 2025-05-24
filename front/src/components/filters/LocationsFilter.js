@@ -14,7 +14,7 @@ function LocationsFilter(props) {
     useEffect(() => {
         axios({
             method: 'get',
-            url: '/api/v1/locations',
+            url: '/api/v1/talents/locations',
         }).then(response => {
             setLocations(response.data);
         });
