@@ -38,10 +38,7 @@ function TalentsList(props) {
         preferences: 'talents.filters.preferences',
     };
 
-    const [query, setQuery] = useState({
-        searchString: sessionStorage.getItem('talents.list.search') ?? '',
-        locations: JSON.parse(sessionStorage.getItem('talents.filters.locations')) ?? [],
-    });
+    const [searchString, setSearchString] = useState(sessionStorage.getItem('talents.list.search') ?? '');
 
     const [bodyFilter, setBodyFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.body)) ?? []);
     const [gendersFilter, setGendersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.genders)) ?? []);
@@ -68,28 +65,18 @@ function TalentsList(props) {
     ]);
 
     useEffect(() => {
-        setTalents(filterTalents([...fetchedTalents], query));
-    }, [fetchedTalents, query]);
+        setTalents(filterTalents([...fetchedTalents], { searchString, locations: locationsFilter }));
+    }, [fetchedTalents, searchString, locationsFilter]);
 
     const searchTalents = (item) => {
-        setQuery({
-            searchString: item.search,
-            locations: query.locations,
-        });
+        setSearchString(item.search);
         sessionStorage.setItem('talents.list.search', item.search);
     }
-
-    useEffect(() => {
-        setQuery({
-            searchString: query.searchString,
-            locations: locationsFilter,
-        });
-    }, [locationsFilter]);
 
     let result = null;
 
     if (talents && Object.keys(talents).length > 0) {
-        result = talents.map((talent, index) => {
+        result = talents.map((talent) => {
             return (
                 <NavLink className='talents-list__item' key={'talent.' + talent.id} to={talent.id}>
                     <TalentUsername name={talent.name} />
@@ -150,7 +137,7 @@ function TalentsList(props) {
                         <Form
                             form={form}
                             name='talents.search.form'
-                            initialValues={{ search: query.searchString }}
+                            initialValues={{ search: searchString }}
                             onValuesChange={searchTalents}
                             autoComplete='off'
                         >
