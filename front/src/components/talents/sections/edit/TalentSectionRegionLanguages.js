@@ -8,18 +8,10 @@ import NestedSection from '../../../ui-components/NestedSection';
 
 import { Flag } from '../../../ui-components/Flag';
 
+import { binaryRadioOptions } from '../../../../constants/form';
+
 function TalentSectionRegionLanguages(props) {
     const { settings } = useSettings();
-    const yesNoOptions = [
-        {
-            value: 0,
-            label: 'No'
-        },
-        {
-            value: 1,
-            label: 'Yes'
-        },
-    ];
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -53,7 +45,7 @@ function TalentSectionRegionLanguages(props) {
                     />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Accent' name='is_accent'>
-                    <Radio.Group options={yesNoOptions} />
+                    <Radio.Group options={binaryRadioOptions} />
                 </Form.Item>
             </NestedSection.Body>
         </NestedSection>
