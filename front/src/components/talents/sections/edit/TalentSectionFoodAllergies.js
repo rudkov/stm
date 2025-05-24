@@ -3,7 +3,6 @@ import { Form, Input, Radio } from 'antd';
 import NestedSection from '../../../ui-components/NestedSection';
 
 function TalentSectionFoodAllergies(props) {
-    const { TextArea } = Input;
     const yesNoOptions = [
         {
             value: 0,
@@ -20,7 +19,7 @@ function TalentSectionFoodAllergies(props) {
             <NestedSection.Header>Food & Allergies</NestedSection.Header>
             <NestedSection.Body className='nested-section__column'>
                 <Form.Item className='talent-form-row__left-label' label='Allergies' name='allergies'>
-                    <TextArea autoSize={{ minRows: 2 }} />
+                    <Input.TextArea autoSize={{ minRows: 2 }} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Vegetarian' name='is_vegetarian'>
                     <Radio.Group options={yesNoOptions} />

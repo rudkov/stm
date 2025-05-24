@@ -10,7 +10,6 @@ import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20
 
 function TalentSectionRelatives(props) {
     const { settings } = useSettings();
-    const { TextArea } = Input;
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -30,7 +29,7 @@ function TalentSectionRelatives(props) {
                                                 />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, 'info']}>
-                                                <TextArea autoSize={{ minRows: 2 }} placeholder='Name, phone, email, address...' />
+                                                <Input.TextArea autoSize={{ minRows: 2 }} placeholder='Name, phone, email, address...' />
                                             </Form.Item>
                                         </div>
                                         <div className='talent-section-form-relatives__button'>

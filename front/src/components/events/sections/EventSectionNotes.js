@@ -11,8 +11,6 @@ import DataCell from '../../ui-components/DataCell';
 function EventSectionNotes(props) {
     const event = useSelector(getEvent);
 
-    const { TextArea } = Input;
-
     return (
         <div className='info-panel--section'>
             <div className='info-panel--section--header'>
@@ -31,7 +29,7 @@ function EventSectionNotes(props) {
                     <DataCell
                         value={
                             <Form.Item name='notes' className='form-item--border-bottom'>
-                                <TextArea autoSize={{ minRows: 1 }} />
+                                <Input.TextArea autoSize={{ minRows: 1 }} />
                             </Form.Item>
                         }
                     />

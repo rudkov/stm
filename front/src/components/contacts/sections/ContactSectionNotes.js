@@ -11,8 +11,6 @@ import DataCell from '../../ui-components/DataCell';
 function ContactSectionNotes(props) {
     const contact = useSelector(getContact);
 
-    const { TextArea } = Input;
-
     return (
         <div className='info-panel--section'>
             <div className='info-panel--section--header'>
@@ -31,7 +29,7 @@ function ContactSectionNotes(props) {
                     <DataCell
                         value={
                             <Form.Item name='comment' className='form-item--border-bottom'>
-                                <TextArea autoSize={{ minRows: 1 }} />
+                                <Input.TextArea autoSize={{ minRows: 1 }} />
                             </Form.Item>
                         }
                     />

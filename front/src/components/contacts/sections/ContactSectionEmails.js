@@ -20,7 +20,6 @@ function ContactSectionEmails(props) {
     const { settings } = useSettings();
 
     const { Option } = Select;
-    const { TextArea } = Input;
 
     return (
         <div className='info-panel--section'>
@@ -67,7 +66,7 @@ function ContactSectionEmails(props) {
                                                     </Select>
                                                 </Form.Item>
                                                 <Form.Item {...restField} name={[name, "info"]} style={{ width: '60%' }}>
-                                                    <TextArea autoSize={{ minRows: 1 }} placeholder="Email" />
+                                                    <Input.TextArea autoSize={{ minRows: 1 }} placeholder="Email" />
                                                 </Form.Item>
                                                 <Button key='contact.emails.remove' icon={IconCrossInCircle} isSmall={true} onClick={() => remove(name)} />
                                             </Space.Compact>

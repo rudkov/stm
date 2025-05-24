@@ -20,7 +20,6 @@ function ContactSectionPhones(props) {
     const { settings } = useSettings();
 
     const { Option } = Select;
-    const { TextArea } = Input;
 
     return (
         <div className='info-panel--section'>
@@ -67,7 +66,7 @@ function ContactSectionPhones(props) {
                                                     </Select>
                                                 </Form.Item>
                                                 <Form.Item {...restField} name={[name, "info"]} style={{ width: '60%' }}>
-                                                    <TextArea autoSize={{ minRows: 1 }} placeholder="Phone" />
+                                                    <Input.TextArea autoSize={{ minRows: 1 }} placeholder="Phone" />
                                                 </Form.Item>
                                                 <Button key='contact.phones.remove' icon={IconCrossInCircle} isSmall={true} onClick={() => remove(name)} />
                                             </Space.Compact>

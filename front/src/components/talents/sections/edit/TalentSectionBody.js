@@ -8,7 +8,6 @@ import IconColorBadge from '../../../ui-components/IconColorBadge';
 
 function TalentSectionBody(props) {
     const { settings } = useSettings();
-    const { TextArea } = Input;
 
     const yesNoOptions = [
         {
@@ -128,13 +127,13 @@ function TalentSectionBody(props) {
                     <Radio.Group options={yesNoOptions} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Scars' name='scars'>
-                    <TextArea autoSize={{ minRows: 1 }} />
+                    <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Tattoos' name='tattoos'>
-                    <TextArea autoSize={{ minRows: 1 }} />
+                    <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Piercings' name='piercings'>
-                    <TextArea autoSize={{ minRows: 1 }} />
+                    <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
             </NestedSection.Body>
         </NestedSection>
