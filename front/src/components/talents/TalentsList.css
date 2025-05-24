@@ -56,5 +56,12 @@
 }
 
 .talents-list__body {
-padding-bottom: 6px;
+    padding-bottom: 6px;
+}
+
+.talents-list__empty {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

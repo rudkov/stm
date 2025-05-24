@@ -4,7 +4,7 @@ import '../../helpers/shared.css';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
-import { Form, Input, Tooltip, Button } from 'antd';
+import { Button, Empty, Form, Input, Tooltip } from 'antd';
 
 import { getTalents, fetchTalents, filterTalents } from '../../store/talents/talents';
 
@@ -100,6 +100,13 @@ function TalentsList(props) {
                 </NavLink>
             );
         });
+    }
+    else {
+        result = (
+            <div className='talents-list__empty'>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No talents found' />
+            </div>
+        );
     }
 
     return (
