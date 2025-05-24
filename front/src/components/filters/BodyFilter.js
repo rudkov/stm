@@ -48,33 +48,17 @@ function BodyFilter(props) {
 
     const checkIfFiltersApplied = (values) => {
         const processedValues = { ...values };
-
-        if (Array.isArray(processedValues.bust) && processedValues.bust.length === 2 &&
-            processedValues.bust[0] === formConfig.bust[0] && processedValues.bust[1] === formConfig.bust[1]) {
-            processedValues.bust = [];
-        }
-
-        if (Array.isArray(processedValues.height) && processedValues.height.length === 2 &&
-            processedValues.height[0] === formConfig.height[0] && processedValues.height[1] === formConfig.height[1]) {
-            processedValues.height = [];
-        }
-
-        if (Array.isArray(processedValues.hips) && processedValues.hips.length === 2 &&
-            processedValues.hips[0] === formConfig.hips[0] && processedValues.hips[1] === formConfig.hips[1]) {
-            processedValues.hips = [];
-        }
-
-        if (Array.isArray(processedValues.waist) && processedValues.waist.length === 2 &&
-            processedValues.waist[0] === formConfig.waist[0] && processedValues.waist[1] === formConfig.waist[1]) {
-            processedValues.waist = [];
-        }
-
-        if (Array.isArray(processedValues.weight) && processedValues.weight.length === 2 &&
-            processedValues.weight[0] === formConfig.weight[0] && processedValues.weight[1] === formConfig.weight[1]) {
-            processedValues.weight = [];
-        }
-
-        return !Object.values(processedValues).every(arr => Array.isArray(arr) && arr.length === 0);
+        const rangeFields = ['bust', 'height', 'hips', 'waist', 'weight'];
+    
+        rangeFields.forEach((field) => {
+            const val = processedValues[field];
+            const def = formConfig[field];
+            if (Array.isArray(val) && val.length === 2 && val[0] === def[0] && val[1] === def[1]) {
+                processedValues[field] = [];
+            }
+        });
+    
+        return !Object.values(processedValues).every(val => Array.isArray(val) && val.length === 0);
     };
 
     useEffect(() => {
