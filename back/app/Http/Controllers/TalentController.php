@@ -53,102 +53,68 @@ class TalentController extends Controller
 
     public function index(Request $request)
     {
-        $raw_talents = DB::table('talents')
-            ->where('talents.team_id', Auth::user()->team->id)
-            ->whereNull('talents.deleted_at')
-            ->when($request->bust, function ($query, $bust) {
-                if (count($bust) === 2) {
-                    return $query->whereBetween('talents.bust_cm', [$bust[0], $bust[1]]);
-                }
-                return $query;
-            })
-            ->when($request->cupSize, function ($query, $cupSize) {
-                return $query->whereIn('talents.cup_size_id', $cupSize);
-            })
-            ->when($request->dressSize, function ($query, $dressSize) {
-                return $query->whereIn('talents.dress_size_id', $dressSize);
-            })
-            ->when($request->eyeColor, function ($query, $eyeColor) {
-                return $query->whereIn('talents.eye_color_id', $eyeColor);
-            })
-            ->when($request->genders, function ($query, $gender) {
-                return $query->whereIn('talents.gender_id', $gender);
-            })
-            ->when($request->hairColor, function ($query, $hairColor) {
-                return $query->whereIn('talents.hair_color_id', $hairColor);
-            })
-            ->when($request->hairLength, function ($query, $hairLength) {
-                return $query->whereIn('talents.hair_length_id', $hairLength);
-            })
-            ->when($request->height, function ($query, $height) {
-                if (count($height) === 2) {
-                    return $query->whereBetween('talents.height_cm', [$height[0], $height[1]]);
-                }
-                return $query;
-            })
-            ->when($request->hips, function ($query, $hips) {
-                if (count($hips) === 2) {
-                    return $query->whereBetween('talents.hips_cm', [$hips[0], $hips[1]]);
-                }
-                return $query;
-            })
-            ->when($request->managers, function ($query, $manager) {
-                return $query->whereIn('talents.created_by', $manager);
-            })
-            ->when($request->noContacts, function ($query, $noContacts) {
-                if ($noContacts === true || $noContacts === 'true') {
-                    return $query->whereNotExists(function ($subquery) {
-                        $subquery->select(DB::raw(1))
-                            ->from('talent_emails')
-                            ->whereColumn('talent_emails.talent_id', 'talents.id');
-                    })
-                        ->whereNotExists(function ($subquery) {
-                            $subquery->select(DB::raw(1))
-                                ->from('talent_messengers')
-                                ->whereColumn('talent_messengers.talent_id', 'talents.id');
-                        })
-                        ->whereNotExists(function ($subquery) {
-                            $subquery->select(DB::raw(1))
-                                ->from('talent_phones')
-                                ->whereColumn('talent_phones.talent_id', 'talents.id');
-                        })
-                    ;
-                }
-                return $query;
-            })
-            ->when($request->preferences, function ($query, $preferences) {
-                foreach ($preferences as $preference) {
-                    $query->where('talents.' . $preference, 1);
-                }
-                return $query;
-            })
-            ->when($request->skinColor, function ($query, $skinColor) {
-                return $query->whereIn('talents.skin_color_id', $skinColor);
-            })
-            ->when($request->shirtSize, function ($query, $shirtSize) {
-                return $query->whereIn('talents.shirt_size_id', $shirtSize);
-            })
-            ->when($request->shoeSize, function ($query, $shoeSize) {
-                return $query->whereIn('talents.shoe_size_id', $shoeSize);
-            })
-            ->when($request->suitCut, function ($query, $suitCut) {
-                return $query->whereIn('talents.suit_cut_id', $suitCut);
-            })
-            ->when($request->waist, function ($query, $waist) {
-                if (count($waist) === 2) {
-                    return $query->whereBetween('talents.waist_cm', [$waist[0], $waist[1]]);
-                }
-                return $query;
-            })
-            ->when($request->weight, function ($query, $weight) {
-                if (count($weight) === 2) {
-                    return $query->whereBetween('talents.weight_kg', [$weight[0], $weight[1]]);
-                }
-                return $query;
-            })
-            ->orderBy('talents.first_name', 'asc')
-            ->orderBy('talents.last_name', 'asc')
-            ->get(['talents.id', 'talents.first_name', 'talents.last_name', 'talents.current_location']);
+        $query = DB::table('talents')
+                    ->where('talents.team_id', Auth::user()->team->id)
+                    ->whereNull('talents.deleted_at');
+        
+        // Simple filters
+        $filters = [
+            'cup_size_id'    => 'cupSize',
+            'dress_size_id'  => 'dressSize',
+            'eye_color_id'   => 'eyeColor',
+            'gender_id'      => 'genders',
+            'hair_color_id'  => 'hairColor',
+            'hair_length_id' => 'hairLength',
+            'skin_color_id'  => 'skinColor',
+            'shirt_size_id'  => 'shirtSize',
+            'shoe_size_id'   => 'shoeSize',
+            'suit_cut_id'    => 'suitCut',
+            'created_by'     => 'managers',
+        ];
+        
+        foreach ($filters as $column => $param) {
+            if (!empty($request->$param)) {
+                $query->whereIn("talents.$column", $request->$param);
+            }
+        }
+        
+        // Ranges (between)
+        $rangeFilters = [
+            'bust_cm'   => 'bust',
+            'height_cm' => 'height',
+            'hips_cm'   => 'hips',
+            'waist_cm'  => 'waist',
+            'weight_kg' => 'weight',
+        ];
+        
+        foreach ($rangeFilters as $column => $param) {
+            if (!empty($request->$param) && count($request->$param) === 2) {
+                $query->whereBetween("talents.$column", $request->$param);
+            }
+        }
+        
+        // No contact info
+        if ($request->noContacts === true || $request->noContacts === 'true') {
+            $query->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('talent_emails')->whereColumn('talent_emails.talent_id', 'talents.id');
+            })->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('talent_messengers')->whereColumn('talent_messengers.talent_id', 'talents.id');
+            })->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('talent_phones')->whereColumn('talent_phones.talent_id', 'talents.id');
+            });
+        }
+        
+        // Preferences (bool)
+        if (!empty($request->preferences)) {
+            foreach ($request->preferences as $preference) {
+                $query->where("talents.$preference", 1);
+            }
+        }
+        
+        $raw_talents = $query
+                    ->orderBy('talents.first_name')
+                    ->orderBy('talents.last_name')
+                    ->get(['talents.id', 'talents.first_name', 'talents.last_name', 'talents.current_location']);
 
         $talents = array();
         foreach ($raw_talents as $talent) {
