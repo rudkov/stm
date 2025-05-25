@@ -26,6 +26,8 @@ class CreateTalentsTable extends Migration
             $table->unsignedBigInteger('mother_agency_id')->nullable();
             $table->unsignedBigInteger('marital_status_id')->nullable();
             $table->boolean('is_lifestyle')->nullable();
+            $table->unsignedBigInteger('manager_id')->nullable();
+            $table->foreign('manager_id')->references('id')->on('users');
 
             // measurements
             $table->unsignedBigInteger('hair_color_id')->nullable();

@@ -2,26 +2,23 @@ import './Filter.css';
 import './ManagersFilter.css';
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { getUsers, fetchUsers } from '../../store/users/users';
+import axios from 'axios';
 
 import Filter from './Filter';
 
 import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
 
 function ManagersFilter(props) {
-    const dispatch = useDispatch();
-    const fetchedUsers = useSelector(getUsers);
     const [managers, setManagers] = useState([]);
 
     useEffect(() => {
-        dispatch(fetchUsers());
-    }, [dispatch]);
-
-    useEffect(() => {
-        setManagers([...fetchedUsers]);
-    }, [fetchedUsers]);
+        axios({
+            method: 'get',
+            url: '/api/v1/talents/managers',
+        }).then(response => {
+            setManagers(response.data);
+        });
+    }, []);
 
     const toggleItem = (item) => {
         let items = [...props.selectedItems];

@@ -60,6 +60,13 @@ export const filterTalents = (items, query) => {
         });
     }
 
+    if (query.managers && Object.keys(query.managers).length > 0) {
+        const managers = query.managers;
+        items = items.filter((item) => {
+            return item.manager_id && managers.includes(item.manager_id);
+        });
+    }
+
     return items;
 };
 

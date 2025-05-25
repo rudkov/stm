@@ -36,6 +36,8 @@ Route::group(['prefix' => 'v1'], function () {
 
         //talents
         Route::post('talents/search', 'TalentController@index');
+        Route::get('talents/locations', 'TalentController@locations');
+        Route::get('talents/managers', 'TalentController@managers');
 
         //talent current location
         Route::put('talents/{id}/locations/current', 'TalentController@updateCurrentLocation');
@@ -52,12 +54,7 @@ Route::group(['prefix' => 'v1'], function () {
         //event
         Route::get('events/{id}', 'EventController@show');
 
-        //locations
-        Route::get('locations', 'locationController@index');
-
         //users
         Route::post('users/search', 'UserController@index');
-
-        // Route::apiResource('talents', TalentController::class);
     });
 });

@@ -1,9 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialAuthState = {
     isAuthenticated: false,
     isLoading: true,
     activeTeam: null,
+    user_id: null,
 };
 
 const authSlice = createSlice({
@@ -15,6 +16,7 @@ const authSlice = createSlice({
                 if (action.payload.data.team_id) {
                     state.activeTeam = action.payload.data.team_id;
                 }
+                state.user_id = action.payload.data.id;
                 state.isAuthenticated = true;
             }
         },

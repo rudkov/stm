@@ -4,7 +4,7 @@ import '../../helpers/shared.css';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
-import { Form, Input, Tooltip, Button } from 'antd';
+import { Button, Empty, Form, Input, Tooltip } from 'antd';
 
 import { getTalents, fetchTalents, filterTalents } from '../../store/talents/talents';
 
@@ -51,7 +51,6 @@ function TalentsList(props) {
         dispatch(fetchTalents({
             body: bodyFilter,
             genders: gendersFilter,
-            managers: managersFilter,
             noContacts: noContactsFilter,
             preferences: preferencesFilter,
         }));
@@ -59,14 +58,22 @@ function TalentsList(props) {
         dispatch,
         bodyFilter,
         gendersFilter,
-        managersFilter,
         noContactsFilter,
         preferencesFilter,
     ]);
 
     useEffect(() => {
-        setTalents(filterTalents([...fetchedTalents], { searchString, locations: locationsFilter }));
-    }, [fetchedTalents, searchString, locationsFilter]);
+        setTalents(
+            filterTalents(
+                [...fetchedTalents],
+                {
+                    searchString,
+                    locations: locationsFilter,
+                    managers: managersFilter
+                }
+            )
+        );
+    }, [fetchedTalents, searchString, locationsFilter, managersFilter]);
 
     const searchTalents = (item) => {
         setSearchString(item.search);
@@ -93,6 +100,13 @@ function TalentsList(props) {
                 </NavLink>
             );
         });
+    }
+    else {
+        result = (
+            <div className='talents-list__empty'>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No talents found' />
+            </div>
+        );
     }
 
     return (
