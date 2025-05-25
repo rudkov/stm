@@ -5,7 +5,7 @@
 import '../../helpers/shared.css';
 
 import { useState } from 'react';
-import { Tooltip, Switch } from 'antd';
+import { Tooltip } from 'antd';
 
 import { ReactComponent as IconCircle } from '../../assets/icons/circle.svg';
 import { ReactComponent as IconCrossInCircle } from '../../assets/icons/cross-in-circle.svg';

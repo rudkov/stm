@@ -2,7 +2,7 @@ import './Filter.css';
 import './BodyFilter.css';
 import '../../helpers/shared.css';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Form, Select, Slider } from 'antd';
 
 import { useSettings } from '../../context/SettingsContext';
@@ -11,20 +11,20 @@ import Filter from './Filter';
 
 import IconColorBadge from '../ui-components/IconColorBadge';
 
+const formConfig = {
+    bust: [55, 160],
+    height: [70, 210],
+    hips: [55, 170],
+    waist: [45, 150],
+    weight: [15, 180],
+};
+
 function BodyFilter(props) {
     const [form] = Form.useForm();
     const { settings } = useSettings();
     const [isApplied, setIsApplied] = useState(false);
 
-    const formConfig = {
-        bust: [55, 160],
-        height: [70, 210],
-        hips: [55, 170],
-        waist: [45, 150],
-        weight: [15, 180],
-    };
-
-    const initForm = (values) => {
+    const initForm = useCallback((values) => {
         const formValues = {
             bust: Array.isArray(values.bust) && values.bust.length === 0 ? [...formConfig.bust] : (values.bust ?? [...formConfig.bust]),
             height: Array.isArray(values.height) && values.height.length === 0 ? [...formConfig.height] : (values.height ?? [...formConfig.height]),
@@ -44,12 +44,12 @@ function BodyFilter(props) {
         };
 
         form.setFieldsValue(formValues);
-    };
+    }, [form]);
 
-    const checkIfFiltersApplied = (values) => {
+    const checkIfFiltersApplied = useCallback((values) => {
         const processedValues = { ...values };
         const rangeFields = ['bust', 'height', 'hips', 'waist', 'weight'];
-    
+
         rangeFields.forEach((field) => {
             const val = processedValues[field];
             const def = formConfig[field];
@@ -57,26 +57,26 @@ function BodyFilter(props) {
                 processedValues[field] = [];
             }
         });
-    
+
         return !Object.values(processedValues).every(val => Array.isArray(val) && val.length === 0);
-    };
+    }, []);
 
     useEffect(() => {
         initForm(props?.selectedValues);
         setIsApplied(checkIfFiltersApplied(props?.selectedValues));
-    }, []);
+    }, [props?.selectedValues, initForm, checkIfFiltersApplied]);
 
     useEffect(() => {
         if (props?.selectedValues) {
             setIsApplied(checkIfFiltersApplied(props.selectedValues));
         }
-    }, [props.selectedValues]);
+    }, [props.selectedValues, checkIfFiltersApplied]);
 
     const applyFilter = () => {
         const values = form.getFieldsValue();
         const processedValues = { ...values };
         const rangeFields = ['bust', 'height', 'hips', 'waist', 'weight'];
-    
+
         rangeFields.forEach((field) => {
             const val = processedValues[field];
             const def = formConfig[field];
@@ -84,7 +84,7 @@ function BodyFilter(props) {
                 processedValues[field] = [];
             }
         });
-    
+
         setIsApplied(checkIfFiltersApplied(processedValues));
         props.setValues(processedValues);
         sessionStorage.setItem(props.uniqueName, JSON.stringify(processedValues));
