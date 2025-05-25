@@ -10,7 +10,6 @@ import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20
 
 function TalentSectionAddresses(props) {
     const { settings } = useSettings();
-    const { TextArea } = Input;
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -30,7 +29,7 @@ function TalentSectionAddresses(props) {
                                                 />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, 'info']}>
-                                                <TextArea autoSize={{ minRows: 2 }} placeholder='Address' />
+                                                <Input.TextArea autoSize={{ minRows: 2 }} placeholder='Address' />
                                             </Form.Item>
                                         </div>
                                         <div className='talent-section-form-addresses__button'>

@@ -17,7 +17,13 @@ function TalentSectionSocialMedia(props) {
                                     <div className='text-light'>{socialMedia.type?.name}</div>
                                     <div className='nested-section__item_with_icon ellipsis'>
                                         <div className='nested-section__icon'>{SocialMediaIcons[socialMedia.type?.system_name]}</div>
-                                        {<a href={`${socialMedia.type?.url + socialMedia.info}`} className='ellipsis' target='_blank' rel='noreferrer'>{socialMedia.info}</a>}
+                                        {socialMedia.type?.url ? (
+                                            <a href={`${socialMedia.type.url}${socialMedia.info}`} className='ellipsis' target='_blank' rel='noreferrer'>
+                                                {socialMedia.info}
+                                            </a>
+                                        ) : (
+                                            <span className='ellipsis'>{socialMedia.info}</span>
+                                        )}
                                     </div>
                                 </div>
                             );

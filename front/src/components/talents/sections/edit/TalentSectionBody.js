@@ -6,20 +6,10 @@ import NestedSection from '../../../ui-components/NestedSection';
 
 import IconColorBadge from '../../../ui-components/IconColorBadge';
 
+import { binaryRadioOptions } from '../../../../constants/form';
+
 function TalentSectionBody(props) {
     const { settings } = useSettings();
-    const { TextArea } = Input;
-
-    const yesNoOptions = [
-        {
-            value: 0,
-            label: 'No'
-        },
-        {
-            value: 1,
-            label: 'Yes'
-        },
-    ];
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -125,16 +115,16 @@ function TalentSectionBody(props) {
                     />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Ears pierced' name='is_ears_pierced'>
-                    <Radio.Group options={yesNoOptions} />
+                    <Radio.Group options={binaryRadioOptions} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Scars' name='scars'>
-                    <TextArea autoSize={{ minRows: 1 }} />
+                    <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Tattoos' name='tattoos'>
-                    <TextArea autoSize={{ minRows: 1 }} />
+                    <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Piercings' name='piercings'>
-                    <TextArea autoSize={{ minRows: 1 }} />
+                    <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
             </NestedSection.Body>
         </NestedSection>

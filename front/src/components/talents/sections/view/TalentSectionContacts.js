@@ -37,7 +37,13 @@ function TalentSectionContacts(props) {
                                     <div className='text-light'>{messenger.type?.name}</div>
                                     <div className='nested-section__item_with_icon ellipsis'>
                                         <div className='nested-section__icon'>{MessengersIcons[messenger.type?.system_name]}</div>
-                                        {<a href={`${messenger.type?.url + messenger.info}`} className='ellipsis' target='_blank' rel='noreferrer'>{messenger.info}</a>}
+                                        {messenger.type?.url ? (
+                                            <a href={`${messenger.type.url}${messenger.info}`} className='ellipsis' target='_blank' rel='noreferrer'>
+                                                {messenger.info}
+                                            </a>
+                                        ) : (
+                                            <span className='ellipsis'>{messenger.info}</span>
+                                        )}
                                     </div>
                                 </div>
                             );

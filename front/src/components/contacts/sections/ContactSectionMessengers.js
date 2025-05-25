@@ -22,7 +22,6 @@ function ContactSectionMessengers(props) {
     const { settings } = useSettings();
 
     const { Option } = Select;
-    const { TextArea } = Input;
 
     return (
         <div className='info-panel--section'>
@@ -70,7 +69,7 @@ function ContactSectionMessengers(props) {
                                                     </Select>
                                                 </Form.Item>
                                                 <Form.Item {...restField} name={[name, "info"]} style={{ width: '60%' }}>
-                                                    <TextArea autoSize={{ minRows: 1 }} placeholder="Username" />
+                                                    <Input.TextArea autoSize={{ minRows: 1 }} placeholder="Username" />
                                                 </Form.Item>
                                                 <Button key='contact.messengers.remove' icon={IconCrossInCircle} isSmall={true} onClick={() => remove(name)} />
                                             </Space.Compact>

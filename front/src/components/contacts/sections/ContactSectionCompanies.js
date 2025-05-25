@@ -24,8 +24,6 @@ function ContactSectionCompanies(props) {
         dispatch(fetchCompanies());
     }, [dispatch]);
 
-    const { TextArea } = Input;
-
     return (
         <div className='info-panel--section'>
             <div className='info-panel--section--header'>
@@ -72,7 +70,7 @@ function ContactSectionCompanies(props) {
                                                     name={[name, "job_title"]}
                                                     style={{ width: '40%' }}
                                                 >
-                                                    <TextArea autoSize={{ minRows: 1 }} placeholder="Job title" />
+                                                    <Input.TextArea autoSize={{ minRows: 1 }} placeholder="Job title" />
                                                 </Form.Item>
                                                 <Button key='contact.companies.remove' icon={IconCrossInCircle} isSmall={true} onClick={() => remove(name)} />
                                             </Space.Compact>
