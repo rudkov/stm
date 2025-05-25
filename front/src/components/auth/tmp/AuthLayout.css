@@ -18,9 +18,21 @@
 }
 
 .auth-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+}
+
+.auth-page__title {
     font-size: 24px;
     font-weight: 700;
-    text-align: center;
+    margin: 0;
+}
+
+.auth-page__paragraph {
+    color: var(--text-secondary);
+    margin: 0;
 }
 
 .auth-page__body {

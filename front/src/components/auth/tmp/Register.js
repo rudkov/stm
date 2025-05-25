@@ -1,6 +1,6 @@
 import './Register.css';
 
-import { Form, Input, Button } from 'antd';
+import { Button, Form, Input } from 'antd';
 
 import AuthLayout from './AuthLayout';
 
@@ -10,7 +10,7 @@ function Register() {
     return (
         <AuthLayout>
             <AuthLayout.Header>
-                Create an Account
+                <h3 className='auth-page__title'>Create an Account</h3>
             </AuthLayout.Header>
             <AuthLayout.Body>
                 <Form
@@ -56,7 +56,6 @@ function Register() {
                 Already have an account? <a href='#'>Sign in</a>
             </AuthLayout.Footer>
         </AuthLayout>
-
     );
 }
 
