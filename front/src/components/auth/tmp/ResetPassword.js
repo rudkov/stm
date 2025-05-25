@@ -2,17 +2,18 @@ import { Button, Form, Input } from 'antd';
 
 import AuthLayout from './AuthLayout';
 
-function Login() {
+function ResetPassword() {
     const [form] = Form.useForm();
 
     return (
         <AuthLayout>
             <AuthLayout.Header>
-                <h3 className='auth-page__title'>Sign In</h3>
+                <h3 className='auth-page__title'>Reset Your Password</h3>
+                <p className='auth-page__paragraph'>Enter your email address below and we'll send you a link to reset your password.</p>
             </AuthLayout.Header>
             <AuthLayout.Body>
                 <Form
-                    name='login'
+                    name='reset-password'
                     form={form}
                     layout='vertical'
                     requiredMark={false}
@@ -21,31 +22,17 @@ function Login() {
                 >
                     <Form.Item
                         name='email'
-                        label='Email'
                         rules={[{ required: true, message: 'Please enter your email address' }]}
                     >
                         <Input placeholder='Email' />
                     </Form.Item>
-                    <Form.Item
-                        name='password'
-                        label='Password'
-                        rules={[{ required: true, message: 'Please enter a password' }]}
-                    >
-                        <Input.Password placeholder='Password' />
-                    </Form.Item>
-                    <div>
-                        <a href='#'>Forgot password?</a>
-                    </div>
                     <Form.Item>
-                        <Button type='primary' htmlType='submit' block>Sign In</Button>
+                        <Button type='primary' htmlType='submit' block>Send Reset Instructions</Button>
                     </Form.Item>
                 </Form>
             </AuthLayout.Body>
-            <AuthLayout.Footer>
-                Don't have an account? <a href='#'>Sign up</a>
-            </AuthLayout.Footer>
         </AuthLayout>
     );
 }
 
-export default Login;
+export default ResetPassword;
