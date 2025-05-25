@@ -29,6 +29,9 @@ import Talents from './components/pages/Talents';
 import TalentsZeroState from './components/talents/TalentsZeroState';
 import TalentView from './components/talents/TalentView';
 
+import { default as TmpLogin } from './components/auth/tmp/Login';
+import { default as TmpRegister } from './components/auth/tmp/Register';
+
 import NewTeam from './components/teams/NewTeam';
 
 import Tmp from './components/pages/Tmp';
@@ -43,6 +46,11 @@ function App() {
                         <Route index element={<Tmp />} />
                         <Route path='login' element={<Login />} />
                         <Route path='register' element={<Register />} />
+
+                        {/* Temporary Auth Routes */}
+                        <Route path='tmp/login' element={<TmpLogin />} />
+                        <Route path='tmp/register' element={<TmpRegister />} />
+                        {/* End of Temporary Auth Routes */}
 
                         <Route element={<RequireAuth />}>
 
