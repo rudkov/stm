@@ -68,7 +68,7 @@ class EventController extends Controller
                     foreach ($clients as $client) {
                         $query->orWhere(function ($query) use ($client) {
                             $query->where('events.clientable_id', $client['id'])
-                                ->where('events.clientable_type', $client['class']);
+                                ->where('events.clientable_type', $client['type']);
                         });
                     }
                 });
