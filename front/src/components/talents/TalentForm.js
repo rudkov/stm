@@ -15,6 +15,7 @@ import {
     talentActions
 } from '../../store/talents/talent';
 import { fetchTalents } from '../../store/talents/talents';
+import { fetchClients, getClients } from '../../store/clients/clients';
 
 import CustomDrawer from '../ui-components/CustomDrawer';
 import ScrollableView from '../ui-components/ScrollableView';
@@ -54,7 +55,9 @@ function TalentForm(props) {
     const [originalFormValues, setOriginalFormValues] = useState();
     const [isConfirmClosingModalOpen, setIsConfirmClosingModalOpen] = useState(false);
     const showNotification = useNotification();
-    
+    const fetchedClients = useSelector(getClients);
+    const [motherAgencies, setMotherAgencies] = useState([]);
+
     const { isNewTalent, open: isFormOpen, closeForm: onClose } = props;
 
     const initForm = useCallback((values) => {
@@ -69,6 +72,14 @@ function TalentForm(props) {
             is_lifestyle: values.is_lifestyle,
             gender_id: values.gender_id || '',
             manager_id: values.manager_id || user_id,
+
+            mother_agency: (() => {
+                const index = motherAgencies.findIndex(agency =>
+                    agency.id === values.mother_agencyable_id &&
+                    agency.type === values.mother_agencyable_type
+                );
+                return index === -1 ? '' : index;
+            })(),
 
             comment: values.comment || '',
 
@@ -130,7 +141,7 @@ function TalentForm(props) {
             biography: values.biography || '',
         });
         setOriginalFormValues(form.getFieldsValue(true));
-    }, [form]);
+    }, [form, motherAgencies]);
 
     const submitForm = (formValues) => {
         setIsLoading(true);
@@ -141,6 +152,9 @@ function TalentForm(props) {
         values.marital_status_id = values.marital_status_id ?? null;
         values.gender_id = values.gender_id ?? null;
         values.is_lifestyle = (values.is_lifestyle === 'Lifestyle') ? 1 : (values.is_lifestyle === 'Fashion') ? 0 : null;
+
+        values.mother_agencyable_id = motherAgencies[values.mother_agency]?.id ?? null;
+        values.mother_agencyable_type = motherAgencies[values.mother_agency]?.type ?? null;
 
         values.hair_color_id = values.hair_color_id ?? null;
         values.hair_length_id = values.hair_length_id ?? null;
@@ -228,6 +242,10 @@ function TalentForm(props) {
         },
     ];
 
+    useEffect(() => {
+        setMotherAgencies([...fetchedClients]);
+    }, [fetchedClients]);
+
     const deleteTalent = () => {
         setIsLoading(true);
         dispatch(deleteTalentById({ talentId: talent.id }));
@@ -236,6 +254,7 @@ function TalentForm(props) {
     useEffect(() => {
         if (!isNewTalent && talent.id && isFormOpen) {
             dispatch(fetchTalentById(talent.id));
+            dispatch(fetchClients());
         }
     }, [isNewTalent, talent.id, isFormOpen, dispatch]);
 
@@ -369,7 +388,7 @@ function TalentForm(props) {
                             </div>
                             <div className='talent-form__body'>
                                 <TalentSectionNotes id='notes' />
-                                <TalentSectionPrimaryInfo id='primary-info' />
+                                <TalentSectionPrimaryInfo id='primary-info' form={form} motherAgencies={motherAgencies} />
                                 <TalentSectionFoodAllergies id='food-allergies' />
                                 <TalentSectionBody id='body' />
                                 <TalentSectionContacts id='contacts' form={form} />

@@ -103,6 +103,13 @@ const prepareTalent = (state, values) => {
     item.is_lifestyle = (values.is_lifestyle === 1) ? "Lifestyle" : (values.is_lifestyle === 0) ? "Fashion" : null;
     item.gender_id = values.gender_id || '';
 
+    item.mother_agency = values.mother_agencyable?.name ||
+        (values.mother_agencyable?.first_name || values.mother_agencyable?.last_name ?
+            `${values.mother_agencyable.first_name || ''} ${values.mother_agencyable.last_name || ''}`.trim() :
+            '');
+    item.mother_agencyable_id = values.mother_agencyable_id || '';
+    item.mother_agencyable_type = values.mother_agencyable_type || '';
+
     item.hair_color_id = values.hair_color_id || '';
     item.hair_length_id = values.hair_length_id || '';
     item.eye_color_id = values.eye_color_id || '';

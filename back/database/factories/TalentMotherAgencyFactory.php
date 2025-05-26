@@ -28,7 +28,7 @@ class TalentMotherAgencyFactory extends Factory
                 $companies[$talent->team_id]->random(),
                 $contacts[$talent->team_id]->random()
             ])->random();
-            $talent->motherAgency()->associate($motherAgency);
+            $talent->motherAgencyable()->associate($motherAgency);
             $talent->save();
         }
     }

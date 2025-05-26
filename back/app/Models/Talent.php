@@ -214,8 +214,8 @@ class Talent extends Model
         return $this->belongsTo(User::class, 'manager_id');
     }
 
-    public function motherAgency(): MorphTo
+    public function motherAgencyable(): MorphTo
     {
-        return $this->morphTo('mother_agencyable');
+        return $this->morphTo();
     }
 }
