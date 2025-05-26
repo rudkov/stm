@@ -16,6 +16,7 @@ use App\Models\ContactMessenger;
 use App\Models\Event;
 use App\Models\EventChunk;
 use App\Models\User;
+use App\Models\Talent;
 
 class Contact extends Model
 {
@@ -78,5 +79,10 @@ class Contact extends Model
     public function eventChunks(): MorphToMany
     {
         return $this->morphedByMany(EventChunk::class, 'contactable');
+    }
+
+    public function talents()
+    {
+        return $this->morphMany(Talent::class, 'mother_agencyable');
     }
 }
