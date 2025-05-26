@@ -3,18 +3,18 @@ import '../../helpers/form.css';
 
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
-import { Form, Select, DatePicker, Button, Drawer } from 'antd';
+import { Form, Drawer } from 'antd';
 
 
-import { eventActions, getEvent, fetchEventById } from '../../store/events/event';
-import { fetchEvents } from '../../store/events/events';
+import { getEvent, fetchEventById } from '../../store/events/event';
+// import { fetchEvents } from '../../store/events/events';
 
-import { useNotification } from '../notifications/NotificationProvider';
+// import { useNotification } from '../notifications/NotificationProvider';
 
-import TimePicker from './TimePicker';
-import dayjs from 'dayjs';
+// import TimePicker from './TimePicker';
+// import dayjs from 'dayjs';
 
 import EventSectionMain from './sections/EventSectionMain';
 import EventSectionNotes from './sections/EventSectionNotes';
@@ -30,7 +30,7 @@ function EventInfo(props) {
     const navigate = useNavigate();
     const params = useParams();
     const [form] = Form.useForm();
-    const showNotification = useNotification();
+    // const showNotification = useNotification();
 
     const event = useSelector(getEvent);
     // const createResponse = useSelector(getCreateResponse);
@@ -45,7 +45,7 @@ function EventInfo(props) {
         setEditMode(!editMode);
     };
 
-    const initForm = () => {
+    const initForm = useCallback(() => {
         // console.log(event);
         form.setFieldsValue({
             title: event.title || '',
@@ -54,7 +54,7 @@ function EventInfo(props) {
 
             talents: event.talents || null,
         });
-    };
+    }, [event, form]);
 
     const handleCancel = () => {
         form.resetFields();
@@ -78,17 +78,17 @@ function EventInfo(props) {
     //   console.log('Failed:', errorInfo);
     // };
 
-    // const onFormSubmit = (values) => {
-    //   setLoading(true);
+    const onFormSubmit = (values) => {
+        setLoading(true);
 
-    //   if (props.newContact) {
-    //     dispatch(createContact({ values: values }));
-    //   }
-    //   else {
-    //     console.log(values);
-    //     dispatch(updateContactById({ contactId: contact.id, values: values }));
-    //   }
-    // };
+        //   if (props.newContact) {
+        //     dispatch(createContact({ values: values }));
+        //   }
+        //   else {
+        //     console.log(values);
+        //     dispatch(updateContactById({ contactId: contact.id, values: values }));
+        //   }
+    };
 
     // useEffect(() => {
     //   if (props.newEvent) {
@@ -110,7 +110,7 @@ function EventInfo(props) {
 
     useEffect(() => {
         initForm();
-    }, [event, form]);
+    }, [event, form, initForm]);
 
     // useEffect(() => {
     //   setLoading(false);
@@ -182,7 +182,7 @@ function EventInfo(props) {
             <Form
                 name="event"
                 form={form}
-                // onFinish={onFormSubmit}
+                onFinish={onFormSubmit}
                 // onFinishFailed={onFinishFailed}
                 preserve={true}
             >

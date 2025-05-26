@@ -3,7 +3,7 @@ import '../../helpers/shared.css';
 
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { Form } from 'antd';
 
@@ -36,12 +36,12 @@ function ContactProfile(props) {
     const [contactId, setContactId] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const toggleForm = () => {
+    const toggleForm = useCallback(() => {
         setEditMode(!editMode);
-    };
+    }, [editMode]);
 
-    const initForm = () => {
-        console.log(contact);
+    const initForm = useCallback(() => {
+        // console.log(contact);
         form.setFieldsValue({
             first_name: contact.first_name || '',
             last_name: contact.last_name || '',
@@ -53,7 +53,7 @@ function ContactProfile(props) {
             emails: contact.emails || null,
             messengers: contact.messengers || null,
         });
-    };
+    }, [contact, form]);
 
     const handleCancel = () => {
         form.resetFields();
@@ -97,7 +97,7 @@ function ContactProfile(props) {
         else {
             setEditMode(false);
         }
-    }, [params, dispatch]);
+    }, [params, dispatch, props.newContact]);
 
     useEffect(() => {
         if (params.id && contactId !== params.id) {
@@ -109,7 +109,7 @@ function ContactProfile(props) {
 
     useEffect(() => {
         initForm();
-    }, [contact, form]);
+    }, [contact, form, initForm]);
 
     useEffect(() => {
         setLoading(false);
@@ -120,7 +120,7 @@ function ContactProfile(props) {
             dispatch(contactActions.resetResponse('create'));
             navigate('/app/contacts/' + createResponse.contactId, { replace: true });
         }
-    }, [createResponse]);
+    }, [createResponse, dispatch, navigate, showNotification, toggleForm]);
 
     useEffect(() => {
         setLoading(false);
@@ -130,7 +130,7 @@ function ContactProfile(props) {
             toggleForm();
             dispatch(contactActions.resetResponse('update'));
         }
-    }, [updateResponse]);
+    }, [updateResponse, dispatch, navigate, showNotification, toggleForm]);
 
     useEffect(() => {
         setLoading(false);
@@ -141,7 +141,7 @@ function ContactProfile(props) {
             dispatch(contactActions.resetResponse('delete'));
             navigate('/app/contacts', { replace: true });
         }
-    }, [deleteResponse]);
+    }, [deleteResponse, dispatch, navigate, showNotification, toggleForm]);
 
     let result = null;
 

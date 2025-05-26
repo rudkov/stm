@@ -44,7 +44,7 @@ function TalentView(props) {
         if (talentId) {
             dispatch(fetchTalentById(talentId));
         }
-    }, [talentId]);
+    }, [talentId, dispatch]);
 
     useEffect(() => {
         if (scrollContainerRef.current)

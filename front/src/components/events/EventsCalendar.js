@@ -76,6 +76,8 @@ function EventsCalendar() {
             eventTypes: filteredEventTypes,
             talents: filteredTalents,
         }));
+        // next line is needed to avoid warning about firstDayOfCurrentMonth in dependency array
+        // eslint-disable-next-line 
     }, [dispatch, filteredClients, filteredEventTypes, filteredTalents]);
 
     let result = null;
