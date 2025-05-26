@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\User;
+use App\Models\TalentBoard;
 
 class Team extends Model
 {
@@ -24,5 +25,10 @@ class Team extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function talentBoards()
+    {
+        return $this->hasMany(TalentBoard::class);
     }
 }
