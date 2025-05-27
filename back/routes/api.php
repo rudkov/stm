@@ -47,6 +47,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('talents/{id}', 'TalentController@update');//->middleware('can:update,talent');
         Route::post('talents', 'TalentController@store');
         Route::delete('talents/{id}', 'TalentController@destroy');
+
+        //talent boards
+        Route::apiResource('talent-boards', 'TalentBoardController');
         
         //events
         Route::post('events/search','EventController@index');

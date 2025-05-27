@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\Talent;
+use App\Models\TalentBoard;
 use App\Models\TalentCupSize;
 use App\Models\TalentDressSize;
 use App\Models\TalentEyeColor;
@@ -26,7 +27,8 @@ class TalentFactory extends Factory
     public function definition()
     {
         $users = User::all()->groupBy('team_id');
-        $team_id = Team::all()->random()->id;
+        // Only select from teams that have users
+        $team_id = Team::whereIn('id', array_keys($users->toArray()))->get()->random()->id;
 
         return [
 
@@ -39,6 +41,7 @@ class TalentFactory extends Factory
             'marital_status_id' => TalentMaritalStatus::all()->random()->id,
             'is_lifestyle' => rand(0, 1),
             'manager_id' => $users[$team_id]->random()->id,
+            'board_id' => TalentBoard::where('team_id', $team_id)->get()->random()->id,
 
             'hair_color_id' => TalentHairColor::all()->random()->id,
             'hair_length_id' => TalentHairLength::all()->random()->id,

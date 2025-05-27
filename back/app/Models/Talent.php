@@ -53,6 +53,7 @@ class Talent extends Model
         'manager_id',
         'mother_agencyable_id',
         'mother_agencyable_type',
+        'board_id',
 
         'hair_color_id',
         'hair_length_id',

@@ -72,6 +72,7 @@ function TalentForm(props) {
             is_lifestyle: values.is_lifestyle,
             gender_id: values.gender_id || '',
             manager_id: values.manager_id || user_id,
+            board_id: values.board_id || '',
 
             mother_agency: (() => {
                 const index = motherAgencies.findIndex(agency =>
@@ -152,7 +153,7 @@ function TalentForm(props) {
         values.marital_status_id = values.marital_status_id ?? null;
         values.gender_id = values.gender_id ?? null;
         values.is_lifestyle = (values.is_lifestyle === 'Lifestyle') ? 1 : (values.is_lifestyle === 'Fashion') ? 0 : null;
-
+        
         values.mother_agencyable_id = motherAgencies[values.mother_agency]?.id ?? null;
         values.mother_agencyable_type = motherAgencies[values.mother_agency]?.type ?? null;
 

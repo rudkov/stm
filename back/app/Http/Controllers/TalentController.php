@@ -19,6 +19,7 @@ class TalentController extends Controller
     {
         $talent = Talent::where('id', $id)
             ->with([
+                'board',
                 'gender',
                 'maritalStatus',
                 'hairColor',

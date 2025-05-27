@@ -1,0 +1,9 @@
+.custom-select__footer {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+    padding-top: 4px;
+    border-top: 1px solid var(--divider-color);
+    margin-top: 4px;
+}
