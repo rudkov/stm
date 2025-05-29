@@ -12,6 +12,7 @@ import ScrollableView from '../ui-components/ScrollableView';
 
 import TalentUsername from './components/TalentUsername';
 
+import BoardFilter from '../filters/BoardFilter';
 import BodyFilter from '../filters/BodyFilter';
 import GendersFilter from '../filters/GendersFilter';
 import LocationsFilter from '../filters/LocationsFilter';
@@ -30,6 +31,7 @@ function TalentsList(props) {
     const scrollContainerRef = useRef(null);
 
     const filterNames = {
+        board: 'talents.filters.board',
         body: 'talents.filters.body',
         genders: 'talents.filters.genders',
         locations: 'talents.filters.locations',
@@ -40,6 +42,7 @@ function TalentsList(props) {
 
     const [searchString, setSearchString] = useState(sessionStorage.getItem('talents.list.search') ?? '');
 
+    const [boardFilter, setBoardFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.board)) ?? 0);
     const [bodyFilter, setBodyFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.body)) ?? []);
     const [gendersFilter, setGendersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.genders)) ?? []);
     const [locationsFilter, setLocationsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.locations)) ?? []);
@@ -49,6 +52,7 @@ function TalentsList(props) {
 
     useEffect(() => {
         dispatch(fetchTalents({
+            board: boardFilter,
             body: bodyFilter,
             genders: gendersFilter,
             noContacts: noContactsFilter,
@@ -56,6 +60,7 @@ function TalentsList(props) {
         }));
     }, [
         dispatch,
+        boardFilter,
         bodyFilter,
         gendersFilter,
         noContactsFilter,
@@ -113,6 +118,11 @@ function TalentsList(props) {
         <div className='talents-container'>
             <ScrollableView>
                 <ScrollableView.Body className='talents-container__filters'>
+                    <BoardFilter
+                        uniqueName={filterNames.board}
+                        value={boardFilter}
+                        setValue={setBoardFilter}
+                    />
                     <LocationsFilter
                         uniqueName={filterNames.locations}
                         selectedItems={locationsFilter}

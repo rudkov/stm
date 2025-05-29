@@ -11,6 +11,7 @@ export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (args
             method: 'post',
             url: '/api/v1/talents/search',
             data: {
+                board: args?.board !== 0 ? [args?.board] : null,
                 bust: args?.body?.bust,
                 cupSize: args?.body?.cupSize,
                 dressSize: args?.body?.dressSize,

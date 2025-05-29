@@ -62,6 +62,7 @@ class TalentController extends Controller
 
         // Simple filters
         $filters = [
+            'board_id'       => 'board',
             'cup_size_id'    => 'cupSize',
             'dress_size_id'  => 'dressSize',
             'eye_color_id'   => 'eyeColor',
@@ -72,7 +73,7 @@ class TalentController extends Controller
             'shirt_size_id'  => 'shirtSize',
             'shoe_size_id'   => 'shoeSize',
             'suit_cut_id'    => 'suitCut',
-            'created_by'     => 'managers',
+            'manager_id'     => 'managers',
         ];
 
         foreach ($filters as $column => $param) {
