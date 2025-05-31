@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './Notification.css';
 
 const Notification = (props) => {
@@ -25,7 +25,7 @@ const Notification = (props) => {
         clearInterval(intervalId);
     };
 
-    const handleCloseNotification = () => {
+    const handleCloseNotification = useCallback(() => {
         setExit(true);
         setTimeout(() => {
             props.dispatch({
@@ -33,13 +33,13 @@ const Notification = (props) => {
                 id: props.id,
             });
         }, 400);
-    };
+    }, [props]);
 
     useEffect(() => {
         if(timer === 100) {
             handleCloseNotification();
         }
-    }, [timer]);
+    }, [timer, handleCloseNotification]);
 
     useEffect(() => {
         handleStartTimer();

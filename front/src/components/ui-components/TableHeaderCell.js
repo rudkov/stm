@@ -10,7 +10,7 @@ function TableHeaderCell(props) {
 
     let icon = '';
 
-    if (props.order.column == props.sortColumn) {
+    if (props.order.column === props.sortColumn) {
         icon = <IconArrow className={props.order.asc ? '' : 'table-header-cell--icon-flipped'} />
     }
 

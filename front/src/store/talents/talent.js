@@ -250,6 +250,8 @@ const talentSlice = createSlice({
                 case 'delete':
                     state.deleteResponse.status = null;
                     break;
+                default:
+                    break;
             }
         }
     },

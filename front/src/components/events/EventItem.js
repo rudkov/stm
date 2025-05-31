@@ -3,13 +3,13 @@ import './EventItem.css';
 import * as dayjs from 'dayjs';
 import en from "dayjs/locale/en";
 
-import { useSelector, useDispatch } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router';
 
-import { eventActions } from '../../store/events/event';
+// import { eventActions } from '../../store/events/event';
 
 function EventItem(props) {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     // let selectedEvent = useSelector((state) => state.event.selectedItem);
 
     dayjs.locale({

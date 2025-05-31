@@ -18,8 +18,6 @@ function EventSectionMain(props) {
     const event = useSelector(getEvent);
     const { settings } = useSettings();
 
-    const { Option } = Select;
-
     const handleCancel = (item) => {
         props.handleCancel(item);
     }

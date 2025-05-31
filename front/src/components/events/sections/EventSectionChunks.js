@@ -2,21 +2,21 @@ import '../../../helpers/form.css';
 import '../../../helpers/info-panel.css';
 import '../../../helpers/shared.css';
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-import { Form, Select, Space } from 'antd';
+// import { Form, Select, Space } from 'antd';
 
 import { getEvent } from '../../../store/events/event';
 
-import DataCell from '../../ui-components/DataCell';
+// import DataCell from '../../ui-components/DataCell';
 
-import { ReactComponent as IconCrossInCircle } from '../../../assets/icons/cross-in-circle.svg';
+// import { ReactComponent as IconCrossInCircle } from '../../../assets/icons/cross-in-circle.svg';
 
-import Button from '../../buttons/Button';
+// import Button from '../../buttons/Button';
 
 function EventSectionChunks(props) {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const event = useSelector(getEvent);
 
     return (

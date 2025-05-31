@@ -141,7 +141,7 @@ function TalentForm(props) {
             biography: values.biography || '',
         });
         setOriginalFormValues(form.getFieldsValue(true));
-    }, [form, motherAgencies]);
+    }, [form, motherAgencies, user_id]);
 
     const submitForm = (formValues) => {
         setIsLoading(true);
