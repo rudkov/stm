@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 use App\Models\TalentAddress;
 use App\Models\Country;
@@ -46,10 +47,11 @@ class Talent extends Model
         'legal_last_name',
         'gender_id',
         'birth_date',
-        'mother_agency_id',
         'marital_status_id',
         'is_lifestyle',
         'manager_id',
+        'mother_agencyable_id',
+        'mother_agencyable_type',
 
         'hair_color_id',
         'hair_length_id',
@@ -210,5 +212,10 @@ class Talent extends Model
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function motherAgencyable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

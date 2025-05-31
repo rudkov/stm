@@ -20,7 +20,7 @@ class ClientController extends Controller
 
         foreach ($companies as $company) {
             $item = array();
-            $item['class'] = get_class($company);
+            $item['type'] = get_class($company);
             $item['id'] = $company['id'];
             $item['name'] = $company['name'];
             $result[] = $item;
@@ -28,7 +28,7 @@ class ClientController extends Controller
 
         foreach ($contacts as $contact) {
             $item = array();
-            $item['class'] = get_class($contact);
+            $item['type'] = get_class($contact);
             $item['id'] = $contact['id'];
             $item['name'] = $contact['first_name'] . ' ' . $contact['last_name'];
             $result[] = $item;

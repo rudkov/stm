@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 use App\Models\Event;
+use App\Models\Contact;
+use App\Models\Talent;
 
 class Company extends Model
 {
@@ -44,5 +46,10 @@ class Company extends Model
     public function contacts()
     {
         return $this->belongsToMany(Contact::class)->withPivot('job_title');
+    }
+
+    public function talents()
+    {
+        return $this->morphMany(Talent::class, 'mother_agencyable');
     }
 }

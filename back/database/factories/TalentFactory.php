@@ -36,7 +36,6 @@ class TalentFactory extends Factory
             'legal_last_name' => $this->faker->lastName(),
             'gender_id' => TalentGender::all()->random()->id,
             'birth_date' => $this->faker->dateTime(),
-            //    $table->smallInteger('mother_agency_id')->nullable()->unsigned()->index();
             'marital_status_id' => TalentMaritalStatus::all()->random()->id,
             'is_lifestyle' => rand(0, 1),
             'manager_id' => $users[$team_id]->random()->id,

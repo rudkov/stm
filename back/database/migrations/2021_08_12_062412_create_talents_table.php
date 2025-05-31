@@ -23,7 +23,6 @@ class CreateTalentsTable extends Migration
             $table->string('legal_last_name')->nullable();
             $table->unsignedBigInteger('gender_id')->nullable();
             $table->date('birth_date')->nullable();
-            $table->unsignedBigInteger('mother_agency_id')->nullable();
             $table->unsignedBigInteger('marital_status_id')->nullable();
             $table->boolean('is_lifestyle')->nullable();
             $table->unsignedBigInteger('manager_id')->nullable();

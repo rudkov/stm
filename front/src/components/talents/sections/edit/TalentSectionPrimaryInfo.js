@@ -66,10 +66,12 @@ function TalentSectionPrimaryInfo(props) {
                         options={settings.talent_marital_statuses.map(item => ({ label: item.name, value: item.id }))}
                     />
                 </Form.Item>
-                {/* TODO <div className='nested-section__cell-horizontal'>
-                    <div className='text-light'>Mother agency</div>
-                    <div><b>Mother agency</b></div>
-                </div> */}
+                <Form.Item className='talent-form-row__left-label' label='Mother agency' name='mother_agency'>
+                    <Select
+                        allowClear
+                        options={props.motherAgencies.map((item, index) => ({ label: item.name, value: index }))}
+                    />
+                </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Lifestyle/fashion' name='is_lifestyle'>
                     <Radio.Group options={lifestyleOrFashion} />
                 </Form.Item>

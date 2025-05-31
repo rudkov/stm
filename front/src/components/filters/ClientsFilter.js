@@ -31,7 +31,7 @@ function ClientsFilter(props) {
     const toggleItem = (item) => {
         let items = [...props.selectedItems];
         const index = items.findIndex(client =>
-            client.id === item.id && client.class === item.class
+            client.id === item.id && client.type === item.type
         );
         index === -1 ? items.push(item) : items.splice(index, 1);
         props.setFiltered(items);
@@ -57,11 +57,11 @@ function ClientsFilter(props) {
                 <div
                     className='filter__checkbox-item clients-filter__checkbox-item'
                     key={'filter.clients.' + client.id}
-                    onClick={toggleItem.bind(this, { id: client.id, class: client.class })}
+                    onClick={toggleItem.bind(this, { id: client.id, type: client.type })}
                 >
                     <div className='filter__checkbox'>
                         {
-                            props.selectedItems?.some(item => item.id === client.id && item.class === client.class)
+                            props.selectedItems?.some(item => item.id === client.id && item.type === client.type)
                                 ? <div className='filter__check'><IconCheckSmall /></div>
                                 : ''
                         }

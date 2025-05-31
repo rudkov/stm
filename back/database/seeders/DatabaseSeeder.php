@@ -21,6 +21,7 @@ use Database\Factories\ContactMessengerFactory;
 use Database\Factories\CompanyContactFactory;
 use Database\Factories\EventContactFactory;
 use Database\Factories\EventClientFactory;
+use Database\Factories\TalentMotherAgencyFactory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -74,6 +75,9 @@ class DatabaseSeeder extends Seeder
 
         $companyContactFactory = new CompanyContactFactory();
         $companyContactFactory->run();
+
+        $talentMotherAgencyFactory = new TalentMotherAgencyFactory();
+        $talentMotherAgencyFactory->run();
 
         \App\Models\Event::factory(50)->create();
 
