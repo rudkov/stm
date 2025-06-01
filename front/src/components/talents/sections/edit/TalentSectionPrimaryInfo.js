@@ -31,6 +31,8 @@ function TalentSectionPrimaryInfo(props) {
     const fetchedTalentBoards = useSelector(getTalentBoards);
     const [boards, setBoards] = useState([]);
     const createTalentBoardResponse = useSelector(getCreateTalentBoardResponse);
+    const [isAddBoardInputOpen, setIsAddBoardInputOpen] = useState(false);
+    const [isAddBoardInputLoading, setIsAddBoardInputLoading] = useState(false);
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -46,6 +48,7 @@ function TalentSectionPrimaryInfo(props) {
     }, [fetchedTalentBoards]);
 
     const handleAddBoard = (boardName) => {
+        setIsAddBoardInputLoading(true);
         dispatch(createTalentBoard({ values: { name: boardName } }));
     };
 
@@ -54,6 +57,8 @@ function TalentSectionPrimaryInfo(props) {
             props.form.setFieldsValue({ board_id: createTalentBoardResponse.item.id });
             dispatch(fetchTalentBoards());
             dispatch(talentBoardActions.resetResponse('create'));
+            setIsAddBoardInputLoading(false);
+            setIsAddBoardInputOpen(false);
         }
     }, [createTalentBoardResponse, props.form, dispatch]);
 
@@ -99,10 +104,13 @@ function TalentSectionPrimaryInfo(props) {
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Board' name='board_id'>
                     <CustomSelect
+                        open={isAddBoardInputOpen}
+                        onDropdownVisibleChange={setIsAddBoardInputOpen}
                         options={boards.map((item) => ({ label: item.name, value: item.id }))}
                         onAddItem={handleAddBoard}
                         inputPlaceholder='Enter new board name'
                         addButtonText='Add Board'
+                        isAddInputLoading={isAddBoardInputLoading}
                     />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Manager' name='manager_id'>

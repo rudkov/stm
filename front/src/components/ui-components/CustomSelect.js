@@ -1,9 +1,13 @@
 import './CustomSelect.css';
+import '../../helpers/shared.css';
 
 import { Button, Input, Select } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { LoadingOutlined } from '@ant-design/icons';
 
 function CustomSelect({
+    open,
     value,
     onChange,
     className,
@@ -12,6 +16,7 @@ function CustomSelect({
     inputPlaceholder = 'Enter new item',
     addButtonText = 'Add',
     allowClear = true,
+    isAddInputLoading = false,
     ...restProps
 }) {
     const [newItemName, setNewItemName] = useState('');
@@ -29,10 +34,13 @@ function CustomSelect({
             if (newItemId !== undefined && onChange) {
                 onChange(newItemId);
             }
-            setNewItemName('');
-            setDropdownVisible(false);
         }
     };
+
+    useEffect(() => {
+        setNewItemName('');
+        setDropdownVisible(open);
+    }, [open]);
 
     return (
         <Select
@@ -58,6 +66,9 @@ function CustomSelect({
                                     handleAddItem(e);
                                 }
                             }}
+                            suffix={
+                                <LoadingOutlined className={`custom-select__loading-icon ${isAddInputLoading ? '' : 'hidden'}`} />
+                            }
                         />
                         <Button type='text' onClick={handleAddItem}>
                             {addButtonText}
