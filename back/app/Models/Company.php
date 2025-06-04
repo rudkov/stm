@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 use App\Models\Event;
 use App\Models\Contact;
@@ -38,9 +37,9 @@ class Company extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function event(): MorphOne
+    public function events()
     {
-        return $this->morphOne(Event::class, 'clientable');
+        return $this->hasMany(Event::class, 'client_id');
     }
 
     public function contacts()

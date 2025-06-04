@@ -1,9 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth";
-import clientsReducer from "./clients/clients";
+import companiesReducer from "./contacts/companies";
 import contactReducer from "./contacts/contact";
 import contactsReducer from "./contacts/contacts";
-import companiesReducer from "./contacts/companies";
 import eventReducer from "./events/event";
 import eventsReducer from "./events/events";
 import talentBoardReducer from "./talents/talentBoard";
@@ -15,10 +14,9 @@ import usersReducer from "./users/users";
 const store = configureStore({
     reducer: {
         auth: authReducer,
-        clients: clientsReducer,
+        companies: companiesReducer,
         contact: contactReducer,
         contacts: contactsReducer,
-        companies: companiesReducer,
         event: eventReducer,
         events: eventsReducer,
         talent: talentReducer,

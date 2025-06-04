@@ -11,7 +11,6 @@ use Database\Factories\ContactEmailFactory;
 use Database\Factories\ContactMessengerFactory;
 use Database\Factories\CompanyContactFactory;
 use Database\Factories\EventChunkFactory;
-use Database\Factories\EventClientFactory;
 use Database\Factories\EventContactFactory;
 use Database\Factories\EventTalentFactory;
 use Database\Factories\TalentAddressFactory;
@@ -84,8 +83,5 @@ class DatabaseSeeder extends Seeder
 
         $eventContactFactory = new EventContactFactory();
         $eventContactFactory->run();
-
-        $eventClientFactory = new EventClientFactory();
-        $eventClientFactory->run();
     }
 }

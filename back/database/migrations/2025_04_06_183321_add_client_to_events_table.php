@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->uuid('clientable_id')->nullable();
-            $table->string('clientable_type')->nullable();
+            $table->uuid('client_id')->nullable();
+            $table->foreign('client_id')->references('id')->on('companies');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('clientable_id');
-            $table->dropColumn('clientable_type');
+            $table->dropForeign(['client_id']);
+            $table->dropColumn('client_id');
         });
     }
 };

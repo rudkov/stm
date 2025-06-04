@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 use App\Models\Contact;
@@ -56,9 +55,9 @@ class Event extends Model
         return $this->belongsToMany(Talent::class)->orderBy('first_name')->orderBy('last_name')->withPivot('cost');
     }
 
-    public function clientable(): MorphTo
+    public function client()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Company::class);
     }
 
     public function contacts(): MorphToMany

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 use App\Models\TalentAddress;
 use App\Models\Country;
@@ -217,7 +216,6 @@ class Talent extends Model
 
     public function motherAgency()
     {
-        // return $this->belongsTo(Company::class, 'mother_agency_id');
         return $this->belongsTo(Company::class);
     }
 

@@ -63,15 +63,8 @@ class EventController extends Controller
             ->when($request->eventTypes, function ($query, $eventType) {
                 return $query->whereIn('events.event_type_id', $eventType);
             })
-            ->when($request->clients, function ($query, $clients) {
-                return $query->where(function ($query) use ($clients) {
-                    foreach ($clients as $client) {
-                        $query->orWhere(function ($query) use ($client) {
-                            $query->where('events.clientable_id', $client['id'])
-                                ->where('events.clientable_type', $client['type']);
-                        });
-                    }
-                });
+            ->when($request->clients, function ($query, $client) {
+                return $query->whereIn('events.client_id', $client);
             })
             ->orderBy('event_chunks.start_date', 'asc')
             ->orderBy('talent_name', 'asc')
@@ -108,7 +101,7 @@ class EventController extends Controller
                 'eventChunks',
                 'eventType',
                 'talents',
-                'clientable',
+                'client',
                 'contacts',
                 'createdBy',
                 'updatedBy',
