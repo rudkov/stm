@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('talents', function (Blueprint $table) {
-            $table->uuid('mother_agencyable_id')->nullable();
-            $table->string('mother_agencyable_type')->nullable();
+            $table->uuid('mother_agency_id')->nullable();
+            $table->foreign('mother_agency_id')->references('id')->on('companies');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('talents', function (Blueprint $table) {
-            $table->dropColumn('mother_agencyable_id');
-            $table->dropColumn('mother_agencyable_type');
+            $table->dropForeign(['mother_agency_id']);
+            $table->dropColumn('mother_agency_id');
         });
     }
 };

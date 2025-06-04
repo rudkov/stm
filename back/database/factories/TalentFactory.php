@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+use App\Models\Company;
 use App\Models\Talent;
 use App\Models\TalentBoard;
 use App\Models\TalentCupSize;
@@ -42,6 +43,7 @@ class TalentFactory extends Factory
             'is_lifestyle' => rand(0, 1),
             'manager_id' => $users[$team_id]->random()->id,
             'board_id' => TalentBoard::where('team_id', $team_id)->get()->random()->id,
+            'mother_agency_id' => [null, Company::where('team_id', $team_id)->get()->random()->id][rand(0, 1)],
 
             'hair_color_id' => TalentHairColor::all()->random()->id,
             'hair_length_id' => TalentHairLength::all()->random()->id,

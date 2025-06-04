@@ -51,8 +51,7 @@ class Talent extends Model
         'marital_status_id',
         'is_lifestyle',
         'manager_id',
-        'mother_agencyable_id',
-        'mother_agencyable_type',
+        'mother_agency_id',
         'board_id',
 
         'hair_color_id',
@@ -216,9 +215,10 @@ class Talent extends Model
         return $this->belongsTo(User::class, 'manager_id');
     }
 
-    public function motherAgencyable(): MorphTo
+    public function motherAgency()
     {
-        return $this->morphTo();
+        // return $this->belongsTo(Company::class, 'mother_agency_id');
+        return $this->belongsTo(Company::class);
     }
 
     public function board()

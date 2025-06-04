@@ -50,6 +50,6 @@ class Company extends Model
 
     public function talents()
     {
-        return $this->morphMany(Talent::class, 'mother_agencyable');
+        return $this->hasMany(Talent::class);
     }
 }

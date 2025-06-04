@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import dayjs from "dayjs";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
-import measurementsConverter from "../../helpers/measurements-converter";
+import measurementsConverter from '../../helpers/measurements-converter';
 
 //TODO: Below is a temporary solution. We need to place date format into user settings.
 //TODO: this format also appears in all date time antd controls. To double check
@@ -100,15 +100,8 @@ const prepareTalent = (state, values) => {
     item.birth_date = birthDate ? birthDate.format(outputDateFormat) : null;
     item.age = birthDate ? dayjs().diff(birthDate, 'years') : null;
 
-    item.is_lifestyle = (values.is_lifestyle === 1) ? "Lifestyle" : (values.is_lifestyle === 0) ? "Fashion" : null;
+    item.is_lifestyle = (values.is_lifestyle === 1) ? 'Lifestyle' : (values.is_lifestyle === 0) ? 'Fashion' : null;
     item.gender_id = values.gender_id || '';
-
-    item.mother_agency = values.mother_agencyable?.name ||
-        (values.mother_agencyable?.first_name || values.mother_agencyable?.last_name ?
-            `${values.mother_agencyable.first_name || ''} ${values.mother_agencyable.last_name || ''}`.trim() :
-            '');
-    item.mother_agencyable_id = values.mother_agencyable_id || '';
-    item.mother_agencyable_type = values.mother_agencyable_type || '';
 
     item.hair_color_id = values.hair_color_id || '';
     item.hair_length_id = values.hair_length_id || '';
