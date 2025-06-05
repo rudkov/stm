@@ -14,7 +14,6 @@ import {
     deleteTalentById, getDeleteResponse,
     talentActions
 } from '../../store/talents/talent';
-import { fetchTalents } from '../../store/talents/talents';
 
 import CustomDrawer from '../ui-components/CustomDrawer';
 import ScrollableView from '../ui-components/ScrollableView';
@@ -55,7 +54,7 @@ function TalentForm(props) {
     const [isConfirmClosingModalOpen, setIsConfirmClosingModalOpen] = useState(false);
     const showNotification = useNotification();
 
-    const { isNewTalent, open: isFormOpen, closeForm: onClose } = props;
+    const { isNewTalent, open: isFormOpen, closeForm: onClose, onAfterSubmit } = props;
 
     const initForm = useCallback((values) => {
         form.setFieldsValue({
@@ -255,33 +254,33 @@ function TalentForm(props) {
         if (createResponse.status === 'fulfilled') {
             setIsLoading(false);
             showNotification({ type: 'SUCCESS', message: 'Changes saved' });
-            dispatch(fetchTalents());
+            onAfterSubmit();
             dispatch(talentActions.resetResponse('create'));
             navigate('/app/talents/' + createResponse.talentId);
             onClose();
         }
-    }, [createResponse, dispatch, navigate, onClose, showNotification]);
+    }, [createResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit]);
 
     useEffect(() => {
         if (updateResponse.status === 'fulfilled') {
             setIsLoading(false);
             showNotification({ type: 'SUCCESS', message: 'Changes saved' });
-            dispatch(fetchTalents());
+            onAfterSubmit();
             dispatch(talentActions.resetResponse('update'));
             onClose();
         }
-    }, [updateResponse, dispatch, onClose, showNotification]);
+    }, [updateResponse, dispatch, onClose, showNotification, onAfterSubmit]);
 
     useEffect(() => {
         if (deleteResponse.status === 'fulfilled') {
             setIsLoading(false);
             showNotification({ type: 'SUCCESS', message: 'Talent deleted' });
-            dispatch(fetchTalents());
+            onAfterSubmit();
             dispatch(talentActions.resetResponse('delete'));
             navigate('/app/talents', { replace: true });
             onClose();
         }
-    }, [deleteResponse, dispatch, navigate, onClose, showNotification]);
+    }, [deleteResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit]);
 
     const anchorClicked = (e, link) => {
         e.preventDefault();

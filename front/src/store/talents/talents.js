@@ -5,32 +5,34 @@ const initialState = {
     items: [],
 };
 
-export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (args = {}) => {
+const transformFilters = (filters) => ({
+    board: filters.board && filters.board !== 0 ? [filters.board] : null,
+    bust: filters.body?.bust,
+    cupSize: filters.body?.cupSize,
+    dressSize: filters.body?.dressSize,
+    eyeColor: filters.body?.eyeColor,
+    genders: filters.genders,
+    hairColor: filters.body?.hairColor,
+    hairLength: filters.body?.hairLength,
+    height: filters.body?.height,
+    hips: filters.body?.hips,
+    managers: filters.managers,
+    noContacts: filters.noContacts,
+    preferences: filters.preferences,
+    shirtSize: filters.body?.shirtSize,
+    shoeSize: filters.body?.shoeSize,
+    skinColor: filters.body?.skinColor,
+    suitCut: filters.body?.suitCut,
+    waist: filters.body?.waist,
+    weight: filters.body?.weight,
+});
+
+export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (filters = {}) => {
     try {
         const response = await axios({
             method: 'post',
             url: '/api/v1/talents/search',
-            data: {
-                board: args?.board && args?.board !== 0 ? [args?.board] : null,
-                bust: args?.body?.bust,
-                cupSize: args?.body?.cupSize,
-                dressSize: args?.body?.dressSize,
-                eyeColor: args?.body?.eyeColor,
-                genders: args?.genders,
-                hairColor: args?.body?.hairColor,
-                hairLength: args?.body?.hairLength,
-                height: args?.body?.height,
-                hips: args?.body?.hips,
-                managers: args?.managers,
-                noContacts: args?.noContacts,
-                preferences: args?.preferences,
-                shirtSize: args?.body?.shirtSize,
-                shoeSize: args?.body?.shoeSize,
-                skinColor: args?.body?.skinColor,
-                suitCut: args?.body?.suitCut,
-                waist: args?.body?.waist,
-                weight: args?.body?.weight,
-            },
+            data: transformFilters(filters),
         });
         return response.data;
     } catch (err) {
