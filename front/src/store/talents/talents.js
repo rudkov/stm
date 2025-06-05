@@ -4,6 +4,7 @@ import axios from 'axios';
 const initialState = {
     items: [],
     locations: [],
+    managers: [],
 };
 
 const transformFilters = (filters) => ({
@@ -46,6 +47,18 @@ export const fetchTalentsLocations = createAsyncThunk('talents/fetchTalentsLocat
         const response = await axios({
             method: 'get',
             url: '/api/v1/talents/locations',
+        });
+        return response.data;
+    } catch (err) {
+        return err.message;
+    }
+});
+
+export const fetchTalentsManagers = createAsyncThunk('talents/fetchTalentsManagers', async (filters = {}) => {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: '/api/v1/talents/managers',
         });
         return response.data;
     } catch (err) {
@@ -97,10 +110,14 @@ const talentsSlice = createSlice({
             .addCase(fetchTalentsLocations.fulfilled, (state, action) => {
                 state.locations = action.payload;
             })
+            .addCase(fetchTalentsManagers.fulfilled, (state, action) => {
+                state.managers = action.payload;
+            })
     }
 });
 
 export const getTalents = (state) => state.talents.items;
 export const getTalentsLocations = (state) => state.talents.locations;
+export const getTalentsManagers = (state) => state.talents.managers;
 
 export default talentsSlice.reducer;

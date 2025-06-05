@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
 
-import { fetchTalents } from '../../store/talents/talents';
+import { fetchTalents, fetchTalentsManagers } from '../../store/talents/talents';
 import { useTalentsFilters, TalentsFilters } from '../talents/TalentsFilters';
 
 import TalentsList from '../talents/TalentsList';
@@ -20,6 +20,7 @@ function Talents() {
     // Memoized function to fetch talents with current filters
     const fetchTalentsWithFilters = useCallback(() => {
         dispatch(fetchTalents(filters));
+        dispatch(fetchTalentsManagers());
     }, [dispatch, filters]);
 
     // Fetch talents when filters change
