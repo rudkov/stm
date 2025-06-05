@@ -1,28 +1,36 @@
 import './Contacts.css';
 
-import { Splitter } from 'antd';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
 
-import ContactsList from '../contacts/ContactsList';
+import { fetchCompanies } from '../../store/contacts/companies';
+import { useContactsFilters } from '../contacts/ContactsFilters';
+
+import CompaniesList from '../contacts/CompaniesList';
 
 function Contacts() {
-    if (localStorage.getItem("contactsPagePanelSize") === null) {
-        localStorage.setItem("contactsPagePanelSize", "50%");
-    }
+    const dispatch = useDispatch();
+    const { filters, updateFilter } = useContactsFilters();
 
-    const panelResized = (item) => {
-        let panelSizePercentage = item[0] * 100 / (item[0] + item[1]);
-        localStorage.setItem("contactsPagePanelSize", panelSizePercentage + "%");
-    }
+    useEffect(() => {
+        dispatch(fetchCompanies());
+    }, [dispatch]);
+
     return (
-        <Splitter onResizeEnd={panelResized}>
-            <Splitter.Panel defaultSize={localStorage.getItem("contactsPagePanelSize")} min="20%" max="80%">
-                <ContactsList />
-            </Splitter.Panel>
-            <Splitter.Panel>
-                <Outlet />
-            </Splitter.Panel>
-        </Splitter>
+        <>
+            <div className='contacts-page'>
+                <CompaniesList
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
+                <div className='contacts-page__right-column'>
+                    <div className='section-primary'>
+                        <Outlet />
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
 

@@ -15,8 +15,7 @@ import Register from './components/auth/Register';
 import Main from './components/Main';
 
 import Contacts from './components/pages/Contacts';
-import ContactsRoot from './components/contacts/ContactsRoot';
-import ContactProfile from './components/contacts/ContactProfile';
+import CompanyView from './components/contacts/CompanyView';
 
 import Events from './components/pages/Events';
 import EventInfo from './components/events/EventInfo';
@@ -46,20 +45,17 @@ function App() {
 
                                 <Route path='app' element={<Main />}>
 
-                                    <Route path='contacts' element={<Contacts />}>
-                                        <Route path=':id' element={<ContactProfile />} />
-                                        <Route path='new' element={<ContactProfile newContact={true} />} />
-                                        <Route path='*' element={<ContactsRoot />} />
-                                    </Route>
-
                                     <Route path='calendar' element={<Events />}>
                                         <Route path=':id' element={<EventInfo />} />
+                                    </Route>
+
+                                    <Route path='contacts' element={<Contacts />}>
+                                        <Route path=':id' element={<CompanyView />} />
                                     </Route>
 
                                     <Route path='talents' element={<Talents />}>
                                         <Route index element={<TalentsZeroState />} />
                                         <Route path=':id' element={<TalentView />} />
-                                        <Route path='new' element={<TalentView newTalent={true} />} />
                                     </Route>
 
                                 </Route>

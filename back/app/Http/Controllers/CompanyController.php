@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Http\Resources\CompanyCollection;
 use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
@@ -13,6 +14,6 @@ class CompanyController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        return $companies;
+        return new CompanyCollection($companies);
     }
 }
