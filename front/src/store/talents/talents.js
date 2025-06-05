@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const initialState = {
     items: [],
+    locations: [],
 };
 
 const transformFilters = (filters) => ({
@@ -33,6 +34,18 @@ export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (filt
             method: 'post',
             url: '/api/v1/talents/search',
             data: transformFilters(filters),
+        });
+        return response.data;
+    } catch (err) {
+        return err.message;
+    }
+});
+
+export const fetchTalentsLocations = createAsyncThunk('talents/fetchTalentsLocations', async (filters = {}) => {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: '/api/v1/talents/locations',
         });
         return response.data;
     } catch (err) {
@@ -81,9 +94,13 @@ const talentsSlice = createSlice({
             .addCase(fetchTalents.fulfilled, (state, action) => {
                 state.items = action.payload;
             })
+            .addCase(fetchTalentsLocations.fulfilled, (state, action) => {
+                state.locations = action.payload;
+            })
     }
 });
 
 export const getTalents = (state) => state.talents.items;
+export const getTalentsLocations = (state) => state.talents.locations;
 
 export default talentsSlice.reducer;
