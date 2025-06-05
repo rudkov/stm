@@ -142,6 +142,8 @@ function TalentForm(props) {
         values.marital_status_id = values.marital_status_id ?? null;
         values.gender_id = values.gender_id ?? null;
         values.is_lifestyle = (values.is_lifestyle === 'Lifestyle') ? 1 : (values.is_lifestyle === 'Fashion') ? 0 : null;
+        values.board_id = values.board_id ?? null;
+        values.mother_agency_id = values.mother_agency_id ?? null;
 
         values.hair_color_id = values.hair_color_id ?? null;
         values.hair_length_id = values.hair_length_id ?? null;
