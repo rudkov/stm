@@ -1,29 +1,25 @@
-import axios from 'axios';
 import { useNavigate } from 'react-router';
-
-import { useDispatch } from 'react-redux';
-import { authActions } from "../../store/auth";
+import { useLogoutMutation } from '../../api/authApi';
+import { useEffect } from 'react';
 
 const Logout = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const from = '/';
+    const [logout] = useLogoutMutation();
 
-    axios({
-        method: 'post',
-        url: '/api/v1/logout',
-    })
-        .then(function (response) {
-            dispatch(authActions.logout());
-            navigate(from, { replace: true });
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+    useEffect(() => {
+        const performLogout = async () => {
+            try {
+                await logout().unwrap();
+                navigate('/', { replace: true });
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        };
 
-    return (
-        <></>
-    );
-}
+        performLogout();
+    }, [logout, navigate]);
+
+    return null;
+};
 
 export default Logout;

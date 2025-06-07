@@ -49,7 +49,7 @@ function TalentForm(props) {
     const createResponse = useSelector(getCreateResponse);
     const updateResponse = useSelector(getUpdateResponse);
     const deleteResponse = useSelector(getDeleteResponse);
-    const user_id = useSelector((state) => state.auth.user_id);
+    // const user_id = useSelector((state) => state.auth.user_id);
     const getContainer = () => containerRef.current;
     const containerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);

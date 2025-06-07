@@ -1,14 +1,17 @@
 import { Outlet } from "react-router";
-import { useSelector } from 'react-redux';
-
+import { useCheckAuthQuery } from '../../api/authApi';
 import { TeamSettingsProvider } from '../../context/TeamSettingsContext';
-
 import NewTeam from "./NewTeam";
+import Loading from "../ui-components/Loading";
 
 const RequireTeam = () => {
-    let activeTeam = useSelector((state) => state.auth.activeTeam);
+    const { data: authData, isLoading } = useCheckAuthQuery();
 
-    if (activeTeam !== null) {
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (authData?.activeTeam !== null) {
         return (
             <TeamSettingsProvider>
                 <Outlet />
