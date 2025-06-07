@@ -1,105 +1,91 @@
-import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router';
 
-import { Row, Col } from 'antd';
 import { Form, Input, Button } from 'antd';
+import { useLoginMutation, useCheckAuthQuery } from '../../api/authApi';
+import { useEffect } from 'react';
 
-import { useDispatch } from 'react-redux';
-import { authActions } from "../../store/auth";
+import AuthLayout from './AuthLayout';
 
 const Login = () => {
-    const dispatch = useDispatch();
-
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/app/calendar';
+    const [login, { isLoading, error }] = useLoginMutation();
+    const { data: authData } = useCheckAuthQuery();
+    const [form] = Form.useForm();
 
-    const handleSubmit = (values) => {
-        axios({
-            method: 'post',
-            url: '/api/v1/login',
-            data: {
-                email: values.email,
-                password: values.password,
-            },
-        })
-            .then(function (response) {
-                if (response.data !== false) {
-                    let data = response.data;
-                    dispatch(authActions.login({ data }));
-                    navigate(from, { replace: true });
-                } else {
-                    // TODO: handle auth error
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
+    const to = location.state?.from?.pathname 
+        || new URLSearchParams(location.search).get('from')
+        || '/app/calendar';
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+    useEffect(() => {
+        if (authData?.isAuthenticated) {
+            navigate(to, { replace: true }); 
+        }
+    }, [authData?.isAuthenticated, navigate, to]);
+    
+    useEffect(()=> {
+        if (error?.isValidationError) {
+            form.setFields(error.fieldErrors);
+        } else if (error) {
+            // TODO: Handle general error
+            console.log('Login failed. Please try again.');
+        }
+    }, [form, error]);
+
+    const handleSubmit = async (values) => {
+        await login({
+            email: values.email,
+            password: values.password,
+        });
     };
 
     return (
-        <>
-            <Row>
-                <Col span={8} offset={8}>
-                    <Form
-                        name="basic"
-                        labelCol={{
-                            span: 8,
-                        }}
-                        wrapperCol={{
-                            span: 16,
-                        }}
-                        initialValues={{
-                            remember: true,
-                        }}
-                        onFinish={handleSubmit}
-                        onFinishFailed={onFinishFailed}
+        <AuthLayout>
+            <AuthLayout.Header>
+                <h3 className='auth-page__title'>Sign In</h3>
+            </AuthLayout.Header>
+            <AuthLayout.Body>
+                <Form
+                    name='login'
+                    form={form}
+                    layout='vertical'
+                    requiredMark={false}
+                    size='large'
+                    className='auth-form'
+                    validateTrigger='onBlur'
+                    onFinish={handleSubmit}
+                >
+                    <Form.Item
+                        name='email'
+                        label='Email'
+                        rules={[
+                            { required: true, message: 'Please enter your email address' },
+                            { type: 'email', message: 'Please enter a valid email' }
+                        ]}
+        
                     >
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your email',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your password',
-                                },
-                            ]}
-                        >
-                            <Input.Password />
-                        </Form.Item>
-
-                        <Form.Item
-                            wrapperCol={{
-                                offset: 8,
-                                span: 16,
-                            }}
-                        >
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Col>
-            </Row>
-        </>
+                        <Input placeholder='Email' />
+                    </Form.Item>
+                    <Form.Item
+                        name='password'
+                        label='Password'
+                        rules={[{ required: true, message: 'Please enter a password' }]}
+                    >
+                        <Input.Password placeholder='Password' />
+                    </Form.Item>
+                    <div>
+                        <a href='#'>Forgot password?</a>
+                    </div>
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' loading={isLoading} block>Sign In</Button>
+                    </Form.Item>
+                </Form>
+            </AuthLayout.Body>
+            <AuthLayout.Footer>
+                Don't have an account? <a href='#'>Sign up</a>
+            </AuthLayout.Footer>
+        </AuthLayout>
     );
-}
+};
 
 export default Login;
