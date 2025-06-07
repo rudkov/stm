@@ -2,35 +2,28 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
-    protected function createAndAuthenticate(Request $request)
+    protected function createAndAuthenticate(RegisterRequest $request)
     {
-        $validated = $request->validate([
-            'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users'],
-        ]);
-
-        $random = str_shuffle('abcdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ234567890!$%^&!$%^&');
-        $password = substr($random, 0, 20);
+        $validated = $request->validated();
         
-        User::create([
-            'email' => $request['email'],
-            'password' => Hash::make($password),
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
-        $credentials = [
-            'email' => $request['email'],
-            'password' => $password,
-        ];
-
-        if (Auth::attempt($credentials,true)) {
+        if (Auth::attempt([
+            'email' => $validated['email'],
+            'password' => $validated['password']
+        ], true)) {
             $request->session()->regenerate();
             return 'true';
         }
