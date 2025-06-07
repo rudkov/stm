@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
 
     //auth
-    Route::post('login', 'LoginController@login');
-    Route::post('logout', 'LoginController@logout');
+    Route::post('login', 'LoginController@login')->middleware('web');
+    Route::post('logout', 'LoginController@logout')->middleware('web');
     Route::get('is-logged-in', 'LoginController@isLoggedIn');
     Route::post('register', 'Auth\RegisterController@createAndAuthenticate');
 
