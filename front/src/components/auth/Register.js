@@ -1,88 +1,61 @@
-import axios from 'axios';
-import { useNavigate } from 'react-router';
+import './Register.css';
 
-import { Row, Col } from 'antd';
-import { Form, Input, Button } from 'antd';
+import { Button, Form, Input } from 'antd';
 
-import { useDispatch } from 'react-redux';
-import { authActions } from "../../store/auth";
+import AuthLayout from './AuthLayout';
 
-const Register = () => {
-    const dispatch = useDispatch();
-
-    const navigate = useNavigate();
-    const from = '/app';
-
-    const handleSubmit = (values) => {
-        axios({
-            method: 'post',
-            url: '/api/v1/register',
-            data: {
-                email: values.email,
-            },
-        })
-            .then(function (response) {
-                console.log(response);
-                if (response.data === true) {
-                    let data = response.data;
-                    dispatch(authActions.login({ data }));
-                    navigate(from, { replace: true });
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
+function Register() {
+    const [form] = Form.useForm();
 
     return (
-        <>
-            <Row>
-                <Col span={8} offset={8}>
-                    <Form
-                        name="basic"
-                        labelCol={{
-                            span: 8,
-                        }}
-                        wrapperCol={{
-                            span: 16,
-                        }}
-                        initialValues={{
-                            remember: true,
-                        }}
-                        onFinish={handleSubmit}
-                        onFinishFailed={onFinishFailed}
+        <AuthLayout>
+            <AuthLayout.Header>
+                <h3 className='auth-page__title'>Create an Account</h3>
+            </AuthLayout.Header>
+            <AuthLayout.Body>
+                <Form
+                    name='register'
+                    form={form}
+                    layout='vertical'
+                    requiredMark={false}
+                    size='large'
+                    className='auth-form'
+                >
+                    <Form.Item
+                        name='name'
+                        label='Name'
+                        rules={[{ required: true, message: 'Please enter your name' }]}
                     >
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your email',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item
-                            wrapperCol={{
-                                offset: 8,
-                                span: 16,
-                            }}
-                        >
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Col>
-            </Row>
-        </>
+                        <Input placeholder='Name' />
+                    </Form.Item>
+                    <Form.Item
+                        name='email'
+                        label='Email'
+                        rules={[{ required: true, message: 'Please enter your email address' }]}
+                    >
+                        <Input placeholder='Email' />
+                    </Form.Item>
+                    <Form.Item
+                        name='password'
+                        label='Password'
+                        rules={[{ required: true, message: 'Please enter a password' }]}
+                    >
+                        <Input.Password placeholder='Password' />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' block>Create Account</Button>
+                    </Form.Item>
+                    <div className='register-form__terms'>
+                        By clicking 'Create Account', you agree to our&nbsp;
+                        <a href='#'>Terms of Service</a> and&nbsp;
+                        <a href='#'>Privacy Policy</a>.
+                    </div>
+                </Form>
+            </AuthLayout.Body>
+            <AuthLayout.Footer>
+                Already have an account? <a href='#'>Sign in</a>
+            </AuthLayout.Footer>
+        </AuthLayout>
     );
 }
 
