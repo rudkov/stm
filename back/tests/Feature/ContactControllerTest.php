@@ -608,6 +608,7 @@ class ContactControllerTest extends TestCase
         
         // Create another user in a different team
         $otherTeam = Team::factory()->create();
+        /** @var \App\Models\User $otherUser */
         $otherUser = User::factory()->create(['team_id' => $otherTeam->id]);
         
         $response = $this->actingAs($otherUser)
