@@ -248,12 +248,19 @@ class ContactControllerTest extends TestCase
         
         $phoneType1 = PhoneType::factory()->create();
         $phoneType2 = PhoneType::factory()->create();
+        $phoneType3 = PhoneType::factory()->create(); // For new phone
         
-        // Create initial phone
-        $existingPhone = ContactPhone::factory()->create([
+        // Create initial phones
+        $existingPhone1 = ContactPhone::factory()->create([
             'contact_id' => $contact->id,
             'phone_type_id' => $phoneType1->id,
             'info' => '+1234567890'
+        ]);
+        
+        $existingPhone2 = ContactPhone::factory()->create([
+            'contact_id' => $contact->id,
+            'phone_type_id' => $phoneType2->id,
+            'info' => '+0987654321'
         ]);
         
         $response = $this->actingAs($this->user)
@@ -262,16 +269,22 @@ class ContactControllerTest extends TestCase
                 'last_name' => $contact->last_name,
                 'companies' => [],
                 'phones' => [
-                    // Update existing phone
+                    // Update first existing phone
                     [
-                        'id' => $existingPhone->id,
+                        'id' => $existingPhone1->id,
                         'phone_type_id' => $phoneType1->id,
                         'info' => '+9876543210' // Changed number
                     ],
+                    // Update second existing phone
+                    [
+                        'id' => $existingPhone2->id,
+                        'phone_type_id' => $phoneType2->id,
+                        'info' => '+1122334455' // Changed number
+                    ],
                     // Add new phone
                     [
-                        'phone_type_id' => $phoneType2->id,
-                        'info' => '+1122334455'
+                        'phone_type_id' => $phoneType3->id,
+                        'info' => '+1111111111'
                     ]
                 ],
                 'emails' => [],
@@ -280,23 +293,31 @@ class ContactControllerTest extends TestCase
 
         $response->assertStatus(200);
         
-        // Check existing phone was updated
+        // Check first phone was updated
         $this->assertDatabaseHas('contact_phones', [
-            'id' => $existingPhone->id,
+            'id' => $existingPhone1->id,
             'contact_id' => $contact->id,
             'phone_type_id' => $phoneType1->id,
             'info' => '+9876543210'
         ]);
         
-        // Check new phone was added
+        // Check second phone was updated
         $this->assertDatabaseHas('contact_phones', [
+            'id' => $existingPhone2->id,
             'contact_id' => $contact->id,
             'phone_type_id' => $phoneType2->id,
             'info' => '+1122334455'
         ]);
+
+        // Check new phone was added
+        $this->assertDatabaseHas('contact_phones', [
+            'contact_id' => $contact->id,
+            'phone_type_id' => $phoneType3->id,
+            'info' => '+1111111111'
+        ]);
         
         // Check total count of phones
-        $this->assertEquals(2, $contact->fresh()->phones()->count());
+        $this->assertEquals(3, $contact->fresh()->phones()->count());
     }
 
     public function test_delete_contact_phone()
@@ -347,12 +368,19 @@ class ContactControllerTest extends TestCase
         
         $emailType1 = EmailType::factory()->create();
         $emailType2 = EmailType::factory()->create();
+        $emailType3 = EmailType::factory()->create(); // For new email
         
-        // Create initial email
-        $existingEmail = ContactEmail::factory()->create([
+        // Create initial emails
+        $existingEmail1 = ContactEmail::factory()->create([
             'contact_id' => $contact->id,
             'email_type_id' => $emailType1->id,
-            'info' => 'old@example.com'
+            'info' => 'old1@example.com'
+        ]);
+        
+        $existingEmail2 = ContactEmail::factory()->create([
+            'contact_id' => $contact->id,
+            'email_type_id' => $emailType2->id,
+            'info' => 'old2@example.com'
         ]);
         
         $response = $this->actingAs($this->user)
@@ -362,15 +390,21 @@ class ContactControllerTest extends TestCase
                 'companies' => [],
                 'phones' => [],
                 'emails' => [
-                    // Update existing email
+                    // Update first existing email
                     [
-                        'id' => $existingEmail->id,
+                        'id' => $existingEmail1->id,
                         'email_type_id' => $emailType1->id,
-                        'info' => 'updated@example.com' // Changed email
+                        'info' => 'updated1@example.com' // Changed email
+                    ],
+                    // Update second existing email
+                    [
+                        'id' => $existingEmail2->id,
+                        'email_type_id' => $emailType2->id,
+                        'info' => 'updated2@example.com' // Changed email
                     ],
                     // Add new email
                     [
-                        'email_type_id' => $emailType2->id,
+                        'email_type_id' => $emailType3->id,
                         'info' => 'new@example.com'
                     ]
                 ],
@@ -379,23 +413,31 @@ class ContactControllerTest extends TestCase
 
         $response->assertStatus(200);
         
-        // Check existing email was updated
+        // Check first email was updated
         $this->assertDatabaseHas('contact_emails', [
-            'id' => $existingEmail->id,
+            'id' => $existingEmail1->id,
             'contact_id' => $contact->id,
             'email_type_id' => $emailType1->id,
-            'info' => 'updated@example.com'
+            'info' => 'updated1@example.com'
         ]);
         
+        // Check second email was updated
+        $this->assertDatabaseHas('contact_emails', [
+            'id' => $existingEmail2->id,
+            'contact_id' => $contact->id,
+            'email_type_id' => $emailType2->id,
+            'info' => 'updated2@example.com'
+        ]);
+
         // Check new email was added
         $this->assertDatabaseHas('contact_emails', [
             'contact_id' => $contact->id,
-            'email_type_id' => $emailType2->id,
+            'email_type_id' => $emailType3->id,
             'info' => 'new@example.com'
         ]);
         
         // Check total count of emails
-        $this->assertEquals(2, $contact->fresh()->emails()->count());
+        $this->assertEquals(3, $contact->fresh()->emails()->count());
     }
 
     public function test_delete_contact_email()
@@ -446,12 +488,19 @@ class ContactControllerTest extends TestCase
         
         $messengerType1 = MessengerType::factory()->create();
         $messengerType2 = MessengerType::factory()->create();
+        $messengerType3 = MessengerType::factory()->create(); // For new messenger
         
-        // Create initial messenger
-        $existingMessenger = ContactMessenger::factory()->create([
+        // Create initial messengers
+        $existingMessenger1 = ContactMessenger::factory()->create([
             'contact_id' => $contact->id,
             'messenger_type_id' => $messengerType1->id,
-            'info' => 'old_username'
+            'info' => 'old_username1'
+        ]);
+        
+        $existingMessenger2 = ContactMessenger::factory()->create([
+            'contact_id' => $contact->id,
+            'messenger_type_id' => $messengerType2->id,
+            'info' => 'old_username2'
         ]);
         
         $response = $this->actingAs($this->user)
@@ -462,15 +511,21 @@ class ContactControllerTest extends TestCase
                 'phones' => [],
                 'emails' => [],
                 'messengers' => [
-                    // Update existing messenger
+                    // Update first existing messenger
                     [
-                        'id' => $existingMessenger->id,
+                        'id' => $existingMessenger1->id,
                         'messenger_type_id' => $messengerType1->id,
-                        'info' => 'updated_username' // Changed username
+                        'info' => 'updated_username1' // Changed username
+                    ],
+                    // Update second existing messenger
+                    [
+                        'id' => $existingMessenger2->id,
+                        'messenger_type_id' => $messengerType2->id,
+                        'info' => 'updated_username2' // Changed username
                     ],
                     // Add new messenger
                     [
-                        'messenger_type_id' => $messengerType2->id,
+                        'messenger_type_id' => $messengerType3->id,
                         'info' => 'new_username'
                     ]
                 ],
@@ -478,23 +533,31 @@ class ContactControllerTest extends TestCase
 
         $response->assertStatus(200);
         
-        // Check existing messenger was updated
+        // Check first messenger was updated
         $this->assertDatabaseHas('contact_messengers', [
-            'id' => $existingMessenger->id,
+            'id' => $existingMessenger1->id,
             'contact_id' => $contact->id,
             'messenger_type_id' => $messengerType1->id,
-            'info' => 'updated_username'
+            'info' => 'updated_username1'
         ]);
         
+        // Check second messenger was updated
+        $this->assertDatabaseHas('contact_messengers', [
+            'id' => $existingMessenger2->id,
+            'contact_id' => $contact->id,
+            'messenger_type_id' => $messengerType2->id,
+            'info' => 'updated_username2'
+        ]);
+
         // Check new messenger was added
         $this->assertDatabaseHas('contact_messengers', [
             'contact_id' => $contact->id,
-            'messenger_type_id' => $messengerType2->id,
+            'messenger_type_id' => $messengerType3->id,
             'info' => 'new_username'
         ]);
         
         // Check total count of messengers
-        $this->assertEquals(2, $contact->fresh()->messengers()->count());
+        $this->assertEquals(3, $contact->fresh()->messengers()->count());
     }
 
     public function test_delete_contact_messenger()
@@ -545,6 +608,7 @@ class ContactControllerTest extends TestCase
         
         // Create another user in a different team
         $otherTeam = Team::factory()->create();
+        /** @var \App\Models\User $otherUser */
         $otherUser = User::factory()->create(['team_id' => $otherTeam->id]);
         
         $response = $this->actingAs($otherUser)

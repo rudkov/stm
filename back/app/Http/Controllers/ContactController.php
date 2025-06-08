@@ -7,7 +7,6 @@ use App\Http\Requests\ContactRequest;
 use App\Http\Resources\ContactCollection;
 use function App\Helpers\sync_has_many;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
