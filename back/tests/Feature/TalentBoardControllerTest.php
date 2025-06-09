@@ -23,6 +23,9 @@ class TalentBoardControllerTest extends TestCase
         // Create a team and user
         $this->team = Team::factory()->create();
         $this->user = User::factory()->create(['team_id' => $this->team->id]);
+
+        // Create default talent boards for the team (simulate normal team creation)
+        $this->team->createDefaultTalentBoards($this->user->id);
     }
 
     public function test_store_talent_board_requires_name()
