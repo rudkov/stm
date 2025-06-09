@@ -18,9 +18,8 @@ class TeamController extends Controller
 
             $user = null;
 
-            DB::transaction(function () use ($request, $auth) {
+            DB::transaction(function () use ($request, $auth, &$user) {
                 $team = Team::create($request->all());
-                $team->save();
 
                 $user = User::where('id', $auth->id)
                     ->firstOrFail();

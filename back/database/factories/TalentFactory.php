@@ -27,8 +27,11 @@ class TalentFactory extends Factory
     public function definition()
     {
         $users = User::all()->groupBy('team_id');
-        // Only select from teams that have users
-        $team_id = Team::whereIn('id', array_keys($users->toArray()))->get()->random()->id;
+        $userTeamIds = array_keys($users->toArray());
+        
+        // Only select from teams that have both users AND talent boards
+        $teamsWithBoards = TalentBoard::whereIn('team_id', $userTeamIds)->distinct()->pluck('team_id')->toArray();
+        $team_id = Team::whereIn('id', $teamsWithBoards)->get()->random()->id;
 
         return [
 

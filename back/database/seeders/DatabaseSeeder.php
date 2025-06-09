@@ -37,6 +37,17 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Team::factory(3)->create();
         \App\Models\User::factory(10)->create();
+        
+        // Create talent boards for factory-created teams
+        $teams = \App\Models\Team::all();
+        foreach ($teams as $team) {
+            if ($team->talentBoards()->count() === 0) {
+                $firstUser = \App\Models\User::where('team_id', $team->id)->first();
+                if ($firstUser) {
+                    $team->createDefaultTalentBoards($firstUser->id);
+                }
+            }
+        }
         \App\Models\Talent::factory(50)->create();
         \App\Models\TalentRelative::factory(150)->create();
 

@@ -16,6 +16,8 @@ class TalentBoard extends Model
 
     protected $fillable = [
         'name',
+        'created_by',
+        'updated_by',
     ];
 
     public function createdBy()
