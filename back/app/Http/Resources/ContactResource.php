@@ -24,7 +24,7 @@ class ContactResource extends JsonResource
             'companies' => ContactCompanyResource::collection($this->whenLoaded('companies')),
             'phones' => PhoneResource::collection($this->whenLoaded('phones')),
             'emails' => EmailResource::collection($this->whenLoaded('emails')),
-            'messengers' => ContactMessengerResource::collection($this->whenLoaded('messengers')),
+            'messengers' => MessengerResource::collection($this->whenLoaded('messengers')),
             'created_by' => $this->whenLoaded('createdBy', function () {
                 return [
                     'id' => $this->createdBy->id,

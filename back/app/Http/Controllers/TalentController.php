@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Address;
 use App\Models\Email;
+use App\Models\Messenger;
 use App\Models\Phone;
-use App\Models\Talent;
-use App\Models\TalentMessenger;
-use App\Models\TalentRelative;
 use App\Models\SocialMedia;
+use App\Models\Talent;
+use App\Models\TalentRelative;
 
 class TalentController extends Controller
 {
@@ -387,7 +387,7 @@ class TalentController extends Controller
 
         foreach ($newMessengers as $item) {
             if (array_key_exists('id', $item)) {
-                $oldMessenger = TalentMessenger::where('id', $item['id'])->firstOrFail();
+                $oldMessenger = Messenger::where('id', $item['id'])->firstOrFail();
 
                 if (@$item['messenger_type_id'] || @$item['info']) {
                     if (
@@ -403,7 +403,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$item['messenger_type_id'] || @$item['info']) {
-                    $newMessenger = new TalentMessenger();
+                    $newMessenger = new Messenger();
                     $newMessenger->messenger_type_id = @$item['messenger_type_id'];
                     $newMessenger->info = @$item['info'];
                     $messengers['upsert'][] = $newMessenger;
@@ -522,7 +522,7 @@ class TalentController extends Controller
             $newMessengers = collect($request->messengers);
             foreach ($newMessengers as $item) {
                 if (@$item['messenger_type_id'] || @$item['info']) {
-                    $newMessenger = new TalentMessenger();
+                    $newMessenger = new Messenger();
                     $newMessenger->messenger_type_id = @$item['messenger_type_id'];
                     $newMessenger->info = @$item['info'];
                     $talent->messengers()->save($newMessenger);

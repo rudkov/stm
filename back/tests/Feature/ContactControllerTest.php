@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Contact;
 use App\Models\Company;
-use App\Models\ContactMessenger;
+use App\Models\Messenger;
 use App\Models\EmailType;
 use App\Models\MessengerType;
 use App\Models\PhoneType;
@@ -448,8 +448,7 @@ class ContactControllerTest extends TestCase
         $messengerType2 = MessengerType::factory()->create();
 
         // Create initial messenger
-        $existingMessenger = ContactMessenger::factory()->create([
-            'contact_id' => $contact->id,
+        $existingMessenger = $contact->messengers()->create([
             'messenger_type_id' => $messengerType1->id,
             'info' => 'old_username'
         ]);
@@ -479,16 +478,18 @@ class ContactControllerTest extends TestCase
         $response->assertStatus(200);
 
         // Check existing messenger was updated
-        $this->assertDatabaseHas('contact_messengers', [
+        $this->assertDatabaseHas('messengers', [
             'id' => $existingMessenger->id,
-            'contact_id' => $contact->id,
+            'messengerable_id' => $contact->id,
+            'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType1->id,
             'info' => 'updated_username'
         ]);
 
         // Check new messenger was added
-        $this->assertDatabaseHas('contact_messengers', [
-            'contact_id' => $contact->id,
+        $this->assertDatabaseHas('messengers', [
+            'messengerable_id' => $contact->id,
+            'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType2->id,
             'info' => 'new_username'
         ]);
@@ -508,8 +509,7 @@ class ContactControllerTest extends TestCase
         $messengerType = MessengerType::factory()->create();
 
         // Create initial messenger
-        $existingMessenger = ContactMessenger::factory()->create([
-            'contact_id' => $contact->id,
+        $existingMessenger = $contact->messengers()->create([
             'messenger_type_id' => $messengerType->id,
             'info' => 'username'
         ]);
@@ -527,7 +527,7 @@ class ContactControllerTest extends TestCase
         $response->assertStatus(200);
 
         // Check messenger was deleted
-        $this->assertDatabaseMissing('contact_messengers', [
+        $this->assertDatabaseMissing('messengers', [
             'id' => $existingMessenger->id
         ]);
 
@@ -645,8 +645,9 @@ class ContactControllerTest extends TestCase
         ]);
 
         // Check messenger was created
-        $this->assertDatabaseHas('contact_messengers', [
-            'contact_id' => $contact->id,
+        $this->assertDatabaseHas('messengers', [
+            'messengerable_id' => $contact->id,
+            'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType->id,
             'info' => 'complete_username'
         ]);
