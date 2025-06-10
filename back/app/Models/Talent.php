@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 use App\Models\Country;
-use App\Models\TalentEmail;
 use App\Models\Event;
 use App\Models\TalentMessenger;
 use App\Models\TalentSocialMedia;
@@ -27,15 +26,18 @@ use App\Models\TalentBoard;
 use App\Models\User;
 
 use App\Traits\HasAddresses;
+use App\Traits\HasEmails;
 use App\Traits\HasPhones;
 
 class Talent extends Model
 {
-    use HasAddresses;
-    use HasPhones;
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
+    
+    use HasAddresses;
+    use HasEmails;
+    use HasPhones;
 
     protected $table = 'talents';
 
@@ -185,11 +187,6 @@ class Talent extends Model
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'talent_language', 'talent_id', 'language_id');
-    }
-
-    public function emails()
-    {
-        return $this->hasMany(TalentEmail::class);
     }
 
     public function socialMedias()

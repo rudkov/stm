@@ -9,20 +9,22 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 use App\Models\Company;
-use App\Models\ContactEmail;
 use App\Models\ContactMessenger;
 use App\Models\Event;
 use App\Models\EventChunk;
 use App\Models\User;
 
+use App\Traits\HasEmails;
 use App\Traits\HasPhones;
 
 class Contact extends Model
 {
     use HasFactory;
-    use HasPhones;
     use HasUuids;
     use SoftDeletes;
+    
+    use HasEmails;
+    use HasPhones;
 
     protected $table = 'contacts';
 
@@ -44,11 +46,6 @@ class Contact extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
-    }
-
-    public function emails()
-    {
-        return $this->hasMany(ContactEmail::class);
     }
 
     public function messengers()

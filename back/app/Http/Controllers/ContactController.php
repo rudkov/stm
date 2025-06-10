@@ -21,8 +21,11 @@ class ContactController extends Controller
     {
         $innerQuery = DB::table('contacts')
             ->where('contacts.team_id', Auth::user()->team_id)
-            ->leftJoin('contact_emails', 'contacts.id', '=', 'contact_emails.contact_id')
-            ->leftJoin('email_types', 'email_types.id', '=', 'contact_emails.email_type_id')
+            ->leftJoin('emails', function ($join) {
+                $join->on('contacts.id', '=', 'emails.emailable_id')
+                    ->where('emails.emailable_type', '=', 'contact');
+            })
+            ->leftJoin('email_types', 'email_types.id', '=', 'emails.email_type_id')
             ->leftJoin('phones', function ($join) {
                 $join->on('contacts.id', '=', 'phones.phoneable_id')
                     ->where('phones.phoneable_type', '=', 'contact');
@@ -42,7 +45,7 @@ class ContactController extends Controller
                 'contacts.id',
                 'contacts.first_name',
                 'contacts.last_name',
-                'contact_emails.info as email',
+                'emails.info as email',
                 'email_types.weight as email_weight',
                 'phones.info as phone',
                 'phone_types.weight as phone_weight',

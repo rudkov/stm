@@ -23,7 +23,7 @@ class ContactResource extends JsonResource
             'updated_at' => $this->updated_at,
             'companies' => ContactCompanyResource::collection($this->whenLoaded('companies')),
             'phones' => PhoneResource::collection($this->whenLoaded('phones')),
-            'emails' => ContactEmailResource::collection($this->whenLoaded('emails')),
+            'emails' => EmailResource::collection($this->whenLoaded('emails')),
             'messengers' => ContactMessengerResource::collection($this->whenLoaded('messengers')),
             'created_by' => $this->whenLoaded('createdBy', function () {
                 return [

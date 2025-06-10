@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('talent_emails', function (Blueprint $table) {
+        Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuid('talent_id');
-            $table->foreign('talent_id')->references('id')->on('talents');
+            $table->uuidMorphs('emailable');
 
             $table->unsignedBigInteger('email_type_id')->nullable();
             $table->foreign('email_type_id')->references('id')->on('email_types');
-        
+
             $table->timestamps();
         });
     }
@@ -34,6 +33,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('talent_emails');
+        Schema::table('emails', function (Blueprint $table) {
+            $table->dropForeign('emails_email_type_id_foreign');
+        });
+        Schema::dropIfExists('emails');
     }
 };

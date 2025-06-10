@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Address;
+use App\Models\Email;
 use App\Models\Phone;
 use App\Models\Talent;
-use App\Models\TalentEmail;
 use App\Models\TalentMessenger;
 use App\Models\TalentRelative;
 use App\Models\TalentSocialMedia;
@@ -307,7 +307,7 @@ class TalentController extends Controller
 
         foreach ($newEmails as $email) {
             if (array_key_exists('id', $email)) {
-                $oldEmail = TalentEmail::where('id', $email['id'])->firstOrFail();
+                $oldEmail = Email::where('id', $email['id'])->firstOrFail();
 
                 if (@$email['email_type_id'] || @$email['info']) {
                     if (
@@ -323,7 +323,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$email['email_type_id'] || @$email['info']) {
-                    $newEmail = new TalentEmail();
+                    $newEmail = new Email();
                     $newEmail->email_type_id = @$email['email_type_id'];
                     $newEmail->info = @$email['info'];
                     $emails['upsert'][] = $newEmail;
@@ -502,7 +502,7 @@ class TalentController extends Controller
             $newEmails = collect($request->emails);
             foreach ($newEmails as $email) {
                 if (@$email['email_type_id'] || @$email['info']) {
-                    $newEmail = new TalentEmail();
+                    $newEmail = new Email();
                     $newEmail->email_type_id = @$email['email_type_id'];
                     $newEmail->info = @$email['info'];
                     $talent->emails()->save($newEmail);

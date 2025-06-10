@@ -4,9 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Contact;
 use App\Models\Company;
-use App\Models\ContactEmail;
 use App\Models\ContactMessenger;
-use App\Models\Phone;
 use App\Models\EmailType;
 use App\Models\MessengerType;
 use App\Models\PhoneType;
@@ -132,8 +130,9 @@ class ContactControllerTest extends TestCase
         ]);
 
         // Check email was created
-        $this->assertDatabaseHas('contact_emails', [
-            'contact_id' => $contact->id,
+        $this->assertDatabaseHas('emails', [
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'email_type_id' => $emailType->id,
             'info' => 'john@example.com'
         ]);
@@ -350,8 +349,7 @@ class ContactControllerTest extends TestCase
         $emailType2 = EmailType::factory()->create();
 
         // Create initial email
-        $existingEmail = ContactEmail::factory()->create([
-            'contact_id' => $contact->id,
+        $existingEmail = $contact->emails()->create([
             'email_type_id' => $emailType1->id,
             'info' => 'old@example.com'
         ]);
@@ -381,16 +379,18 @@ class ContactControllerTest extends TestCase
         $response->assertStatus(200);
 
         // Check existing email was updated
-        $this->assertDatabaseHas('contact_emails', [
+        $this->assertDatabaseHas('emails', [
             'id' => $existingEmail->id,
-            'contact_id' => $contact->id,
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'email_type_id' => $emailType1->id,
             'info' => 'updated@example.com'
         ]);
 
         // Check new email was added
-        $this->assertDatabaseHas('contact_emails', [
-            'contact_id' => $contact->id,
+        $this->assertDatabaseHas('emails', [
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'email_type_id' => $emailType2->id,
             'info' => 'new@example.com'
         ]);
@@ -410,8 +410,7 @@ class ContactControllerTest extends TestCase
         $emailType = EmailType::factory()->create();
 
         // Create initial email
-        $existingEmail = ContactEmail::factory()->create([
-            'contact_id' => $contact->id,
+        $existingEmail = $contact->emails()->create([
             'email_type_id' => $emailType->id,
             'info' => 'test@example.com'
         ]);
@@ -429,7 +428,7 @@ class ContactControllerTest extends TestCase
         $response->assertStatus(200);
 
         // Check email was deleted
-        $this->assertDatabaseMissing('contact_emails', [
+        $this->assertDatabaseMissing('emails', [
             'id' => $existingEmail->id
         ]);
 
@@ -630,15 +629,17 @@ class ContactControllerTest extends TestCase
         ]);
 
         // Check phone was created
-        $this->assertDatabaseHas('contact_phones', [
-            'contact_id' => $contact->id,
+        $this->assertDatabaseHas('phones', [
+            'phoneable_id' => $contact->id,
+            'phoneable_type' => 'contact',
             'phone_type_id' => $phoneType->id,
             'info' => '+9876543210'
         ]);
 
         // Check email was created
-        $this->assertDatabaseHas('contact_emails', [
-            'contact_id' => $contact->id,
+        $this->assertDatabaseHas('emails', [
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'email_type_id' => $emailType->id,
             'info' => 'complete@example.com'
         ]);
