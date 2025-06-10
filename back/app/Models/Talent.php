@@ -11,7 +11,6 @@ use App\Models\Country;
 use App\Models\TalentEmail;
 use App\Models\Event;
 use App\Models\TalentMessenger;
-use App\Models\TalentPhone;
 use App\Models\TalentSocialMedia;
 use App\Models\TalentCupSize;
 use App\Models\TalentDressSize;
@@ -28,10 +27,12 @@ use App\Models\TalentBoard;
 use App\Models\User;
 
 use App\Traits\HasAddresses;
+use App\Traits\HasPhones;
 
 class Talent extends Model
 {
     use HasAddresses;
+    use HasPhones;
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
@@ -184,11 +185,6 @@ class Talent extends Model
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'talent_language', 'talent_id', 'language_id');
-    }
-
-    public function phones()
-    {
-        return $this->hasMany(TalentPhone::class);
     }
 
     public function emails()

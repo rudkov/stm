@@ -21,17 +21,17 @@ class ContactResource extends JsonResource
             'comment' => $this->comment,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'companies' => ContactCompanyResource::collection($this->whenLoaded('companies')),            
-            'phones' => ContactPhoneResource::collection($this->whenLoaded('phones')),
+            'companies' => ContactCompanyResource::collection($this->whenLoaded('companies')),
+            'phones' => PhoneResource::collection($this->whenLoaded('phones')),
             'emails' => ContactEmailResource::collection($this->whenLoaded('emails')),
             'messengers' => ContactMessengerResource::collection($this->whenLoaded('messengers')),
-            'created_by' => $this->whenLoaded('createdBy', function() {
+            'created_by' => $this->whenLoaded('createdBy', function () {
                 return [
                     'id' => $this->createdBy->id,
                     'name' => $this->createdBy->name,
                 ];
             }),
-            'updated_by' => $this->whenLoaded('updatedBy', function() {
+            'updated_by' => $this->whenLoaded('updatedBy', function () {
                 return [
                     'id' => $this->updatedBy->id,
                     'name' => $this->updatedBy->name,

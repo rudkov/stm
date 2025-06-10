@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Team::observe(TeamObserver::class);
 
         Relation::enforceMorphMap([
+            'contact' => 'App\Models\Contact',
             'event' => 'App\Models\Event',
             'event-chunk' => 'App\Models\EventChunk',
             'talent' => 'App\Models\Talent',

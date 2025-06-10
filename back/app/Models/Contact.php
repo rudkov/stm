@@ -7,20 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 use App\Models\Company;
-use App\Models\ContactPhone;
 use App\Models\ContactEmail;
 use App\Models\ContactMessenger;
 use App\Models\Event;
 use App\Models\EventChunk;
 use App\Models\User;
-use App\Models\Talent;
+
+use App\Traits\HasPhones;
 
 class Contact extends Model
 {
     use HasFactory;
+    use HasPhones;
     use HasUuids;
     use SoftDeletes;
 
@@ -46,11 +46,6 @@ class Contact extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function phones()
-    {
-        return $this->hasMany(ContactPhone::class);
-    }
-
     public function emails()
     {
         return $this->hasMany(ContactEmail::class);
@@ -70,7 +65,7 @@ class Contact extends Model
     {
         return $this->morphedByMany(Event::class, 'contactable');
     }
- 
+
     public function eventChunks(): MorphToMany
     {
         return $this->morphedByMany(EventChunk::class, 'contactable');

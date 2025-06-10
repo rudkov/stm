@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Address;
+use App\Models\Phone;
 use App\Models\Talent;
 use App\Models\TalentEmail;
 use App\Models\TalentMessenger;
-use App\Models\TalentPhone;
 use App\Models\TalentRelative;
 use App\Models\TalentSocialMedia;
 
@@ -267,7 +267,7 @@ class TalentController extends Controller
 
         foreach ($newPhones as $phone) {
             if (array_key_exists('id', $phone)) {
-                $oldPhone = TalentPhone::where('id', $phone['id'])->firstOrFail();
+                $oldPhone = Phone::where('id', $phone['id'])->firstOrFail();
 
                 if (@$phone['phone_type_id'] || @$phone['info']) {
                     if (
@@ -283,7 +283,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$phone['phone_type_id'] || @$phone['info']) {
-                    $newPhone = new TalentPhone();
+                    $newPhone = new Phone();
                     $newPhone->phone_type_id = @$phone['phone_type_id'];
                     $newPhone->info = @$phone['info'];
                     $phones['upsert'][] = $newPhone;
@@ -492,7 +492,7 @@ class TalentController extends Controller
             $newPhones = collect($request->phones);
             foreach ($newPhones as $phone) {
                 if (@$phone['phone_type_id'] || @$phone['info']) {
-                    $newPhone = new TalentPhone();
+                    $newPhone = new Phone();
                     $newPhone->phone_type_id = @$phone['phone_type_id'];
                     $newPhone->info = @$phone['info'];
                     $talent->phones()->save($newPhone);
