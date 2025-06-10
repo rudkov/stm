@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\Talent;
-use App\Models\TalentSocialMedia;
 use App\Models\SocialMediaType;
 
 class TalentSocialMediaFactory extends Factory
@@ -24,11 +23,9 @@ class TalentSocialMediaFactory extends Factory
             $randomSocialMediaTypes = $socialMediaTypes->random(rand(1, count($socialMediaTypes)));
 
             foreach ($randomSocialMediaTypes as $randomSocialMediaType) {
-                $talent->socialMedias()->saveMany([
-                    new TalentSocialMedia([
-                        'info' => $this->faker->userName,
-                        'social_media_type_id' => $randomSocialMediaType->id,
-                    ]),
+                $talent->socialMedias()->create([
+                    'info' => $this->faker->userName,
+                    'social_media_type_id' => $randomSocialMediaType->id,
                 ]);
             }
         }

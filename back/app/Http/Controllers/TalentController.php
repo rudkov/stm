@@ -12,7 +12,7 @@ use App\Models\Phone;
 use App\Models\Talent;
 use App\Models\TalentMessenger;
 use App\Models\TalentRelative;
-use App\Models\TalentSocialMedia;
+use App\Models\SocialMedia;
 
 class TalentController extends Controller
 {
@@ -347,7 +347,7 @@ class TalentController extends Controller
 
         foreach ($newSocialMedias as $item) {
             if (array_key_exists('id', $item)) {
-                $oldSocialMedia = TalentSocialMedia::where('id', $item['id'])->firstOrFail();
+                $oldSocialMedia = SocialMedia::where('id', $item['id'])->firstOrFail();
 
                 if (@$item['social_media_type_id'] || @$item['info']) {
                     if (
@@ -363,7 +363,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$item['social_media_type_id'] || @$item['info']) {
-                    $newSocialMedia = new TalentSocialMedia();
+                    $newSocialMedia = new SocialMedia();
                     $newSocialMedia->social_media_type_id = @$item['social_media_type_id'];
                     $newSocialMedia->info = @$item['info'];
                     $socialMedias['upsert'][] = $newSocialMedia;
@@ -512,7 +512,7 @@ class TalentController extends Controller
             $newSocialMedias = collect($request->social_medias);
             foreach ($newSocialMedias as $item) {
                 if (@$item['social_media_type_id'] || @$item['info']) {
-                    $newSocialMedia = new TalentSocialMedia();
+                    $newSocialMedia = new SocialMedia();
                     $newSocialMedia->social_media_type_id = @$item['social_media_type_id'];
                     $newSocialMedia->info = @$item['info'];
                     $talent->socialMedias()->save($newSocialMedia);

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Models\Country;
 use App\Models\Event;
 use App\Models\TalentMessenger;
-use App\Models\TalentSocialMedia;
 use App\Models\TalentCupSize;
 use App\Models\TalentDressSize;
 use App\Models\TalentEyeColor;
@@ -28,16 +27,18 @@ use App\Models\User;
 use App\Traits\HasAddresses;
 use App\Traits\HasEmails;
 use App\Traits\HasPhones;
+use App\Traits\HasSocialMedia;
 
 class Talent extends Model
 {
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
-    
+
     use HasAddresses;
     use HasEmails;
     use HasPhones;
+    use HasSocialMedia;
 
     protected $table = 'talents';
 
@@ -187,11 +188,6 @@ class Talent extends Model
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'talent_language', 'talent_id', 'language_id');
-    }
-
-    public function socialMedias()
-    {
-        return $this->hasMany(TalentSocialMedia::class);
     }
 
     public function messengers()
