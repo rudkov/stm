@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-use App\Models\TalentAddress;
 use App\Models\Country;
 use App\Models\TalentEmail;
 use App\Models\Event;
@@ -28,8 +27,11 @@ use App\Models\TalentSuitCut;
 use App\Models\TalentBoard;
 use App\Models\User;
 
+use App\Traits\HasAddresses;
+
 class Talent extends Model
 {
+    use HasAddresses;
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
@@ -182,11 +184,6 @@ class Talent extends Model
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'talent_language', 'talent_id', 'language_id');
-    }
-
-    public function addresses()
-    {
-        return $this->hasMany(TalentAddress::class);
     }
 
     public function phones()

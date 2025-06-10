@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Team;
 use App\Observers\TeamObserver;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,11 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
 
         Team::observe(TeamObserver::class);
+
+        Relation::enforceMorphMap([
+            'event' => 'App\Models\Event',
+            'event-chunk' => 'App\Models\EventChunk',
+            'talent' => 'App\Models\Talent',
+        ]);
     }
 }

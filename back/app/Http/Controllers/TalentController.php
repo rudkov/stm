@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TalentAddress;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+use App\Models\Address;
+use App\Models\Talent;
 use App\Models\TalentEmail;
 use App\Models\TalentMessenger;
 use App\Models\TalentPhone;
-use App\Models\TalentSocialMedia;
-use Illuminate\Http\Request;
-use App\Models\Talent;
 use App\Models\TalentRelative;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use App\Models\TalentSocialMedia;
 
 class TalentController extends Controller
 {
@@ -226,7 +227,7 @@ class TalentController extends Controller
 
         foreach ($newAddresses as $address) {
             if (array_key_exists('id', $address)) {
-                $oldAddress = TalentAddress::where('id', $address['id'])->firstOrFail();
+                $oldAddress = Address::where('id', $address['id'])->firstOrFail();
 
                 if (@$address['address_type_id'] || @$address['info']) {
                     if (
@@ -242,7 +243,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$address['address_type_id'] || @$address['info']) {
-                    $newAddress = new TalentAddress();
+                    $newAddress = new Address();
                     $newAddress->address_type_id = @$address['address_type_id'];
                     $newAddress->info = @$address['info'];
                     $addresses['upsert'][] = $newAddress;
@@ -481,7 +482,7 @@ class TalentController extends Controller
             $newAddresses = collect($request->addresses);
             foreach ($newAddresses as $address) {
                 if (@$address['address_type_id'] || @$address['info']) {
-                    $newAddress = new TalentAddress();
+                    $newAddress = new Address();
                     $newAddress->address_type_id = @$address['address_type_id'];
                     $newAddress->info = @$address['info'];
                     $talent->addresses()->save($newAddress);
