@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuidMorphs('addressable');
-
             $table->unsignedBigInteger('address_type_id')->nullable();
             $table->foreign('address_type_id')->references('id')->on('address_types');
 
-            $table->timestamps();
+            $table->uuidMorphs('addressable');
         });
     }
 

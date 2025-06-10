@@ -9,6 +9,8 @@ class Address extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'info',
         'address_type_id',

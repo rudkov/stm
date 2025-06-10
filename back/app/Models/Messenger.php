@@ -9,6 +9,8 @@ class Messenger extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'info',
         'messenger_type_id',

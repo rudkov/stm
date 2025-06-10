@@ -9,6 +9,8 @@ class SocialMedia extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'info',
         'social_media_type_id',

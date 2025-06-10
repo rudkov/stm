@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuidMorphs('social_mediaable');
-
             $table->unsignedBigInteger('social_media_type_id')->nullable();
             $table->foreign('social_media_type_id')->references('id')->on('social_media_types');
 
-            $table->timestamps();
+            $table->uuidMorphs('social_mediaable');
         });
     }
 

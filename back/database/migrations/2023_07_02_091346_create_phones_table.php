@@ -16,13 +16,11 @@ return new class extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
-
-            $table->uuidMorphs('phoneable');
-
+            
             $table->unsignedBigInteger('phone_type_id')->nullable();
             $table->foreign('phone_type_id')->references('id')->on('phone_types');
-        
-            $table->timestamps();
+            
+            $table->uuidMorphs('phoneable');
         });
     }
 

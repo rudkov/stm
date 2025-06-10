@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuidMorphs('messengerable');
-
             $table->unsignedBigInteger('messenger_type_id')->nullable();
             $table->foreign('messenger_type_id')->references('id')->on('messenger_types');
 
-            $table->timestamps();
+            $table->uuidMorphs('messengerable');
         });
     }
 

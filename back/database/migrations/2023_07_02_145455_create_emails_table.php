@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuidMorphs('emailable');
-
             $table->unsignedBigInteger('email_type_id')->nullable();
             $table->foreign('email_type_id')->references('id')->on('email_types');
 
-            $table->timestamps();
+            $table->uuidMorphs('emailable');
         });
     }
 
