@@ -11,7 +11,6 @@ use App\Models\Country;
 use App\Models\Team;
 use App\Models\Language;
 use App\Models\User;
-use App\Models\TalentBoard;
 use App\Models\EventType;
 use App\Models\TalentCupSize;
 use App\Models\TalentDressSize;
@@ -37,7 +36,6 @@ class FirstTimeSeeder extends Seeder
     {
         $this->teams();
         $this->users();
-        $this->talentBoards();
 
         $this->countries();
         $this->languages();
@@ -73,19 +71,6 @@ class FirstTimeSeeder extends Seeder
 
         foreach ($items as $item) {
             Team::create($item);
-        }
-    }
-
-    public function talentBoards()
-    {
-        $teams = Team::all();
-
-        foreach ($teams as $team) {
-            $firstUser = User::where('team_id', $team->id)->first();
-            
-            if ($firstUser) {
-                $team->createDefaultTalentBoards($firstUser->id);
-            }
         }
     }
 

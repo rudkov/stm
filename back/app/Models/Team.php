@@ -40,7 +40,7 @@ class Team extends Model
             ]));
 
             $team = static::find($teamId);
-            $team->createDefaultTalentBoards();
+            $team->createDefaultTalentBoards(Auth::id());
             return $team;
         });
     }
@@ -48,21 +48,12 @@ class Team extends Model
     /**
      * Create default talent boards for this team.
      * 
-     * @param int|null $userId Optional user ID to use as creator
+     * @param int|null $userId User ID to use as creator (optional)
      * @return void
      */
-    public function createDefaultTalentBoards($userId = null): void
+    public function createDefaultTalentBoards(?int $userId = null): void
     {
         $defaultBoards = config('defaults.talent_boards', []);
-        
-        if (!$userId) {
-            $userId = Auth::id();
-        }
-
-        // Skip creating talent boards if no user is available
-        if (!$userId) {
-            return;
-        }
 
         foreach ($defaultBoards as $board) {
             $this->talentBoards()->create([

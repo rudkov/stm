@@ -80,16 +80,33 @@ class TeamTest extends TestCase
         }
     }
 
-    public function test_team_does_not_create_talent_boards_when_no_user_available()
+    public function test_team_creates_talent_boards_with_null_user_when_no_user_available()
     {
+        // Get default talent boards from config
+        $defaultBoards = Config::get('defaults.talent_boards', []);
+
         // Ensure no user is authenticated
         Auth::logout();
 
         // Create a team
         $team = Team::create(['name' => 'Test Team']);
 
-        // Assert no talent boards were created
-        $this->assertCount(0, $team->talentBoards);
+        // Assert talent boards were created
+        $talentBoards = $team->talentBoards;
+        $this->assertCount(count($defaultBoards), $talentBoards);
+
+        // Assert talent boards have null created_by and updated_by
+        foreach ($talentBoards as $board) {
+            $this->assertEquals($team->id, $board->team_id);
+            $this->assertNull($board->created_by);
+            $this->assertNull($board->updated_by);
+        }
+
+        // Assert talent boards have correct names from config
+        $boardNames = $talentBoards->pluck('name')->toArray();
+        foreach ($defaultBoards as $defaultBoard) {
+            $this->assertContains($defaultBoard['name'], $boardNames);
+        }
     }
 
     public function test_team_creates_no_talent_boards_when_config_is_empty()

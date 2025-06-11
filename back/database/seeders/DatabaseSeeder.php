@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Team::factory(3)->create();
         \App\Models\User::factory(10)->create();
         
-        // Create talent boards for factory-created teams
+        // Create talent boards for factory-created teams (which don't use Team::create())
         $teams = \App\Models\Team::all();
         foreach ($teams as $team) {
             if ($team->talentBoards()->count() === 0) {
