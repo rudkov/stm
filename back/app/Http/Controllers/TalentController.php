@@ -556,9 +556,9 @@ class TalentController extends Controller
             abort(403);
         }
 
-        $talent->current_location = $request['current_location'];
         $talent->timestamps = false;
         $talent->userTracking = false;
+        $talent->current_location = $request['current_location'];
         $talent->save();
 
         $talent = $this->getTalentById($id);

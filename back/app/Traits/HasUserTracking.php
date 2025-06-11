@@ -46,14 +46,6 @@ use Illuminate\Support\Facades\Auth;
 trait HasUserTracking
 {
     /**
-     * Indicates if the model should automatically track user changes.
-     * Can be set on individual model instances.
-     *
-     * @var bool
-     */
-    public $userTracking = true;
-
-    /**
      * Boot the trait.
      */
     protected static function bootHasUserTracking()
@@ -68,10 +60,38 @@ trait HasUserTracking
         });
 
         static::updating(function ($model) {
-            if ($model->usesUserTracking() && Auth::check() && empty($model->updated_by)) {
+            if ($model->usesUserTracking() && Auth::check()) {
                 $model->updated_by = Auth::id();
             }
         });
+    }
+
+    /**
+     * Get the model's attributes for array conversion.
+     * Excludes userTracking from being saved to database.
+     */
+    public function attributesToArray()
+    {
+        $attributes = parent::attributesToArray();
+
+        // Remove userTracking from attributes to prevent it from being saved to database
+        unset($attributes['userTracking']);
+
+        return $attributes;
+    }
+
+    /**
+     * Get the model's attributes that should be saved to the database.
+     * Excludes userTracking from being saved.
+     */
+    public function getDirty()
+    {
+        $dirty = parent::getDirty();
+
+        // Remove userTracking from dirty attributes to prevent it from being saved to database
+        unset($dirty['userTracking']);
+
+        return $dirty;
     }
 
     /**
@@ -82,12 +102,12 @@ trait HasUserTracking
      */
     public function usesUserTracking()
     {
-        // If userTracking property is explicitly set on the instance, use that
-        if (isset($this->userTracking)) {
-            return $this->userTracking;
+        // Check if userTracking is set as an attribute (dynamically set)
+        if (array_key_exists('userTracking', $this->attributes)) {
+            return $this->attributes['userTracking'];
         }
 
-        // Otherwise, check if there's a class-level property (similar to $timestamps)
+        // Check if there's a userTracking property defined on the class and use its value
         if (property_exists($this, 'userTracking')) {
             return $this->userTracking;
         }
@@ -104,6 +124,7 @@ trait HasUserTracking
      */
     public function setUserTracking($value)
     {
+        // Set as a dynamic property
         $this->userTracking = $value;
 
         return $this;
