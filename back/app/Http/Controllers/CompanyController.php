@@ -36,7 +36,6 @@ class CompanyController extends Controller
     public function update(CompanyRequest $request, Company $company)
     {
         $validated = $request->validated();
-        $company->updated_by = Auth::user()->id;
         $company->update($validated);
 
         return $this->show($company);
@@ -50,8 +49,6 @@ class CompanyController extends Controller
 
         $company->fill($validated);
         $company->team_id = $user->team->id;
-        $company->created_by = $user->id;
-        $company->updated_by = $user->id;
         $company->save();
 
         return $this->show($company);
@@ -59,7 +56,6 @@ class CompanyController extends Controller
 
     public function destroy(Company $company)
     {
-        $company->updated_by = Auth::user()->id;
         $company->delete();
         return response()->json(null, 204);
     }

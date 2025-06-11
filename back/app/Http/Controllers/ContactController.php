@@ -87,7 +87,6 @@ class ContactController extends Controller
         // Process the validated data
         $validated = $request->validated();
         DB::transaction(function () use ($contact, $validated) {
-            $contact->updated_by = Auth::user()->id;
             $contact->update($validated);
 
             //COMPANIES & JOB TITLES START
@@ -116,8 +115,6 @@ class ContactController extends Controller
 
             $contact->fill($validated);
             $contact->team_id = $user->team->id;
-            $contact->created_by = $user->id;
-            $contact->updated_by = $user->id;
             $contact->save();
 
             //COMPANIES & JOB TITLES START
@@ -138,7 +135,6 @@ class ContactController extends Controller
 
     public function destroy(Contact $contact)
     {
-        $contact->updated_by = Auth::user()->id;
         $contact->delete();
         return response()->json(null, 204);
     }
