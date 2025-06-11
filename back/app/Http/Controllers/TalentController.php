@@ -563,6 +563,7 @@ class TalentController extends Controller
 
         $talent->current_location = $request['current_location'];
         $talent->timestamps = false;
+        $talent->userTracking = false;
         $talent->save();
 
         $talent = $this->getTalentById($id);
