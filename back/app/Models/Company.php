@@ -11,11 +11,15 @@ use App\Models\Event;
 use App\Models\Contact;
 use App\Models\Talent;
 
+use App\Traits\HasUserTracking;
+
 class Company extends Model
 {
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
+
+    use HasUserTracking;
 
     protected $table = 'companies';
 
@@ -26,16 +30,6 @@ class Company extends Model
     protected $fillable = [
         'name',
     ];
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
 
     public function events()
     {

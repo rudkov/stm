@@ -32,7 +32,6 @@ class TalentBoardController extends Controller
     public function update(TalentBoardRequest $request, TalentBoard $talentBoard)
     {
         $validated = $request->validated();
-        $talentBoard->updated_by = Auth::user()->id;
         $talentBoard->update($validated);
 
         return $this->show($talentBoard);
@@ -46,8 +45,6 @@ class TalentBoardController extends Controller
 
         $talentBoard->fill($validated);
         $talentBoard->team_id = $user->team->id;
-        $talentBoard->created_by = $user->id;
-        $talentBoard->updated_by = $user->id;
         $talentBoard->save();
 
         return $this->show($talentBoard);
@@ -55,7 +52,6 @@ class TalentBoardController extends Controller
 
     public function destroy(TalentBoard $talentBoard)
     {
-        $talentBoard->updated_by = Auth::user()->id;
         $talentBoard->delete();
         return response()->json(null, 204);
     }

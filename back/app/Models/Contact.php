@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Models\Company;
 use App\Models\Event;
 use App\Models\EventChunk;
-use App\Models\User;
 
 use App\Traits\HasEmails;
 use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
+use App\Traits\HasUserTracking;
 
 class Contact extends Model
 {
@@ -26,6 +26,7 @@ class Contact extends Model
     use HasEmails;
     use HasMessengers;
     use HasPhones;
+    use HasUserTracking;
 
     protected $table = 'contacts';
 
@@ -38,16 +39,6 @@ class Contact extends Model
         'last_name',
         'comment',
     ];
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
 
     public function companies()
     {

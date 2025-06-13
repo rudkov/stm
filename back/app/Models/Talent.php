@@ -28,6 +28,7 @@ use App\Traits\HasEmails;
 use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
 use App\Traits\HasSocialMedia;
+use App\Traits\HasUserTracking;
 
 class Talent extends Model
 {
@@ -40,6 +41,7 @@ class Talent extends Model
     use HasMessengers;
     use HasPhones;
     use HasSocialMedia;
+    use HasUserTracking;
 
     protected $table = 'talents';
 
@@ -105,16 +107,6 @@ class Talent extends Model
     protected $casts = [
         'birth_date' => 'date:Y-m-d',
     ];
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
 
     public function events()
     {

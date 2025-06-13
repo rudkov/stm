@@ -170,8 +170,6 @@ class TalentController extends Controller
             abort(403);
         }
 
-        $talent->updated_by = Auth::user()->id;
-
         //RELATIVES START
         $relatives['upsert'] = array();
         $relatives['delete'] = array();
@@ -463,8 +461,6 @@ class TalentController extends Controller
 
             $talent->fill($request->all());
             $talent->team_id = $user->team->id;
-            $talent->created_by = $user->id;
-            $talent->updated_by = $user->id;
             $talent->manager_id = $request->manager_id;
             $talent->save();
 
@@ -547,7 +543,6 @@ class TalentController extends Controller
             abort(403);
         }
 
-        $talent->updated_by = Auth::user()->id;
         $talent->delete();
         return response()->json(null, 204);
     }
@@ -561,8 +556,9 @@ class TalentController extends Controller
             abort(403);
         }
 
-        $talent->current_location = $request['current_location'];
         $talent->timestamps = false;
+        $talent->userTracking = false;
+        $talent->current_location = $request['current_location'];
         $talent->save();
 
         $talent = $this->getTalentById($id);

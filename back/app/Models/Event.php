@@ -12,13 +12,16 @@ use App\Models\Contact;
 use App\Models\EventChunk;
 use App\Models\EventType;
 use App\Models\Talent;
-use App\Models\User;
+
+use App\Traits\HasUserTracking;
 
 class Event extends Model
 {
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
+
+    use HasUserTracking;
 
     protected $hidden = [
         'team_id',
@@ -29,16 +32,6 @@ class Event extends Model
         'imageable_id',
         'imageable_type',
     ];
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
 
     public function eventChunks()
     {
