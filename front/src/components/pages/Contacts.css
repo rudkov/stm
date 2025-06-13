@@ -1,0 +1,11 @@
+.contacts-page {
+    display: grid;
+    grid-template-columns: 240px auto;
+    height: 100vh;
+    gap: 12px;
+}
+
+.contacts-page__right-column {
+    height: 100vh;
+    padding: 12px 12px 12px 0;
+}

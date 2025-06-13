@@ -23,7 +23,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::apiResource('contacts', 'ContactController');
         
         //companies
-        Route::get('companies', 'CompanyController@index');
+        Route::apiResource('companies', 'CompanyController');
 
         //teams
         Route::post('teams', 'TeamController@store');
