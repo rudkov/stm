@@ -10,7 +10,6 @@ use function App\Helpers\sync_has_many;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-
 class ContactController extends Controller
 {
     public function __construct()
@@ -22,10 +21,16 @@ class ContactController extends Controller
     {
         $innerQuery = DB::table('contacts')
             ->where('contacts.team_id', Auth::user()->team_id)
-            ->leftJoin('contact_emails', 'contacts.id', '=', 'contact_emails.contact_id')
-            ->leftJoin('email_types', 'email_types.id', '=', 'contact_emails.email_type_id')
-            ->leftJoin('contact_phones', 'contacts.id', '=', 'contact_phones.contact_id')
-            ->leftJoin('phone_types', 'phone_types.id', '=', 'contact_phones.phone_type_id')
+            ->leftJoin('emails', function ($join) {
+                $join->on('contacts.id', '=', 'emails.emailable_id')
+                    ->where('emails.emailable_type', '=', 'contact');
+            })
+            ->leftJoin('email_types', 'email_types.id', '=', 'emails.email_type_id')
+            ->leftJoin('phones', function ($join) {
+                $join->on('contacts.id', '=', 'phones.phoneable_id')
+                    ->where('phones.phoneable_type', '=', 'contact');
+            })
+            ->leftJoin('phone_types', 'phone_types.id', '=', 'phones.phone_type_id')
 
             ->leftJoin('company_contact', 'company_contact.contact_id', '=', 'contacts.id')
             ->leftJoin('companies', 'company_contact.company_id', '=', 'companies.id')
@@ -33,16 +38,16 @@ class ContactController extends Controller
             ->whereNull('contacts.deleted_at')
             ->orderBy('contacts.first_name', 'asc')
             ->orderBy('contacts.last_name', 'asc')
-            ->orderBy('companies.name', 'asc') 
+            ->orderBy('companies.name', 'asc')
             ->orderBy('email_types.weight', 'ASC')
             ->orderBy('phone_types.weight', 'ASC')
             ->select([
                 'contacts.id',
-                'contacts.first_name', 
+                'contacts.first_name',
                 'contacts.last_name',
-                'contact_emails.info as email',
+                'emails.info as email',
                 'email_types.weight as email_weight',
-                'contact_phones.info as phone',
+                'phones.info as phone',
                 'phone_types.weight as phone_weight',
                 'company_contact.job_title as job_title',
                 'companies.name as company_name',
@@ -52,18 +57,19 @@ class ContactController extends Controller
                 ) AS row_num')
 
             ]);
-        $contacts = DB::table(function($query) use ($innerQuery) {
+        $contacts = DB::table(function ($query) use ($innerQuery) {
             $query->fromSub($innerQuery, 'ranked_contacts');
         })
-        ->where('row_num', 1)
-        ->get();
-        
+            ->where('row_num', 1)
+            ->get();
+
         return new ContactCollection($contacts);
     }
 
     public function show(Contact $contact)
     {
-        $contact->load('companies',
+        $contact->load(
+            'companies',
             'phones',
             'phones.type',
             'emails',
@@ -96,7 +102,7 @@ class ContactController extends Controller
             sync_has_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
             sync_has_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
-        
+
         return $this->show($contact);
     }
 

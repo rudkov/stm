@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('talent_messengers', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuid('talent_id');
-            $table->foreign('talent_id')->references('id')->on('talents');
+            $table->unsignedBigInteger('address_type_id')->nullable();
+            $table->foreign('address_type_id')->references('id')->on('address_types');
 
-            $table->unsignedBigInteger('messenger_type_id')->nullable();
-            $table->foreign('messenger_type_id')->references('id')->on('messenger_types');
-        
-            $table->timestamps();
+            $table->uuidMorphs('addressable');
         });
     }
 
@@ -34,6 +31,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('talent_messengers');
+        Schema::table('addresses', function (Blueprint $table) {
+            $table->dropForeign('addresses_address_type_id_foreign');
+        });
+        Schema::dropIfExists('addresses');
     }
 };

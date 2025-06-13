@@ -8,28 +8,32 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('contact_messengers', function (Blueprint $table) {
+        Schema::create('messengers', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuid('contact_id');
-            $table->foreign('contact_id')->references('id')->on('contacts');
-
             $table->unsignedBigInteger('messenger_type_id')->nullable();
             $table->foreign('messenger_type_id')->references('id')->on('messenger_types');
-        
-            $table->timestamps();
+
+            $table->uuidMorphs('messengerable');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('contact_messengers');
+        Schema::table('messengers', function (Blueprint $table) {
+            $table->dropForeign('messengers_messenger_type_id_foreign');
+        });
+        Schema::dropIfExists('messengers');
     }
 };

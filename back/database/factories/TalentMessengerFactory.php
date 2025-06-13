@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\Talent;
-use App\Models\TalentMessenger;
 use App\Models\MessengerType;
 
 class TalentMessengerFactory extends Factory
@@ -24,11 +23,9 @@ class TalentMessengerFactory extends Factory
             $randomMessengerTypes = $messengerTypes->random(rand(1, count($messengerTypes)));
 
             foreach ($randomMessengerTypes as $randomMessengerType) {
-                $talent->messengers()->saveMany([
-                    new TalentMessenger([
-                        'info' => $this->faker->userName,
-                        'messenger_type_id' => $randomMessengerType->id,
-                    ]),
+                $talent->messengers()->create([
+                    'info' => $this->faker->userName,
+                    'messenger_type_id' => $randomMessengerType->id,
                 ]);
             }
         }

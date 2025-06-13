@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ContactMessengerResource extends JsonResource
+class PhoneResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +17,11 @@ class ContactMessengerResource extends JsonResource
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'messenger_type_id' => $this->messenger_type_id,
-            'type' => $this->whenLoaded('type', function($type) {
+            'phone_type_id' => $this->phone_type_id,
+            'type' => $this->whenLoaded('type', function ($type) {
                 return [
                     'id' => $type->id,
                     'name' => $type->name,
-                    'system_name' => $type->system_name,
                 ];
             }),
         ];

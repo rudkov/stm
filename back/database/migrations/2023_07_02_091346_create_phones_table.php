@@ -8,28 +8,32 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('contact_phones', function (Blueprint $table) {
+        Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
-
-            $table->uuid('contact_id');
-            $table->foreign('contact_id')->references('id')->on('contacts');
-
+            
             $table->unsignedBigInteger('phone_type_id')->nullable();
             $table->foreign('phone_type_id')->references('id')->on('phone_types');
-        
-            $table->timestamps();
+            
+            $table->uuidMorphs('phoneable');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('contact_phones');
+        Schema::table('phones', function (Blueprint $table) {
+            $table->dropForeign('phones_phone_type_id_foreign');
+        });
+        Schema::dropIfExists('phones');
     }
 };

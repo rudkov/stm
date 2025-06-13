@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TalentAddress;
-use App\Models\TalentEmail;
-use App\Models\TalentMessenger;
-use App\Models\TalentPhone;
-use App\Models\TalentSocialMedia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+use App\Models\Address;
+use App\Models\Email;
+use App\Models\Messenger;
+use App\Models\Phone;
+use App\Models\SocialMedia;
 use App\Models\Talent;
 use App\Models\TalentRelative;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 class TalentController extends Controller
 {
@@ -226,7 +227,7 @@ class TalentController extends Controller
 
         foreach ($newAddresses as $address) {
             if (array_key_exists('id', $address)) {
-                $oldAddress = TalentAddress::where('id', $address['id'])->firstOrFail();
+                $oldAddress = Address::where('id', $address['id'])->firstOrFail();
 
                 if (@$address['address_type_id'] || @$address['info']) {
                     if (
@@ -242,7 +243,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$address['address_type_id'] || @$address['info']) {
-                    $newAddress = new TalentAddress();
+                    $newAddress = new Address();
                     $newAddress->address_type_id = @$address['address_type_id'];
                     $newAddress->info = @$address['info'];
                     $addresses['upsert'][] = $newAddress;
@@ -266,7 +267,7 @@ class TalentController extends Controller
 
         foreach ($newPhones as $phone) {
             if (array_key_exists('id', $phone)) {
-                $oldPhone = TalentPhone::where('id', $phone['id'])->firstOrFail();
+                $oldPhone = Phone::where('id', $phone['id'])->firstOrFail();
 
                 if (@$phone['phone_type_id'] || @$phone['info']) {
                     if (
@@ -282,7 +283,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$phone['phone_type_id'] || @$phone['info']) {
-                    $newPhone = new TalentPhone();
+                    $newPhone = new Phone();
                     $newPhone->phone_type_id = @$phone['phone_type_id'];
                     $newPhone->info = @$phone['info'];
                     $phones['upsert'][] = $newPhone;
@@ -306,7 +307,7 @@ class TalentController extends Controller
 
         foreach ($newEmails as $email) {
             if (array_key_exists('id', $email)) {
-                $oldEmail = TalentEmail::where('id', $email['id'])->firstOrFail();
+                $oldEmail = Email::where('id', $email['id'])->firstOrFail();
 
                 if (@$email['email_type_id'] || @$email['info']) {
                     if (
@@ -322,7 +323,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$email['email_type_id'] || @$email['info']) {
-                    $newEmail = new TalentEmail();
+                    $newEmail = new Email();
                     $newEmail->email_type_id = @$email['email_type_id'];
                     $newEmail->info = @$email['info'];
                     $emails['upsert'][] = $newEmail;
@@ -346,7 +347,7 @@ class TalentController extends Controller
 
         foreach ($newSocialMedias as $item) {
             if (array_key_exists('id', $item)) {
-                $oldSocialMedia = TalentSocialMedia::where('id', $item['id'])->firstOrFail();
+                $oldSocialMedia = SocialMedia::where('id', $item['id'])->firstOrFail();
 
                 if (@$item['social_media_type_id'] || @$item['info']) {
                     if (
@@ -362,7 +363,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$item['social_media_type_id'] || @$item['info']) {
-                    $newSocialMedia = new TalentSocialMedia();
+                    $newSocialMedia = new SocialMedia();
                     $newSocialMedia->social_media_type_id = @$item['social_media_type_id'];
                     $newSocialMedia->info = @$item['info'];
                     $socialMedias['upsert'][] = $newSocialMedia;
@@ -386,7 +387,7 @@ class TalentController extends Controller
 
         foreach ($newMessengers as $item) {
             if (array_key_exists('id', $item)) {
-                $oldMessenger = TalentMessenger::where('id', $item['id'])->firstOrFail();
+                $oldMessenger = Messenger::where('id', $item['id'])->firstOrFail();
 
                 if (@$item['messenger_type_id'] || @$item['info']) {
                     if (
@@ -402,7 +403,7 @@ class TalentController extends Controller
                 }
             } else {
                 if (@$item['messenger_type_id'] || @$item['info']) {
-                    $newMessenger = new TalentMessenger();
+                    $newMessenger = new Messenger();
                     $newMessenger->messenger_type_id = @$item['messenger_type_id'];
                     $newMessenger->info = @$item['info'];
                     $messengers['upsert'][] = $newMessenger;
@@ -481,7 +482,7 @@ class TalentController extends Controller
             $newAddresses = collect($request->addresses);
             foreach ($newAddresses as $address) {
                 if (@$address['address_type_id'] || @$address['info']) {
-                    $newAddress = new TalentAddress();
+                    $newAddress = new Address();
                     $newAddress->address_type_id = @$address['address_type_id'];
                     $newAddress->info = @$address['info'];
                     $talent->addresses()->save($newAddress);
@@ -491,7 +492,7 @@ class TalentController extends Controller
             $newPhones = collect($request->phones);
             foreach ($newPhones as $phone) {
                 if (@$phone['phone_type_id'] || @$phone['info']) {
-                    $newPhone = new TalentPhone();
+                    $newPhone = new Phone();
                     $newPhone->phone_type_id = @$phone['phone_type_id'];
                     $newPhone->info = @$phone['info'];
                     $talent->phones()->save($newPhone);
@@ -501,7 +502,7 @@ class TalentController extends Controller
             $newEmails = collect($request->emails);
             foreach ($newEmails as $email) {
                 if (@$email['email_type_id'] || @$email['info']) {
-                    $newEmail = new TalentEmail();
+                    $newEmail = new Email();
                     $newEmail->email_type_id = @$email['email_type_id'];
                     $newEmail->info = @$email['info'];
                     $talent->emails()->save($newEmail);
@@ -511,7 +512,7 @@ class TalentController extends Controller
             $newSocialMedias = collect($request->social_medias);
             foreach ($newSocialMedias as $item) {
                 if (@$item['social_media_type_id'] || @$item['info']) {
-                    $newSocialMedia = new TalentSocialMedia();
+                    $newSocialMedia = new SocialMedia();
                     $newSocialMedia->social_media_type_id = @$item['social_media_type_id'];
                     $newSocialMedia->info = @$item['info'];
                     $talent->socialMedias()->save($newSocialMedia);
@@ -521,7 +522,7 @@ class TalentController extends Controller
             $newMessengers = collect($request->messengers);
             foreach ($newMessengers as $item) {
                 if (@$item['messenger_type_id'] || @$item['info']) {
-                    $newMessenger = new TalentMessenger();
+                    $newMessenger = new Messenger();
                     $newMessenger->messenger_type_id = @$item['messenger_type_id'];
                     $newMessenger->info = @$item['info'];
                     $talent->messengers()->save($newMessenger);

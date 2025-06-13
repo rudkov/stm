@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('talent_social_media', function (Blueprint $table) {
+        Schema::create('social_media', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuid('talent_id');
-            $table->foreign('talent_id')->references('id')->on('talents');
-            
             $table->unsignedBigInteger('social_media_type_id')->nullable();
             $table->foreign('social_media_type_id')->references('id')->on('social_media_types');
-        
-            $table->timestamps();
+
+            $table->uuidMorphs('social_mediaable');
         });
     }
 
@@ -34,6 +31,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('talent_social_media');
+        Schema::table('social_media', function (Blueprint $table) {
+            $table->dropForeign('social_media_social_media_type_id_foreign');
+        });
+        Schema::dropIfExists('social_media');
     }
 };

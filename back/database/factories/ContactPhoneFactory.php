@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\Contact;
-use App\Models\ContactPhone;
 use App\Models\PhoneType;
 
 class ContactPhoneFactory extends Factory
@@ -24,11 +23,9 @@ class ContactPhoneFactory extends Factory
             $randomPhoneTypes = $phoneTypes->random(rand(1, 3));
 
             foreach ($randomPhoneTypes as $randomPhoneType) {
-                $contact->phones()->saveMany([
-                    new ContactPhone([
-                        'info' => $this->faker->e164PhoneNumber,
-                        'phone_type_id' => $randomPhoneType->id,
-                    ]),
+                $contact->phones()->create([
+                    'info' => $this->faker->e164PhoneNumber,
+                    'phone_type_id' => $randomPhoneType->id,
                 ]);
             }
         }

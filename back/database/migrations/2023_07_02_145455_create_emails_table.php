@@ -8,28 +8,32 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('contact_emails', function (Blueprint $table) {
+        Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
 
-            $table->uuid('contact_id');
-            $table->foreign('contact_id')->references('id')->on('contacts');
-
             $table->unsignedBigInteger('email_type_id')->nullable();
             $table->foreign('email_type_id')->references('id')->on('email_types');
-        
-            $table->timestamps();
+
+            $table->uuidMorphs('emailable');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('contact_emails');
+        Schema::table('emails', function (Blueprint $table) {
+            $table->dropForeign('emails_email_type_id_foreign');
+        });
+        Schema::dropIfExists('emails');
     }
 };
