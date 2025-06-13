@@ -26,6 +26,7 @@ use App\Models\TalentShirtSize;
 use App\Models\TalentShoeSize;
 use App\Models\TalentSkinColor;
 use App\Models\TalentSuitCut;
+use App\Models\TalentBoard;
 use App\Models\User;
 
 class Talent extends Model
@@ -52,6 +53,7 @@ class Talent extends Model
         'manager_id',
         'mother_agencyable_id',
         'mother_agencyable_type',
+        'board_id',
 
         'hair_color_id',
         'hair_length_id',
@@ -217,5 +219,10 @@ class Talent extends Model
     public function motherAgencyable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function board()
+    {
+        return $this->belongsTo(TalentBoard::class);
     }
 }

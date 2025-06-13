@@ -70,9 +70,7 @@ class FirstTimeSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            $team = new Team();
-            $team->name = $item['name'];
-            $team->save();
+            Team::create($item);
         }
     }
 
