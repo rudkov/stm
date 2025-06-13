@@ -1,25 +1,9 @@
-.talents-container {
-    display: grid;
-    grid-template-columns: 240px auto;
-    height: 100vh;
-    gap: 6px;
-}
-
-.talents-container__filters {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    height: 100vh;
-    overflow: auto;
-    padding: 12px 0;
-}
-
-.talents-container__list {
+.talents-list {
     height: 100vh;
     padding: 12px 0;
 }
 
-.talents-container__list-section {
+.talents-list__section {
     padding: 6px 0 0 6px;
 }
 
@@ -40,7 +24,7 @@
     background-color: var(--menu-item-background-color-active);
 }
 
-.talents-list-item__in-town {
+.talents-list__item-in-town {
     margin-left: auto;
     font-size: 0;
     border: none;

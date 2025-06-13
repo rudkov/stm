@@ -1,15 +1,32 @@
 import './Talents.css';
 import '../../helpers/shared.css';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
+
+import { fetchTalents, fetchTalentsManagers } from '../../store/talents/talents';
+import { useTalentsFilters, TalentsFilters } from '../talents/TalentsFilters';
 
 import TalentsList from '../talents/TalentsList';
 import TalentForm from '../talents/TalentForm';
 
 function Talents() {
+    const dispatch = useDispatch();
     const [isTalentFormOpen, setIsTalentFormOpen] = useState(false);
     const [isNewTalent, setIsNewTalent] = useState();
+    const { filters, updateFilter } = useTalentsFilters();
+
+    // Memoized function to fetch talents with current filters
+    const fetchTalentsWithFilters = useCallback(() => {
+        dispatch(fetchTalents(filters));
+        dispatch(fetchTalentsManagers());
+    }, [dispatch, filters]);
+
+    // Fetch talents when filters change
+    useEffect(() => {
+        fetchTalentsWithFilters();
+    }, [fetchTalentsWithFilters]);
 
     const createTalent = () => {
         setIsNewTalent(true);
@@ -28,7 +45,15 @@ function Talents() {
     return (
         <>
             <div className='talents-page'>
-                <TalentsList createTalent={createTalent} />
+                <TalentsFilters
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
+                <TalentsList
+                    createTalent={createTalent}
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
                 <div className='talents-page__right-column'>
                     <div className='section-primary'>
                         <Outlet context={{ editTalent }} />
@@ -39,6 +64,7 @@ function Talents() {
                 open={isTalentFormOpen}
                 closeForm={closeTalentForm}
                 isNewTalent={isNewTalent}
+                onAfterSubmit={fetchTalentsWithFilters}
             />
         </>
     );

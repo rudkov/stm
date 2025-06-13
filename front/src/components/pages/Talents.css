@@ -1,6 +1,6 @@
 .talents-page {
     display: grid;
-    grid-template-columns: 480px auto;
+    grid-template-columns: 240px 240px auto;
     height: 100vh;
     gap: 12px;
 }

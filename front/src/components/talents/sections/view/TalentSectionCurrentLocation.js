@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconClose } from '../../../../assets/icons/close.svg';
 
 import { updateCurrentLocation, getCurrentLocationResponse } from '../../../../store/talents/talent';
-import { fetchTalents } from '../../../../store/talents/talents';
+import { fetchTalents, fetchTalentsLocations } from '../../../../store/talents/talents';
+import { useTalentsFilters } from '../../../talents/TalentsFilters';
 
 import TalentLocation from '../../components/TalentLocation';
 
@@ -18,6 +19,7 @@ function TalentSectionCurrentLocation(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const { filters } = useTalentsFilters();
 
     const talent = props.talent;
     const currentLocationResponse = useSelector(getCurrentLocationResponse);
@@ -48,10 +50,11 @@ function TalentSectionCurrentLocation(props) {
     useEffect(() => {
         setLoading(false);
         if (currentLocationResponse.status === 'fulfilled') {
-            dispatch(fetchTalents());
+            dispatch(fetchTalents(filters));
+            dispatch(fetchTalentsLocations());
             setIsModalOpen(false);
         }
-    }, [currentLocationResponse, dispatch]);
+    }, [currentLocationResponse, dispatch, filters]);
 
     return (
         <>

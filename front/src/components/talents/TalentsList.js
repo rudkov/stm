@@ -1,88 +1,40 @@
 import './TalentsList.css';
 import '../../helpers/shared.css';
 
-import { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import { Button, Empty, Form, Input, Tooltip } from 'antd';
 
-import { getTalents, fetchTalents, filterTalents } from '../../store/talents/talents';
+import { getTalents, filterTalents } from '../../store/talents/talents';
 
 import ScrollableView from '../ui-components/ScrollableView';
-
 import TalentUsername from './components/TalentUsername';
-
-import BoardFilter from '../filters/BoardFilter';
-import BodyFilter from '../filters/BodyFilter';
-import GendersFilter from '../filters/GendersFilter';
-import LocationsFilter from '../filters/LocationsFilter';
-import ManagersFilter from '../filters/ManagersFilter';
-import NoContactsFilter from '../filters/NoContactsFilter';
-import PreferencesFilter from '../filters/PreferencesFilter';
 
 import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
 
-function TalentsList(props) {
-    const dispatch = useDispatch();
+function TalentsList({ createTalent, filters, updateFilter }) {
     const [form] = Form.useForm();
     const fetchedTalents = useSelector(getTalents);
     const [talents, setTalents] = useState([]);
     const scrollContainerRef = useRef(null);
-
-    const filterNames = {
-        board: 'talents.filters.board',
-        body: 'talents.filters.body',
-        genders: 'talents.filters.genders',
-        locations: 'talents.filters.locations',
-        managers: 'talents.filters.managers',
-        noContacts: 'talents.filters.noContacts',
-        preferences: 'talents.filters.preferences',
-    };
-
-    const [searchString, setSearchString] = useState(sessionStorage.getItem('talents.list.search') ?? '');
-
-    const [boardFilter, setBoardFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.board)) ?? 0);
-    const [bodyFilter, setBodyFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.body)) ?? []);
-    const [gendersFilter, setGendersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.genders)) ?? []);
-    const [locationsFilter, setLocationsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.locations)) ?? []);
-    const [managersFilter, setManagersFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.managers)) ?? []);
-    const [noContactsFilter, setNoContactsFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.noContacts)) ?? false);
-    const [preferencesFilter, setPreferencesFilter] = useState(JSON.parse(sessionStorage.getItem(filterNames.preferences)) ?? []);
-
-    useEffect(() => {
-        dispatch(fetchTalents({
-            board: boardFilter,
-            body: bodyFilter,
-            genders: gendersFilter,
-            noContacts: noContactsFilter,
-            preferences: preferencesFilter,
-        }));
-    }, [
-        dispatch,
-        boardFilter,
-        bodyFilter,
-        gendersFilter,
-        noContactsFilter,
-        preferencesFilter,
-    ]);
 
     useEffect(() => {
         setTalents(
             filterTalents(
                 [...fetchedTalents],
                 {
-                    searchString,
-                    locations: locationsFilter,
-                    managers: managersFilter
+                    searchString: filters.search,
+                    locations: filters.locations,
+                    managers: filters.managers
                 }
             )
         );
-    }, [fetchedTalents, searchString, locationsFilter, managersFilter]);
+    }, [fetchedTalents, filters.search, filters.locations, filters.managers]);
 
     const searchTalents = (item) => {
-        setSearchString(item.search);
-        sessionStorage.setItem('talents.list.search', item.search);
+        updateFilter('search', item.search);
     }
 
     let result = null;
@@ -92,7 +44,7 @@ function TalentsList(props) {
             return (
                 <NavLink className='talents-list__item' key={'talent.' + talent.id} to={talent.id}>
                     <TalentUsername name={talent.name} />
-                    <div className='talents-list-item__in-town'>
+                    <div className='talents-list__item-in-town'>
                         {
                             talent.location
                                 ? ''
@@ -115,70 +67,29 @@ function TalentsList(props) {
     }
 
     return (
-        <div className='talents-container'>
-            <ScrollableView>
-                <ScrollableView.Body className='talents-container__filters'>
-                    <BoardFilter
-                        uniqueName={filterNames.board}
-                        value={boardFilter}
-                        setValue={setBoardFilter}
-                    />
-                    <LocationsFilter
-                        uniqueName={filterNames.locations}
-                        selectedItems={locationsFilter}
-                        setFiltered={setLocationsFilter}
-                    />
-                    <ManagersFilter
-                        uniqueName={filterNames.managers}
-                        selectedItems={managersFilter}
-                        setFiltered={setManagersFilter}
-                    />
-                    <GendersFilter
-                        uniqueName={filterNames.genders}
-                        selectedItems={gendersFilter}
-                        setFiltered={setGendersFilter}
-                    />
-                    <BodyFilter
-                        uniqueName={filterNames.body}
-                        selectedValues={bodyFilter}
-                        setValues={setBodyFilter}
-                    />
-                    <PreferencesFilter
-                        uniqueName={filterNames.preferences}
-                        selectedItems={preferencesFilter}
-                        setFiltered={setPreferencesFilter}
-                    />
-                    <NoContactsFilter
-                        uniqueName={filterNames.noContacts}
-                        value={noContactsFilter}
-                        setValue={setNoContactsFilter}
-                    />
+        <div className='talents-list'>
+            <ScrollableView scrollContainerRef={scrollContainerRef} className='talents-list__section section-primary'>
+                <ScrollableView.Header className='talents-list__header'>
+                    <Form
+                        form={form}
+                        name='talents.search.form'
+                        initialValues={{ search: filters.search }}
+                        onValuesChange={searchTalents}
+                        autoComplete='off'
+                    >
+                        <Form.Item name='search'>
+                            <Input
+                                placeholder='Search'
+                                allowClear={true}
+                            />
+                        </Form.Item>
+                    </Form>
+                    <Button type='primary' icon={<IconAdd />} onClick={createTalent} />
+                </ScrollableView.Header>
+                <ScrollableView.Body className='talents-list__body'>
+                    {result}
                 </ScrollableView.Body>
             </ScrollableView>
-            <div className='talents-container__list'>
-                <ScrollableView scrollContainerRef={scrollContainerRef} className='talents-container__list-section section-primary'>
-                    <ScrollableView.Header className='talents-list__header'>
-                        <Form
-                            form={form}
-                            name='talents.search.form'
-                            initialValues={{ search: searchString }}
-                            onValuesChange={searchTalents}
-                            autoComplete='off'
-                        >
-                            <Form.Item name='search'>
-                                <Input
-                                    placeholder='Search'
-                                    allowClear={true}
-                                />
-                            </Form.Item>
-                        </Form>
-                        <Button type='primary' icon={<IconAdd />} onClick={props.createTalent} />
-                    </ScrollableView.Header>
-                    <ScrollableView.Body className='talents-list__body'>
-                        {result}
-                    </ScrollableView.Body>
-                </ScrollableView>
-            </div>
         </div>
     );
 }

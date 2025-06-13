@@ -2,23 +2,25 @@ import './Filter.css';
 import './LocationsFilter.css';
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Filter from './Filter';
 
 import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
+import { getTalentsLocations, fetchTalentsLocations } from '../../store/talents/talents';
 
 function LocationsFilter(props) {
+    const dispatch = useDispatch();
+    const fetchedTalentsLocations = useSelector(getTalentsLocations);
     const [locations, setLocations] = useState(null);
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: '/api/v1/talents/locations',
-        }).then(response => {
-            setLocations(response.data);
-        });
-    }, []);
+        dispatch(fetchTalentsLocations());
+    }, [dispatch]);
+
+    useEffect(() => {
+        setLocations(fetchedTalentsLocations);
+    }, [fetchedTalentsLocations]);
 
     const toggleItem = (item) => {
         let items = [...props.selectedItems];
