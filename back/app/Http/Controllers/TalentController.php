@@ -36,7 +36,7 @@ class TalentController extends Controller
                 'relatives',
                 'relatives.type',
                 'manager',
-                'motherAgencyable',
+                'motherAgency',
                 'createdBy',
                 'updatedBy',
                 'addresses',

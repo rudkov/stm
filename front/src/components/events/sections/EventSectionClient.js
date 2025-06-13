@@ -26,7 +26,7 @@ function EventSectionClient(props) {
             </div>
             <div className={`${!props.editMode ? "" : "hidden"}`}>
                 <div className='info-panel--section_1col text-regular'>
-                    {event.clientable?.name}
+                    {event.client?.name}
                 </div>
                 <div className='info-panel--section_1col text-regular'>
                     {

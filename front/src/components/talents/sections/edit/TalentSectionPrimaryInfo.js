@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createTalentBoard, getCreateResponse as getCreateTalentBoardResponse, talentBoardActions } from '../../../../store/talents/talentBoard';
 import { fetchTalentBoards, getTalentBoards } from '../../../../store/talents/talentBoards';
 import { fetchUsers, getUsers } from '../../../../store/users/users';
+import { fetchCompanies, getCompanies } from '../../../../store/contacts/companies';
 
 import { useSettings } from '../../../../context/SettingsContext';
 
@@ -26,26 +27,33 @@ function TalentSectionPrimaryInfo(props) {
     const { settings } = useSettings();
     const outputDateFormat = 'DD.MM.YYYY';
     const dispatch = useDispatch();
-    const fetchedUsers = useSelector(getUsers);
-    const [managers, setManagers] = useState([]);
+    const fetchedCompanies = useSelector(getCompanies);
+    const [companies, setCompanies] = useState([]);
     const fetchedTalentBoards = useSelector(getTalentBoards);
     const [boards, setBoards] = useState([]);
+    const fetchedUsers = useSelector(getUsers);
+    const [managers, setManagers] = useState([]);
     const createTalentBoardResponse = useSelector(getCreateTalentBoardResponse);
     const [isAddBoardInputOpen, setIsAddBoardInputOpen] = useState(false);
     const [isAddBoardInputLoading, setIsAddBoardInputLoading] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchUsers());
+        dispatch(fetchCompanies());
         dispatch(fetchTalentBoards());
+        dispatch(fetchUsers());
     }, [dispatch]);
 
     useEffect(() => {
-        setManagers([...fetchedUsers]);
-    }, [fetchedUsers]);
+        setCompanies([...fetchedCompanies]);
+    }, [fetchedCompanies]);
 
     useEffect(() => {
         setBoards([...fetchedTalentBoards]);
     }, [fetchedTalentBoards]);
+
+    useEffect(() => {
+        setManagers([...fetchedUsers]);
+    }, [fetchedUsers]);
 
     const handleAddBoard = (boardName) => {
         setIsAddBoardInputLoading(true);
@@ -96,10 +104,10 @@ function TalentSectionPrimaryInfo(props) {
                 <Form.Item className='talent-form-row__left-label' label='Lifestyle/fashion' name='is_lifestyle'>
                     <Radio.Group options={lifestyleOrFashion} />
                 </Form.Item>
-                <Form.Item className='talent-form-row__left-label' label='Mother agency' name='mother_agency'>
+                <Form.Item className='talent-form-row__left-label' label='Mother agency' name='mother_agency_id'>
                     <Select
                         allowClear
-                        options={props.motherAgencies.map((item, index) => ({ label: item.name, value: index }))}
+                        options={companies.map((item) => ({ label: item.name, value: item.id }))}
                     />
                 </Form.Item>
                 <Form.Item className='talent-form-row__left-label' label='Board' name='board_id'>

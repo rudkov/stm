@@ -39,7 +39,7 @@ function TalentSectionPrimaryInfo(props) {
                     </div>
                     <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Mother agency</div>
-                        <div>{talent.mother_agency}</div>
+                        <div>{talent.mother_agency?.name}</div>
                     </div>
                     <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Board</div>

@@ -6,22 +6,20 @@ use Illuminate\Database\Seeder;
 
 use Database\Seeders\FirstTimeSeeder;
 
-use Database\Factories\EventChunkFactory;
-use Database\Factories\EventTalentFactory;
-use Database\Factories\TalentMessengerFactory;
-use Database\Factories\TalentPhoneFactory;
-use Database\Factories\TalentSocialMediaFactory;
-use Database\Factories\TalentCitizenshipFactory;
-use Database\Factories\TalentLanguageFactory;
-use Database\Factories\TalentAddressFactory;
-use Database\Factories\TalentEmailFactory;
 use Database\Factories\ContactPhoneFactory;
 use Database\Factories\ContactEmailFactory;
 use Database\Factories\ContactMessengerFactory;
 use Database\Factories\CompanyContactFactory;
+use Database\Factories\EventChunkFactory;
 use Database\Factories\EventContactFactory;
-use Database\Factories\EventClientFactory;
-use Database\Factories\TalentMotherAgencyFactory;
+use Database\Factories\EventTalentFactory;
+use Database\Factories\TalentAddressFactory;
+use Database\Factories\TalentCitizenshipFactory;
+use Database\Factories\TalentEmailFactory;
+use Database\Factories\TalentLanguageFactory;
+use Database\Factories\TalentMessengerFactory;
+use Database\Factories\TalentPhoneFactory;
+use Database\Factories\TalentSocialMediaFactory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,6 +46,8 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+        \App\Models\Company::factory(50)->create();
+        \App\Models\Contact::factory(50)->create();
         \App\Models\Talent::factory(50)->create();
         \App\Models\TalentRelative::factory(150)->create();
 
@@ -72,9 +72,6 @@ class DatabaseSeeder extends Seeder
         $talentMessengerFactory = new TalentMessengerFactory();
         $talentMessengerFactory->run();
 
-        \App\Models\Company::factory(50)->create();
-        \App\Models\Contact::factory(50)->create();
-
         $contactPhoneFactory = new ContactPhoneFactory();
         $contactPhoneFactory->run();
 
@@ -87,9 +84,6 @@ class DatabaseSeeder extends Seeder
         $companyContactFactory = new CompanyContactFactory();
         $companyContactFactory->run();
 
-        $talentMotherAgencyFactory = new TalentMotherAgencyFactory();
-        $talentMotherAgencyFactory->run();
-
         \App\Models\Event::factory(50)->create();
 
         $eventChunkFactory = new EventChunkFactory();
@@ -100,8 +94,5 @@ class DatabaseSeeder extends Seeder
 
         $eventContactFactory = new EventContactFactory();
         $eventContactFactory->run();
-
-        $eventClientFactory = new EventClientFactory();
-        $eventClientFactory->run();
     }
 }

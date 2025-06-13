@@ -70,19 +70,9 @@ class Contact extends Model
     {
         return $this->morphedByMany(Event::class, 'contactable');
     }
-
-    public function event(): MorphOne
-    {
-        return $this->morphOne(Event::class, 'clientable');
-    }
  
     public function eventChunks(): MorphToMany
     {
         return $this->morphedByMany(EventChunk::class, 'contactable');
-    }
-
-    public function talents()
-    {
-        return $this->morphMany(Talent::class, 'mother_agencyable');
     }
 }

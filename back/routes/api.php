@@ -4,10 +4,7 @@
 // PUT: update resources
 // DELETE: delete resources
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-// use \App\Http\Controllers\TalentController;
 
 Route::group(['prefix' => 'v1'], function () {
 
@@ -21,9 +18,6 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('settings','SettingsController@index');
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
-
-        //clients
-        Route::get('clients', 'ClientController@index');
 
         //contacts
         Route::apiResource('contacts', 'ContactController');
