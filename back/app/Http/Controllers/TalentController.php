@@ -16,6 +16,11 @@ use App\Models\TalentRelative;
 
 class TalentController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Talent::class);
+    }
+
     private function getTalentById($id)
     {
         $talent = Talent::where('id', $id)
