@@ -47,6 +47,7 @@ class SettingsController extends Controller
         $settings['email_types'] = EmailType::orderBy('weight','asc')->get();
         $settings['social_media_types'] = SocialMediaType::orderBy('name','asc')->get();
         $settings['messenger_types'] = MessengerType::orderBy('name','asc')->get();
+        $settings['talent_body'] = config('defaults.talent_body');
         return $settings;
     }
 }

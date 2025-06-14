@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidateEach;
+
+use App\Models\Company;
+use App\Models\TalentBoard;
+use App\Models\TalentCupSize;
+use App\Models\TalentDressSize;
+use App\Models\TalentEyeColor;
+use App\Models\TalentGender;
+use App\Models\TalentHairColor;
+use App\Models\TalentHairLength;
+use App\Models\TalentMaritalStatus;
+use App\Models\TalentShirtSize;
+use App\Models\TalentShoeSize;
+use App\Models\TalentSkinColor;
+use App\Models\TalentSuitCut;
+use App\Models\User;
+
+class TalentRequest extends FormRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            // Basic Information
+            'first_name' => 'required_without:last_name|string|max:255',
+            'last_name' => 'required_without:first_name|string|max:255',
+            'legal_first_name' => 'string|max:255',
+            'legal_last_name' => 'string|max:255',
+            'birth_date' => 'nullable|date',
+            'current_location' => 'nullable|string|max:255',
+
+            // Strings
+            'achievements' => 'string',
+            'allergies' => 'string',
+            'biography' => 'string',
+            'comment' => 'string',
+            'performance_skills' => 'string',
+            'piercings' => 'string',
+            'scars' => 'string',
+            'tattoos' => 'string',
+
+            // Physical Attributes
+            'bust_cm' => 'nullable|numeric|min:' . config('defaults.talent_body.bust.min') . '|max:' . config('defaults.talent_body.bust.max'),
+            'height_cm' => 'nullable|numeric|min:' . config('defaults.talent_body.height.min') . '|max:' . config('defaults.talent_body.height.max'),
+            'hips_cm' => 'nullable|numeric|min:' . config('defaults.talent_body.hips.min') . '|max:' . config('defaults.talent_body.hips.max'),
+            'waist_cm' => 'nullable|numeric|min:' . config('defaults.talent_body.waist.min') . '|max:' . config('defaults.talent_body.waist.max'),
+            'weight_kg' => 'nullable|numeric|min:' . config('defaults.talent_body.weight.min') . '|max:' . config('defaults.talent_body.weight.max'),
+
+            // Booleans
+            'is_accent' => 'nullable|boolean',
+            'is_ears_pierced' => 'nullable|boolean',
+            'is_faithbased_ads' => 'nullable|boolean',
+            'is_fur' => 'nullable|boolean',
+            'is_gambling_ads' => 'nullable|boolean',
+            'is_lingerie' => 'nullable|boolean',
+            'is_liquor_ads' => 'nullable|boolean',
+            'is_nude' => 'nullable|boolean',
+            'is_political_ads' => 'nullable|boolean',
+            'is_smoking_ads' => 'nullable|boolean',
+            'is_sports' => 'nullable|boolean',
+            'is_swimwear' => 'nullable|boolean',
+            'is_topless' => 'nullable|boolean',
+            'is_vegetarian' => 'nullable|boolean',
+
+            // Relationships
+            'board_id' => 'nullable|exists:' . TalentBoard::class . ',id',
+            'cup_size_id' => 'nullable|exists:' . TalentCupSize::class . ',id',
+            'dress_size_id' => 'nullable|exists:' . TalentDressSize::class . ',id',
+            'eye_color_id' => 'nullable|exists:' . TalentEyeColor::class . ',id',
+            'gender_id' => 'nullable|exists:' . TalentGender::class . ',id',
+            'hair_color_id' => 'nullable|exists:' . TalentHairColor::class . ',id',
+            'hair_length_id' => 'nullable|exists:' . TalentHairLength::class . ',id',
+            'manager_id' => 'nullable|exists:' . User::class . ',id',
+            'marital_status_id' => 'nullable|exists:' . TalentMaritalStatus::class . ',id',
+            'mother_agency_id' => 'nullable|exists:' . Company::class . ',id',
+            'shirt_size_id' => 'nullable|exists:' . TalentShirtSize::class . ',id',
+            'shoe_size_id' => 'nullable|exists:' . TalentShoeSize::class . ',id',
+            'skin_color_id' => 'nullable|exists:' . TalentSkinColor::class . ',id',
+            'suit_cut_id' => 'nullable|exists:' . TalentSuitCut::class . ',id',
+
+            // Collections
+            'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],
+            'citizenships' => ['nullable', 'array', new ValidateEach(new CountryRequest())],
+            'emails' => ['nullable', 'array', new ValidateEach(new EmailRequest())],
+            'languages' => ['nullable', 'array', new ValidateEach(new LanguageRequest())],
+            'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
+            'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],
+            'social_medias' => ['nullable', 'array', new ValidateEach(new SocialMediaRequest())],
+            'relatives' => ['nullable', 'array', new ValidateEach(new TalentRelativeRequest())],
+        ];
+    }
+}

@@ -11,14 +11,6 @@ import Filter from './Filter';
 
 import IconColorBadge from '../ui-components/IconColorBadge';
 
-const formConfig = {
-    bust: [55, 160],
-    height: [70, 210],
-    hips: [55, 170],
-    waist: [45, 150],
-    weight: [15, 180],
-};
-
 function BodyFilter(props) {
     const [form] = Form.useForm();
     const { settings } = useSettings();
@@ -26,11 +18,11 @@ function BodyFilter(props) {
 
     const initForm = useCallback((values) => {
         const formValues = {
-            bust: Array.isArray(values.bust) && values.bust.length === 0 ? [...formConfig.bust] : (values.bust ?? [...formConfig.bust]),
-            height: Array.isArray(values.height) && values.height.length === 0 ? [...formConfig.height] : (values.height ?? [...formConfig.height]),
-            hips: Array.isArray(values.hips) && values.hips.length === 0 ? [...formConfig.hips] : (values.hips ?? [...formConfig.hips]),
-            waist: Array.isArray(values.waist) && values.waist.length === 0 ? [...formConfig.waist] : (values.waist ?? [...formConfig.waist]),
-            weight: Array.isArray(values.weight) && values.weight.length === 0 ? [...formConfig.weight] : (values.weight ?? [...formConfig.weight]),
+            bust: Array.isArray(values.bust) && values.bust.length === 0 ? [settings.talent_body.bust.min, settings.talent_body.bust.max] : (values.bust ?? [settings.talent_body.bust.min, settings.talent_body.bust.max]),
+            height: Array.isArray(values.height) && values.height.length === 0 ? [settings.talent_body.height.min, settings.talent_body.height.max] : (values.height ?? [settings.talent_body.height.min, settings.talent_body.height.max]),
+            hips: Array.isArray(values.hips) && values.hips.length === 0 ? [settings.talent_body.hips.min, settings.talent_body.hips.max] : (values.hips ?? [settings.talent_body.hips.min, settings.talent_body.hips.max]),
+            waist: Array.isArray(values.waist) && values.waist.length === 0 ? [settings.talent_body.waist.min, settings.talent_body.waist.max] : (values.waist ?? [settings.talent_body.waist.min, settings.talent_body.waist.max]),
+            weight: Array.isArray(values.weight) && values.weight.length === 0 ? [settings.talent_body.weight.min, settings.talent_body.weight.max] : (values.weight ?? [settings.talent_body.weight.min, settings.talent_body.weight.max]),
 
             cupSize: values.cupSize ?? [],
             dressSize: values.dressSize ?? [],
@@ -44,7 +36,7 @@ function BodyFilter(props) {
         };
 
         form.setFieldsValue(formValues);
-    }, [form]);
+    }, [form, settings.talent_body]);
 
     const checkIfFiltersApplied = useCallback((values) => {
         const processedValues = { ...values };
@@ -52,14 +44,14 @@ function BodyFilter(props) {
 
         rangeFields.forEach((field) => {
             const val = processedValues[field];
-            const def = formConfig[field];
+            const def = settings.talent_body[field];
             if (Array.isArray(val) && val.length === 2 && val[0] === def[0] && val[1] === def[1]) {
                 processedValues[field] = [];
             }
         });
 
         return !Object.values(processedValues).every(val => Array.isArray(val) && val.length === 0);
-    }, []);
+    }, [settings.talent_body]);
 
     useEffect(() => {
         initForm(props?.selectedValues);
@@ -79,7 +71,7 @@ function BodyFilter(props) {
 
         rangeFields.forEach((field) => {
             const val = processedValues[field];
-            const def = formConfig[field];
+            const def = settings.talent_body[field];
             if (Array.isArray(val) && val.length === 2 && val[0] === def[0] && val[1] === def[1]) {
                 processedValues[field] = [];
             }
@@ -113,8 +105,8 @@ function BodyFilter(props) {
                 <Form.Item label='Bust' name='bust'>
                     <Slider
                         range
-                        min={formConfig.bust[0]}
-                        max={formConfig.bust[1]}
+                        min={settings.talent_body.bust.min}
+                        max={settings.talent_body.bust.max}
                         style={{ width: '100%' }}
                         onChangeComplete={applyFilter}
                     />
@@ -122,8 +114,8 @@ function BodyFilter(props) {
                 <Form.Item label='Height' name='height'>
                     <Slider
                         range
-                        min={formConfig.height[0]}
-                        max={formConfig.height[1]}
+                        min={settings.talent_body.height.min}
+                        max={settings.talent_body.height.max}
                         style={{ width: '100%' }}
                         onChangeComplete={applyFilter}
                     />
@@ -131,8 +123,8 @@ function BodyFilter(props) {
                 <Form.Item label='Hips' name='hips'>
                     <Slider
                         range
-                        min={formConfig.hips[0]}
-                        max={formConfig.hips[1]}
+                        min={settings.talent_body.hips.min}
+                        max={settings.talent_body.hips.max}
                         style={{ width: '100%' }}
                         onChangeComplete={applyFilter}
                     />
@@ -140,8 +132,8 @@ function BodyFilter(props) {
                 <Form.Item label='Waist' name='waist'>
                     <Slider
                         range
-                        min={formConfig.waist[0]}
-                        max={formConfig.waist[1]}
+                        min={settings.talent_body.waist.min}
+                        max={settings.talent_body.waist.max}
                         style={{ width: '100%' }}
                         onChangeComplete={applyFilter}
                     />
@@ -149,8 +141,8 @@ function BodyFilter(props) {
                 <Form.Item label='Weight' name='weight'>
                     <Slider
                         range
-                        min={formConfig.weight[0]}
-                        max={formConfig.weight[1]}
+                        min={settings.talent_body.weight.min}
+                        max={settings.talent_body.weight.max}
                         style={{ width: '100%' }}
                         onChangeComplete={applyFilter}
                     />
@@ -248,7 +240,7 @@ function BodyFilter(props) {
                         onChange={applyFilter}
                     />
                 </Form.Item>
-                <Form.Item label='Dress size' name='dressSize'>
+                <Form.Item label='Dress' name='dressSize'>
                     <Select
                         allowClear
                         mode='multiple'
@@ -257,7 +249,7 @@ function BodyFilter(props) {
                         onChange={applyFilter}
                     />
                 </Form.Item>
-                <Form.Item label='Shoe' name='shoeSize'>
+                <Form.Item label='Shoes' name='shoeSize'>
                     <Select
                         allowClear
                         mode='multiple'
