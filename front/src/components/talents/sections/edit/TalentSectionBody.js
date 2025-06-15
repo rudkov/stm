@@ -102,7 +102,7 @@ function TalentSectionBody(props) {
                         options={(settings.talent_suit_cuts || []).map((item) => ({ value: item.id, label: item.name }))}
                     />
                 </Form.Item>
-                <Form.Item className='talent-form-row__left-label' label='Dress size' name='dress_size_id'>
+                <Form.Item className='talent-form-row__left-label' label='Dress' name='dress_size_id'>
                     <Select
                         allowClear
                         options={(settings.talent_dress_sizes || []).map((item) => ({ value: item.id, label: item.name }))}

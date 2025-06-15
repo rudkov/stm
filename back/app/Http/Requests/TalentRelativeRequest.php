@@ -15,7 +15,7 @@ class TalentRelativeRequest extends FormRequest
     {
         return [
             'id' => 'sometimes|exists:talent_relatives,id',
-            'relative_type_id' => 'required|exists:talent_relative_types,id',
+            'relative_type_id' => 'nullable|exists:talent_relative_types,id',
             'info' => 'required|string|max:255',
         ];
     }

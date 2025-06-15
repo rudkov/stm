@@ -15,7 +15,7 @@ class AddressRequest extends FormRequest
     {
         return [
             'id' => 'sometimes|exists:addresses,id',
-            'address_type_id' => 'required|exists:address_types,id',
+            'address_type_id' => 'nullable|exists:address_types,id',
             'info' => 'required|string|max:255',
         ];
     }

@@ -2,7 +2,7 @@ import './TalentSectionMain.css';
 
 import { Avatar, Button } from "antd";
 
-import TalentSectionCurrentLocation from './TalentSectionCurrentLocation';
+import TalentSectionLocation from './TalentSectionLocation';
 
 function TalentSectionMain(props) {
     const talent = props.talent;
@@ -15,7 +15,7 @@ function TalentSectionMain(props) {
                 </div>
                 <div className='talent-section-main__header-content'>
                     <div className='talent-section-main__talent_name'>{talent.full_name}</div>
-                    <div><TalentSectionCurrentLocation talent={talent} /></div>
+                    <div><TalentSectionLocation talent={talent} /></div>
                 </div>
             </div>
             <div className='talent-section-main__controls'>

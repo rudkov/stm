@@ -15,7 +15,7 @@ class PhoneRequest extends FormRequest
     {
         return [
             'id' => 'sometimes|exists:phones,id',
-            'phone_type_id' => 'required|exists:phone_types,id',
+            'phone_type_id' => 'nullable|exists:phone_types,id',
             'info' => 'required|string|max:255',
         ];
     }

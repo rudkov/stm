@@ -23,6 +23,7 @@ class MessengerResource extends JsonResource
                     'id' => $type->id,
                     'name' => $type->name,
                     'system_name' => $type->system_name,
+                    'url' => $type->url,
                 ];
             }),
         ];

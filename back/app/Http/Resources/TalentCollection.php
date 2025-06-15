@@ -18,7 +18,7 @@ class TalentCollection extends ResourceCollection
             return [
                 'id' => $talent->id,
                 'name' => trim($talent->first_name . ' ' . $talent->last_name),
-                'current_location' => $talent->current_location,
+                'location' => $talent->location,
                 'manager_id' => $talent->manager_id,
             ];
         })->toArray();

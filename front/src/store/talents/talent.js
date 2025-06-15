@@ -16,7 +16,7 @@ const initialState = {
     createResponse: {},
     updateResponse: {},
     deleteResponse: {},
-    currentLocationResponse: {},
+    locationResponse: {},
 };
 
 export const fetchTalentById = createAsyncThunk('talent/fetchTalentById', async (talentId) => {
@@ -76,13 +76,13 @@ export const deleteTalentById = createAsyncThunk('talent/deleteTalentById', asyn
     }
 });
 
-export const updateCurrentLocation = createAsyncThunk('talent/updateCurrentLocation', async (args) => {
+export const updateLocation = createAsyncThunk('talent/updateLocation', async (args) => {
     const talentId = args[0];
     const value = args[1];
 
     try {
         const response = await axios.put('/api/v1/talents/' + talentId + '/locations/current', {
-            current_location: value,
+            location: value,
         });
         return response.data;
     } catch (err) {
@@ -277,11 +277,11 @@ const talentSlice = createSlice({
                 state.deleteResponse.status = 'fulfilled';
             })
 
-            .addCase(updateCurrentLocation.pending, (state, action) => {
-                state.currentLocationResponse.status = 'pending';
+            .addCase(updateLocation.pending, (state, action) => {
+                state.locationResponse.status = 'pending';
             })
-            .addCase(updateCurrentLocation.fulfilled, (state, action) => {
-                state.currentLocationResponse.status = 'fulfilled';
+            .addCase(updateLocation.fulfilled, (state, action) => {
+                state.locationResponse.status = 'fulfilled';
                 prepareTalent(state, action.payload);
             })
     }
@@ -293,7 +293,7 @@ export const getCreateResponse = (state) => state.talent.createResponse;
 export const getUpdateResponse = (state) => state.talent.updateResponse;
 export const getDeleteResponse = (state) => state.talent.deleteResponse;
 
-export const getCurrentLocationResponse = (state) => state.talent.currentLocationResponse;
+export const getLocationResponse = (state) => state.talent.locationResponse;
 
 export const talentActions = talentSlice.actions;
 

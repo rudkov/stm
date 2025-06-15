@@ -15,8 +15,8 @@ class MessengerRequest extends FormRequest
     {
         return [
             'id' => 'sometimes|exists:messengers,id',
-            'messenger_type_id' => 'required|exists:messenger_types,id',
-            'info' => 'required|string|max:255',
+            'messenger_type_id' => 'required_with:info|exists:messenger_types,id',
+            'info' => 'required_with:messenger_type_id|string|max:255',
         ];
     }
 }

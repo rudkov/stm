@@ -15,13 +15,13 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('register', 'Auth\RegisterController@createAndAuthenticate');
 
     //settings
-    Route::get('settings','SettingsController@index');
+    Route::get('settings', 'SettingsController@index');
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //contacts
         Route::apiResource('contacts', 'ContactController');
-        
+
         //companies
         Route::apiResource('companies', 'CompanyController');
 
@@ -29,24 +29,17 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('teams', 'TeamController@store');
 
         //talents
-        Route::post('talents/search', 'TalentController@index');
         Route::get('talents/locations', 'TalentController@locations');
         Route::get('talents/managers', 'TalentController@managers');
-
-        //talent current location
-        Route::put('talents/{id}/locations/current', 'TalentController@updateCurrentLocation');
-
-        //talent
-        Route::get('talents/{id}', 'TalentController@show');//->middleware('can:view,talent');
-        Route::put('talents/{id}', 'TalentController@update');//->middleware('can:update,talent');
-        Route::post('talents', 'TalentController@store');
-        Route::delete('talents/{id}', 'TalentController@destroy');
+        Route::post('talents/search', 'TalentController@search');
+        Route::put('talents/{talent}/locations/current', 'TalentController@updateCurrentLocation');
+        Route::apiResource('talents', 'TalentController');
 
         //talent boards
         Route::apiResource('talent-boards', 'TalentBoardController');
-        
+
         //events
-        Route::post('events/search','EventController@index');
+        Route::post('events/search', 'EventController@index');
 
         //event
         Route::get('events/{id}', 'EventController@show');

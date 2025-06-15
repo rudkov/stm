@@ -20,6 +20,8 @@ import ScrollableView from '../ui-components/ScrollableView';
 
 import { useNotification } from '../notifications/NotificationProvider';
 
+import { cleanFormCollection, cleanFormCollectionWithTypes } from '../../helpers/form-utils';
+
 import { LoadingOutlined } from '@ant-design/icons';
 import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
 
@@ -64,12 +66,12 @@ function TalentForm(props) {
             legal_first_name: values.legal_first_name || '',
             legal_last_name: values.legal_last_name || '',
             birth_date: values.birth_date ? dayjs(values.birth_date, 'DD.MM.YYYY') : null,
-            marital_status_id: values.marital_status_id || '',
+            marital_status_id: values.marital_status?.id || '',
             is_lifestyle: values.is_lifestyle,
-            gender_id: values.gender_id || '',
-            manager_id: values.manager_id || user_id,
-            board_id: values.board_id || '',
-            mother_agency_id: values.mother_agency_id || '',
+            gender_id: values.gender?.id || '',
+            manager_id: values.manager?.id || user_id,
+            board_id: values.board?.id || '',
+            mother_agency_id: values.mother_agency?.id || '',
 
             comment: values.comment || '',
 
@@ -88,15 +90,15 @@ function TalentForm(props) {
             emails: values.emails || null,
             messengers: values.messengers || null,
 
-            hair_color_id: values.hair_color_id || '',
-            hair_length_id: values.hair_length_id || '',
-            eye_color_id: values.eye_color_id || '',
-            cup_size_id: values.cup_size_id || '',
-            shoe_size_id: values.shoe_size_id || '',
-            shirt_size_id: values.shirt_size_id || '',
-            suit_cut_id: values.suit_cut_id || '',
-            dress_size_id: values.dress_size_id || '',
-            skin_color_id: values.skin_color_id || '',
+            hair_color_id: values.hair_color?.id || '',
+            hair_length_id: values.hair_length?.id || '',
+            eye_color_id: values.eye_color?.id || '',
+            cup_size_id: values.cup_size?.id || '',
+            shoe_size_id: values.shoe_size?.id || '',
+            shirt_size_id: values.shirt_size?.id || '',
+            suit_cut_id: values.suit_cut?.id || '',
+            dress_size_id: values.dress_size?.id || '',
+            skin_color_id: values.skin_color?.id || '',
             is_ears_pierced: values.is_ears_pierced,
             height_cm: values.height_cm || '',
             bust_cm: values.bust_cm || '',
@@ -154,6 +156,51 @@ function TalentForm(props) {
         values.shirt_size_id = values.shirt_size_id ?? null;
         values.suit_cut_id = values.suit_cut_id ?? null;
         values.dress_size_id = values.dress_size_id ?? null;
+
+        // Convert undefined to null for collection objects to ensure proper backend handling
+        if (values.addresses) {
+            values.addresses = values.addresses.map(address => ({
+                ...address,
+                address_type_id: address.address_type_id ?? null
+            }));
+        }
+        if (values.emails) {
+            values.emails = values.emails.map(email => ({
+                ...email,
+                email_type_id: email.email_type_id ?? null
+            }));
+        }
+        if (values.messengers) {
+            values.messengers = values.messengers.map(messenger => ({
+                ...messenger,
+                messenger_type_id: messenger.messenger_type_id ?? null
+            }));
+        }
+        if (values.phones) {
+            values.phones = values.phones.map(phone => ({
+                ...phone,
+                phone_type_id: phone.phone_type_id ?? null
+            }));
+        }
+        if (values.relatives) {
+            values.relatives = values.relatives.map(relative => ({
+                ...relative,
+                relative_type_id: relative.relative_type_id ?? null
+            }));
+        }
+        if (values.social_medias) {
+            values.social_medias = values.social_medias.map(socialMedia => ({
+                ...socialMedia,
+                social_media_type_id: socialMedia.social_media_type_id ?? null
+            }));
+        }
+
+        values.addresses = cleanFormCollection(values.addresses);
+        values.emails = cleanFormCollection(values.emails);
+        values.phones = cleanFormCollection(values.phones);
+        values.relatives = cleanFormCollection(values.relatives);
+        values.messengers = cleanFormCollectionWithTypes(values.messengers);
+        values.social_medias = cleanFormCollectionWithTypes(values.social_medias);
 
         if (isNewTalent) {
             dispatch(createTalent({ values: values }));

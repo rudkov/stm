@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateEach;
 
 use App\Models\Company;
+use App\Models\Country;
+use App\Models\Language;
 use App\Models\TalentBoard;
 use App\Models\TalentCupSize;
 use App\Models\TalentDressSize;
@@ -33,20 +35,20 @@ class TalentRequest extends FormRequest
             // Basic Information
             'first_name' => 'required_without:last_name|string|max:255',
             'last_name' => 'required_without:first_name|string|max:255',
-            'legal_first_name' => 'string|max:255',
-            'legal_last_name' => 'string|max:255',
+            'legal_first_name' => 'nullable|string|max:255',
+            'legal_last_name' => 'nullable|string|max:255',
             'birth_date' => 'nullable|date',
-            'current_location' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
 
             // Strings
-            'achievements' => 'string',
-            'allergies' => 'string',
-            'biography' => 'string',
-            'comment' => 'string',
-            'performance_skills' => 'string',
-            'piercings' => 'string',
-            'scars' => 'string',
-            'tattoos' => 'string',
+            'achievements' => 'nullable|string',
+            'allergies' => 'nullable|string',
+            'biography' => 'nullable|string',
+            'comment' => 'nullable|string',
+            'performance_skills' => 'nullable|string',
+            'piercings' => 'nullable|string',
+            'scars' => 'nullable|string',
+            'tattoos' => 'nullable|string',
 
             // Physical Attributes
             'bust_cm' => 'nullable|numeric|min:' . config('defaults.talent_body.bust.min') . '|max:' . config('defaults.talent_body.bust.max'),
@@ -87,11 +89,15 @@ class TalentRequest extends FormRequest
             'skin_color_id' => 'nullable|exists:' . TalentSkinColor::class . ',id',
             'suit_cut_id' => 'nullable|exists:' . TalentSuitCut::class . ',id',
 
-            // Collections
+            // Collections - Many-to-many relationships (arrays of IDs)
+            'citizenships' => ['nullable', 'array'],
+            'citizenships.*' => ['required', 'exists:' . Country::class . ',alpha_2'],
+            'languages' => ['nullable', 'array'],
+            'languages.*' => ['required', 'exists:' . Language::class . ',id'],
+
+            // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],
-            'citizenships' => ['nullable', 'array', new ValidateEach(new CountryRequest())],
             'emails' => ['nullable', 'array', new ValidateEach(new EmailRequest())],
-            'languages' => ['nullable', 'array', new ValidateEach(new LanguageRequest())],
             'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
             'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],
             'social_medias' => ['nullable', 'array', new ValidateEach(new SocialMediaRequest())],

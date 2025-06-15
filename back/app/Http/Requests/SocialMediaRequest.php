@@ -15,8 +15,8 @@ class SocialMediaRequest extends FormRequest
     {
         return [
             'id' => 'sometimes|exists:social_media,id',
-            'social_media_type_id' => 'required|exists:social_media_types,id',
-            'info' => 'required|string|max:255',
+            'social_media_type_id' => 'required_with:info|exists:social_media_types,id',
+            'info' => 'required_with:social_media_type_id|string|max:255',
         ];
     }
 }

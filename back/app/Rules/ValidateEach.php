@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
+use Illuminate\Support\Facades\Validator;
 
 class ValidateEach implements ValidationRule, ValidatorAwareRule
 {
@@ -25,10 +26,13 @@ class ValidateEach implements ValidationRule, ValidatorAwareRule
         foreach ($value as $index => $item) {
             $request = new $this->requestClass();
             $request->merge($item);
-
-            if (!$request->isValid()) {
-                foreach ($request->errors()->all() as $error) {
-                    $fail("The :attribute.$index.$error");
+            
+            // Create a validator using the request's rules
+            $validator = Validator::make($item, $request->rules());
+            
+            if ($validator->fails()) {
+                foreach ($validator->errors()->all() as $error) {
+                    $fail("The :attribute.$index $error");
                 }
             }
         }
