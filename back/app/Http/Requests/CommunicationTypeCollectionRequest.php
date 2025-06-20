@@ -17,17 +17,17 @@ class CommunicationTypeCollectionRequest extends FormRequest
     {
         $rules = [];
 
-        foreach (CommunicationTypeHelper::getTypeMapping() as $requestKey => $dbType) {
-            $rules[$requestKey] = 'sometimes|array|nullable';
-            $rules["{$requestKey}.*.id"] = [
+        foreach (CommunicationTypeHelper::getTypes() as $type) {
+            $rules[$type] = 'sometimes|array|nullable';
+            $rules["{$type}.*.id"] = [
                 'sometimes',
                 'integer',
                 Rule::exists('communication_types', 'id')
                     ->where('team_id', Auth::user()->team_id)
-                    ->where('type', $dbType),
+                    ->where('type', $type),
             ];
-            $rules["{$requestKey}.*.name"] = 'required|string|max:255';
-            $rules["{$requestKey}.*.weight"] = 'sometimes|integer';
+            $rules["{$type}.*.name"] = 'required|string|max:255';
+            $rules["{$type}.*.weight"] = 'sometimes|integer';
         }
 
         return $rules;
@@ -41,12 +41,12 @@ class CommunicationTypeCollectionRequest extends FormRequest
         $validator->after(function ($validator) {
             $validated = $this->validated();
 
-            foreach (CommunicationTypeHelper::getTypeMapping() as $requestKey => $dbType) {
-                if (!isset($validated[$requestKey]) || $validated[$requestKey] === null) {
+            foreach (CommunicationTypeHelper::getTypes() as $type) {
+                if (!isset($validated[$type]) || $validated[$type] === null) {
                     continue;
                 }
 
-                $types = $validated[$requestKey];
+                $types = $validated[$type];
                 $names = [];
 
                 // Check for duplicate names within the current request
@@ -54,7 +54,7 @@ class CommunicationTypeCollectionRequest extends FormRequest
                     $name = $typeData['name'];
 
                     if (in_array($name, $names)) {
-                        $validator->errors()->add("{$requestKey}.{$index}.name", 'Duplicate names are not allowed within the same request.');
+                        $validator->errors()->add("{$type}.{$index}.name", 'Duplicate names are not allowed within the same request.');
                     } else {
                         $names[] = $name;
                     }

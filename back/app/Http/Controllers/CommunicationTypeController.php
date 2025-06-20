@@ -29,10 +29,10 @@ class CommunicationTypeController extends Controller
             return CommunicationTypeResource::collection($typeCollection);
         });
 
-        // Build response dynamically using the type mapping
+        // Build response using database type values
         $response = [];
-        foreach (CommunicationTypeHelper::getTypeMapping() as $apiKey => $dbType) {
-            $response[$apiKey] = $grouped->get($dbType, []);
+        foreach (CommunicationTypeHelper::getTypes() as $type) {
+            $response[$type] = $grouped->get($type, []);
         }
 
         return response()->json($response);
@@ -50,11 +50,11 @@ class CommunicationTypeController extends Controller
 
         DB::transaction(function () use ($validated, $teamId) {
             // Process each type that was provided in the request
-            foreach (CommunicationTypeHelper::getTypeMapping() as $apiKey => $dbType) {
-                if (isset($validated[$apiKey])) {
+            foreach (CommunicationTypeHelper::getTypes() as $type) {
+                if (isset($validated[$type])) {
                     // Handle both null and array cases - pass to sync method
-                    $typeData = $validated[$apiKey] ?? [];
-                    $this->syncCommunicationTypes($typeData, $dbType, $teamId);
+                    $typeData = $validated[$type] ?? [];
+                    $this->syncCommunicationTypes($typeData, $type, $teamId);
                 }
             }
         });

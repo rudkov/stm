@@ -5,14 +5,14 @@ namespace App\Helpers;
 class CommunicationTypeHelper
 {
     /**
-     * Get the mapping between API request/response keys and database type values.
+     * Get the list of communication types used in the database.
      */
-    public static function getTypeMapping(): array
+    public static function getTypes(): array
     {
         return [
-            'email_types' => 'email',
-            'phone_types' => 'phone',
-            'address_types' => 'address'
+            'address',
+            'email',
+            'phone'
         ];
     }
 }
