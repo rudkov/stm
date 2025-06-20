@@ -22,6 +22,12 @@ Route::group(['prefix' => 'v1'], function () {
         //contacts
         Route::apiResource('contacts', 'ContactController');
 
+        //communication types
+        Route::get('communication-types', 'CommunicationTypeController@index')
+            ->name('communication-types.index');
+        Route::put('communication-types', 'CommunicationTypeController@update')
+            ->name('communication-types.update');
+
         //companies
         Route::apiResource('companies', 'CompanyController');
 
