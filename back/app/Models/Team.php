@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Services\TeamInitializationService;
+
 use App\Models\User;
 use App\Models\TalentBoard;
+use App\Models\CommunicationType;
 
 class Team extends Model
 {
@@ -40,37 +43,27 @@ class Team extends Model
             ]));
 
             $team = static::find($teamId);
-            $team->createDefaultTalentBoards(Auth::id());
+
+            $initializationService = new TeamInitializationService();
+            $initializationService->createDefaultTalentBoards($team, Auth::id());
+            $initializationService->createDefaultCommunicationTypes($team);
+
             return $team;
         });
     }
 
-    /**
-     * Create default talent boards for this team.
-     * 
-     * @param int|null $userId User ID to use as creator (optional)
-     * @return void
-     */
-    public function createDefaultTalentBoards(?int $userId = null): void
+    public function communicationTypes()
     {
-        $defaultBoards = config('defaults.talent_boards', []);
-
-        foreach ($defaultBoards as $board) {
-            $this->talentBoards()->create([
-                'name' => $board['name'],
-                'created_by' => $userId,
-                'updated_by' => $userId,
-            ]);
-        }
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
+        return $this->hasMany(CommunicationType::class);
     }
 
     public function talentBoards()
     {
         return $this->hasMany(TalentBoard::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

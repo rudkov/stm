@@ -10,6 +10,24 @@ return [
     |
     */
 
+    'communication_types' => [
+        'address' => [
+            ['name' => 'Primary', 'weight' => 0],
+            ['name' => 'Secondary', 'weight' => 1],
+            ['name' => 'Alternative', 'weight' => 2]
+        ],
+        'email' => [
+            ['name' => 'Primary', 'weight' => 0],
+            ['name' => 'Secondary', 'weight' => 1],
+            ['name' => 'Alternative', 'weight' => 2]
+        ],
+        'phone' => [
+            ['name' => 'Primary', 'weight' => 0],
+            ['name' => 'Secondary', 'weight' => 1],
+            ['name' => 'Alternative', 'weight' => 2]
+        ],
+    ],
+
     'talent_boards' => [
         ['name' => 'Direct'],
         ['name' => 'Main'],

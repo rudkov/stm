@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
 
 use App\Models\Country;
 use App\Models\Team;
@@ -24,9 +23,6 @@ use App\Models\TalentShirtSize;
 use App\Models\TalentShoeSize;
 use App\Models\TalentSkinColor;
 use App\Models\TalentSuitCut;
-use App\Models\AddressType;
-use App\Models\PhoneType;
-use App\Models\EmailType;
 use App\Models\MessengerType;
 use App\Models\SocialMediaType;
 
@@ -41,9 +37,6 @@ class FirstTimeSeeder extends Seeder
         $this->languages();
 
         $this->eventTypes();
-        $this->addressTypes();
-        $this->phoneTypes();
-        $this->emailTypes();
         $this->socialMediaTypes();
         $this->messengerTypes();
 
@@ -416,54 +409,6 @@ class FirstTimeSeeder extends Seeder
             $language->id = $key;
             $language->name = $value;
             $language->save();
-        }
-    }
-
-    public function addressTypes()
-    {
-        $items = [
-            ['Primary', 0],
-            ['Secondary', 1],
-            ['Alternative', 2]
-        ];
-
-        foreach ($items as $item) {
-            $addressType = new AddressType();
-            $addressType->name = $item[0];
-            $addressType->weight = $item[1];
-            $addressType->save();
-        }
-    }
-
-    public function phoneTypes()
-    {
-        $items = [
-            ['Primary', 0],
-            ['Secondary', 1],
-            ['Alternative', 2]
-        ];
-
-        foreach ($items as $item) {
-            $phoneType = new PhoneType();
-            $phoneType->name = $item[0];
-            $phoneType->weight = $item[1];
-            $phoneType->save();
-        }
-    }
-
-    public function emailTypes()
-    {
-        $items = [
-            ['Primary', 0],
-            ['Secondary', 1],
-            ['Alternative', 2]
-        ];
-
-        foreach ($items as $item) {
-            $emailType = new EmailType();
-            $emailType->name = $item[0];
-            $emailType->weight = $item[1];
-            $emailType->save();
         }
     }
 

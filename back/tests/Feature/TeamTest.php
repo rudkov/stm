@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Models\Team;
 use App\Models\TalentBoard;
 use App\Models\User;
+use App\Models\CommunicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
+use App\Services\TeamInitializationService;
 
 class TeamTest extends TestCase
 {
@@ -67,8 +69,9 @@ class TeamTest extends TestCase
         // Create a team using factory to avoid automatic default board creation
         $team = Team::factory()->create(['name' => 'Test Team']);
 
-        // Create default talent boards with specific user
-        $team->createDefaultTalentBoards($specificUser->id);
+        // Create default talent boards with specific user using the service
+        $initializationService = new \App\Services\TeamInitializationService();
+        $initializationService->createDefaultTalentBoards($team, $specificUser->id);
 
         // Assert talent boards were created with the specific user
         $talentBoards = $team->talentBoards;
@@ -146,8 +149,9 @@ class TeamTest extends TestCase
         // Assert initial talent boards were created
         $this->assertCount(count($defaultBoards), $team->talentBoards);
 
-        // Call createDefaultTalentBoards again
-        $team->createDefaultTalentBoards($user->id);
+        // Call createDefaultTalentBoards again using the service
+        $initializationService = new \App\Services\TeamInitializationService();
+        $initializationService->createDefaultTalentBoards($team, $user->id);
 
         // Assert additional talent boards were created (method is not idempotent by design)
         $this->assertCount(count($defaultBoards) * 2, $team->fresh()->talentBoards);
@@ -177,6 +181,47 @@ class TeamTest extends TestCase
                 'team_id' => $team->id,
                 'name' => $defaultBoard['name'],
             ]);
+        }
+    }
+
+    public function test_team_creates_default_communication_types_on_creation()
+    {
+        // Get default communication types from config
+        $defaultCommunicationTypes = Config::get('defaults.communication_types', []);
+
+        // Create a team for the user factory dependency
+        $existingTeam = Team::factory()->create();
+
+        // Create and authenticate a user
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        // Create a team
+        $team = Team::create(['name' => 'Test Team']);
+
+        // Assert team was created
+        $this->assertInstanceOf(Team::class, $team);
+
+        // Calculate expected total communication types
+        $expectedTotal = 0;
+        foreach ($defaultCommunicationTypes as $type => $typeData) {
+            $expectedTotal += count($typeData);
+        }
+
+        // Assert communication types were created
+        $communicationTypes = $team->communicationTypes;
+        $this->assertCount($expectedTotal, $communicationTypes);
+
+        // Assert communication types have correct structure
+        foreach ($defaultCommunicationTypes as $type => $typeData) {
+            foreach ($typeData as $item) {
+                $this->assertDatabaseHas('communication_types', [
+                    'team_id' => $team->id,
+                    'type' => $type,
+                    'name' => $item['name'],
+                    'weight' => $item['weight'],
+                ]);
+            }
         }
     }
 }
