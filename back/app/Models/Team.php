@@ -10,9 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 use App\Services\TeamInitializationService;
 
-use App\Models\User;
-use App\Models\TalentBoard;
 use App\Models\CommunicationType;
+use App\Models\Company;
+use App\Models\Contact;
+use App\Models\Event;
+use App\Models\EventChunk;
+use App\Models\Talent;
+use App\Models\TalentBoard;
+use App\Models\User;
 
 class Team extends Model
 {
@@ -55,6 +60,31 @@ class Team extends Model
     public function communicationTypes()
     {
         return $this->hasMany(CommunicationType::class);
+    }
+
+    public function companies()
+    {
+        return $this->hasMany(Company::class);
+    }
+
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function eventChunks()
+    {
+        return $this->hasMany(EventChunk::class);
+    }
+
+    public function talents()
+    {
+        return $this->hasMany(Talent::class);
     }
 
     public function talentBoards()

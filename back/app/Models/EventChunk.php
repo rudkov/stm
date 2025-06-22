@@ -11,8 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Models\Event;
 use App\Models\Contact;
 
+use App\Traits\BelongsToTeam;
+
 class EventChunk extends Model
 {
+    use BelongsToTeam;
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
