@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\TalentRequest;
 use App\Http\Requests\TalentSearchRequest;
+use App\Http\Requests\TalentLocationRequest;
 use App\Http\Resources\TalentCollection;
 use App\Models\Talent;
 use App\Queries\TalentQuery;
@@ -23,14 +25,18 @@ class TalentController extends Controller
 
     public function index()
     {
-        $emptyRequest = new TalentSearchRequest();
-        return $this->search($emptyRequest);
+        return $this->search();
     }
 
-    public function search(TalentSearchRequest $request)
+    public function search($request = null)
     {
+        $filters = [];
+        if ($request instanceof TalentSearchRequest) {
+            $filters = $request->validated();
+        }
+
         $query = new TalentQuery(Auth::user());
-        $talents = $query->applyFilters($request->validated())->get();
+        $talents = $query->applyFilters($filters)->get();
         return new TalentCollection($talents);
     }
 
@@ -123,11 +129,15 @@ class TalentController extends Controller
         return response()->json(null, 204);
     }
 
-    public function updateCurrentLocation(TalentRequest $request, Talent $talent)
+    public function updateLocation(TalentLocationRequest $request, Talent $talent)
     {
+        $this->authorize('update', $talent);
+
+        $validated = $request->validated();
         $talent->timestamps = false;
         $talent->userTracking = false;
-        $talent->update(['location' => $request->validated('location')]);
+        $talent->location = $validated['location'];
+        $talent->save();
         return $this->show($talent);
     }
 

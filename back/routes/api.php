@@ -35,10 +35,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('teams', 'TeamController@store');
 
         //talents
-        Route::get('talents/locations', 'TalentController@locations');
-        Route::get('talents/managers', 'TalentController@managers');
-        Route::post('talents/search', 'TalentController@search');
-        Route::put('talents/{talent}/locations/current', 'TalentController@updateCurrentLocation');
+        Route::get('talents/locations', 'TalentController@locations')->name('talents.locations');
+        Route::get('talents/managers', 'TalentController@managers')->name('talents.managers');
+        Route::post('talents/search', 'TalentController@search')->name('talents.search');
+        Route::put('talents/{talent}/locations/current', 'TalentController@updateLocation')->name('talents.update-location');
         Route::apiResource('talents', 'TalentController');
 
         //talent boards
