@@ -3,57 +3,90 @@
  */
 
 /**
- * Checks if a regular form object is considered empty
- * An object is empty if it has no meaningful content in key fields
+ * Checks if a field value is considered empty
+ * 
+ * @param {any} value - The value to check
+ * @returns {boolean} - True if the value is empty
+ */
+const isEmpty = (value) => {
+    if (value === null || value === undefined || value === '') return true;
+    if (typeof value === 'string' && value.trim() === '') return true;
+    if (typeof value === 'object' && value.hasOwnProperty('id')) return isEmpty(value.id);
+    return false;
+};
+
+/**
+ * Checks if a form object meets the specified requirements
  * 
  * @param {Object} item - The object to check
+ * @param {Object} config - Configuration object
+ * @param {string[]} config.requiredAll - Fields that must all be non-empty
+ * @param {string[]} config.requiredAny - At least one of these fields must be non-empty
  * @returns {boolean} - True if the object should be filtered out
  */
-export const isEmptyFormObject = (item) => {
+const isEmptyByConfig = (item, config = {}) => {
     if (!item || typeof item !== 'object') return true;
 
-    // For objects with info property (phones, emails, addresses, relatives)
-    if (item.hasOwnProperty('info')) {
-        // Filter out if no info at all
-        return !item.info || item.info.trim() === '';
+    const { requiredAll = [], requiredAny = [] } = config;
+
+    // Check requiredAll fields (all must be non-empty)
+    if (requiredAll.length > 0) {
+        const allRequiredMet = requiredAll.every(field => {
+            const value = field.includes('.') ? getNestedValue(item, field) : item[field];
+            return !isEmpty(value);
+        });
+        if (!allRequiredMet) {
+            return true; // Filter out if any required field is empty
+        }
     }
 
-    // For other objects, check if any value exists
-    const values = Object.values(item);
-    const hasValue = values.some(value => {
-        if (value === null || value === undefined || value === '') return false;
-        if (typeof value === 'number' && value === 0) return false;
-        return true;
-    });
+    // Check requiredAny fields (at least one must be non-empty)
+    if (requiredAny.length > 0) {
+        const anyRequiredMet = requiredAny.some(field => {
+            const value = field.includes('.') ? getNestedValue(item, field) : item[field];
+            return !isEmpty(value);
+        });
+        if (!anyRequiredMet) {
+            return true; // Filter out if all requiredAny fields are empty
+        }
+    }
 
-    return !hasValue;
+    return false;
 };
 
 /**
- * Cleans a single form collection array by removing empty objects
- * Use this for regular collections like addresses, emails, phones, relatives
+ * Helper function to get nested object values (e.g., 'type.id')
+ * 
+ * @param {Object} obj - The object to get value from
+ * @param {string} path - Dot notation path (e.g., 'type.id')
+ * @returns {any} - The value at the path
+ */
+const getNestedValue = (obj, path) => {
+    return path.split('.').reduce((current, key) => current?.[key], obj);
+};
+
+/**
+ * Cleans a form collection array by removing empty objects based on configuration
  * 
  * @param {Array} array - The array to filter
+ * @param {Object} config - Configuration object
+ * @param {string[]} config.requiredAll - Fields that must all be non-empty
+ * @param {string[]} config.requiredAny - At least one of these fields must be non-empty
  * @returns {Array|null} - The filtered array with empty objects removed, or null if empty
- */
-export const cleanFormCollection = (array) => {
-    if (!Array.isArray(array)) return array;
-
-    const filtered = array.filter(item => !isEmptyFormObject(item));
-    return filtered.length === 0 ? null : filtered;
-};
-
-/**
- * Cleans a form collection array for objects that have types (messengers, social_medias)
- * Only filters out null/undefined/non-objects - keeps all valid objects for backend validation
  * 
- * @param {Array} array - The array to filter
- * @returns {Array|null} - The filtered array, or null if empty
+ * @example
+ * // For addresses/emails/phones/relatives (info required, type optional)
+ * cleanCollection(values.addresses, { requiredAny: ['info'] })
+ * 
+ * // For social_medias/messengers (both type and info required)
+ * cleanCollection(values.social_medias, { requiredAll: ['social_media_type_id', 'info'] })
+ * 
+ * // For complex nested fields
+ * cleanCollection(values.addresses, { requiredAny: ['info'], requiredAll: ['type.id'] })
  */
-export const cleanFormCollectionWithTypes = (array) => {
+export const cleanCollection = (array, config = {}) => {
     if (!Array.isArray(array)) return array;
 
-    // Only filter out null/undefined/non-objects, keep everything else for backend validation
-    const filtered = array.filter(item => item && typeof item === 'object');
+    const filtered = array.filter(item => !isEmptyByConfig(item, config));
     return filtered.length === 0 ? null : filtered;
 };

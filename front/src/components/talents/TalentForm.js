@@ -20,7 +20,7 @@ import ScrollableView from '../ui-components/ScrollableView';
 
 import { useNotification } from '../notifications/NotificationProvider';
 
-import { cleanFormCollection, cleanFormCollectionWithTypes } from '../../helpers/form-utils';
+import { cleanCollection } from '../../helpers/form-utils';
 
 import { LoadingOutlined } from '@ant-design/icons';
 import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
@@ -194,12 +194,12 @@ function TalentForm(props) {
             }));
         }
 
-        values.addresses = cleanFormCollection(values.addresses);
-        values.emails = cleanFormCollection(values.emails);
-        values.phones = cleanFormCollection(values.phones);
-        values.relatives = cleanFormCollection(values.relatives);
-        values.messengers = cleanFormCollectionWithTypes(values.messengers);
-        values.social_medias = cleanFormCollectionWithTypes(values.social_medias);
+        values.addresses = cleanCollection(values.addresses, { requiredAny: ['info'] });
+        values.emails = cleanCollection(values.emails, { requiredAny: ['info'] });
+        values.phones = cleanCollection(values.phones, { requiredAny: ['info'] });
+        values.relatives = cleanCollection(values.relatives, { requiredAny: ['info'] });
+        values.messengers = cleanCollection(values.messengers, { requiredAll: ['messenger_type_id', 'info'] });
+        values.social_medias = cleanCollection(values.social_medias, { requiredAll: ['social_media_type_id', 'info'] });
 
         if (isNewTalent) {
             dispatch(createTalent({ values: values }));
