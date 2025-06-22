@@ -2,15 +2,18 @@
 
 namespace Tests\Feature;
 
-use App\Models\Team;
-use App\Models\TalentBoard;
-use App\Models\User;
-use App\Models\CommunicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+
 use Tests\TestCase;
-use App\Services\TeamInitializationService;
+
+use App\Models\Company;
+use App\Models\Contact;
+use App\Models\Talent;
+use App\Models\Team;
+use App\Models\TalentBoard;
+use App\Models\User;
 
 class TeamTest extends TestCase
 {
@@ -223,5 +226,161 @@ class TeamTest extends TestCase
                 ]);
             }
         }
+    }
+
+    // === Relationship Tests ===
+
+    public function test_team_has_many_users()
+    {
+        $team = Team::factory()->create();
+        $users = User::factory()->count(3)->create(['team_id' => $team->id]);
+
+        $teamUsers = $team->users;
+
+        $this->assertCount(3, $teamUsers);
+        foreach ($users as $user) {
+            $this->assertTrue($teamUsers->contains('id', $user->id));
+        }
+    }
+
+    public function test_team_has_many_companies()
+    {
+        $team = Team::factory()->create();
+        $companies = [];
+
+        // Create companies manually
+        for ($i = 0; $i < 2; $i++) {
+            $company = new Company();
+            $company->name = "Company {$i}";
+            $company->team_id = $team->id;
+            $company->save();
+            $companies[] = $company;
+        }
+
+        $teamCompanies = $team->companies;
+
+        $this->assertCount(2, $teamCompanies);
+        foreach ($companies as $company) {
+            $this->assertTrue($teamCompanies->contains('id', $company->id));
+        }
+    }
+
+    public function test_team_has_many_contacts()
+    {
+        $team = Team::factory()->create();
+        $contacts = [];
+
+        // Create contacts manually
+        for ($i = 0; $i < 3; $i++) {
+            $contact = new Contact();
+            $contact->first_name = "Contact";
+            $contact->last_name = "User {$i}";
+            $contact->team_id = $team->id;
+            $contact->save();
+            $contacts[] = $contact;
+        }
+
+        $teamContacts = $team->contacts;
+
+        $this->assertCount(3, $teamContacts);
+        foreach ($contacts as $contact) {
+            $this->assertTrue($teamContacts->contains('id', $contact->id));
+        }
+    }
+
+    public function test_team_has_many_talents()
+    {
+        $team = Team::factory()->create();
+        $talents = [];
+
+        // Create talents manually
+        for ($i = 0; $i < 4; $i++) {
+            $talent = new Talent();
+            $talent->first_name = "Talent";
+            $talent->last_name = "User {$i}";
+            $talent->team_id = $team->id;
+            $talent->save();
+            $talents[] = $talent;
+        }
+
+        $teamTalents = $team->talents;
+
+        $this->assertCount(4, $teamTalents);
+        foreach ($talents as $talent) {
+            $this->assertTrue($teamTalents->contains('id', $talent->id));
+        }
+    }
+
+    public function test_team_has_many_talent_boards()
+    {
+        $team = Team::factory()->create();
+        $talentBoards = [];
+
+        // Create talent boards manually (beyond the default ones created by Team::create)
+        for ($i = 0; $i < 3; $i++) {
+            $talentBoard = new TalentBoard();
+            $talentBoard->name = "Custom Board {$i}";
+            $talentBoard->team_id = $team->id;
+            $talentBoard->save();
+            $talentBoards[] = $talentBoard;
+        }
+
+        $teamTalentBoards = $team->talentBoards;
+
+        // Should have default boards + our custom boards
+        $this->assertGreaterThanOrEqual(3, $teamTalentBoards->count());
+
+        // Check that our custom boards are included
+        foreach ($talentBoards as $talentBoard) {
+            $this->assertTrue($teamTalentBoards->contains('id', $talentBoard->id));
+        }
+    }
+
+    public function test_team_relationships_return_empty_collections_when_no_related_models()
+    {
+        $team = Team::factory()->create();
+
+        $this->assertCount(0, $team->users);
+        $this->assertCount(0, $team->companies);
+        $this->assertCount(0, $team->contacts);
+        $this->assertCount(0, $team->talents);
+        // Note: communicationTypes and talentBoards are created by default in Team::create()
+        // Skipping events and eventChunks due to complex dependencies
+    }
+
+    public function test_team_relationships_eager_loading()
+    {
+        $team = Team::factory()->create();
+
+        // Create models manually
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->name = "User {$i}";
+            $user->email = "user{$i}@example.com";
+            $user->password = 'password';
+            $user->team_id = $team->id;
+            $user->save();
+        }
+
+        $company = new Company();
+        $company->name = 'Test Company';
+        $company->team_id = $team->id;
+        $company->save();
+
+        $contact = new Contact();
+        $contact->first_name = 'John';
+        $contact->last_name = 'Doe';
+        $contact->team_id = $team->id;
+        $contact->save();
+
+        $teamWithRelations = Team::with(['users', 'companies', 'contacts'])
+            ->find($team->id);
+
+        $this->assertTrue($teamWithRelations->relationLoaded('users'));
+        $this->assertTrue($teamWithRelations->relationLoaded('companies'));
+        $this->assertTrue($teamWithRelations->relationLoaded('contacts'));
+        $this->assertCount(2, $teamWithRelations->users);
+        $this->assertCount(1, $teamWithRelations->companies);
+        $this->assertCount(1, $teamWithRelations->contacts);
     }
 }
