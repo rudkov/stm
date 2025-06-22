@@ -27,7 +27,6 @@ class CommunicationTypeCollectionRequest extends FormRequest
                     ->where('type', $type),
             ];
             $rules["{$type}.*.name"] = 'required|string|max:255';
-            $rules["{$type}.*.weight"] = 'sometimes|integer';
         }
 
         return $rules;

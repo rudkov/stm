@@ -53,10 +53,10 @@ class CommunicationTypeControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'address' => [
-                    '*' => ['id', 'name', 'type', 'weight']
+                    '*' => ['id', 'name']
                 ],
                 'email' => [
-                    '*' => ['id', 'name', 'type', 'weight']
+                    '*' => ['id', 'name']
                 ],
                 'phone' => []
             ])

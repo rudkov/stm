@@ -17,13 +17,7 @@ class PhoneResource extends JsonResource
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'phone_type_id' => $this->phone_type_id,
-            'type' => $this->whenLoaded('type', function ($type) {
-                return [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                ];
-            }),
+            'type' => new CommunicationTypeResource($this->whenLoaded('type')),
         ];
     }
 }

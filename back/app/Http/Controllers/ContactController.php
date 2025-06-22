@@ -25,12 +25,12 @@ class ContactController extends Controller
                 $join->on('contacts.id', '=', 'emails.emailable_id')
                     ->where('emails.emailable_type', '=', 'contact');
             })
-            ->leftJoin('email_types', 'email_types.id', '=', 'emails.email_type_id')
+            ->leftJoin('communication_types as email_types', 'email_types.id', '=', 'emails.communication_type_id')
             ->leftJoin('phones', function ($join) {
                 $join->on('contacts.id', '=', 'phones.phoneable_id')
                     ->where('phones.phoneable_type', '=', 'contact');
             })
-            ->leftJoin('phone_types', 'phone_types.id', '=', 'phones.phone_type_id')
+            ->leftJoin('communication_types as phone_types', 'phone_types.id', '=', 'phones.communication_type_id')
 
             ->leftJoin('company_contact', 'company_contact.contact_id', '=', 'contacts.id')
             ->leftJoin('companies', 'company_contact.company_id', '=', 'companies.id')
@@ -97,8 +97,8 @@ class ContactController extends Controller
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
-            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id', 'info']);
+            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id', 'info']);
             sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
 
@@ -125,8 +125,8 @@ class ContactController extends Controller
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
-            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id', 'info']);
+            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id', 'info']);
             sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
 

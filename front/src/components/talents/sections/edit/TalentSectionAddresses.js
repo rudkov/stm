@@ -2,14 +2,14 @@ import './TalentSectionAddresses.css';
 
 import { Button, Form, Input, Select } from 'antd';
 
-import { useSettings } from '../../../../context/SettingsContext';
+import { useTeamSettings } from '../../../../context/TeamSettingsContext';
 
 import NestedSection from '../../../ui-components/NestedSection';
 
 import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20x20.svg';
 
 function TalentSectionAddresses(props) {
-    const { settings } = useSettings();
+    const { teamSettings } = useTeamSettings();
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -22,10 +22,10 @@ function TalentSectionAddresses(props) {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-addresses__item' key={`talent.address.${key}`}>
                                         <div className='talent-section-form-addresses__data'>
-                                            <Form.Item {...restField} name={[name, 'address_type_id']}>
+                                            <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
-                                                    options={settings.address_types.map(item => ({ label: item.name, value: item.id }))}
+                                                    options={teamSettings.communication_types.address.map(item => ({ label: item.name, value: item.id }))}
                                                 />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, 'info']}>

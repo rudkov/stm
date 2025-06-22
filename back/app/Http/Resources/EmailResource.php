@@ -17,13 +17,7 @@ class EmailResource extends JsonResource
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'email_type_id' => $this->email_type_id,
-            'type' => $this->whenLoaded('type', function ($type) {
-                return [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                ];
-            }),
+            'type' => new CommunicationTypeResource($this->whenLoaded('type')),
         ];
     }
 }

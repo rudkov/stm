@@ -44,6 +44,10 @@ Route::group(['prefix' => 'v1'], function () {
         //talent boards
         Route::apiResource('talent-boards', 'TalentBoardController');
 
+        //team settings
+        Route::get('settings/team', 'SettingsController@team')
+            ->name('settings.team');
+
         //events
         Route::post('events/search', 'EventController@index');
 

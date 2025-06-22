@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\HasCommunicationType;
+
 class Phone extends Model
 {
-    use HasFactory;
+    use HasFactory, HasCommunicationType;
 
     public $timestamps = false;
 
     protected $fillable = [
         'info',
-        'phone_type_id',
+        'communication_type_id',
         'phoneable_id',
         'phoneable_type',
     ];
@@ -24,13 +26,5 @@ class Phone extends Model
     public function phoneable()
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Get the phone type.
-     */
-    public function type()
-    {
-        return $this->belongsTo(PhoneType::class, 'phone_type_id');
     }
 }

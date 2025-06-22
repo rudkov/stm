@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\HasCommunicationType;
+
 class Address extends Model
 {
-    use HasFactory;
+    use HasFactory, HasCommunicationType;
 
     public $timestamps = false;
 
     protected $fillable = [
         'info',
-        'address_type_id',
+        'communication_type_id',
         'addressable_id',
         'addressable_type',
     ];
@@ -24,13 +26,5 @@ class Address extends Model
     public function addressable()
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Get the address type.
-     */
-    public function type()
-    {
-        return $this->belongsTo(AddressType::class, 'address_type_id');
     }
 }

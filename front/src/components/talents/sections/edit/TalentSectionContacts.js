@@ -4,6 +4,7 @@ import '../../../../helpers/form.css';
 import { Button, Form, Input, Select } from 'antd';
 
 import { useSettings } from '../../../../context/SettingsContext';
+import { useTeamSettings } from '../../../../context/TeamSettingsContext';
 
 import NestedSection from '../../../ui-components/NestedSection';
 
@@ -13,6 +14,7 @@ import { MessengersIcons } from '../../../ui-components/Icons';
 
 function TalentSectionContacts(props) {
     const { settings } = useSettings();
+    const { teamSettings } = useTeamSettings();
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -25,10 +27,10 @@ function TalentSectionContacts(props) {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-contacts__item' key={`talent.phone.${key}`}>
                                         <div className='talent-section-form-contacts__data'>
-                                            <Form.Item {...restField} name={[name, 'phone_type_id']}>
+                                            <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
-                                                    options={settings.phone_types.map(item => ({
+                                                    options={teamSettings.communication_types.phone.map(item => ({
                                                         label: item.name,
                                                         value: item.id,
                                                     }))}
@@ -54,10 +56,10 @@ function TalentSectionContacts(props) {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-contacts__item' key={`talent.email.${key}`}>
                                         <div className='talent-section-form-contacts__data'>
-                                            <Form.Item {...restField} name={[name, 'email_type_id']}>
+                                            <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
-                                                    options={settings.email_types.map(item => ({
+                                                    options={teamSettings.communication_types.email.map(item => ({
                                                         label: item.name,
                                                         value: item.id,
                                                     }))}

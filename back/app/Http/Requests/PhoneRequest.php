@@ -6,16 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PhoneRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         return [
             'id' => 'sometimes|exists:phones,id',
-            'phone_type_id' => 'nullable|exists:phone_types,id',
+            'communication_type_id' => 'nullable|exists:communication_types,id',
             'info' => 'required|string|max:255',
         ];
     }

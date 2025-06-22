@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\HasCommunicationType;
+
 class Email extends Model
 {
-    use HasFactory;
+    use HasFactory, HasCommunicationType;
 
     public $timestamps = false;
 
     protected $fillable = [
         'info',
-        'email_type_id',
+        'communication_type_id',
         'emailable_id',
         'emailable_type',
     ];
@@ -24,13 +26,5 @@ class Email extends Model
     public function emailable()
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Get the email type.
-     */
-    public function type()
-    {
-        return $this->belongsTo(EmailType::class, 'email_type_id');
     }
 }

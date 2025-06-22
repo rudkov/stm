@@ -6,16 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AddressRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         return [
             'id' => 'sometimes|exists:addresses,id',
-            'address_type_id' => 'nullable|exists:address_types,id',
+            'communication_type_id' => 'nullable|exists:communication_types,id',
             'info' => 'required|string|max:255',
         ];
     }

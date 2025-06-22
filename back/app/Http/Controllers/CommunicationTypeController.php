@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CommunicationType;
-use App\Http\Requests\CommunicationTypeCollectionRequest;
-use App\Http\Resources\CommunicationTypeResource;
-use App\Helpers\CommunicationTypeHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use App\Helpers\CommunicationTypeHelper;
+use App\Http\Requests\CommunicationTypeCollectionRequest;
+use App\Http\Resources\CommunicationTypeResource;
+use App\Models\CommunicationType;
 
 class CommunicationTypeController extends Controller
 {
@@ -19,20 +20,12 @@ class CommunicationTypeController extends Controller
     {
         $this->authorize('viewAny', CommunicationType::class);
 
-        $types = CommunicationType::where('team_id', Auth::user()->team_id)
-            ->orderBy('type')
-            ->orderBy('weight')
-            ->get();
+        $data = CommunicationType::getGroupedByType(Auth::user()->team_id);
 
-        // Group by type and return structured response
-        $grouped = $types->groupBy('type')->map(function ($typeCollection) {
-            return CommunicationTypeResource::collection($typeCollection);
-        });
-
-        // Build response using database type values
+        // Apply resource transformation
         $response = [];
-        foreach (CommunicationTypeHelper::getTypes() as $type) {
-            $response[$type] = $grouped->get($type, []);
+        foreach ($data as $type => $items) {
+            $response[$type] = CommunicationTypeResource::collection(collect($items));
         }
 
         return response()->json($response);
