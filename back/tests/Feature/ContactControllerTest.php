@@ -8,7 +8,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\CommunicationType;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Email;
+use App\Models\Messenger;
 use App\Models\MessengerType;
+use App\Models\Phone;
 use App\Models\Team;
 use App\Models\User;
 
@@ -71,6 +74,11 @@ class ContactControllerTest extends TestCase
         $messengerType = MessengerType::factory()->create();
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
+        // Use factories to generate realistic test data
+        $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->toArray();
+        $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->toArray();
+        $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->toArray();
+
         $response = $this->actingAs($this->user)
             ->postJson(route('contacts.store'), [
                 'first_name' => 'John',
@@ -84,20 +92,20 @@ class ContactControllerTest extends TestCase
                 ],
                 'phones' => [
                     [
-                        'communication_type_id' => $phoneType->id,
-                        'info' => '+1234567890'
+                        'communication_type_id' => $phoneData['communication_type_id'],
+                        'info' => $phoneData['info']
                     ]
                 ],
                 'emails' => [
                     [
-                        'communication_type_id' => $emailType->id,
-                        'info' => 'john@example.com'
+                        'communication_type_id' => $emailData['communication_type_id'],
+                        'info' => $emailData['info']
                     ]
                 ],
                 'messengers' => [
                     [
-                        'messenger_type_id' => $messengerType->id,
-                        'info' => 'johndoe'
+                        'messenger_type_id' => $messengerData['messenger_type_id'],
+                        'info' => $messengerData['info']
                     ]
                 ]
             ]);
@@ -124,24 +132,24 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('phones', [
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'communication_type_id' => $phoneType->id,
-            'info' => '+1234567890'
+            'communication_type_id' => $phoneData['communication_type_id'],
+            'info' => $phoneData['info']
         ]);
 
         // Check email was created
         $this->assertDatabaseHas('emails', [
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'communication_type_id' => $emailType->id,
-            'info' => 'john@example.com'
+            'communication_type_id' => $emailData['communication_type_id'],
+            'info' => $emailData['info']
         ]);
 
         // Check messenger was created
         $this->assertDatabaseHas('messengers', [
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
-            'messenger_type_id' => $messengerType->id,
-            'info' => 'johndoe'
+            'messenger_type_id' => $messengerData['messenger_type_id'],
+            'info' => $messengerData['info']
         ]);
     }
 
@@ -250,16 +258,23 @@ class ContactControllerTest extends TestCase
         $phoneType2 = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
         $phoneType3 = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]); // For new phone
 
-        // Create initial phones
-        $existingPhone1 = $contact->phones()->create([
+        // Create initial phones using factories
+        $existingPhone1 = Phone::factory()->create([
+            'phoneable_id' => $contact->id,
+            'phoneable_type' => 'contact',
             'communication_type_id' => $phoneType1->id,
-            'info' => '+1234567890'
         ]);
 
-        $existingPhone2 = $contact->phones()->create([
+        $existingPhone2 = Phone::factory()->create([
+            'phoneable_id' => $contact->id,
+            'phoneable_type' => 'contact',
             'communication_type_id' => $phoneType2->id,
-            'info' => '+0987654321'
         ]);
+
+        // Generate realistic update data using factories
+        $updatedPhone1Data = Phone::factory()->make(['communication_type_id' => $phoneType1->id])->only(['info']);
+        $updatedPhone2Data = Phone::factory()->make(['communication_type_id' => $phoneType2->id])->only(['info']);
+        $newPhoneData = Phone::factory()->make(['communication_type_id' => $phoneType3->id])->only(['info']);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
@@ -271,18 +286,18 @@ class ContactControllerTest extends TestCase
                     [
                         'id' => $existingPhone1->id,
                         'communication_type_id' => $phoneType1->id,
-                        'info' => '+9876543210' // Changed number
+                        'info' => $updatedPhone1Data['info']
                     ],
                     // Update second existing phone
                     [
                         'id' => $existingPhone2->id,
                         'communication_type_id' => $phoneType2->id,
-                        'info' => '+1122334455' // Changed number
+                        'info' => $updatedPhone2Data['info']
                     ],
                     // Add new phone
                     [
                         'communication_type_id' => $phoneType3->id,
-                        'info' => '+1111111111'
+                        'info' => $newPhoneData['info']
                     ]
                 ],
                 'emails' => [],
@@ -297,7 +312,7 @@ class ContactControllerTest extends TestCase
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
             'communication_type_id' => $phoneType1->id,
-            'info' => '+9876543210'
+            'info' => $updatedPhone1Data['info']
         ]);
 
         // Check second phone was updated
@@ -306,7 +321,7 @@ class ContactControllerTest extends TestCase
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
             'communication_type_id' => $phoneType2->id,
-            'info' => '+1122334455'
+            'info' => $updatedPhone2Data['info']
         ]);
 
         // Check new phone was added
@@ -314,7 +329,7 @@ class ContactControllerTest extends TestCase
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
             'communication_type_id' => $phoneType3->id,
-            'info' => '+1111111111'
+            'info' => $newPhoneData['info']
         ]);
 
         // Check total count of phones
@@ -331,10 +346,11 @@ class ContactControllerTest extends TestCase
 
         $phoneType = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
 
-        // Create initial phone
-        $existingPhone = $contact->phones()->create([
+        // Create initial phone using factory
+        $existingPhone = Phone::factory()->create([
+            'phoneable_id' => $contact->id,
+            'phoneable_type' => 'contact',
             'communication_type_id' => $phoneType->id,
-            'info' => '+1234567890'
         ]);
 
         $response = $this->actingAs($this->user)
@@ -370,16 +386,23 @@ class ContactControllerTest extends TestCase
         $emailType2 = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
         $emailType3 = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]); // For new email
 
-        // Create initial emails
-        $existingEmail1 = $contact->emails()->create([
+        // Create initial emails using factories
+        $existingEmail1 = Email::factory()->create([
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'communication_type_id' => $emailType1->id,
-            'info' => 'old1@example.com'
         ]);
 
-        $existingEmail2 = $contact->emails()->create([
+        $existingEmail2 = Email::factory()->create([
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'communication_type_id' => $emailType2->id,
-            'info' => 'old2@example.com'
         ]);
+
+        // Generate realistic update data using factories
+        $updatedEmail1Data = Email::factory()->make(['communication_type_id' => $emailType1->id])->only(['info']);
+        $updatedEmail2Data = Email::factory()->make(['communication_type_id' => $emailType2->id])->only(['info']);
+        $newEmailData = Email::factory()->make(['communication_type_id' => $emailType3->id])->only(['info']);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
@@ -392,18 +415,18 @@ class ContactControllerTest extends TestCase
                     [
                         'id' => $existingEmail1->id,
                         'communication_type_id' => $emailType1->id,
-                        'info' => 'updated1@example.com' // Changed email
+                        'info' => $updatedEmail1Data['info']
                     ],
                     // Update second existing email
                     [
                         'id' => $existingEmail2->id,
                         'communication_type_id' => $emailType2->id,
-                        'info' => 'updated2@example.com' // Changed email
+                        'info' => $updatedEmail2Data['info']
                     ],
                     // Add new email
                     [
                         'communication_type_id' => $emailType3->id,
-                        'info' => 'new@example.com'
+                        'info' => $newEmailData['info']
                     ]
                 ],
                 'messengers' => [],
@@ -417,7 +440,7 @@ class ContactControllerTest extends TestCase
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
             'communication_type_id' => $emailType1->id,
-            'info' => 'updated1@example.com'
+            'info' => $updatedEmail1Data['info']
         ]);
 
         // Check second email was updated
@@ -426,7 +449,7 @@ class ContactControllerTest extends TestCase
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
             'communication_type_id' => $emailType2->id,
-            'info' => 'updated2@example.com'
+            'info' => $updatedEmail2Data['info']
         ]);
 
         // Check new email was added
@@ -434,7 +457,7 @@ class ContactControllerTest extends TestCase
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
             'communication_type_id' => $emailType3->id,
-            'info' => 'new@example.com'
+            'info' => $newEmailData['info']
         ]);
 
         // Check total count of emails
@@ -451,10 +474,11 @@ class ContactControllerTest extends TestCase
 
         $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
 
-        // Create initial email
-        $existingEmail = $contact->emails()->create([
+        // Create initial email using factory
+        $existingEmail = Email::factory()->create([
+            'emailable_id' => $contact->id,
+            'emailable_type' => 'contact',
             'communication_type_id' => $emailType->id,
-            'info' => 'test@example.com'
         ]);
 
         $response = $this->actingAs($this->user)
@@ -490,16 +514,23 @@ class ContactControllerTest extends TestCase
         $messengerType2 = MessengerType::factory()->create();
         $messengerType3 = MessengerType::factory()->create(); // For new messenger
 
-        // Create initial messengers
-        $existingMessenger1 = $contact->messengers()->create([
+        // Create initial messengers using factories
+        $existingMessenger1 = Messenger::factory()->create([
+            'messengerable_id' => $contact->id,
+            'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType1->id,
-            'info' => 'old_username1'
         ]);
 
-        $existingMessenger2 = $contact->messengers()->create([
+        $existingMessenger2 = Messenger::factory()->create([
+            'messengerable_id' => $contact->id,
+            'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType2->id,
-            'info' => 'old_username2'
         ]);
+
+        // Generate realistic update data using factories
+        $updatedMessenger1Data = Messenger::factory()->make(['messenger_type_id' => $messengerType1->id])->only(['info']);
+        $updatedMessenger2Data = Messenger::factory()->make(['messenger_type_id' => $messengerType2->id])->only(['info']);
+        $newMessengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType3->id])->only(['info']);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
@@ -513,18 +544,18 @@ class ContactControllerTest extends TestCase
                     [
                         'id' => $existingMessenger1->id,
                         'messenger_type_id' => $messengerType1->id,
-                        'info' => 'updated_username1' // Changed username
+                        'info' => $updatedMessenger1Data['info']
                     ],
                     // Update second existing messenger
                     [
                         'id' => $existingMessenger2->id,
                         'messenger_type_id' => $messengerType2->id,
-                        'info' => 'updated_username2' // Changed username
+                        'info' => $updatedMessenger2Data['info']
                     ],
                     // Add new messenger
                     [
                         'messenger_type_id' => $messengerType3->id,
-                        'info' => 'new_username'
+                        'info' => $newMessengerData['info']
                     ]
                 ],
             ]);
@@ -537,7 +568,7 @@ class ContactControllerTest extends TestCase
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType1->id,
-            'info' => 'updated_username1'
+            'info' => $updatedMessenger1Data['info']
         ]);
 
         // Check second messenger was updated
@@ -546,7 +577,7 @@ class ContactControllerTest extends TestCase
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType2->id,
-            'info' => 'updated_username2'
+            'info' => $updatedMessenger2Data['info']
         ]);
 
         // Check new messenger was added
@@ -554,7 +585,7 @@ class ContactControllerTest extends TestCase
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType3->id,
-            'info' => 'new_username'
+            'info' => $newMessengerData['info']
         ]);
 
         // Check total count of messengers
@@ -571,10 +602,11 @@ class ContactControllerTest extends TestCase
 
         $messengerType = MessengerType::factory()->create();
 
-        // Create initial messenger
-        $existingMessenger = $contact->messengers()->create([
+        // Create initial messenger using factory
+        $existingMessenger = Messenger::factory()->create([
+            'messengerable_id' => $contact->id,
+            'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerType->id,
-            'info' => 'username'
         ]);
 
         $response = $this->actingAs($this->user)
@@ -639,6 +671,11 @@ class ContactControllerTest extends TestCase
         $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
 
+        // Generate realistic test data using factories
+        $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->only(['communication_type_id', 'info']);
+        $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->only(['communication_type_id', 'info']);
+        $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->only(['messenger_type_id', 'info']);
+
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
                 'first_name' => 'Complete',
@@ -650,24 +687,9 @@ class ContactControllerTest extends TestCase
                         'job_title' => 'Senior Developer'
                     ]
                 ],
-                'phones' => [
-                    [
-                        'communication_type_id' => $phoneType->id,
-                        'info' => '+9876543210'
-                    ]
-                ],
-                'emails' => [
-                    [
-                        'communication_type_id' => $emailType->id,
-                        'info' => 'complete@example.com'
-                    ]
-                ],
-                'messengers' => [
-                    [
-                        'messenger_type_id' => $messengerType->id,
-                        'info' => 'complete_username'
-                    ]
-                ],
+                'phones' => [$phoneData],
+                'emails' => [$emailData],
+                'messengers' => [$messengerData],
             ]);
 
         $response->assertStatus(200)
@@ -693,28 +715,22 @@ class ContactControllerTest extends TestCase
         ]);
 
         // Check phone was created
-        $this->assertDatabaseHas('phones', [
+        $this->assertDatabaseHas('phones', array_merge([
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'communication_type_id' => $phoneType->id,
-            'info' => '+9876543210'
-        ]);
+        ], $phoneData));
 
         // Check email was created
-        $this->assertDatabaseHas('emails', [
+        $this->assertDatabaseHas('emails', array_merge([
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'communication_type_id' => $emailType->id,
-            'info' => 'complete@example.com'
-        ]);
+        ], $emailData));
 
         // Check messenger was created
-        $this->assertDatabaseHas('messengers', [
+        $this->assertDatabaseHas('messengers', array_merge([
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
-            'messenger_type_id' => $messengerType->id,
-            'info' => 'complete_username'
-        ]);
+        ], $messengerData));
 
         // Check updated_by was set correctly
         $this->assertEquals($this->user->id, $contact->fresh()->updated_by);

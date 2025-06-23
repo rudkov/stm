@@ -5,9 +5,13 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+use App\Models\Address;
 use App\Models\CommunicationType;
 use App\Models\Company;
+use App\Models\Email;
+use App\Models\Messenger;
 use App\Models\MessengerType;
+use App\Models\Phone;
 use App\Models\Talent;
 use App\Models\TalentBoard;
 use App\Models\Team;
@@ -101,6 +105,12 @@ class TalentControllerTest extends TestCase
         $board = TalentBoard::factory()->create(['team_id' => $this->team->id]);
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
+        // Generate realistic test data using factories
+        $addressData = Address::factory()->make(['communication_type_id' => $addressType->id])->only(['info']);
+        $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->only(['info']);
+        $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->only(['info']);
+        $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->only(['info']);
+
         $response = $this->actingAs($this->user)
             ->postJson(route('talents.store'), [
                 'first_name' => 'John',
@@ -117,34 +127,30 @@ class TalentControllerTest extends TestCase
                 'languages' => [],
                 'relatives' => [],
                 'addresses' => [
-                    [
+                    array_merge([
                         'type' => [
                             'id' => $addressType->id
-                        ],
-                        'info' => '123 Main St, City, State'
-                    ]
+                        ]
+                    ], $addressData)
                 ],
                 'emails' => [
-                    [
+                    array_merge([
                         'type' => [
                             'id' => $emailType->id
-                        ],
-                        'info' => 'john@example.com'
-                    ]
+                        ]
+                    ], $emailData)
                 ],
                 'phones' => [
-                    [
+                    array_merge([
                         'type' => [
                             'id' => $phoneType->id
-                        ],
-                        'info' => '+1234567890'
-                    ]
+                        ]
+                    ], $phoneData)
                 ],
                 'messengers' => [
-                    [
-                        'messenger_type_id' => $messengerType->id,
-                        'info' => 'johndoe'
-                    ]
+                    array_merge([
+                        'messenger_type_id' => $messengerType->id
+                    ], $messengerData)
                 ],
                 'social_medias' => []
             ]);
@@ -166,33 +172,29 @@ class TalentControllerTest extends TestCase
 
         // Skip relatives check since we're not creating any
 
-        $this->assertDatabaseHas('addresses', [
+        $this->assertDatabaseHas('addresses', array_merge([
             'addressable_id' => $talent->id,
             'addressable_type' => 'talent',
             'communication_type_id' => $addressType->id,
-            'info' => '123 Main St, City, State'
-        ]);
+        ], $addressData));
 
-        $this->assertDatabaseHas('emails', [
+        $this->assertDatabaseHas('emails', array_merge([
             'emailable_id' => $talent->id,
             'emailable_type' => 'talent',
             'communication_type_id' => $emailType->id,
-            'info' => 'john@example.com'
-        ]);
+        ], $emailData));
 
-        $this->assertDatabaseHas('phones', [
+        $this->assertDatabaseHas('phones', array_merge([
             'phoneable_id' => $talent->id,
             'phoneable_type' => 'talent',
             'communication_type_id' => $phoneType->id,
-            'info' => '+1234567890'
-        ]);
+        ], $phoneData));
 
-        $this->assertDatabaseHas('messengers', [
+        $this->assertDatabaseHas('messengers', array_merge([
             'messengerable_id' => $talent->id,
             'messengerable_type' => 'talent',
             'messenger_type_id' => $messengerType->id,
-            'info' => 'johndoe'
-        ]);
+        ], $messengerData));
 
         // Skip social medias check since we're not creating any
     }
