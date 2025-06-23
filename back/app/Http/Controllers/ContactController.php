@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
-use App\Http\Requests\ContactRequest;
-use App\Http\Resources\ContactCollection;
-use function App\Helpers\sync_morph_many;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Requests\ContactRequest;
+use App\Http\Resources\ContactCollection;
+use App\Models\Contact;
+
+use function App\Helpers\sync_belongs_to_many;
+use function App\Helpers\sync_morph_many;
 
 class ContactController extends Controller
 {
@@ -89,14 +91,7 @@ class ContactController extends Controller
         DB::transaction(function () use ($contact, $validated) {
             $contact->update($validated);
 
-            //COMPANIES & JOB TITLES START
-            $companies = array();
-            foreach (collect($validated['companies'] ?? []) as $company) {
-                $companies[$company['id']] = ['job_title' => $company['job_title']];
-            }
-            $contact->companies()->sync($companies);
-            //COMPANIES & JOB TITLES END
-
+            sync_belongs_to_many($contact->companies(), $validated['companies'] ?? [], ['job_title']);
             sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
             sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
@@ -115,14 +110,7 @@ class ContactController extends Controller
             $contact->team_id = Auth::user()->team_id;
             $contact->save();
 
-            //COMPANIES & JOB TITLES START
-            $companies = array();
-            foreach (collect($validated['companies'] ?? []) as $company) {
-                $companies[$company['id']] = ['job_title' => $company['job_title']];
-            }
-            $contact->companies()->sync($companies);
-            //COMPANIES & JOB TITLES END
-
+            sync_belongs_to_many($contact->companies(), $validated['companies'] ?? [], ['job_title']);
             sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
             sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);

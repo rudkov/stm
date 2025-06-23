@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,8 +12,8 @@ use App\Http\Resources\TalentCollection;
 use App\Models\Talent;
 use App\Queries\TalentQuery;
 
-use function App\Helpers\sync_morph_many;
 use function App\Helpers\sync_has_many;
+use function App\Helpers\sync_morph_many;
 
 class TalentController extends Controller
 {
@@ -30,6 +29,8 @@ class TalentController extends Controller
 
     public function search($request = null)
     {
+        $this->authorize('viewAny', Talent::class);
+        
         $filters = [];
         if ($request instanceof TalentSearchRequest) {
             $filters = $request->validated();
@@ -143,6 +144,8 @@ class TalentController extends Controller
 
     public function locations()
     {
+        $this->authorize('viewAny', Talent::class);
+        
         $uniqueLocations = DB::table('talents')
             ->select('location')
             ->where('team_id', Auth::user()->team_id)
@@ -155,6 +158,8 @@ class TalentController extends Controller
 
     public function managers()
     {
+        $this->authorize('viewAny', Talent::class);
+        
         $uniqueManagers = DB::table('talents')
             ->leftJoin('users', 'talents.manager_id', '=', 'users.id')
             ->where('talents.team_id', Auth::user()->team_id)

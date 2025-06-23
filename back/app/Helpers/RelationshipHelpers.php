@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -17,6 +18,64 @@ function freshRelationQuery(HasMany $relation)
 {
     return $relation->getModel()->newQuery()
         ->where($relation->getForeignKeyName(), $relation->getParent()->getKey());
+}
+
+/**
+ * Synchronizes a BelongsToMany relationship with given items and pivot data
+ * 
+ * Updates the relationship while preserving pivot data from the input array
+ * Supports field mapping for pivot data to handle different input structures
+ * 
+ * @param BelongsToMany $relation The BelongsToMany relationship to sync
+ * @param array $items Array of items to sync
+ * @param array $pivotFields Array of pivot fields to process. Supports two formats:
+ *                          - Direct: ['field_name'] - treated as 'field_name' => 'field_name'
+ *                          - Mapping: ['pivot_field' => 'input.path'] - maps nested input to pivot field
+ *                          - Mixed: ['pivot_field' => 'input.path', 'direct_field']
+ * @param string $keyField The field name in items that contains the related model ID (default: 'id')
+ */
+function sync_belongs_to_many(BelongsToMany $relation, array $items, array $pivotFields = [], string $keyField = 'id')
+{
+    // Normalize pivot fields array to handle both formats
+    $pivotMapping = [];
+    foreach ($pivotFields as $key => $value) {
+        if (is_numeric($key)) {
+            // Direct field: ['field_name'] -> 'field_name' => 'field_name'
+            $pivotMapping[$value] = $value;
+        } else {
+            // Mapping: ['pivot_field' => 'input.path']
+            $pivotMapping[$key] = $value;
+        }
+    }
+
+    // Build sync data array
+    $syncData = [];
+
+    foreach ($items as $item) {
+        if (empty($item[$keyField])) {
+            continue; // Skip items without the key field
+        }
+
+        $itemId = $item[$keyField];
+        $pivotData = [];
+
+        // Extract pivot data using the mapping configuration
+        foreach ($pivotMapping as $pivotField => $inputPath) {
+            // Use a sentinel value to check if the path exists in the input
+            $sentinel = new \stdClass();
+            $value = data_get($item, $inputPath, $sentinel);
+
+            // Only include the field if the path exists in the input (even if value is null)
+            if ($value !== $sentinel) {
+                $pivotData[$pivotField] = $value;
+            }
+        }
+
+        $syncData[$itemId] = $pivotData;
+    }
+
+    // Sync the relationship
+    $relation->sync($syncData);
 }
 
 /**
