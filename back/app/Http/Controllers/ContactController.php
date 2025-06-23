@@ -97,9 +97,9 @@ class ContactController extends Controller
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id', 'info']);
-            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id', 'info']);
+            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
         });
 
         return $this->show($contact);
@@ -111,10 +111,8 @@ class ContactController extends Controller
         $validated = $request->validated();
 
         DB::transaction(function () use ($contact, $validated) {
-            $user = Auth::user();
-
             $contact->fill($validated);
-            $contact->team_id = $user->team->id;
+            $contact->team_id = Auth::user()->team_id;
             $contact->save();
 
             //COMPANIES & JOB TITLES START
@@ -125,9 +123,9 @@ class ContactController extends Controller
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id', 'info']);
-            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id', 'info']);
+            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
         });
 
         return $this->show($contact);
