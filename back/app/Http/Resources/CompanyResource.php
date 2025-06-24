@@ -29,8 +29,8 @@ class CompanyResource extends JsonResource
                     ];
                 });
             }),
-            'created_by' => UserResource::basic($this->whenLoaded('createdBy')),
-            'updated_by' => UserResource::basic($this->whenLoaded('updatedBy')),
+            'created_by' => UserBasicResource::make($this->whenLoaded('createdBy')),
+            'updated_by' => UserBasicResource::make($this->whenLoaded('updatedBy')),
         ];
     }
 }

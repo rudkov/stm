@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\UserBasicResource;
 use App\Models\User;
 use PHPUnit\Framework\TestCase;
 
-class UserResourceTest extends TestCase
+class UserBasicResourceTest extends TestCase
 {
     public function test_basic_returns_correct_user_data_structure()
     {
@@ -16,7 +16,7 @@ class UserResourceTest extends TestCase
             public $name = 'John Doe';
         };
 
-        $result = UserResource::basic($user);
+        $result = UserBasicResource::make($user);
 
         $this->assertEquals([
             'id' => 123,
@@ -31,7 +31,7 @@ class UserResourceTest extends TestCase
         $user->id = 456;
         $user->name = 'Jane Smith';
 
-        $result = UserResource::basic($user);
+        $result = UserBasicResource::make($user);
 
         $this->assertEquals([
             'id' => 456,
