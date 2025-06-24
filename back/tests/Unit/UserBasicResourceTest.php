@@ -2,9 +2,11 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Http\Request;
+use Tests\TestCase;
+
 use App\Http\Resources\UserBasicResource;
 use App\Models\User;
-use PHPUnit\Framework\TestCase;
 
 class UserBasicResourceTest extends TestCase
 {
@@ -16,7 +18,8 @@ class UserBasicResourceTest extends TestCase
             public $name = 'John Doe';
         };
 
-        $result = UserBasicResource::make($user);
+        $resource = UserBasicResource::make($user);
+        $result = $resource->toArray(new Request());
 
         $this->assertEquals([
             'id' => 123,
@@ -31,7 +34,8 @@ class UserBasicResourceTest extends TestCase
         $user->id = 456;
         $user->name = 'Jane Smith';
 
-        $result = UserBasicResource::make($user);
+        $resource = UserBasicResource::make($user);
+        $result = $resource->toArray(new Request());
 
         $this->assertEquals([
             'id' => 456,
