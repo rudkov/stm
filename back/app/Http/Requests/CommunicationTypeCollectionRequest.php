@@ -16,6 +16,7 @@ class CommunicationTypeCollectionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
+        $teamId = Auth::user()->team_id;
 
         foreach (CommunicationTypeHelper::getTypes() as $type) {
             $rules[$type] = 'sometimes|array|nullable';
@@ -23,7 +24,7 @@ class CommunicationTypeCollectionRequest extends FormRequest
                 'sometimes',
                 'integer',
                 Rule::exists(CommunicationType::class, 'id')
-                    ->where('team_id', Auth::user()->team_id)
+                    ->where('team_id', $teamId)
                     ->where('type', $type),
             ];
             $rules["{$type}.*.name"] = 'required|string|max:255';
