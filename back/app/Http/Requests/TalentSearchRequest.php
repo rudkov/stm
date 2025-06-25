@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 use App\Models\TalentBoard;
 use App\Models\TalentCupSize;
@@ -41,29 +42,29 @@ class TalentSearchRequest extends FormRequest
 
             // Array filters
             'board' => 'nullable|array',
-            'board.*' => 'exists:' . TalentBoard::class . ',id',
+            'board.*' => Rule::exists(TalentBoard::class, 'id'),
             'cupSize' => 'nullable|array',
-            'cupSize.*' => 'exists:' . TalentCupSize::class . ',id',
+            'cupSize.*' => Rule::exists(TalentCupSize::class, 'id'),
             'dressSize' => 'nullable|array',
-            'dressSize.*' => 'exists:' . TalentDressSize::class . ',id',
+            'dressSize.*' => Rule::exists(TalentDressSize::class, 'id'),
             'eyeColor' => 'nullable|array',
-            'eyeColor.*' => 'exists:' . TalentEyeColor::class . ',id',
+            'eyeColor.*' => Rule::exists(TalentEyeColor::class, 'id'),
             'genders' => 'nullable|array',
-            'genders.*' => 'exists:' . TalentGender::class . ',id',
+            'genders.*' => Rule::exists(TalentGender::class, 'id'),
             'hairColor' => 'nullable|array',
-            'hairColor.*' => 'exists:' . TalentHairColor::class . ',id',
+            'hairColor.*' => Rule::exists(TalentHairColor::class, 'id'),
             'hairLength' => 'nullable|array',
-            'hairLength.*' => 'exists:' . TalentHairLength::class . ',id',
+            'hairLength.*' => Rule::exists(TalentHairLength::class, 'id'),
             'managers' => 'nullable|array',
-            'managers.*' => 'exists:' . User::class . ',id',
+            'managers.*' => Rule::exists(User::class, 'id'),
             'shirtSize' => 'nullable|array',
-            'shirtSize.*' => 'exists:' . TalentShirtSize::class . ',id',
+            'shirtSize.*' => Rule::exists(TalentShirtSize::class, 'id'),
             'shoeSize' => 'nullable|array',
-            'shoeSize.*' => 'exists:' . TalentShoeSize::class . ',id',
+            'shoeSize.*' => Rule::exists(TalentShoeSize::class, 'id'),
             'skinColor' => 'nullable|array',
-            'skinColor.*' => 'exists:' . TalentSkinColor::class . ',id',
+            'skinColor.*' => Rule::exists(TalentSkinColor::class, 'id'),
             'suitCut' => 'nullable|array',
-            'suitCut.*' => 'exists:' . TalentSuitCut::class . ',id',
+            'suitCut.*' => Rule::exists(TalentSuitCut::class, 'id'),
         ];
     }
 }

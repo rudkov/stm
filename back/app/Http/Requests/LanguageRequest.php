@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+use App\Models\Language;
 
 class LanguageRequest extends FormRequest
 {
@@ -14,7 +17,7 @@ class LanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:languages,id',
+            'id' => ['required', Rule::exists(Language::class, 'id')],
         ];
     }
 }

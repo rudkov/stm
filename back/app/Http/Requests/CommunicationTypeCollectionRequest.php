@@ -5,7 +5,11 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+
 use App\Helpers\CommunicationTypeHelper;
+
+use App\Models\CommunicationType;
+
 
 class CommunicationTypeCollectionRequest extends FormRequest
 {
@@ -22,7 +26,7 @@ class CommunicationTypeCollectionRequest extends FormRequest
             $rules["{$type}.*.id"] = [
                 'sometimes',
                 'integer',
-                Rule::exists('communication_types', 'id')
+                Rule::exists(CommunicationType::class, 'id')
                     ->where('team_id', Auth::user()->team_id)
                     ->where('type', $type),
             ];
