@@ -10,7 +10,7 @@ use App\Models\Email;
 
 class EmailRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => ['sometimes', Rule::exists(Email::class, 'id')],

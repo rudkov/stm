@@ -21,10 +21,7 @@ use App\Models\User;
 class TalentSearchRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
      * These rules match exactly what the frontend sends via transformFilters()
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

@@ -10,7 +10,7 @@ use App\Models\Phone;
 
 class PhoneRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => ['sometimes', Rule::exists(Phone::class, 'id')],

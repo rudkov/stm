@@ -10,12 +10,7 @@ use App\Models\SocialMediaType;
 
 class SocialMediaRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => ['sometimes', Rule::exists(SocialMedia::class, 'id')],

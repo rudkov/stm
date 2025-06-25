@@ -10,12 +10,7 @@ use App\Models\MessengerType;
 
 class MessengerRequest extends FormRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => ['sometimes', Rule::exists(Messenger::class, 'id')],

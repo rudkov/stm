@@ -10,7 +10,7 @@ use App\Models\CommunicationType;
 
 class AddressRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => ['sometimes', Rule::exists(Address::class, 'id')],

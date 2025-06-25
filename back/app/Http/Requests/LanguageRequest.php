@@ -9,11 +9,6 @@ use App\Models\Language;
 
 class LanguageRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [

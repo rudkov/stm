@@ -13,10 +13,6 @@ use App\Models\CommunicationType;
 
 class CommunicationTypeCollectionRequest extends FormRequest
 {
-
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         $rules = [];
@@ -36,9 +32,6 @@ class CommunicationTypeCollectionRequest extends FormRequest
         return $rules;
     }
 
-    /**
-     * Configure the validator instance.
-     */
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
