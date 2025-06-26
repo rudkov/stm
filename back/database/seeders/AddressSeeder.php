@@ -24,7 +24,7 @@ class AddressSeeder extends Seeder
 
             foreach ($randomAddressTypes as $randomAddressType) {
                 $talent->addresses()->create([
-                    'info' => fake()->sentence(6),
+                    'info' => fake()->address,
                     'address_type_id' => $randomAddressType->id,
                     'addressable_type' => $talent::class,
                     'addressable_id' => $talent->id,
