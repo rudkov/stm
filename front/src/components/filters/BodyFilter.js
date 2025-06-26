@@ -17,12 +17,22 @@ function BodyFilter(props) {
     const [isApplied, setIsApplied] = useState(false);
 
     const initForm = useCallback((values) => {
+        const getRangeValue = (key) => {
+          const value = values[key];
+          const { min, max } = settings.talent_body[key];
+        
+          if (Array.isArray(value)) {
+            return value.length === 0 ? [min, max] : value;
+          }
+        
+          return value ?? [min, max];
+        };
         const formValues = {
-            bust: Array.isArray(values.bust) && values.bust.length === 0 ? [settings.talent_body.bust.min, settings.talent_body.bust.max] : (values.bust ?? [settings.talent_body.bust.min, settings.talent_body.bust.max]),
-            height: Array.isArray(values.height) && values.height.length === 0 ? [settings.talent_body.height.min, settings.talent_body.height.max] : (values.height ?? [settings.talent_body.height.min, settings.talent_body.height.max]),
-            hips: Array.isArray(values.hips) && values.hips.length === 0 ? [settings.talent_body.hips.min, settings.talent_body.hips.max] : (values.hips ?? [settings.talent_body.hips.min, settings.talent_body.hips.max]),
-            waist: Array.isArray(values.waist) && values.waist.length === 0 ? [settings.talent_body.waist.min, settings.talent_body.waist.max] : (values.waist ?? [settings.talent_body.waist.min, settings.talent_body.waist.max]),
-            weight: Array.isArray(values.weight) && values.weight.length === 0 ? [settings.talent_body.weight.min, settings.talent_body.weight.max] : (values.weight ?? [settings.talent_body.weight.min, settings.talent_body.weight.max]),
+            bust: getRangeValue('bust'),
+            height: getRangeValue('height'),
+            hips: getRangeValue('hips'),
+            waist: getRangeValue('waist'),
+            weight: getRangeValue('weight'),
 
             cupSize: values.cupSize ?? [],
             dressSize: values.dressSize ?? [],
