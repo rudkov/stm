@@ -9,8 +9,7 @@ use App\Http\Requests\ContactRequest;
 use App\Http\Resources\ContactCollection;
 use App\Models\Contact;
 
-use function App\Helpers\sync_belongs_to_many;
-use function App\Helpers\sync_morph_many;
+use function App\Helpers\sync_relation;
 
 class ContactController extends Controller
 {
@@ -91,10 +90,10 @@ class ContactController extends Controller
         DB::transaction(function () use ($contact, $validated) {
             $contact->update($validated);
 
-            sync_belongs_to_many($contact->companies(), $validated['companies'] ?? [], ['job_title']);
-            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
+            sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
         });
 
         return $this->show($contact);
@@ -110,10 +109,10 @@ class ContactController extends Controller
             $contact->team_id = Auth::user()->team_id;
             $contact->save();
 
-            sync_belongs_to_many($contact->companies(), $validated['companies'] ?? [], ['job_title']);
-            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
+            sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
         });
 
         return $this->show($contact);

@@ -12,8 +12,7 @@ use App\Http\Resources\TalentCollection;
 use App\Models\Talent;
 use App\Queries\TalentQuery;
 
-use function App\Helpers\sync_has_many;
-use function App\Helpers\sync_morph_many;
+use function App\Helpers\sync_relation;
 
 class TalentController extends Controller
 {
@@ -30,7 +29,7 @@ class TalentController extends Controller
     public function search($request = null)
     {
         $this->authorize('viewAny', Talent::class);
-        
+
         $filters = [];
         if ($request instanceof TalentSearchRequest) {
             $filters = $request->validated();
@@ -87,13 +86,12 @@ class TalentController extends Controller
             $talent->citizenships()->sync($validated['citizenships'] ?? []);
             $talent->languages()->sync($validated['languages'] ?? []);
 
-            sync_has_many($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
-
-            sync_morph_many($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-            sync_morph_many($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
+            sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
         });
 
         return $this->show($talent);
@@ -112,13 +110,12 @@ class TalentController extends Controller
             $talent->citizenships()->sync($validated['citizenships'] ?? []);
             $talent->languages()->sync($validated['languages'] ?? []);
 
-            sync_has_many($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
-
-            sync_morph_many($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-            sync_morph_many($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_morph_many($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
+            sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
         });
 
         return $this->show($talent);
@@ -145,7 +142,7 @@ class TalentController extends Controller
     public function locations()
     {
         $this->authorize('viewAny', Talent::class);
-        
+
         $uniqueLocations = DB::table('talents')
             ->select('location')
             ->where('team_id', Auth::user()->team_id)
@@ -159,7 +156,7 @@ class TalentController extends Controller
     public function managers()
     {
         $this->authorize('viewAny', Talent::class);
-        
+
         $uniqueManagers = DB::table('talents')
             ->leftJoin('users', 'talents.manager_id', '=', 'users.id')
             ->where('talents.team_id', Auth::user()->team_id)

@@ -7,57 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
- * Synchronizes a BelongsToMany relationship with given items and pivot data
- * 
- * Updates the relationship while preserving pivot data from the input array
- * Supports field mapping for pivot data to handle different input structures
- * 
- * @param BelongsToMany $relation The BelongsToMany relationship to sync
- * @param array $items Array of items to sync
- * @param array $pivotFields Array of pivot fields to process. Supports two formats:
- *                          - Direct: ['field_name'] - treated as 'field_name' => 'field_name'
- *                          - Mapping: ['pivot_field' => 'input.path'] - maps nested input to pivot field
- *                          - Mixed: ['pivot_field' => 'input.path', 'direct_field']
- * @param string $keyField The field name in items that contains the related model ID (default: 'id')
- */
-function sync_belongs_to_many(BelongsToMany $relation, array $items, array $pivotFields = [], string $keyField = 'id')
-{
-    sync_relation($relation, $items, $pivotFields, ['keyField' => $keyField]);
-}
-
-/**
- * Synchronizes a HasMany relationship with given items
- * 
- * Updates existing records, creates new ones, and removes records not present in the input array
- * 
- * @param HasMany $relation The HasMany relationship to sync
- * @param array $items Array of items to sync
- * @param array $fillable Array of fields that can be filled
- */
-function sync_has_many(HasMany $relation, array $items, array $fillable = [])
-{
-    sync_relation($relation, $items, $fillable);
-}
-
-/**
- * Synchronizes a MorphMany relationship with given items
- * 
- * Updates existing records, creates new ones, and removes records not present in the input array
- * Supports both direct field access and field mapping from nested structures
- * 
- * @param MorphMany $relation The MorphMany relationship to sync
- * @param array $items Array of items to sync
- * @param array $fields Array of fields to process. Supports two formats:
- *                     - Direct: ['field_name'] - treated as 'field_name' => 'field_name'
- *                     - Mapping: ['db_field' => 'input.path'] - maps nested input to db field
- *                     - Mixed: ['db_field' => 'input.path', 'direct_field']
- */
-function sync_morph_many(MorphMany $relation, array $items, array $fields = [])
-{
-    sync_relation($relation, $items, $fields);
-}
-
-/**
  * Normalizes an array of fields/pivot values so that both direct keys and key=>path
  * mapping are represented uniformly as ['db_field' => 'input.path'].
  *
@@ -181,7 +130,7 @@ function sync_relation($relation, array $items, array $fields = [], array $optio
         return;
     }
 
-    // Pre-calculate helpers for HasMany and MorphMany (now share identical logic)
+    // Pre-calculate helpers for HasMany and MorphMany
     if ($relation instanceof HasMany || $relation instanceof MorphMany) {
         $transform  = static function (array $item) use ($mapping): array {
             return extractMappedValues($mapping, $item);
