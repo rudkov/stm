@@ -16,6 +16,7 @@ use App\Models\Talent;
 use App\Models\TalentBoard;
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Weblink;
 
 use App\Services\TeamInitializationService;
 
@@ -58,6 +59,7 @@ class TalentControllerTest extends TestCase
                 'messengers' => [],
                 'phones' => [],
                 'social_medias' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(422)
@@ -78,6 +80,7 @@ class TalentControllerTest extends TestCase
                 'messengers' => [],
                 'phones' => [],
                 'social_medias' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(201)
@@ -110,6 +113,7 @@ class TalentControllerTest extends TestCase
         $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->only(['info']);
         $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->only(['info']);
         $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->only(['info']);
+        $weblinkData = Weblink::factory()->make()->only(['info']);
 
         $response = $this->actingAs($this->user)
             ->postJson(route('talents.store'), [
@@ -152,7 +156,8 @@ class TalentControllerTest extends TestCase
                         'messenger_type_id' => $messengerType->id
                     ], $messengerData)
                 ],
-                'social_medias' => []
+                'social_medias' => [],
+                'weblinks' => [$weblinkData],
             ]);
 
         $response->assertStatus(201)
@@ -196,6 +201,11 @@ class TalentControllerTest extends TestCase
             'messenger_type_id' => $messengerType->id,
         ], $messengerData));
 
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $talent->id,
+            'weblinkable_type' => 'talent',
+        ], $weblinkData));
+
         // Skip social medias check since we're not creating any
     }
 
@@ -212,6 +222,7 @@ class TalentControllerTest extends TestCase
             'messengers' => [],
             'phones' => [],
             'social_medias' => [],
+            'weblinks' => [],
         ]);
 
         $response->assertStatus(401);
@@ -262,6 +273,7 @@ class TalentControllerTest extends TestCase
                 'messengers' => [],
                 'phones' => [],
                 'social_medias' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(200)
@@ -300,6 +312,7 @@ class TalentControllerTest extends TestCase
                 'messengers' => [],
                 'phones' => [],
                 'social_medias' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(200);
@@ -330,6 +343,7 @@ class TalentControllerTest extends TestCase
                 'messengers' => [],
                 'phones' => [],
                 'social_medias' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(403); // Forbidden

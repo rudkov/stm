@@ -14,6 +14,7 @@ use App\Models\MessengerType;
 use App\Models\Phone;
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Weblink;
 
 class ContactControllerTest extends TestCase
 {
@@ -78,6 +79,7 @@ class ContactControllerTest extends TestCase
         $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->toArray();
         $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->toArray();
         $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->toArray();
+        $weblinkData = Weblink::factory()->make()->only(['info']);
 
         $response = $this->actingAs($this->user)
             ->postJson(route('contacts.store'), [
@@ -111,7 +113,8 @@ class ContactControllerTest extends TestCase
                         'messenger_type_id' => $messengerData['messenger_type_id'],
                         'info' => $messengerData['info']
                     ]
-                ]
+                ],
+                'weblinks' => [$weblinkData]
             ]);
 
         $response->assertStatus(201)
@@ -155,6 +158,12 @@ class ContactControllerTest extends TestCase
             'messenger_type_id' => $messengerData['messenger_type_id'],
             'info' => $messengerData['info']
         ]);
+
+        // Check weblink was created
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $weblinkData));
     }
 
     public function test_unauthorized_user_cannot_create_contact()
@@ -187,6 +196,7 @@ class ContactControllerTest extends TestCase
                 'phones' => [],
                 'emails' => [],
                 'messengers' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(200)
@@ -232,6 +242,7 @@ class ContactControllerTest extends TestCase
                 'phones' => [],
                 'emails' => [],
                 'messengers' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(200);
@@ -691,6 +702,7 @@ class ContactControllerTest extends TestCase
         $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->only(['communication_type_id', 'info']);
         $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->only(['communication_type_id', 'info']);
         $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->only(['messenger_type_id', 'info']);
+        $weblinkData = Weblink::factory()->make()->only(['info']);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
@@ -720,6 +732,7 @@ class ContactControllerTest extends TestCase
                     ]
                 ],
                 'messengers' => [$messengerData],
+                'weblinks' => [$weblinkData]
             ]);
 
         $response->assertStatus(200)
@@ -762,6 +775,12 @@ class ContactControllerTest extends TestCase
             'messengerable_type' => 'contact',
         ], $messengerData));
 
+        // Check weblink was created
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $weblinkData));
+
         // Check updated_by was set correctly
         $this->assertEquals($this->user->id, $contact->fresh()->updated_by);
     }
@@ -791,9 +810,220 @@ class ContactControllerTest extends TestCase
                 'companies' => [],
                 'phones' => [],
                 'messengers' => [],
+                'weblinks' => [],
             ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['emails']);
+    }
+
+    public function test_store_contact_with_weblinks()
+    {
+        $weblinkData = Weblink::factory()->make()->only(['info']);
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('contacts.store'), [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [$weblinkData]
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+            ]);
+
+        // Check contact was created
+        $contact = Contact::where('first_name', 'John')->where('last_name', 'Doe')->first();
+        $this->assertNotNull($contact);
+
+        // Check weblink was created
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $weblinkData));
+    }
+
+    public function test_update_contact_weblinks()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        // Create initial weblinks using factory
+        $existingWeblink1 = Weblink::factory()->create([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ]);
+
+        $existingWeblink2 = Weblink::factory()->create([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ]);
+
+        // Generate new weblink data using factory
+        $newWeblinkData = Weblink::factory()->make()->only(['info']);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [
+                    [
+                        'id' => $existingWeblink1->id,
+                        'info' => 'https://updated-website.com'
+                    ],
+                    $newWeblinkData
+                ]
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check first weblink was updated
+        $this->assertDatabaseHas('weblinks', [
+            'id' => $existingWeblink1->id,
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+            'info' => 'https://updated-website.com'
+        ]);
+
+        // Check second weblink was deleted
+        $this->assertDatabaseMissing('weblinks', [
+            'id' => $existingWeblink2->id
+        ]);
+
+        // Check new weblink was created
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $newWeblinkData));
+
+        // Check total count of weblinks
+        $this->assertEquals(2, $contact->fresh()->weblinks()->count());
+    }
+
+    public function test_delete_contact_weblinks()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        // Create initial weblinks using factory
+        $existingWeblink1 = Weblink::factory()->create([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ]);
+
+        $existingWeblink2 = Weblink::factory()->create([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [], // No weblinks, should delete existing
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check weblinks were deleted
+        $this->assertDatabaseMissing('weblinks', [
+            'id' => $existingWeblink1->id
+        ]);
+
+        $this->assertDatabaseMissing('weblinks', [
+            'id' => $existingWeblink2->id
+        ]);
+
+        // Check total count of weblinks
+        $this->assertEquals(0, $contact->fresh()->weblinks()->count());
+    }
+
+    public function test_update_contact_with_multiple_weblinks()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        // Generate multiple weblink data using factory
+        $weblinkData1 = Weblink::factory()->make()->only(['info']);
+        $weblinkData2 = Weblink::factory()->make()->only(['info']);
+        $weblinkData3 = Weblink::factory()->make()->only(['info']);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [$weblinkData1, $weblinkData2, $weblinkData3]
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check all weblinks were created
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $weblinkData1));
+
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $weblinkData2));
+
+        $this->assertDatabaseHas('weblinks', array_merge([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+        ], $weblinkData3));
+
+        // Check total count of weblinks
+        $this->assertEquals(3, $contact->fresh()->weblinks()->count());
+    }
+
+    public function test_contact_weblinks_relationship_returns_correct_data()
+    {
+        $contact = Contact::factory()->create(['team_id' => $this->team->id]);
+
+        $weblink1 = Weblink::factory()->create([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+            'info' => 'https://website1.com'
+        ]);
+
+        $weblink2 = Weblink::factory()->create([
+            'weblinkable_id' => $contact->id,
+            'weblinkable_type' => 'contact',
+            'info' => 'https://website2.com'
+        ]);
+
+        $weblinks = $contact->weblinks;
+
+        $this->assertCount(2, $weblinks);
+        $this->assertEquals('https://website1.com', $weblinks->find($weblink1->id)->info);
+        $this->assertEquals('https://website2.com', $weblinks->find($weblink2->id)->info);
     }
 }

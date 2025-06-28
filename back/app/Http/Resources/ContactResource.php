@@ -25,6 +25,7 @@ class ContactResource extends JsonResource
             'phones' => PhoneResource::collection($this->whenLoaded('phones')),
             'emails' => EmailResource::collection($this->whenLoaded('emails')),
             'messengers' => MessengerResource::collection($this->whenLoaded('messengers')),
+            'weblinks' => WeblinkResource::collection($this->whenLoaded('weblinks')),
             'created_by' => UserBasicResource::make($this->whenLoaded('createdBy')),
             'updated_by' => UserBasicResource::make($this->whenLoaded('updatedBy')),
         ];
