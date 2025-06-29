@@ -89,6 +89,7 @@ function TalentForm(props) {
                 : [{ social_media_type_id: null, info: '' }],
             emails: values.emails || null,
             messengers: values.messengers || null,
+            weblinks: values.weblinks || null,
 
             hair_color_id: values.hair_color?.id || '',
             hair_length_id: values.hair_length?.id || '',
@@ -193,6 +194,11 @@ function TalentForm(props) {
                 social_media_type_id: socialMedia.social_media_type_id ?? null
             }));
         }
+        if (values.weblinks) {
+            values.weblinks = values.weblinks.map(weblink => ({
+                ...weblink,
+            }));
+        }
 
         values.addresses = cleanCollection(values.addresses, { requiredAny: ['info'] });
         values.emails = cleanCollection(values.emails, { requiredAny: ['info'] });
@@ -200,6 +206,7 @@ function TalentForm(props) {
         values.relatives = cleanCollection(values.relatives, { requiredAny: ['info'] });
         values.messengers = cleanCollection(values.messengers, { requiredAll: ['messenger_type_id', 'info'] });
         values.social_medias = cleanCollection(values.social_medias, { requiredAll: ['social_media_type_id', 'info'] });
+        values.weblinks = cleanCollection(values.weblinks, { requiredAny: ['info'] });
 
         if (isNewTalent) {
             dispatch(createTalent({ values: values }));
@@ -424,7 +431,7 @@ function TalentForm(props) {
                                 <TalentSectionContacts id='contacts' form={form} />
                                 <TalentSectionRegionLanguages id='region-languages' />
                                 <TalentSectionPreferences id='preferences' />
-                                <TalentSectionSocialMedia id='social-media' />
+                                <TalentSectionSocialMedia id='social-media' form={form} />
                                 <TalentSectionAddresses id='addresses' />
                                 <TalentSectionRelatives id='relatives' />
                                 <TalentSectionBiography id='biography' />

@@ -7,7 +7,7 @@ function TalentSectionSocialMedia(props) {
 
     return (
         <NestedSection className={props.className}>
-            <NestedSection.Header>Social Media</NestedSection.Header>
+            <NestedSection.Header>Social Media & Websites</NestedSection.Header>
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     {
@@ -25,6 +25,16 @@ function TalentSectionSocialMedia(props) {
                                             <span className='ellipsis'>{socialMedia.info}</span>
                                         )}
                                     </div>
+                                </div>
+                            );
+                        })
+                    }
+                    {
+                        talent.weblinks?.map((weblink) => {
+                            return (
+                                <div className='nested-section__cell-horizontal' key={`talent.weblink.` + weblink.id}>
+                                    <div className='text-light'>Website</div>
+                                    <div className='ellipsis'>{<a href={weblink.info} target='_blank' rel='noreferrer'>{weblink.info}</a>}</div>
                                 </div>
                             );
                         })
