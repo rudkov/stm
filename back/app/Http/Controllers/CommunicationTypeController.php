@@ -91,9 +91,14 @@ class CommunicationTypeController extends Controller
         // Only for records that will remain (not deleted)
         $remainingIds = array_diff($existingIds, $idsToDelete);
         if (!empty($remainingIds)) {
-            CommunicationType::whereIn('id', $remainingIds)
-                ->update(['weight' => DB::raw('-(weight + 1)'),
-                          'name' => DB::raw("CONCAT('temp_name_', id, '_', UNIX_TIMESTAMP())")]);
+            $timestamp = time();
+            foreach ($remainingIds as $id) {
+                CommunicationType::where('id', $id)
+                    ->update([
+                        'weight' => DB::raw('-(weight + 1)'),
+                        'name' => "temp_name_{$id}_{$timestamp}"
+                    ]);
+            }
         }
 
         // Step 3: Process each item in the request (updates and creates)
