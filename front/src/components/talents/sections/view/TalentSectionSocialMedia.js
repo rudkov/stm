@@ -34,7 +34,7 @@ function TalentSectionSocialMedia(props) {
                             return (
                                 <div className='nested-section__cell-horizontal' key={`talent.weblink.` + weblink.id}>
                                     <div className='text-light'>Website</div>
-                                    <div className='ellipsis'>{<a href={weblink.info} target='_blank' rel='noreferrer'>{weblink.info}</a>}</div>
+                                    <div className='ellipsis'>{<a href={weblink.info} target='_blank' rel='noreferrer'>{weblink.sanitized}</a>}</div>
                                 </div>
                             );
                         })
