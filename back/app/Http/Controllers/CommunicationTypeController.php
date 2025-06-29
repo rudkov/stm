@@ -101,28 +101,26 @@ class CommunicationTypeController extends Controller
             }
         }
 
-        // Step 3: Process each item in the request (updates and creates)
+        // Step 3: Bulk upsert (update existing + create new) based on request data
+        // Build a single records array for upsert to minimize queries
+        $records = [];
         foreach ($typeData as $index => $itemData) {
-            $weight = $index; // Rule 1: Weight based on array index
-
-            if (!empty($itemData['id'])) {
-                // Rule 2: ID exists in request + DB → update name and weight
-                CommunicationType::where('id', $itemData['id'])
-                    ->where('team_id', $teamId)
-                    ->where('type', $type)
-                    ->update([
-                        'name' => $itemData['name'],
-                        'weight' => $weight,
-                    ]);
-            } else {
-                // Rule 4: ID absent in both → create new
-                CommunicationType::create([
-                    'name' => $itemData['name'],
-                    'type' => $type,
-                    'weight' => $weight,
-                    'team_id' => $teamId,
-                ]);
-            }
+            $records[] = [
+                // Provide an explicit id (null for new rows) so that each record has the same set of keys
+                'id'      => $itemData['id'] ?? null,
+                'name'    => $itemData['name'],
+                'type'    => $type,
+                'weight'  => $index, // Rule 1: weight based on array index
+                'team_id' => $teamId,
+            ];
         }
+
+        // Use the model's upsert method to perform insert / update in one statement
+        // The primary key (`id`) determines whether to insert or update.
+        CommunicationType::upsert(
+            $records,
+            ['id'],              // Columns that uniquely identify records
+            ['name', 'weight']   // Columns to be updated on conflict
+        );
     }
 }
