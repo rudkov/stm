@@ -66,6 +66,9 @@ class CommunicationTypeController extends Controller
      */
     private function syncCommunicationTypes(array $typeData, string $type, int $teamId)
     {
+        if (DB::transactionLevel() === 0) {
+            throw new \RuntimeException('This must be called within a DB transaction.');
+        }
         // Get existing IDs for this type and team
         $existingIds = CommunicationType::where('type', $type)
             ->where('team_id', $teamId)
@@ -88,16 +91,9 @@ class CommunicationTypeController extends Controller
         // Only for records that will remain (not deleted)
         $remainingIds = array_diff($existingIds, $idsToDelete);
         if (!empty($remainingIds)) {
-            // Set all remaining weights to negative values to avoid conflicts during reordering
             CommunicationType::whereIn('id', $remainingIds)
-                ->update(['weight' => DB::raw('-(weight + 1)')]);
-
-            // Set temporary unique names for remaining records to avoid name conflicts
-            foreach ($remainingIds as $id) {
-                CommunicationType::where('id', $id)->update([
-                    'name' => 'temp_name_' . $id . '_' . time()
-                ]);
-            }
+                ->update(['weight' => DB::raw('-(weight + 1)'),
+                          'name' => DB::raw("CONCAT('temp_name_', id, '_', UNIX_TIMESTAMP())")]);
         }
 
         // Step 3: Process each item in the request (updates and creates)

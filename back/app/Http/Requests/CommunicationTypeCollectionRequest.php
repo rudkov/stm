@@ -46,16 +46,14 @@ class CommunicationTypeCollectionRequest extends FormRequest
                 }
 
                 $types = $validated[$type];
-                $names = [];
-
+                $seen = [];
+                
                 // Check for duplicate names within the current request
-                foreach ($types as $index => $typeData) {
-                    $name = $typeData['name'];
-
-                    if (in_array($name, $names)) {
+                foreach ($types as $index => ['name' => $name]) {
+                    if (isset($seen[$name])) {
                         $validator->errors()->add("{$type}.{$index}.name", 'Duplicate names are not allowed within the same request.');
                     } else {
-                        $names[] = $name;
+                        $seen[$name] = true;
                     }
                 }
             }
