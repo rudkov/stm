@@ -32,16 +32,14 @@ use App\Models\User;
  * ## PERFORMANCE BENEFITS
  * 
  * Without Caching:
- * - 50 talents = ~750+ database queries (15+ per talent)
- * - 500 talents = ~7,500+ database queries
- * - Linear degradation with scale
+ * - 50 talents = 850 database queries (17 queries/talent)
+ * - 500 talents = 8,500 database queries (17 queries/talent)
  * 
  * With Caching:
- * - 50 talents = ~15 database queries (cache hit after first)
- * - 500 talents = ~15 database queries (same!)
- * - Constant performance regardless of scale
+ * - 50 talents = 66 database queries (1.3 queries/talent)
+ * - 500 talents = 516 database queries (1.03 queries/talent)
  * 
- * Performance Improvement: ~95% reduction in database queries
+ * Performance Improvement: ~92-94% reduction in database queries
  * 
  * ## HOW IT WORKS
  * 
