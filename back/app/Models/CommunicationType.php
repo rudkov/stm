@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Helpers\CommunicationTypeHelper;
 
 class CommunicationType extends Model
 {
@@ -28,6 +27,16 @@ class CommunicationType extends Model
     }
 
     /**
+     * Get the default communication types, specified in the config file.
+     *
+     * @return array
+     */
+    public static function getDefaultTypes(): array
+    {
+        return array_keys(config('defaults.communication_types', []));
+    }
+
+    /**
      * Get all communication types for a team, grouped by type.
      *
      * @param int $teamId
@@ -45,7 +54,7 @@ class CommunicationType extends Model
 
         // Build response using helper to ensure all types are present
         $response = [];
-        foreach (CommunicationTypeHelper::getTypes() as $type) {
+        foreach (self::getDefaultTypes() as $type) {
             $response[$type] = $grouped->get($type, collect());
         }
 

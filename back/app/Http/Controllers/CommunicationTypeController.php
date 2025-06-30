@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-use App\Helpers\CommunicationTypeHelper;
 use App\Http\Requests\CommunicationTypeCollectionRequest;
 use App\Http\Resources\CommunicationTypeResource;
 use App\Models\CommunicationType;
@@ -43,7 +42,7 @@ class CommunicationTypeController extends Controller
 
         DB::transaction(function () use ($validated, $teamId) {
             // Process each type that was provided in the request
-            foreach (CommunicationTypeHelper::getTypes() as $type) {
+            foreach (CommunicationType::getDefaultTypes() as $type) {
                 if (isset($validated[$type])) {
                     // Handle both null and array cases - pass to sync method
                     $typeData = $validated[$type] ?? [];

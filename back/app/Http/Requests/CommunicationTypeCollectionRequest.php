@@ -5,7 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use App\Helpers\CommunicationTypeHelper;
+
+use App\Models\CommunicationType;
 
 class CommunicationTypeCollectionRequest extends FormRequest
 {
@@ -17,7 +18,7 @@ class CommunicationTypeCollectionRequest extends FormRequest
     {
         $rules = [];
 
-        foreach (CommunicationTypeHelper::getTypes() as $type) {
+        foreach (CommunicationType::getDefaultTypes() as $type) {
             $rules[$type] = 'sometimes|array|nullable';
             $rules["{$type}.*.id"] = [
                 'sometimes',
@@ -40,14 +41,14 @@ class CommunicationTypeCollectionRequest extends FormRequest
         $validator->after(function ($validator) {
             $validated = $this->validated();
 
-            foreach (CommunicationTypeHelper::getTypes() as $type) {
+            foreach (CommunicationType::getDefaultTypes() as $type) {
                 if (!isset($validated[$type]) || $validated[$type] === null) {
                     continue;
                 }
 
                 $types = $validated[$type];
                 $seen = [];
-                
+
                 // Check for duplicate names within the current request
                 foreach ($types as $index => ['name' => $name]) {
                     if (isset($seen[$name])) {
