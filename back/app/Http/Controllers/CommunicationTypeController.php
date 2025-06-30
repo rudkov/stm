@@ -89,14 +89,14 @@ class CommunicationTypeController extends Controller
 
         // Step 2: Avoid uniqueness conflicts by temporarily setting negative weights and unique names
         // Only for records that will remain (not deleted)
+        // TODO: Replace foreach with a raw query with CONCAT after migrating tests from SQLite to MySQL
         $remainingIds = array_diff($existingIds, $idsToDelete);
         if (!empty($remainingIds)) {
-            $timestamp = time();
             foreach ($remainingIds as $id) {
                 CommunicationType::where('id', $id)
                     ->update([
                         'weight' => DB::raw('-(weight + 1)'),
-                        'name' => "temp_name_{$id}_{$timestamp}"
+                        'name' => "temp_name_{$id}"
                     ]);
             }
         }
