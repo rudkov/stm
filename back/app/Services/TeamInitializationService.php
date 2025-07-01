@@ -2,50 +2,79 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Team;
 
 class TeamInitializationService
 {
+    private Team $team;
+
+    /**
+     * Initialize the team initialization service.
+     * 
+     * @param Team $team
+     */
+    public function __construct(Team $team)
+    {
+        $this->team = $team;
+    }
+
+    /**
+     * Run the team initialization service.
+     * 
+     * @param Team $team
+     * @return void
+     */
+    public static function run(Team $team)
+    {
+        DB::transaction(function () use ($team) {
+            $initializationService = new TeamInitializationService($team);
+            $initializationService->createDefaultTalentBoards();
+            $initializationService->createDefaultCommunicationTypes();
+        });
+    }
+
     /**
      * Create default talent boards for a team.
      * 
-     * @param Team $team
-     * @param int|null $userId User ID to use as creator (optional)
      * @return void
      */
-    public function createDefaultTalentBoards(Team $team, ?int $userId = null): void
+    public function createDefaultTalentBoards(): void
     {
         $defaultBoards = config('defaults.talent_boards', []);
 
-        foreach ($defaultBoards as $board) {
-            $team->talentBoards()->create([
-                'name' => $board['name'],
-                'created_by' => $userId,
-                'updated_by' => $userId,
-            ]);
-        }
+        DB::transaction(function () use ($defaultBoards) {
+            foreach ($defaultBoards as $board) {
+                $this->team->talentBoards()->create([
+                    'name' => $board['name'],
+                    'created_by' => null,
+                    'updated_by' => null,
+                ]);
+            }
+        });
     }
 
     /**
      * Create default communication types for a team.
      * 
-     * @param Team $team
-     * @param int|null $userId User ID to use as creator (optional)
      * @return void
      */
-    public function createDefaultCommunicationTypes(Team $team): void
+    public function createDefaultCommunicationTypes(): void
     {
         $defaultCommunicationTypes = config('defaults.communication_types', []);
 
-        foreach ($defaultCommunicationTypes as $type => $typeData) {
-            foreach ($typeData as $item) {
-                $team->communicationTypes()->create([
-                    'name' => $item['name'],
-                    'type' => $type,
-                    'weight' => $item['weight'],
-                    'team_id' => $team->id,
-                ]);
+        DB::transaction(function () use ($defaultCommunicationTypes) {
+            foreach ($defaultCommunicationTypes as $type => $typeData) {
+                foreach ($typeData as $item) {
+                    $this->team->communicationTypes()->create([
+                        'name' => $item['name'],
+                        'type' => $type,
+                        'weight' => $item['weight'],
+                        'team_id' => $this->team->id,
+                    ]);
+                }
             }
-        }
+        });
     }
 }

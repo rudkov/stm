@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Team;
+
+use App\Services\TeamInitializationService;
 
 class TeamSeeder extends Seeder
 {
@@ -14,9 +17,12 @@ class TeamSeeder extends Seeder
     public function run(): void
     {
         for ($i = 0; $i < 3; $i++) {
-            Team::create([
-                'name' => fake()->company(),
-            ]);
+            DB::transaction(function () {
+                $team = Team::create([
+                    'name' => fake()->company(),
+                ]);
+                TeamInitializationService::run($team);
+            });
         }
     }
 }

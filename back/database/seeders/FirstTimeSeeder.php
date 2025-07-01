@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Country;
@@ -25,6 +26,8 @@ use App\Models\TalentSkinColor;
 use App\Models\TalentSuitCut;
 use App\Models\MessengerType;
 use App\Models\SocialMediaType;
+
+use App\Services\TeamInitializationService;
 
 class FirstTimeSeeder extends Seeder
 {
@@ -63,7 +66,10 @@ class FirstTimeSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            Team::create($item);
+            DB::transaction(function () use ($item) {
+                $team = Team::create($item);
+                TeamInitializationService::run($team);
+            });
         }
     }
 

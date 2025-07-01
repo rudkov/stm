@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\TeamInitializationService;
 
 class TeamController extends Controller
 {
@@ -20,6 +21,7 @@ class TeamController extends Controller
 
             DB::transaction(function () use ($request, $auth, &$user) {
                 $team = Team::create($request->all());
+                TeamInitializationService::run($team);
 
                 $user = User::where('id', $auth->id)
                     ->firstOrFail();
