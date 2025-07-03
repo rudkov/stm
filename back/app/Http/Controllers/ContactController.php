@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use App\Http\Requests\ContactRequest;
 use App\Http\Resources\ContactCollection;
-use function App\Helpers\sync_has_many;
+use function App\Helpers\sync_morph_many;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -97,9 +97,9 @@ class ContactController extends Controller
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            sync_has_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
-            sync_has_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
-            sync_has_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
+            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
 
         return $this->show($contact);
@@ -125,9 +125,9 @@ class ContactController extends Controller
             $contact->companies()->sync($companies);
             //COMPANIES & JOB TITLES END
 
-            sync_has_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
-            sync_has_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
-            sync_has_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_morph_many($contact->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
+            sync_morph_many($contact->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_morph_many($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
         });
 
         return $this->show($contact);
