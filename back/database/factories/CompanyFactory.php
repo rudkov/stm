@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\Company;
-use App\Models\Team;
 use App\Models\User;
 
 class CompanyFactory extends Factory
@@ -15,7 +14,7 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         $users = User::all()->groupBy('team_id');
-        $team_id = Team::all()->random()->id;
+        $team_id = $users->keys()->random();
         
         return [
             'name' => $this->faker->company(),

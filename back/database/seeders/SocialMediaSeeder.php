@@ -1,31 +1,33 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Seeder;
 
-use App\Models\Talent;
 use App\Models\SocialMediaType;
 
-class TalentSocialMediaFactory extends Factory
-{
-    public function definition()
-    {
-        return [];
-    }
+use App\Models\Talent;
 
-    public function run()
+class SocialMediaSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        $talents = Talent::all();
         $socialMediaTypes = SocialMediaType::all();
+
+        $talents = Talent::all();
 
         foreach ($talents as $talent) {
             $randomSocialMediaTypes = $socialMediaTypes->random(rand(1, count($socialMediaTypes)));
 
             foreach ($randomSocialMediaTypes as $randomSocialMediaType) {
                 $talent->socialMedias()->create([
-                    'info' => $this->faker->userName,
+                    'info' => fake()->userName,
                     'social_media_type_id' => $randomSocialMediaType->id,
+                    'social_mediaable_type' => $talent::class,
+                    'social_mediaable_id' => $talent->id,
                 ]);
             }
         }

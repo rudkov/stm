@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Company;
 use App\Models\Event;
 use App\Models\EventType;
-use App\Models\Team;
 use App\Models\User;
 
 class EventFactory extends Factory
@@ -17,7 +16,7 @@ class EventFactory extends Factory
     public function definition()
     {
         $users = User::all()->groupBy('team_id');
-        $team_id = Team::all()->random()->id;
+        $team_id = $users->keys()->random();
 
         return [
             'title' => $this->faker->sentence(6),
