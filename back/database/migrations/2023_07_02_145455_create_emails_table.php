@@ -17,9 +17,6 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
-            $table->unsignedBigInteger('email_type_id')->nullable();
-            $table->foreign('email_type_id')->references('id')->on('email_types');
-
             $table->uuidMorphs('emailable');
         });
     }
@@ -31,9 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('emails', function (Blueprint $table) {
-            $table->dropForeign('emails_email_type_id_foreign');
-        });
         Schema::dropIfExists('emails');
     }
 };

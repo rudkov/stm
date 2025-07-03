@@ -82,10 +82,10 @@ class TalentController extends Controller
 
             sync_has_many($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
 
-            sync_morph_many($talent->addresses(), $validated['addresses'] ?? [], ['address_type_id', 'info']);
-            sync_morph_many($talent->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_morph_many($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_morph_many($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-            sync_morph_many($talent->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
+            sync_morph_many($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
         });
 
@@ -107,10 +107,10 @@ class TalentController extends Controller
 
             sync_has_many($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
 
-            sync_morph_many($talent->addresses(), $validated['addresses'] ?? [], ['address_type_id', 'info']);
-            sync_morph_many($talent->emails(), $validated['emails'] ?? [], ['email_type_id', 'info']);
+            sync_morph_many($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_morph_many($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-            sync_morph_many($talent->phones(), $validated['phones'] ?? [], ['phone_type_id', 'info']);
+            sync_morph_many($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_morph_many($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
         });
 

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PhoneResource extends JsonResource
+class CommunicationTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,7 @@ class PhoneResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'info' => $this->info,
-            'type' => $this->whenLoaded('type', fn() => new CommunicationTypeResource($this->type)),
+            'name' => $this->name,
         ];
     }
 }

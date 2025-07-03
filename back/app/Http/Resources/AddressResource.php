@@ -17,14 +17,7 @@ class AddressResource extends JsonResource
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'address_type_id' => $this->address_type_id,
-            'type' => $this->whenLoaded('type', function ($type) {
-                return [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                    'system_name' => $type->system_name,
-                ];
-            }),
+            'type' => $this->whenLoaded('type', fn() => new CommunicationTypeResource($this->type)),
         ];
     }
 }

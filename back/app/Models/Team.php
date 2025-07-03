@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use App\Models\TalentBoard;
+use App\Models\CommunicationType;
 
 class Team extends Model
 {
@@ -24,53 +23,18 @@ class Team extends Model
         'name',
     ];
 
-    /**
-     * Create a new team with default talent boards in a transaction.
-     * 
-     * @param array $attributes
-     * @return static
-     */
-    public static function create(array $attributes = [])
+    public function communicationTypes()
     {
-        return DB::transaction(function () use ($attributes) {
-            // Use query builder to avoid recursion
-            $teamId = DB::table('teams')->insertGetId(array_merge($attributes, [
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]));
-
-            $team = static::find($teamId);
-            $team->createDefaultTalentBoards(Auth::id());
-            return $team;
-        });
-    }
-
-    /**
-     * Create default talent boards for this team.
-     * 
-     * @param int|null $userId User ID to use as creator (optional)
-     * @return void
-     */
-    public function createDefaultTalentBoards(?int $userId = null): void
-    {
-        $defaultBoards = config('defaults.talent_boards', []);
-
-        foreach ($defaultBoards as $board) {
-            $this->talentBoards()->create([
-                'name' => $board['name'],
-                'created_by' => $userId,
-                'updated_by' => $userId,
-            ]);
-        }
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
+        return $this->hasMany(CommunicationType::class);
     }
 
     public function talentBoards()
     {
         return $this->hasMany(TalentBoard::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

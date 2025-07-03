@@ -80,10 +80,10 @@ function TalentForm(props) {
                 : [{ relative_type_id: null, info: '' }],
             addresses: (values.addresses && values.addresses.length > 0)
                 ? values.addresses
-                : [{ address_type_id: null, info: '' }],
+                : [{ type: { id: null }, info: '' }],
             phones: (values.phones && values.phones.length > 0)
                 ? values.phones
-                : [{ phone_type_id: null, info: '' }],
+                : [{ type: { id: null }, info: '' }],
             social_medias: (values.social_medias && values.social_medias.length > 0)
                 ? values.social_medias
                 : [{ social_media_type_id: null, info: '' }],
@@ -157,17 +157,16 @@ function TalentForm(props) {
         values.suit_cut_id = values.suit_cut_id ?? null;
         values.dress_size_id = values.dress_size_id ?? null;
 
-        // Convert undefined to null for collection objects to ensure proper backend handling
         if (values.addresses) {
             values.addresses = values.addresses.map(address => ({
                 ...address,
-                address_type_id: address.address_type_id ?? null
+                type: { id: address.type.id ?? null }
             }));
         }
         if (values.emails) {
             values.emails = values.emails.map(email => ({
                 ...email,
-                email_type_id: email.email_type_id ?? null
+                type: { id: email.type.id ?? null }
             }));
         }
         if (values.messengers) {
@@ -179,7 +178,7 @@ function TalentForm(props) {
         if (values.phones) {
             values.phones = values.phones.map(phone => ({
                 ...phone,
-                phone_type_id: phone.phone_type_id ?? null
+                type: { id: phone.type.id ?? null }
             }));
         }
         if (values.relatives) {

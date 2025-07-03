@@ -16,10 +16,7 @@ return new class extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
-            
-            $table->unsignedBigInteger('phone_type_id')->nullable();
-            $table->foreign('phone_type_id')->references('id')->on('phone_types');
-            
+
             $table->uuidMorphs('phoneable');
         });
     }
@@ -31,9 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('phones', function (Blueprint $table) {
-            $table->dropForeign('phones_phone_type_id_foreign');
-        });
         Schema::dropIfExists('phones');
     }
 };

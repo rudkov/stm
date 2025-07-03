@@ -2,16 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\Contact;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use App\Models\CommunicationType;
 use App\Models\Company;
-use App\Models\Messenger;
-use App\Models\EmailType;
+use App\Models\Contact;
 use App\Models\MessengerType;
-use App\Models\PhoneType;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 class ContactControllerTest extends TestCase
 {
@@ -67,8 +66,8 @@ class ContactControllerTest extends TestCase
     public function test_store_contact_with_optional_fields()
     {
         // Create necessary types
-        $emailType = EmailType::factory()->create();
-        $phoneType = PhoneType::factory()->create();
+        $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
+        $phoneType = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -85,13 +84,13 @@ class ContactControllerTest extends TestCase
                 ],
                 'phones' => [
                     [
-                        'phone_type_id' => $phoneType->id,
+                        'communication_type_id' => $phoneType->id,
                         'info' => '+1234567890'
                     ]
                 ],
                 'emails' => [
                     [
-                        'email_type_id' => $emailType->id,
+                        'communication_type_id' => $emailType->id,
                         'info' => 'john@example.com'
                     ]
                 ],
@@ -125,7 +124,7 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('phones', [
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'phone_type_id' => $phoneType->id,
+            'communication_type_id' => $phoneType->id,
             'info' => '+1234567890'
         ]);
 
@@ -133,7 +132,7 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('emails', [
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'email_type_id' => $emailType->id,
+            'communication_type_id' => $emailType->id,
             'info' => 'john@example.com'
         ]);
 
@@ -247,18 +246,18 @@ class ContactControllerTest extends TestCase
             'updated_by' => $this->user->id,
         ]);
 
-        $phoneType1 = PhoneType::factory()->create();
-        $phoneType2 = PhoneType::factory()->create();
-        $phoneType3 = PhoneType::factory()->create(); // For new phone
+        $phoneType1 = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
+        $phoneType2 = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
+        $phoneType3 = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]); // For new phone
 
         // Create initial phones
         $existingPhone1 = $contact->phones()->create([
-            'phone_type_id' => $phoneType1->id,
+            'communication_type_id' => $phoneType1->id,
             'info' => '+1234567890'
         ]);
 
         $existingPhone2 = $contact->phones()->create([
-            'phone_type_id' => $phoneType2->id,
+            'communication_type_id' => $phoneType2->id,
             'info' => '+0987654321'
         ]);
 
@@ -271,18 +270,18 @@ class ContactControllerTest extends TestCase
                     // Update first existing phone
                     [
                         'id' => $existingPhone1->id,
-                        'phone_type_id' => $phoneType1->id,
+                        'communication_type_id' => $phoneType1->id,
                         'info' => '+9876543210' // Changed number
                     ],
                     // Update second existing phone
                     [
                         'id' => $existingPhone2->id,
-                        'phone_type_id' => $phoneType2->id,
+                        'communication_type_id' => $phoneType2->id,
                         'info' => '+1122334455' // Changed number
                     ],
                     // Add new phone
                     [
-                        'phone_type_id' => $phoneType3->id,
+                        'communication_type_id' => $phoneType3->id,
                         'info' => '+1111111111'
                     ]
                 ],
@@ -297,7 +296,7 @@ class ContactControllerTest extends TestCase
             'id' => $existingPhone1->id,
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'phone_type_id' => $phoneType1->id,
+            'communication_type_id' => $phoneType1->id,
             'info' => '+9876543210'
         ]);
 
@@ -306,7 +305,7 @@ class ContactControllerTest extends TestCase
             'id' => $existingPhone2->id,
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'phone_type_id' => $phoneType2->id,
+            'communication_type_id' => $phoneType2->id,
             'info' => '+1122334455'
         ]);
 
@@ -314,7 +313,7 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('phones', [
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'phone_type_id' => $phoneType3->id,
+            'communication_type_id' => $phoneType3->id,
             'info' => '+1111111111'
         ]);
 
@@ -330,11 +329,11 @@ class ContactControllerTest extends TestCase
             'updated_by' => $this->user->id,
         ]);
 
-        $phoneType = PhoneType::factory()->create();
+        $phoneType = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
 
         // Create initial phone
         $existingPhone = $contact->phones()->create([
-            'phone_type_id' => $phoneType->id,
+            'communication_type_id' => $phoneType->id,
             'info' => '+1234567890'
         ]);
 
@@ -367,18 +366,18 @@ class ContactControllerTest extends TestCase
             'updated_by' => $this->user->id,
         ]);
 
-        $emailType1 = EmailType::factory()->create();
-        $emailType2 = EmailType::factory()->create();
-        $emailType3 = EmailType::factory()->create(); // For new email
+        $emailType1 = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
+        $emailType2 = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
+        $emailType3 = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]); // For new email
 
         // Create initial emails
         $existingEmail1 = $contact->emails()->create([
-            'email_type_id' => $emailType1->id,
+            'communication_type_id' => $emailType1->id,
             'info' => 'old1@example.com'
         ]);
 
         $existingEmail2 = $contact->emails()->create([
-            'email_type_id' => $emailType2->id,
+            'communication_type_id' => $emailType2->id,
             'info' => 'old2@example.com'
         ]);
 
@@ -392,18 +391,18 @@ class ContactControllerTest extends TestCase
                     // Update first existing email
                     [
                         'id' => $existingEmail1->id,
-                        'email_type_id' => $emailType1->id,
+                        'communication_type_id' => $emailType1->id,
                         'info' => 'updated1@example.com' // Changed email
                     ],
                     // Update second existing email
                     [
                         'id' => $existingEmail2->id,
-                        'email_type_id' => $emailType2->id,
+                        'communication_type_id' => $emailType2->id,
                         'info' => 'updated2@example.com' // Changed email
                     ],
                     // Add new email
                     [
-                        'email_type_id' => $emailType3->id,
+                        'communication_type_id' => $emailType3->id,
                         'info' => 'new@example.com'
                     ]
                 ],
@@ -417,7 +416,7 @@ class ContactControllerTest extends TestCase
             'id' => $existingEmail1->id,
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'email_type_id' => $emailType1->id,
+            'communication_type_id' => $emailType1->id,
             'info' => 'updated1@example.com'
         ]);
 
@@ -426,7 +425,7 @@ class ContactControllerTest extends TestCase
             'id' => $existingEmail2->id,
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'email_type_id' => $emailType2->id,
+            'communication_type_id' => $emailType2->id,
             'info' => 'updated2@example.com'
         ]);
 
@@ -434,7 +433,7 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('emails', [
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'email_type_id' => $emailType3->id,
+            'communication_type_id' => $emailType3->id,
             'info' => 'new@example.com'
         ]);
 
@@ -450,11 +449,11 @@ class ContactControllerTest extends TestCase
             'updated_by' => $this->user->id,
         ]);
 
-        $emailType = EmailType::factory()->create();
+        $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
 
         // Create initial email
         $existingEmail = $contact->emails()->create([
-            'email_type_id' => $emailType->id,
+            'communication_type_id' => $emailType->id,
             'info' => 'test@example.com'
         ]);
 
@@ -636,8 +635,8 @@ class ContactControllerTest extends TestCase
         ]);
 
         $company = Company::factory()->create(['team_id' => $this->team->id]);
-        $phoneType = PhoneType::factory()->create();
-        $emailType = EmailType::factory()->create();
+        $phoneType = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
+        $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
 
         $response = $this->actingAs($this->user)
@@ -653,13 +652,13 @@ class ContactControllerTest extends TestCase
                 ],
                 'phones' => [
                     [
-                        'phone_type_id' => $phoneType->id,
+                        'communication_type_id' => $phoneType->id,
                         'info' => '+9876543210'
                     ]
                 ],
                 'emails' => [
                     [
-                        'email_type_id' => $emailType->id,
+                        'communication_type_id' => $emailType->id,
                         'info' => 'complete@example.com'
                     ]
                 ],
@@ -697,7 +696,7 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('phones', [
             'phoneable_id' => $contact->id,
             'phoneable_type' => 'contact',
-            'phone_type_id' => $phoneType->id,
+            'communication_type_id' => $phoneType->id,
             'info' => '+9876543210'
         ]);
 
@@ -705,7 +704,7 @@ class ContactControllerTest extends TestCase
         $this->assertDatabaseHas('emails', [
             'emailable_id' => $contact->id,
             'emailable_type' => 'contact',
-            'email_type_id' => $emailType->id,
+            'communication_type_id' => $emailType->id,
             'info' => 'complete@example.com'
         ]);
 
@@ -729,7 +728,7 @@ class ContactControllerTest extends TestCase
             'updated_by' => $this->user->id,
         ]);
 
-        $emailType = EmailType::factory()->create();
+        $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
@@ -737,7 +736,7 @@ class ContactControllerTest extends TestCase
                 'last_name' => $contact->last_name,
                 'emails' => [
                     [
-                        'email_type_id' => $emailType->id,
+                        'communication_type_id' => $emailType->id,
                         'info' => 'invalid-email' // Invalid email format
                     ]
                 ],
