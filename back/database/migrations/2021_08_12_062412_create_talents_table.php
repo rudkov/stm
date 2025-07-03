@@ -48,7 +48,7 @@ class CreateTalentsTable extends Migration
             $table->text('tattoos')->nullable();
             $table->text('piercings')->nullable();
 
-            $table->string('current_location')->nullable();
+            $table->string('location')->nullable();
 
             // other info
             // citizenships

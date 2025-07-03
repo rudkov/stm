@@ -67,7 +67,7 @@ class TalentFactory extends Factory
             'tattoos' => $this->faker->sentence(6),
             'piercings' => $this->faker->sentence(6),
 
-            'current_location' => [null, $this->faker->city()][rand(0, 1)],
+            'location' => [null, $this->faker->city()][rand(0, 1)],
 
             'is_vegetarian' => rand(0, 1),
             'allergies' => $this->faker->sentence(6),

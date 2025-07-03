@@ -15,7 +15,7 @@ function TalentSectionContacts(props) {
                             return (
                                 <div className='nested-section__cell-horizontal' key={`talent.phone.` + phone.id}>
                                     <div className='text-light'>{phone.type?.name}</div>
-                                    <div className='ellipsis'>{phone.info}</div>
+                                    <div className='ellipsis'>{<a href={`tel:${phone.info}`}>{phone.info}</a>}</div>
                                 </div>
                             );
                         })

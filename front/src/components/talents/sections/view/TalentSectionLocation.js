@@ -7,13 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as IconClose } from '../../../../assets/icons/close.svg';
 
-import { updateCurrentLocation, getCurrentLocationResponse } from '../../../../store/talents/talent';
+import { updateLocation, getLocationResponse } from '../../../../store/talents/talent';
 import { fetchTalents, fetchTalentsLocations } from '../../../../store/talents/talents';
 import { useTalentsFilters } from '../../../talents/TalentsFilters';
 
 import TalentLocation from '../../components/TalentLocation';
 
-function TalentSectionCurrentLocation(props) {
+function TalentSectionLocation(props) {
 
     const dispatch = useDispatch();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +22,7 @@ function TalentSectionCurrentLocation(props) {
     const { filters } = useTalentsFilters();
 
     const talent = props.talent;
-    const currentLocationResponse = useSelector(getCurrentLocationResponse);
+    const locationResponse = useSelector(getLocationResponse);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -38,23 +38,23 @@ function TalentSectionCurrentLocation(props) {
 
     const onFormSubmit = (values) => {
         setLoading(true);
-        dispatch(updateCurrentLocation([talent.id, values.current_location]));
+        dispatch(updateLocation([talent.id, values.location]));
     };
 
     useEffect(() => {
         form.setFieldsValue({
-            current_location: talent.current_location || '',
+            location: talent.location || '',
         });
     }, [talent, form]);
 
     useEffect(() => {
         setLoading(false);
-        if (currentLocationResponse.status === 'fulfilled') {
+        if (locationResponse.status === 'fulfilled') {
             dispatch(fetchTalents(filters));
             dispatch(fetchTalentsLocations());
             setIsModalOpen(false);
         }
-    }, [currentLocationResponse, dispatch, filters]);
+    }, [locationResponse, dispatch, filters]);
 
     return (
         <>
@@ -62,7 +62,7 @@ function TalentSectionCurrentLocation(props) {
                 className='button--invisible text-regular'
                 onClick={showModal}
             >
-                <TalentLocation location={talent.current_location} />
+                <TalentLocation location={talent.location} />
             </Button>
 
             <Modal
@@ -88,7 +88,7 @@ function TalentSectionCurrentLocation(props) {
                     onFinish={onFormSubmit}
                     preserve={false}
                 >
-                    <Form.Item name='current_location'>
+                    <Form.Item name='location'>
                         <Input placeholder="Specify current location" allowClear />
                     </Form.Item>
                     <p>The talent is set "In town" if the field above is empty.</p>
@@ -97,4 +97,4 @@ function TalentSectionCurrentLocation(props) {
         </>
     );
 };
-export default TalentSectionCurrentLocation;
+export default TalentSectionLocation;

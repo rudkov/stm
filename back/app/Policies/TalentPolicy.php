@@ -41,7 +41,7 @@ class TalentPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->team_id !== null;
     }
 
     /**
