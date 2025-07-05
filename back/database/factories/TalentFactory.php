@@ -115,28 +115,6 @@ use App\Models\User;
  * Talent::factory(50)->create(); // ✅
  * ```
  * 
- * ## ARTISAN COMMANDS
- * 
- * A dedicated Artisan command is available for cache management:
- * 
- * **File:** `app/Console/Commands/ClearFactoryCacheCommand.php`
- * 
- * **Usage:**
- * ```bash
- * # Clear all factory caches
- * php artisan factory:clear-cache
- * 
- * # Clear only talent factory cache
- * php artisan factory:clear-cache --talent
- * ```
- * 
- * **Command Implementation:**
- * The command provides a clean interface for cache management during development:
- * - Signature: `factory:clear-cache {--talent : Clear only TalentFactory cache}`
- * - Clears static caches to ensure fresh data generation
- * - Useful for debugging factory issues or after manual data changes
- * - Can be extended to support additional factory caches as needed
- * 
  * ## TECHNICAL IMPLEMENTATION
  * 
  * ### Cache Structure:
