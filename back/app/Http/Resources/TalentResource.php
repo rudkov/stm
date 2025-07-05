@@ -84,8 +84,8 @@ class TalentResource extends JsonResource
             // Timestamps and user tracking
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'created_by' => UserBasicResource::make($this->whenLoaded('createdBy')),
-            'updated_by' => UserBasicResource::make($this->whenLoaded('updatedBy')),
+            'created_by' => $this->whenLoaded('createdBy', fn() => new UserBasicResource($this->createdBy),
+            'updated_by' => $this->whenLoaded('updatedBy', fn() => new UserBasicResource($this->updatedBy)),
         ];
     }
 }
