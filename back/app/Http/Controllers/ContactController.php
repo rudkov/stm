@@ -77,6 +77,7 @@ class ContactController extends Controller
             'emails.type',
             'messengers',
             'messengers.type',
+            'weblinks',
             'createdBy',
             'updatedBy',
         );
@@ -94,6 +95,7 @@ class ContactController extends Controller
             sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
             sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
         });
 
         return $this->show($contact);
@@ -113,6 +115,7 @@ class ContactController extends Controller
             sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
             sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
         });
 
         return $this->show($contact);

@@ -30,6 +30,7 @@ use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
 use App\Traits\HasSocialMedia;
 use App\Traits\HasUserTracking;
+use App\Traits\HasWeblinks;
 
 class Talent extends Model
 {
@@ -44,6 +45,7 @@ class Talent extends Model
     use HasPhones;
     use HasSocialMedia;
     use HasUserTracking;
+    use HasWeblinks;
 
     protected $table = 'talents';
 

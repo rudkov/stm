@@ -16,9 +16,9 @@ function TalentSectionSocialMedia(props) {
 
     return (
         <NestedSection className={props.className} id={props.id}>
-            <NestedSection.Header>Social Media</NestedSection.Header>
+            <NestedSection.Header>Social Media & Websites</NestedSection.Header>
             <NestedSection.Body className='talent-section-form-social-media__body'>
-                <Form.List name='social_medias'>
+            <Form.List name='social_medias'>
                     {(fields, { add, remove }) => (
                         <>
                             {
@@ -51,12 +51,48 @@ function TalentSectionSocialMedia(props) {
                                     </div>
                                 ))
                             }
-                            <Form.Item>
-                                <Button type='dashed' onClick={() => add()}>Add Social Media</Button>
-                            </Form.Item>
                         </>
                     )}
                 </Form.List>
+                <Form.List name='weblinks'>
+                    {(fields, { add, remove }) => (
+                        <>
+                            {
+                                fields.map(({ key, name, ...restField }) => (
+                                    <div className='talent-section-form-social-media__item' key={`talent.weblink.${key}`}>
+                                        <div className='talent-section-form-social-media__data'>
+                                            <div className='talent-section-form-social-media__label'>Website</div>
+                                            <Form.Item {...restField} name={[name, 'info']}>
+                                                <Input placeholder='Website URL' />
+                                            </Form.Item>
+                                        </div>
+                                        <div className='talent-section-form-social-media__button'>
+                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </>
+                    )}
+                </Form.List>
+                <div className='talent-section-form-contacts__controls'>
+                    <Form.Item>
+                        <Button type='dashed' onClick={() => {
+                            const socialMediasList = props.form.getFieldValue('social_medias');
+                            props.form.setFieldsValue({
+                                social_medias: [...socialMediasList, { social_media_type_id: null, info: '' }]
+                            });
+                        }}>Add Social Media</Button>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type='dashed' onClick={() => {
+                            const weblinksList = props.form.getFieldValue('weblinks');
+                            props.form.setFieldsValue({
+                                weblinks: [...weblinksList, { info: '' }]
+                            });
+                        }}>Add Website</Button>
+                    </Form.Item>
+                </div>
             </NestedSection.Body>
         </NestedSection>
     );

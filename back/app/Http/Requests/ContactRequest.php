@@ -18,6 +18,7 @@ class ContactRequest extends FormRequest
             'emails' => ['nullable', 'array', new ValidateEach(new EmailRequest())],
             'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
             'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],
+            'weblinks' => ['nullable', 'array', new ValidateEach(new WeblinkRequest())],
         ];
     }
 }

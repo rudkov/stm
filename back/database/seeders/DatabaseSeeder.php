@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
                 MessengerSeeder::class,
                 PhoneSeeder::class,
                 SocialMediaSeeder::class,
+                WeblinkSeeder::class,
             ]);
         } else {
             $this->command->warn('Skipping development seeders in ' . app()->environment() . ' environment');

@@ -17,6 +17,7 @@ use App\Traits\HasEmails;
 use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
 use App\Traits\HasUserTracking;
+use App\Traits\HasWeblinks;
 
 class Contact extends Model
 {
@@ -29,6 +30,7 @@ class Contact extends Model
     use HasMessengers;
     use HasPhones;
     use HasUserTracking;
+    use HasWeblinks;
 
     protected $table = 'contacts';
 

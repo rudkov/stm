@@ -80,6 +80,7 @@ class TalentResource extends JsonResource
             'emails' => EmailResource::collection($this->whenLoaded('emails')),
             'social_medias' => SocialMediaResource::collection($this->whenLoaded('socialMedias')),
             'messengers' => MessengerResource::collection($this->whenLoaded('messengers')),
+            'weblinks' => WeblinkResource::collection($this->whenLoaded('weblinks')),
 
             // Timestamps and user tracking
             'created_at' => $this->created_at,
