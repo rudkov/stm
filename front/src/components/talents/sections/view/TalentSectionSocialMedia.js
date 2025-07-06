@@ -1,5 +1,7 @@
 import NestedSection from '../../../ui-components/NestedSection';
 
+import Weblink from '../../../ui-components/Weblink';
+
 import { SocialMediaIcons } from '../../../ui-components/Icons';
 
 function TalentSectionSocialMedia(props) {
@@ -34,7 +36,7 @@ function TalentSectionSocialMedia(props) {
                             return (
                                 <div className='nested-section__cell-horizontal' key={`talent.weblink.` + weblink.id}>
                                     <div className='text-light'>Website</div>
-                                    <div className='ellipsis'>{<a href={weblink.info} target='_blank' rel='noreferrer'>{weblink.info}</a>}</div>
+                                    <div className='ellipsis'><Weblink url={weblink.info} /></div>
                                 </div>
                             );
                         })

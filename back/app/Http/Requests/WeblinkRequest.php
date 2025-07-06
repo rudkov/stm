@@ -13,7 +13,7 @@ class WeblinkRequest extends FormRequest
     {
         return [
             'id' => ['sometimes', Rule::exists(Weblink::class, 'id')],
-            'info' => 'required|string|max:255',
+            'info' => 'required|url|max:255',
         ];
     }
 }

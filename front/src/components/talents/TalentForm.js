@@ -21,6 +21,7 @@ import ScrollableView from '../ui-components/ScrollableView';
 import { useNotification } from '../notifications/NotificationProvider';
 
 import { cleanCollection } from '../../helpers/form-utils';
+import { sanitizeWeblinkForStorage } from '../ui-components/Weblink';
 
 import { LoadingOutlined } from '@ant-design/icons';
 import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
@@ -197,6 +198,7 @@ function TalentForm(props) {
         if (values.weblinks) {
             values.weblinks = values.weblinks.map(weblink => ({
                 ...weblink,
+                info: sanitizeWeblinkForStorage(weblink.info)
             }));
         }
 
