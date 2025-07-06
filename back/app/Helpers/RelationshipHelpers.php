@@ -6,177 +6,171 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-use Illuminate\Support\Arr;
-
 /**
- * Returns a fresh query for the relation
- * 
- * @param HasMany $relation The HasMany relationship to get a fresh query for
- * @return \Illuminate\Database\Eloquent\Builder The fresh query
+ * Normalizes an array of fields/pivot values so that both direct keys and key=>path
+ * mapping are represented uniformly as ['db_field' => 'input.path'].
+ *
+ * Example:
+ *   ['job_title', 'cost' => 'pricing.cost']
+ * becomes:
+ *   ['job_title' => 'job_title', 'cost' => 'pricing.cost']
+ *
+ * @param array $fields
+ * @return array<string,string>
  */
-function freshRelationQuery(HasMany $relation)
+function normalizeFieldMapping(array $fields): array
 {
-    return $relation->getModel()->newQuery()
-        ->where($relation->getForeignKeyName(), $relation->getParent()->getKey());
-}
+    $mapping = [];
 
-/**
- * Synchronizes a BelongsToMany relationship with given items and pivot data
- * 
- * Updates the relationship while preserving pivot data from the input array
- * Supports field mapping for pivot data to handle different input structures
- * 
- * @param BelongsToMany $relation The BelongsToMany relationship to sync
- * @param array $items Array of items to sync
- * @param array $pivotFields Array of pivot fields to process. Supports two formats:
- *                          - Direct: ['field_name'] - treated as 'field_name' => 'field_name'
- *                          - Mapping: ['pivot_field' => 'input.path'] - maps nested input to pivot field
- *                          - Mixed: ['pivot_field' => 'input.path', 'direct_field']
- * @param string $keyField The field name in items that contains the related model ID (default: 'id')
- */
-function sync_belongs_to_many(BelongsToMany $relation, array $items, array $pivotFields = [], string $keyField = 'id')
-{
-    // Normalize pivot fields array to handle both formats
-    $pivotMapping = [];
-    foreach ($pivotFields as $key => $value) {
-        if (is_numeric($key)) {
-            // Direct field: ['field_name'] -> 'field_name' => 'field_name'
-            $pivotMapping[$value] = $value;
-        } else {
-            // Mapping: ['pivot_field' => 'input.path']
-            $pivotMapping[$key] = $value;
-        }
-    }
-
-    // Build sync data array
-    $syncData = [];
-
-    foreach ($items as $item) {
-        if (empty($item[$keyField])) {
-            continue; // Skip items without the key field
-        }
-
-        $itemId = $item[$keyField];
-        $pivotData = [];
-
-        // Extract pivot data using the mapping configuration
-        foreach ($pivotMapping as $pivotField => $inputPath) {
-            // Use a sentinel value to check if the path exists in the input
-            $sentinel = new \stdClass();
-            $value = data_get($item, $inputPath, $sentinel);
-
-            // Only include the field if the path exists in the input (even if value is null)
-            if ($value !== $sentinel) {
-                $pivotData[$pivotField] = $value;
-            }
-        }
-
-        $syncData[$itemId] = $pivotData;
-    }
-
-    // Sync the relationship
-    $relation->sync($syncData);
-}
-
-/**
- * Synchronizes a HasMany relationship with given items
- * 
- * Updates existing records, creates new ones, and removes records not present in the input array
- * 
- * @param HasMany $relation The HasMany relationship to sync
- * @param array $items Array of items to sync
- * @param array $fillable Array of fields that can be filled
- */
-function sync_has_many(HasMany $relation, array $items, array $fillable = [])
-{
-    $existingIds = $relation->pluck('id')->toArray();
-    $submittedIds = [];
-
-    foreach ($items as $item) {
-        if (!empty($item['id']) && in_array($item['id'], $existingIds)) {
-            freshRelationQuery($relation)->where('id', $item['id'])->update(Arr::only($item, $fillable));
-            $submittedIds[] = $item['id'];
-        } else {
-            $new = $relation->create(Arr::only($item, $fillable));
-            $submittedIds[] = $new->id;
-        }
-    }
-
-    freshRelationQuery($relation)->whereNotIn('id', $submittedIds)->delete();
-}
-
-/**
- * Synchronizes a MorphMany relationship with given items
- * 
- * Updates existing records, creates new ones, and removes records not present in the input array
- * Supports both direct field access and field mapping from nested structures
- * 
- * @param MorphMany $relation The MorphMany relationship to sync
- * @param array $items Array of items to sync
- * @param array $fields Array of fields to process. Supports two formats:
- *                     - Direct: ['field_name'] - treated as 'field_name' => 'field_name'
- *                     - Mapping: ['db_field' => 'input.path'] - maps nested input to db field
- *                     - Mixed: ['db_field' => 'input.path', 'direct_field']
- */
-function sync_morph_many(MorphMany $relation, array $items, array $fields = [])
-{
-    // Normalize fields array to handle both formats
-    $fieldMapping = [];
     foreach ($fields as $key => $value) {
         if (is_numeric($key)) {
-            // Direct field: ['field_name'] -> 'field_name' => 'field_name'
-            $fieldMapping[$value] = $value;
+            // Direct field name supplied – use it for both key and path
+            $mapping[$value] = $value;
         } else {
-            // Mapping: ['db_field' => 'input.path']
-            $fieldMapping[$key] = $value;
+            // Explicit mapping provided – keep as-is
+            $mapping[$key] = $value;
         }
     }
 
-    // Transform items using the field mapping
-    $transformedItems = array_map(function ($item) use ($fieldMapping) {
-        $transformed = [];
+    return $mapping;
+}
 
-        // Always include ID if present for updates
-        if (!empty($item['id'])) {
-            $transformed['id'] = $item['id'];
+/**
+ * Extracts values from a given input array using a mapping definition produced by
+ * normalizeFieldMapping(). Only keys that are actually present in the input will
+ * be returned (even if they are present but null).
+ *
+ * @param array<string,string> $mapping
+ * @param array $input
+ * @return array<string,mixed>
+ */
+function extractMappedValues(array $mapping, array $input): array
+{
+    $sentinel = new \stdClass();
+    $result   = [];
+
+    foreach ($mapping as $dbField => $inputPath) {
+        $value = data_get($input, $inputPath, $sentinel);
+        if ($value !== $sentinel) {
+            $result[$dbField] = $value;
         }
+    }
 
-        // Map fields according to the mapping configuration
-        foreach ($fieldMapping as $dbField => $inputPath) {
-            // Use a sentinel value to check if the path exists in the input
-            $sentinel = new \stdClass();
-            $value = data_get($item, $inputPath, $sentinel);
+    return $result;
+}
 
-            // Only include the field if the path exists in the input (even if value is null)
-            if ($value !== $sentinel) {
-                $transformed[$dbField] = $value;
+/**
+ * Returns a query builder scoped to the current relation for safe updates & deletes.
+ * Works for HasMany and MorphMany relations.
+ *
+ * @param HasMany|MorphMany $relation
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+function scopedRelationQuery($relation)
+{
+    if ($relation instanceof HasMany) {
+        return $relation->getModel()->newQuery()
+            ->where($relation->getForeignKeyName(), $relation->getParent()->getKey());
+    }
+
+    if ($relation instanceof MorphMany) {
+        return $relation->getModel()->newQuery()
+            ->where($relation->getMorphType(), $relation->getMorphClass())
+            ->where($relation->getForeignKeyName(), $relation->getParentKey());
+    }
+
+    throw new \InvalidArgumentException('Unsupported relation type for scoped query.');
+}
+
+/**
+ * Generic synchronisation helper for Laravel relations (BelongsToMany, HasMany, MorphMany).
+ *
+ * It keeps related data in sync with the provided $items collection by performing
+ * the minimal set of create / update / delete operations.
+ *
+ * For BelongsToMany:
+ *  - $fields is treated as pivot mapping (see normalizeFieldMapping())
+ *  - $options['keyField'] may specify the key in $items pointing to related model ID (defaults to 'id')
+ *
+ * For HasMany:
+ *  - $fields represents the fillable attributes that can be mass-assigned on the related model
+ *
+ * For MorphMany:
+ *  - $fields is a mapping describing how to take input values and map them onto DB columns
+ *
+ * @param BelongsToMany|HasMany|MorphMany $relation
+ * @param array $items
+ * @param array $fields
+ * @param array $options
+ * @return void
+ */
+function sync_relation($relation, array $items, array $fields = [], array $options = []): void
+{
+    // Normalise field mapping once for all relation types
+    $mapping = normalizeFieldMapping($fields);
+    // --------------------------------------------------
+    // BelongsToMany
+    // --------------------------------------------------
+    if ($relation instanceof BelongsToMany) {
+        $keyField = $options['keyField'] ?? 'id';
+        $syncData = [];
+
+        foreach ($items as $item) {
+            if (empty($item[$keyField])) {
+                continue; // Skip invalid items
             }
+
+            $itemId    = $item[$keyField];
+            $pivotData = extractMappedValues($mapping, $item);
+
+            $syncData[$itemId] = $pivotData;
         }
 
-        return $transformed;
-    }, $items);
+        $relation->sync($syncData);
+        return;
+    }
 
-    // Process the transformed items
+    // Pre-calculate helpers for HasMany and MorphMany
+    if ($relation instanceof HasMany || $relation instanceof MorphMany) {
+        $transform  = static function (array $item) use ($mapping): array {
+            return extractMappedValues($mapping, $item);
+        };
+        $scopedBase = function () use ($relation) {
+            return scopedRelationQuery($relation);
+        };
+    } else {
+        throw new \InvalidArgumentException('Unsupported relation type for sync_relation.');
+    }
+
     $existingIds = $relation->pluck('id')->toArray();
     $submittedIds = [];
 
-    foreach ($transformedItems as $item) {
-        if (!empty($item['id']) && in_array($item['id'], $existingIds)) {
-            $relation->getModel()->newQuery()
-                ->where('id', $item['id'])
-                ->where($relation->getMorphType(), $relation->getMorphClass())
-                ->where($relation->getForeignKeyName(), $relation->getParentKey())
-                ->update(Arr::only($item, array_keys($fieldMapping)));
+    foreach ($items as $item) {
+        $hasId = !empty($item['id']) && in_array($item['id'], $existingIds, true);
+
+        if ($hasId) {
+            // Update existing record
+            $updateData = $transform($item);
+
+            // Never attempt to update the primary key itself
+            unset($updateData['id']);
+
+            if (!empty($updateData)) {
+                ($scopedBase())->where('id', $item['id'])->update($updateData);
+            }
             $submittedIds[] = $item['id'];
         } else {
-            $new = $relation->create(Arr::only($item, array_keys($fieldMapping)));
+            // Create new record
+            $new = $relation->create($transform($item));
             $submittedIds[] = $new->id;
         }
     }
 
-    $relation->getModel()->newQuery()
-        ->where($relation->getMorphType(), $relation->getMorphClass())
-        ->where($relation->getForeignKeyName(), $relation->getParentKey())
-        ->whereNotIn('id', $submittedIds)
-        ->delete();
+    // Delete records that were not submitted
+    if (!empty($submittedIds)) {
+        ($scopedBase())->whereNotIn('id', $submittedIds)->delete();
+    } else {
+        // If no items submitted, wipe all existing
+        ($scopedBase())->delete();
+    }
 }

@@ -24,9 +24,7 @@ use App\Models\User;
 
 use Database\Factories\TalentFactory;
 
-use function App\Helpers\sync_belongs_to_many;
-use function App\Helpers\sync_has_many;
-use function App\Helpers\sync_morph_many;
+use function App\Helpers\sync_relation;
 
 class RelationshipHelpersTest extends TestCase
 {
@@ -69,9 +67,9 @@ class RelationshipHelpersTest extends TestCase
         $this->contact->save();
     }
 
-    // ==================== sync_belongs_to_many Tests ====================
+    // ==================== belongs_to_many Tests ====================
 
-    public function test_sync_belongs_to_many_creates_new_records_with_direct_pivot_fields()
+    public function test_sync_relation_belongs_to_many_creates_new_records_with_direct_pivot_fields()
     {
         // Create companies for testing
         $company1 = Company::factory()->create(['team_id' => $this->team->id]);
@@ -88,7 +86,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+        sync_relation($this->contact->companies(), $items, ['job_title']);
 
         // Assert records were created with pivot data
         $this->assertDatabaseHas('company_contact', [
@@ -106,7 +104,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_creates_new_records_with_field_mapping()
+    public function test_sync_relation_belongs_to_many_creates_new_records_with_field_mapping()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -117,7 +115,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.title']);
+        sync_relation($this->contact->companies(), $items, ['job_title' => 'employment.title']);
 
         // Assert record was created with mapped field
         $this->assertDatabaseHas('company_contact', [
@@ -129,7 +127,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_updates_existing_records()
+    public function test_sync_relation_belongs_to_many_updates_existing_records()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -143,7 +141,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+        sync_relation($this->contact->companies(), $items, ['job_title']);
 
         // Assert pivot data was updated
         $this->assertDatabaseHas('company_contact', [
@@ -155,7 +153,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_removes_detached_records()
+    public function test_sync_relation_belongs_to_many_removes_detached_records()
     {
         $company1 = Company::factory()->create(['team_id' => $this->team->id]);
         $company2 = Company::factory()->create(['team_id' => $this->team->id]);
@@ -172,7 +170,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+        sync_relation($this->contact->companies(), $items, ['job_title']);
 
         // Assert first company still exists with updated data
         $this->assertDatabaseHas('company_contact', [
@@ -190,7 +188,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_handles_empty_input()
+    public function test_sync_relation_belongs_to_many_handles_empty_input()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -198,7 +196,7 @@ class RelationshipHelpersTest extends TestCase
         $this->contact->companies()->attach($company->id, ['job_title' => 'Should be removed']);
 
         // Sync with empty array
-        sync_belongs_to_many($this->contact->companies(), [], ['job_title']);
+        sync_relation($this->contact->companies(), [], ['job_title']);
 
         // Assert all companies were detached
         $this->assertEquals(0, $this->contact->companies()->count());
@@ -207,7 +205,7 @@ class RelationshipHelpersTest extends TestCase
         ]);
     }
 
-    public function test_sync_belongs_to_many_mixed_create_update_delete()
+    public function test_sync_relation_belongs_to_many_mixed_create_update_delete()
     {
         $company1 = Company::factory()->create(['team_id' => $this->team->id]);
         $company2 = Company::factory()->create(['team_id' => $this->team->id]);
@@ -231,7 +229,7 @@ class RelationshipHelpersTest extends TestCase
             // Note: company2 is not included, so it should be detached
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+        sync_relation($this->contact->companies(), $items, ['job_title']);
 
         // Assert update
         $this->assertDatabaseHas('company_contact', [
@@ -256,7 +254,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_handles_complex_field_mapping()
+    public function test_sync_relation_belongs_to_many_handles_complex_field_mapping()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -270,7 +268,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.position.title']);
+        sync_relation($this->contact->companies(), $items, ['job_title' => 'employment.position.title']);
 
         // Assert record was created with complex mapping
         $this->assertDatabaseHas('company_contact', [
@@ -282,7 +280,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_handles_mixed_field_formats()
+    public function test_sync_relation_belongs_to_many_handles_mixed_field_formats()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -295,7 +293,7 @@ class RelationshipHelpersTest extends TestCase
         ];
 
         // Mix of direct fields and mapped fields
-        sync_belongs_to_many($this->contact->companies(), $items, [
+        sync_relation($this->contact->companies(), $items, [
             'job_title' => 'employment.title' // Mapped field takes precedence
         ]);
 
@@ -309,7 +307,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_ignores_missing_nested_paths()
+    public function test_sync_relation_belongs_to_many_ignores_missing_nested_paths()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -320,7 +318,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.title']);
+        sync_relation($this->contact->companies(), $items, ['job_title' => 'employment.title']);
 
         // Should create record with null job_title since path doesn't exist
         $this->assertDatabaseHas('company_contact', [
@@ -332,7 +330,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_handles_null_values_in_nested_paths()
+    public function test_sync_relation_belongs_to_many_handles_null_values_in_nested_paths()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -343,7 +341,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.title']);
+        sync_relation($this->contact->companies(), $items, ['job_title' => 'employment.title']);
 
         // Should create record with null job_title (since path exists but value is null)
         $this->assertDatabaseHas('company_contact', [
@@ -355,7 +353,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_skips_items_without_key_field()
+    public function test_sync_relation_belongs_to_many_skips_items_without_key_field()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -374,7 +372,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+        sync_relation($this->contact->companies(), $items, ['job_title']);
 
         // Assert only the valid item was processed
         $this->assertDatabaseHas('company_contact', [
@@ -386,7 +384,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_with_custom_key_field()
+    public function test_sync_relation_belongs_to_many_with_custom_key_field()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -397,7 +395,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title'], 'company_id');
+        sync_relation($this->contact->companies(), $items, ['job_title'], ['keyField' => 'company_id']);
 
         // Assert record was created using custom key field
         $this->assertDatabaseHas('company_contact', [
@@ -409,7 +407,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->contact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_with_talent_events_and_cost_pivot()
+    public function test_sync_relation_belongs_to_many_with_talent_events_and_cost_pivot()
     {
         // Create events for testing - manually create to avoid factory dependencies
         $event1 = new Event([
@@ -439,7 +437,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->talent->events(), $items, ['cost']);
+        sync_relation($this->talent->events(), $items, ['cost']);
 
         // Assert records were created with cost pivot data
         $this->assertDatabaseHas('event_talent', [
@@ -457,7 +455,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->events()->count());
     }
 
-    public function test_sync_belongs_to_many_with_talent_languages_no_pivot()
+    public function test_sync_relation_belongs_to_many_with_talent_languages_no_pivot()
     {
         // Create languages for testing - manually create since no factory exists
         $language1 = new Language(['id' => 'en', 'name' => 'English']);
@@ -471,7 +469,7 @@ class RelationshipHelpersTest extends TestCase
             ['id' => 'es']
         ];
 
-        sync_belongs_to_many($this->talent->languages(), $items, []);
+        sync_relation($this->talent->languages(), $items, []);
 
         // Assert records were created without pivot data
         $this->assertDatabaseHas('talent_language', [
@@ -487,7 +485,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->languages()->count());
     }
 
-    public function test_sync_belongs_to_many_doesnt_affect_other_models_records()
+    public function test_sync_relation_belongs_to_many_doesnt_affect_other_models_records()
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
@@ -511,7 +509,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+        sync_relation($this->contact->companies(), $items, ['job_title']);
 
         // Assert other contact's relationship still exists
         $this->assertDatabaseHas('company_contact', [
@@ -531,7 +529,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $otherContact->companies()->count());
     }
 
-    public function test_sync_belongs_to_many_production_usage_patterns()
+    public function test_sync_relation_belongs_to_many_production_usage_patterns()
     {
         // This test replicates the exact patterns used in ContactController.php
         $company1 = Company::factory()->create(['team_id' => $this->team->id]);
@@ -546,7 +544,7 @@ class RelationshipHelpersTest extends TestCase
         ];
 
         // Execute exactly as done in ContactController.php
-        sync_belongs_to_many($this->contact->companies(), $validated['companies'] ?? [], ['job_title']);
+        sync_relation($this->contact->companies(), $validated['companies'] ?? [], ['job_title']);
 
         // Verify all records were created correctly
         $this->assertEquals(2, $this->contact->companies()->count());
@@ -564,9 +562,9 @@ class RelationshipHelpersTest extends TestCase
         ]);
     }
 
-    // ==================== sync_has_many Tests ====================
+    // ==================== has_many Tests ====================
 
-    public function test_sync_has_many_creates_new_records()
+    public function test_sync_relation_has_many_creates_new_records()
     {
         // Create a relative type for testing
         $relativeType = TalentRelativeType::factory()->create();
@@ -582,7 +580,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_has_many($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
 
         // Assert records were created
         $this->assertDatabaseHas('talent_relatives', [
@@ -600,7 +598,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->relatives()->count());
     }
 
-    public function test_sync_has_many_updates_existing_records()
+    public function test_sync_relation_has_many_updates_existing_records()
     {
         $relativeType = TalentRelativeType::factory()->create();
 
@@ -619,7 +617,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_has_many($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
 
         // Assert record was updated
         $this->assertDatabaseHas('talent_relatives', [
@@ -632,7 +630,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->relatives()->count());
     }
 
-    public function test_sync_has_many_deletes_removed_records()
+    public function test_sync_relation_has_many_deletes_removed_records()
     {
         $relativeType = TalentRelativeType::factory()->create();
 
@@ -658,7 +656,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_has_many($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
 
         // Assert first relative still exists
         $this->assertDatabaseHas('talent_relatives', [
@@ -674,7 +672,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->relatives()->count());
     }
 
-    public function test_sync_has_many_handles_empty_input()
+    public function test_sync_relation_has_many_handles_empty_input()
     {
         $relativeType = TalentRelativeType::factory()->create();
 
@@ -686,13 +684,13 @@ class RelationshipHelpersTest extends TestCase
         ]);
 
         // Sync with empty array
-        sync_has_many($this->talent->relatives(), [], ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), [], ['relative_type_id', 'info']);
 
         // Assert all relatives were deleted
         $this->assertEquals(0, $this->talent->relatives()->count());
     }
 
-    public function test_sync_has_many_mixed_create_update_delete()
+    public function test_sync_relation_has_many_mixed_create_update_delete()
     {
         $relativeType = TalentRelativeType::factory()->create();
 
@@ -724,7 +722,7 @@ class RelationshipHelpersTest extends TestCase
             // Note: toDeleteRelative is not included, so it should be deleted
         ];
 
-        sync_has_many($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
 
         // Assert update
         $this->assertDatabaseHas('talent_relatives', [
@@ -746,7 +744,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->relatives()->count());
     }
 
-    public function test_sync_has_many_respects_fillable_fields()
+    public function test_sync_relation_has_many_respects_fillable_fields()
     {
         $relativeType = TalentRelativeType::factory()->create();
 
@@ -758,7 +756,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_has_many($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
 
         // Assert only fillable fields were saved
         $this->assertDatabaseHas('talent_relatives', [
@@ -771,9 +769,9 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->relatives()->count());
     }
 
-    // ==================== sync_morph_many Tests ====================
+    // ==================== morph_many Tests ====================
 
-    public function test_sync_morph_many_creates_new_records_with_direct_fields()
+    public function test_sync_relation_morph_many_creates_new_records_with_direct_fields()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -788,7 +786,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, ['communication_type_id', 'info']);
+        sync_relation($this->talent->emails(), $items, ['communication_type_id', 'info']);
 
         // Assert records were created
         $this->assertDatabaseHas('emails', [
@@ -808,7 +806,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_creates_new_records_with_field_mapping()
+    public function test_sync_relation_morph_many_creates_new_records_with_field_mapping()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -819,7 +817,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($this->talent->emails(), $items, ['communication_type_id' => 'type.id', 'info']);
 
         // Assert record was created with mapped field
         $this->assertDatabaseHas('emails', [
@@ -832,7 +830,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_updates_existing_records()
+    public function test_sync_relation_morph_many_updates_existing_records()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -852,7 +850,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, ['communication_type_id', 'info']);
+        sync_relation($this->talent->emails(), $items, ['communication_type_id', 'info']);
 
         // Assert record was updated
         $this->assertDatabaseHas('emails', [
@@ -866,7 +864,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_deletes_removed_records()
+    public function test_sync_relation_morph_many_deletes_removed_records()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -894,7 +892,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, ['communication_type_id', 'info']);
+        sync_relation($this->talent->emails(), $items, ['communication_type_id', 'info']);
 
         // Assert first email still exists
         $this->assertDatabaseHas('emails', [
@@ -911,7 +909,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_handles_empty_input()
+    public function test_sync_relation_morph_many_handles_empty_input()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -924,13 +922,13 @@ class RelationshipHelpersTest extends TestCase
         ]);
 
         // Sync with empty array
-        sync_morph_many($this->talent->emails(), [], ['communication_type_id', 'info']);
+        sync_relation($this->talent->emails(), [], ['communication_type_id', 'info']);
 
         // Assert all emails were deleted
         $this->assertEquals(0, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_mixed_create_update_delete()
+    public function test_sync_relation_morph_many_mixed_create_update_delete()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -964,7 +962,7 @@ class RelationshipHelpersTest extends TestCase
             // Note: toDeleteEmail is not included, so it should be deleted
         ];
 
-        sync_morph_many($this->talent->emails(), $items, ['communication_type_id', 'info']);
+        sync_relation($this->talent->emails(), $items, ['communication_type_id', 'info']);
 
         // Assert update
         $this->assertDatabaseHas('emails', [
@@ -987,7 +985,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_handles_complex_field_mapping()
+    public function test_sync_relation_morph_many_handles_complex_field_mapping()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -999,7 +997,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, [
+        sync_relation($this->talent->emails(), $items, [
             'communication_type_id' => 'type.id',
             'info' => 'contact_info'
         ]);
@@ -1015,7 +1013,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_handles_mixed_field_formats()
+    public function test_sync_relation_morph_many_handles_mixed_field_formats()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -1027,7 +1025,7 @@ class RelationshipHelpersTest extends TestCase
         ];
 
         // Mix of direct fields and mapped fields
-        sync_morph_many($this->talent->emails(), $items, [
+        sync_relation($this->talent->emails(), $items, [
             'communication_type_id' => 'type.id', // Mapped field
             'info' // Direct field
         ]);
@@ -1043,7 +1041,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_ignores_missing_nested_paths()
+    public function test_sync_relation_morph_many_ignores_missing_nested_paths()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -1054,7 +1052,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, [
+        sync_relation($this->talent->emails(), $items, [
             'communication_type_id' => 'type.id', // This path doesn't exist in item
             'info'
         ]);
@@ -1070,7 +1068,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_handles_null_values_in_nested_paths()
+    public function test_sync_relation_morph_many_handles_null_values_in_nested_paths()
     {
         $items = [
             [
@@ -1079,7 +1077,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, [
+        sync_relation($this->talent->emails(), $items, [
             'communication_type_id' => 'type.id',
             'info'
         ]);
@@ -1095,7 +1093,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->emails()->count());
     }
 
-    public function test_sync_morph_many_doesnt_affect_other_models_records()
+    public function test_sync_relation_morph_many_doesnt_affect_other_models_records()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -1124,7 +1122,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->emails(), $items, ['communication_type_id', 'info']);
+        sync_relation($this->talent->emails(), $items, ['communication_type_id', 'info']);
 
         // Assert other talent's email still exists
         $this->assertDatabaseHas('emails', [
@@ -1147,7 +1145,7 @@ class RelationshipHelpersTest extends TestCase
 
     // ==================== Comprehensive Morphable Type Tests ====================
 
-    public function test_sync_morph_many_with_addresses_using_nested_field_mapping()
+    public function test_sync_relation_morph_many_with_addresses_using_nested_field_mapping()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -1162,7 +1160,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->addresses(), $items, ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($this->talent->addresses(), $items, ['communication_type_id' => 'type.id', 'info']);
 
         // Assert records were created with nested field mapping
         $this->assertDatabaseHas('addresses', [
@@ -1182,7 +1180,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->addresses()->count());
     }
 
-    public function test_sync_morph_many_with_phones_using_nested_field_mapping()
+    public function test_sync_relation_morph_many_with_phones_using_nested_field_mapping()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
@@ -1197,7 +1195,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->phones(), $items, ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($this->talent->phones(), $items, ['communication_type_id' => 'type.id', 'info']);
 
         // Assert records were created with nested field mapping
         $this->assertDatabaseHas('phones', [
@@ -1217,7 +1215,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->phones()->count());
     }
 
-    public function test_sync_morph_many_with_messengers_using_direct_field_mapping()
+    public function test_sync_relation_morph_many_with_messengers_using_direct_field_mapping()
     {
         $messengerType = MessengerType::factory()->create();
 
@@ -1232,7 +1230,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->messengers(), $items, ['messenger_type_id', 'info']);
+        sync_relation($this->talent->messengers(), $items, ['messenger_type_id', 'info']);
 
         // Assert records were created with direct field mapping
         $this->assertDatabaseHas('messengers', [
@@ -1252,7 +1250,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->messengers()->count());
     }
 
-    public function test_sync_morph_many_with_social_medias_using_direct_field_mapping()
+    public function test_sync_relation_morph_many_with_social_medias_using_direct_field_mapping()
     {
         $socialMediaType = SocialMediaType::factory()->create();
 
@@ -1267,7 +1265,7 @@ class RelationshipHelpersTest extends TestCase
             ]
         ];
 
-        sync_morph_many($this->talent->socialMedias(), $items, ['social_media_type_id', 'info']);
+        sync_relation($this->talent->socialMedias(), $items, ['social_media_type_id', 'info']);
 
         // Assert records were created with direct field mapping
         $this->assertDatabaseHas('social_media', [
@@ -1287,29 +1285,29 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(2, $this->talent->socialMedias()->count());
     }
 
-    public function test_sync_morph_many_with_different_field_mapping_patterns()
+    public function test_sync_relation_morph_many_with_different_field_mapping_patterns()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
         $socialMediaType = SocialMediaType::factory()->create();
 
         // Test complex field mapping (addresses with nested type.id)
-        sync_morph_many($this->talent->addresses(), [
+        sync_relation($this->talent->addresses(), [
             ['type' => ['id' => $communicationType->id], 'info' => '123 Main St']
         ], ['communication_type_id' => 'type.id', 'info']);
 
         // Test complex field mapping (phones with nested type.id)
-        sync_morph_many($this->talent->phones(), [
+        sync_relation($this->talent->phones(), [
             ['type' => ['id' => $communicationType->id], 'info' => '+1-555-0123']
         ], ['communication_type_id' => 'type.id', 'info']);
 
         // Test direct field mapping (messengers)
-        sync_morph_many($this->talent->messengers(), [
+        sync_relation($this->talent->messengers(), [
             ['messenger_type_id' => $messengerType->id, 'info' => 'username']
         ], ['messenger_type_id', 'info']);
 
         // Test direct field mapping (social media)
-        sync_morph_many($this->talent->socialMedias(), [
+        sync_relation($this->talent->socialMedias(), [
             ['social_media_type_id' => $socialMediaType->id, 'info' => 'handle']
         ], ['social_media_type_id', 'info']);
 
@@ -1345,7 +1343,7 @@ class RelationshipHelpersTest extends TestCase
         ]);
     }
 
-    public function test_sync_morph_many_updates_and_deletes_across_different_morphable_types()
+    public function test_sync_relation_morph_many_updates_and_deletes_across_different_morphable_types()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
@@ -1370,7 +1368,7 @@ class RelationshipHelpersTest extends TestCase
         $this->talent->messengers()->save($messengerToDelete);
 
         // Update address
-        sync_morph_many($this->talent->addresses(), [
+        sync_relation($this->talent->addresses(), [
             [
                 'id' => $existingAddress->id,
                 'type' => ['id' => $communicationType->id],
@@ -1379,7 +1377,7 @@ class RelationshipHelpersTest extends TestCase
         ], ['communication_type_id' => 'type.id', 'info']);
 
         // Update messenger and delete another
-        sync_morph_many($this->talent->messengers(), [
+        sync_relation($this->talent->messengers(), [
             [
                 'id' => $existingMessenger->id,
                 'messenger_type_id' => $messengerType->id,
@@ -1409,22 +1407,22 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->messengers()->count());
     }
 
-    public function test_sync_morph_many_handles_missing_nested_paths_across_morphable_types()
+    public function test_sync_relation_morph_many_handles_missing_nested_paths_across_morphable_types()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
         // Test emails with missing nested path
-        sync_morph_many($this->talent->emails(), [
+        sync_relation($this->talent->emails(), [
             ['info' => 'email_without_type@example.com']
         ], ['communication_type_id' => 'type.id', 'info']);
 
         // Test addresses with missing nested path
-        sync_morph_many($this->talent->addresses(), [
+        sync_relation($this->talent->addresses(), [
             ['info' => 'Address without type']
         ], ['communication_type_id' => 'type.id', 'info']);
 
         // Test phones with missing nested path
-        sync_morph_many($this->talent->phones(), [
+        sync_relation($this->talent->phones(), [
             ['info' => '+1-555-NO-TYPE']
         ], ['communication_type_id' => 'type.id', 'info']);
 
@@ -1453,7 +1451,7 @@ class RelationshipHelpersTest extends TestCase
         $this->assertEquals(1, $this->talent->phones()->count());
     }
 
-    public function test_sync_morph_many_production_usage_patterns()
+    public function test_sync_relation_morph_many_production_usage_patterns()
     {
         // This test replicates the exact patterns used in TalentController.php
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
@@ -1485,11 +1483,11 @@ class RelationshipHelpersTest extends TestCase
         ];
 
         // Execute exactly as done in TalentController.php
-        sync_morph_many($this->talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-        sync_morph_many($this->talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-        sync_morph_many($this->talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
-        sync_morph_many($this->talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-        sync_morph_many($this->talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+        sync_relation($this->talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($this->talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($this->talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+        sync_relation($this->talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($this->talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
 
         // Verify all records were created correctly
         $this->assertEquals(2, $this->talent->addresses()->count());
