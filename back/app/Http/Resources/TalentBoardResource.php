@@ -19,7 +19,7 @@ class TalentBoardResource extends JsonResource
             'name' => $this->name,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'created_by' => $this->whenLoaded('createdBy', fn() => new UserBasicResource($this->createdBy),
+            'created_by' => $this->whenLoaded('createdBy', fn() => new UserBasicResource($this->createdBy)),
             'updated_by' => $this->whenLoaded('updatedBy', fn() => new UserBasicResource($this->updatedBy)),
         ];
     }
