@@ -59,7 +59,7 @@ const formatWeblinkForDisplay = (url) => {
 };
 
 const Weblink = ({ url, className, target = '_blank', rel = 'noreferrer', ...props }) => {
-    if (!url) {
+    if (!(typeof url === 'string' && url.trim())) {
         return null;
     }
 
