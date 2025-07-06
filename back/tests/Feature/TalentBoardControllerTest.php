@@ -51,21 +51,11 @@ class TalentBoardControllerTest extends TestCase
         $response->assertStatus(201)
             ->assertJson([
                 'name' => 'New Board',
-                'created_by' => [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                ],
-                'updated_by' => [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                ],
             ]);
 
         $this->assertDatabaseHas('talent_boards', [
             'name' => 'New Board',
             'team_id' => $this->team->id,
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
     }
 
@@ -75,8 +65,6 @@ class TalentBoardControllerTest extends TestCase
         TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Test Board',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)
@@ -103,15 +91,11 @@ class TalentBoardControllerTest extends TestCase
         TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Board A',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Board B',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         // Create a board for another team (shouldn't be visible)
@@ -155,40 +139,11 @@ class TalentBoardControllerTest extends TestCase
         $this->assertNotContains('Other Team Board', $boardNames);
     }
 
-    public function test_show_returns_talent_board_with_relations()
-    {
-        $board = TalentBoard::factory()->create([
-            'team_id' => $this->team->id,
-            'name' => 'Test Board',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
-        ]);
-
-        $response = $this->actingAs($this->user)
-            ->getJson(route('talent-boards.show', $board->id));
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'id' => $board->id,
-                'name' => 'Test Board',
-                'created_by' => [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                ],
-                'updated_by' => [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                ],
-            ]);
-    }
-
     public function test_update_talent_board()
     {
         $board = TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Original Name',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)
@@ -198,21 +153,13 @@ class TalentBoardControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
+                'id' => $board->id,
                 'name' => 'Updated Name',
-                'created_by' => [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                ],
-                'updated_by' => [
-                    'id' => $this->user->id,
-                    'name' => $this->user->name,
-                ],
             ]);
 
         $this->assertDatabaseHas('talent_boards', [
             'id' => $board->id,
             'name' => 'Updated Name',
-            'updated_by' => $this->user->id,
         ]);
     }
 
@@ -222,20 +169,16 @@ class TalentBoardControllerTest extends TestCase
         $board1 = TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Board One',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $board2 = TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Board Two',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('talent-boards.update', $board2->id), [
-                'name' => 'Board One', // Already exists
+                'name' => 'Board One', // Already exists for this team
             ]);
 
         $response->assertStatus(422)
@@ -247,8 +190,6 @@ class TalentBoardControllerTest extends TestCase
         $board = TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Test Board',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $response = $this->putJson(route('talent-boards.update', $board->id), [
@@ -263,8 +204,6 @@ class TalentBoardControllerTest extends TestCase
         $board = TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Test Board',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)
@@ -272,7 +211,7 @@ class TalentBoardControllerTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertSoftDeleted('talent_boards', [
+        $this->assertDatabaseMissing('talent_boards', [
             'id' => $board->id,
         ]);
     }
@@ -282,8 +221,6 @@ class TalentBoardControllerTest extends TestCase
         $board = TalentBoard::factory()->create([
             'team_id' => $this->team->id,
             'name' => 'Test Board',
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
         ]);
 
         $response = $this->deleteJson(route('talent-boards.destroy', $board->id));

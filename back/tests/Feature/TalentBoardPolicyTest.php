@@ -40,8 +40,6 @@ class TalentBoardPolicyTest extends TestCase
             $this->team1TalentBoard = TalentBoard::factory()->create([
                 'team_id' => $this->team1->id,
                 'name' => 'Team1 Board',
-                'created_by' => $this->user1->id,
-                'updated_by' => $this->user1->id
             ]);
         }
     }
@@ -103,7 +101,6 @@ class TalentBoardPolicyTest extends TestCase
         // Verify talent board still exists
         $this->assertDatabaseHas('talent_boards', [
             'id' => $this->team1TalentBoard->id,
-            'deleted_at' => null
         ]);
 
         // User from same team should be able to delete the talent board
@@ -112,8 +109,8 @@ class TalentBoardPolicyTest extends TestCase
 
         $response->assertStatus(204);
 
-        // Verify talent board is soft deleted
-        $this->assertSoftDeleted('talent_boards', [
+        // Verify talent board is deleted
+        $this->assertDatabaseMissing('talent_boards', [
             'id' => $this->team1TalentBoard->id
         ]);
     }
