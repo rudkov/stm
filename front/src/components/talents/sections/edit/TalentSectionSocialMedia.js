@@ -61,7 +61,7 @@ function TalentSectionSocialMedia(props) {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-social-media__item' key={`talent.weblink.${key}`}>
                                         <div className='talent-section-form-social-media__data'>
-                                            <div className='text-light'>Website</div>
+                                            <div className='talent-section-form-social-media__label'>Website</div>
                                             <Form.Item {...restField} name={[name, 'info']}>
                                                 <Input placeholder='Website URL' />
                                             </Form.Item>

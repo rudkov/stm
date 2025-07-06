@@ -17,3 +17,9 @@
     gap: 4px;
     width: 100%;
 }
+
+.talent-section-form-social-media__label {
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+}
