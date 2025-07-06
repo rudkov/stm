@@ -92,13 +92,17 @@ class ContactControllerTest extends TestCase
                 ],
                 'phones' => [
                     [
-                        'communication_type_id' => $phoneData['communication_type_id'],
+                        'type' => [
+                            'id' => $phoneData['communication_type_id']
+                        ],
                         'info' => $phoneData['info']
                     ]
                 ],
                 'emails' => [
                     [
-                        'communication_type_id' => $emailData['communication_type_id'],
+                        'type' => [
+                            'id' => $emailData['communication_type_id']
+                        ],
                         'info' => $emailData['info']
                     ]
                 ],
@@ -285,18 +289,24 @@ class ContactControllerTest extends TestCase
                     // Update first existing phone
                     [
                         'id' => $existingPhone1->id,
-                        'communication_type_id' => $phoneType1->id,
+                        'type' => [
+                            'id' => $phoneType1->id
+                        ],
                         'info' => $updatedPhone1Data['info']
                     ],
                     // Update second existing phone
                     [
                         'id' => $existingPhone2->id,
-                        'communication_type_id' => $phoneType2->id,
+                        'type' => [
+                            'id' => $phoneType2->id
+                        ],
                         'info' => $updatedPhone2Data['info']
                     ],
                     // Add new phone
                     [
-                        'communication_type_id' => $phoneType3->id,
+                        'type' => [
+                            'id' => $phoneType3->id
+                        ],
                         'info' => $newPhoneData['info']
                     ]
                 ],
@@ -414,18 +424,24 @@ class ContactControllerTest extends TestCase
                     // Update first existing email
                     [
                         'id' => $existingEmail1->id,
-                        'communication_type_id' => $emailType1->id,
+                        'type' => [
+                            'id' => $emailType1->id
+                        ],
                         'info' => $updatedEmail1Data['info']
                     ],
                     // Update second existing email
                     [
                         'id' => $existingEmail2->id,
-                        'communication_type_id' => $emailType2->id,
+                        'type' => [
+                            'id' => $emailType2->id
+                        ],
                         'info' => $updatedEmail2Data['info']
                     ],
                     // Add new email
                     [
-                        'communication_type_id' => $emailType3->id,
+                        'type' => [
+                            'id' => $emailType3->id
+                        ],
                         'info' => $newEmailData['info']
                     ]
                 ],
@@ -687,8 +703,22 @@ class ContactControllerTest extends TestCase
                         'job_title' => 'Senior Developer'
                     ]
                 ],
-                'phones' => [$phoneData],
-                'emails' => [$emailData],
+                'phones' => [
+                    [
+                        'type' => [
+                            'id' => $phoneData['communication_type_id']
+                        ],
+                        'info' => $phoneData['info']
+                    ]
+                ],
+                'emails' => [
+                    [
+                        'type' => [
+                            'id' => $emailData['communication_type_id']
+                        ],
+                        'info' => $emailData['info']
+                    ]
+                ],
                 'messengers' => [$messengerData],
             ]);
 
@@ -752,7 +782,9 @@ class ContactControllerTest extends TestCase
                 'last_name' => $contact->last_name,
                 'emails' => [
                     [
-                        'communication_type_id' => $emailType->id,
+                        'type' => [
+                            'id' => $emailType->id
+                        ],
                         'info' => 'invalid-email' // Invalid email format
                     ]
                 ],
@@ -762,6 +794,6 @@ class ContactControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['emails.0.info']);
+            ->assertJsonValidationErrors(['emails']);
     }
 }

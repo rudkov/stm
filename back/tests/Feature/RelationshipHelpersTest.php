@@ -6,14 +6,25 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Tests\TestCase;
 
+use App\Models\Address;
 use App\Models\CommunicationType;
+use App\Models\Company;
+use App\Models\Contact;
 use App\Models\Email;
+use App\Models\Event;
+use App\Models\Language;
+use App\Models\Messenger;
+use App\Models\MessengerType;
+use App\Models\SocialMediaType;
 use App\Models\Talent;
 use App\Models\TalentRelative;
 use App\Models\TalentRelativeType;
 use App\Models\Team;
 use App\Models\User;
 
+use Database\Factories\TalentFactory;
+
+use function App\Helpers\sync_belongs_to_many;
 use function App\Helpers\sync_has_many;
 use function App\Helpers\sync_morph_many;
 
@@ -24,20 +35,21 @@ class RelationshipHelpersTest extends TestCase
     protected Team $team;
     protected User $user;
     protected Talent $talent;
+    protected Contact $contact;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         // Clear factory cache to avoid stale data in tests
-        \Database\Factories\TalentFactory::clearCache();
+        TalentFactory::clearCache();
 
         // Create team and user
         $this->team = Team::factory()->create();
         $this->user = User::factory()->create(['team_id' => $this->team->id]);
 
         // Create talent for testing - use minimal data to avoid foreign key constraints
-        $this->talent = new \App\Models\Talent([
+        $this->talent = new Talent([
             'first_name' => 'Test',
             'last_name' => 'Talent',
             'team_id' => $this->team->id,
@@ -45,6 +57,511 @@ class RelationshipHelpersTest extends TestCase
             'updated_by' => $this->user->id,
         ]);
         $this->talent->save();
+
+        // Create contact for testing - use minimal data to avoid foreign key constraints
+        $this->contact = new Contact([
+            'first_name' => 'Test',
+            'last_name' => 'Contact',
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+        $this->contact->save();
+    }
+
+    // ==================== sync_belongs_to_many Tests ====================
+
+    public function test_sync_belongs_to_many_creates_new_records_with_direct_pivot_fields()
+    {
+        // Create companies for testing
+        $company1 = Company::factory()->create(['team_id' => $this->team->id]);
+        $company2 = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company1->id,
+                'job_title' => 'Software Engineer'
+            ],
+            [
+                'id' => $company2->id,
+                'job_title' => 'Project Manager'
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+
+        // Assert records were created with pivot data
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company1->id,
+            'job_title' => 'Software Engineer'
+        ]);
+
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company2->id,
+            'job_title' => 'Project Manager'
+        ]);
+
+        $this->assertEquals(2, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_creates_new_records_with_field_mapping()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company->id,
+                'employment' => ['title' => 'Senior Developer']
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.title']);
+
+        // Assert record was created with mapped field
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Senior Developer'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_updates_existing_records()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Attach company with initial pivot data
+        $this->contact->companies()->attach($company->id, ['job_title' => 'Junior Developer']);
+
+        $items = [
+            [
+                'id' => $company->id,
+                'job_title' => 'Senior Developer'
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+
+        // Assert pivot data was updated
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Senior Developer'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_removes_detached_records()
+    {
+        $company1 = Company::factory()->create(['team_id' => $this->team->id]);
+        $company2 = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Attach both companies
+        $this->contact->companies()->attach($company1->id, ['job_title' => 'Keep This']);
+        $this->contact->companies()->attach($company2->id, ['job_title' => 'Remove This']);
+
+        // Only keep the first company
+        $items = [
+            [
+                'id' => $company1->id,
+                'job_title' => 'Keep This Updated'
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+
+        // Assert first company still exists with updated data
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company1->id,
+            'job_title' => 'Keep This Updated'
+        ]);
+
+        // Assert second company was detached
+        $this->assertDatabaseMissing('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company2->id
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_handles_empty_input()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Attach company
+        $this->contact->companies()->attach($company->id, ['job_title' => 'Should be removed']);
+
+        // Sync with empty array
+        sync_belongs_to_many($this->contact->companies(), [], ['job_title']);
+
+        // Assert all companies were detached
+        $this->assertEquals(0, $this->contact->companies()->count());
+        $this->assertDatabaseMissing('company_contact', [
+            'contact_id' => $this->contact->id
+        ]);
+    }
+
+    public function test_sync_belongs_to_many_mixed_create_update_delete()
+    {
+        $company1 = Company::factory()->create(['team_id' => $this->team->id]);
+        $company2 = Company::factory()->create(['team_id' => $this->team->id]);
+        $company3 = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Attach existing companies
+        $this->contact->companies()->attach($company1->id, ['job_title' => 'To Update']);
+        $this->contact->companies()->attach($company2->id, ['job_title' => 'To Delete']);
+
+        $items = [
+            // Update existing
+            [
+                'id' => $company1->id,
+                'job_title' => 'Updated Title'
+            ],
+            // Create new
+            [
+                'id' => $company3->id,
+                'job_title' => 'New Title'
+            ]
+            // Note: company2 is not included, so it should be detached
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+
+        // Assert update
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company1->id,
+            'job_title' => 'Updated Title'
+        ]);
+
+        // Assert creation
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company3->id,
+            'job_title' => 'New Title'
+        ]);
+
+        // Assert deletion
+        $this->assertDatabaseMissing('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company2->id
+        ]);
+
+        $this->assertEquals(2, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_handles_complex_field_mapping()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company->id,
+                'employment' => [
+                    'position' => ['title' => 'Tech Lead']
+                ],
+                'metadata' => ['priority' => 'high']
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.position.title']);
+
+        // Assert record was created with complex mapping
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Tech Lead'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_handles_mixed_field_formats()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company->id,
+                'employment' => ['title' => 'Full Stack Developer'],
+                'job_title' => 'This should be ignored' // Direct field should be ignored when mapping exists
+            ]
+        ];
+
+        // Mix of direct fields and mapped fields
+        sync_belongs_to_many($this->contact->companies(), $items, [
+            'job_title' => 'employment.title' // Mapped field takes precedence
+        ]);
+
+        // Assert record was created with mapped value, not direct value
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Full Stack Developer'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_ignores_missing_nested_paths()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company->id
+                // Missing 'employment.title' path, should result in null
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.title']);
+
+        // Should create record with null job_title since path doesn't exist
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => null
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_handles_null_values_in_nested_paths()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company->id,
+                'employment' => ['title' => null] // Explicit null value
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title' => 'employment.title']);
+
+        // Should create record with null job_title (since path exists but value is null)
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => null
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_skips_items_without_key_field()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'id' => $company->id,
+                'job_title' => 'Valid Item'
+            ],
+            [
+                // Missing 'id' field, should be skipped
+                'job_title' => 'Invalid Item'
+            ],
+            [
+                'id' => '', // Empty 'id' field, should be skipped
+                'job_title' => 'Also Invalid'
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+
+        // Assert only the valid item was processed
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Valid Item'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_with_custom_key_field()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        $items = [
+            [
+                'company_id' => $company->id, // Using custom key field name
+                'job_title' => 'Custom Key Test'
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title'], 'company_id');
+
+        // Assert record was created using custom key field
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Custom Key Test'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_with_talent_events_and_cost_pivot()
+    {
+        // Create events for testing - manually create to avoid factory dependencies
+        $event1 = new Event([
+            'title' => 'Test Event 1',
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+        $event1->save();
+
+        $event2 = new Event([
+            'title' => 'Test Event 2',
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+        $event2->save();
+
+        $items = [
+            [
+                'id' => $event1->id,
+                'cost' => 1500.50
+            ],
+            [
+                'id' => $event2->id,
+                'cost' => 2000.00
+            ]
+        ];
+
+        sync_belongs_to_many($this->talent->events(), $items, ['cost']);
+
+        // Assert records were created with cost pivot data
+        $this->assertDatabaseHas('event_talent', [
+            'talent_id' => $this->talent->id,
+            'event_id' => $event1->id,
+            'cost' => 1500.50
+        ]);
+
+        $this->assertDatabaseHas('event_talent', [
+            'talent_id' => $this->talent->id,
+            'event_id' => $event2->id,
+            'cost' => 2000.00
+        ]);
+
+        $this->assertEquals(2, $this->talent->events()->count());
+    }
+
+    public function test_sync_belongs_to_many_with_talent_languages_no_pivot()
+    {
+        // Create languages for testing - manually create since no factory exists
+        $language1 = new Language(['id' => 'en', 'name' => 'English']);
+        $language1->save();
+
+        $language2 = new Language(['id' => 'es', 'name' => 'Spanish']);
+        $language2->save();
+
+        $items = [
+            ['id' => 'en'],
+            ['id' => 'es']
+        ];
+
+        sync_belongs_to_many($this->talent->languages(), $items, []);
+
+        // Assert records were created without pivot data
+        $this->assertDatabaseHas('talent_language', [
+            'talent_id' => $this->talent->id,
+            'language_id' => 'en'
+        ]);
+
+        $this->assertDatabaseHas('talent_language', [
+            'talent_id' => $this->talent->id,
+            'language_id' => 'es'
+        ]);
+
+        $this->assertEquals(2, $this->talent->languages()->count());
+    }
+
+    public function test_sync_belongs_to_many_doesnt_affect_other_models_records()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Create another contact with companies
+        $otherContact = new Contact([
+            'first_name' => 'Other',
+            'last_name' => 'Contact',
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+        $otherContact->save();
+
+        $otherContact->companies()->attach($company->id, ['job_title' => 'Other Job']);
+
+        // Sync companies for our main contact (should not affect other contact's relationships)
+        $items = [
+            [
+                'id' => $company->id,
+                'job_title' => 'Main Contact Job'
+            ]
+        ];
+
+        sync_belongs_to_many($this->contact->companies(), $items, ['job_title']);
+
+        // Assert other contact's relationship still exists
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $otherContact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Other Job'
+        ]);
+
+        // Assert main contact has its relationship
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title' => 'Main Contact Job'
+        ]);
+
+        $this->assertEquals(1, $this->contact->companies()->count());
+        $this->assertEquals(1, $otherContact->companies()->count());
+    }
+
+    public function test_sync_belongs_to_many_production_usage_patterns()
+    {
+        // This test replicates the exact patterns used in ContactController.php
+        $company1 = Company::factory()->create(['team_id' => $this->team->id]);
+        $company2 = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Simulate validated data structure from ContactController
+        $validated = [
+            'companies' => [
+                ['id' => $company1->id, 'job_title' => 'Software Engineer'],
+                ['id' => $company2->id, 'job_title' => 'Project Manager']
+            ]
+        ];
+
+        // Execute exactly as done in ContactController.php
+        sync_belongs_to_many($this->contact->companies(), $validated['companies'] ?? [], ['job_title']);
+
+        // Verify all records were created correctly
+        $this->assertEquals(2, $this->contact->companies()->count());
+
+        // Verify specific records exist
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company1->id,
+            'job_title' => 'Software Engineer'
+        ]);
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company2->id,
+            'job_title' => 'Project Manager'
+        ]);
     }
 
     // ==================== sync_has_many Tests ====================
@@ -583,7 +1100,7 @@ class RelationshipHelpersTest extends TestCase
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
         // Create another talent with emails
-        $otherTalent = new \App\Models\Talent([
+        $otherTalent = new Talent([
             'first_name' => 'Other',
             'last_name' => 'Talent',
             'team_id' => $this->team->id,
@@ -702,7 +1219,7 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_morph_many_with_messengers_using_direct_field_mapping()
     {
-        $messengerType = \App\Models\MessengerType::factory()->create();
+        $messengerType = MessengerType::factory()->create();
 
         $items = [
             [
@@ -737,7 +1254,7 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_morph_many_with_social_medias_using_direct_field_mapping()
     {
-        $socialMediaType = \App\Models\SocialMediaType::factory()->create();
+        $socialMediaType = SocialMediaType::factory()->create();
 
         $items = [
             [
@@ -773,8 +1290,8 @@ class RelationshipHelpersTest extends TestCase
     public function test_sync_morph_many_with_different_field_mapping_patterns()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
-        $messengerType = \App\Models\MessengerType::factory()->create();
-        $socialMediaType = \App\Models\SocialMediaType::factory()->create();
+        $messengerType = MessengerType::factory()->create();
+        $socialMediaType = SocialMediaType::factory()->create();
 
         // Test complex field mapping (addresses with nested type.id)
         sync_morph_many($this->talent->addresses(), [
@@ -831,22 +1348,22 @@ class RelationshipHelpersTest extends TestCase
     public function test_sync_morph_many_updates_and_deletes_across_different_morphable_types()
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
-        $messengerType = \App\Models\MessengerType::factory()->create();
+        $messengerType = MessengerType::factory()->create();
 
         // Create existing records for addresses and messengers
-        $existingAddress = new \App\Models\Address([
+        $existingAddress = new Address([
             'communication_type_id' => $communicationType->id,
             'info' => 'Old Address'
         ]);
         $this->talent->addresses()->save($existingAddress);
 
-        $existingMessenger = new \App\Models\Messenger([
+        $existingMessenger = new Messenger([
             'messenger_type_id' => $messengerType->id,
             'info' => 'old_username'
         ]);
         $this->talent->messengers()->save($existingMessenger);
 
-        $messengerToDelete = new \App\Models\Messenger([
+        $messengerToDelete = new Messenger([
             'messenger_type_id' => $messengerType->id,
             'info' => 'delete_me'
         ]);
@@ -940,8 +1457,8 @@ class RelationshipHelpersTest extends TestCase
     {
         // This test replicates the exact patterns used in TalentController.php
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
-        $messengerType = \App\Models\MessengerType::factory()->create();
-        $socialMediaType = \App\Models\SocialMediaType::factory()->create();
+        $messengerType = MessengerType::factory()->create();
+        $socialMediaType = SocialMediaType::factory()->create();
 
         // Simulate validated data structure from TalentController
         $validated = [

@@ -19,9 +19,6 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
-        //contacts
-        Route::apiResource('contacts', 'ContactController');
-
         //communication types
         Route::get('communication-types', 'CommunicationTypeController@index')
             ->name('communication-types.index');
@@ -31,8 +28,18 @@ Route::group(['prefix' => 'v1'], function () {
         //companies
         Route::apiResource('companies', 'CompanyController');
 
-        //teams
-        Route::post('teams', 'TeamController@store');
+        //contacts
+        Route::apiResource('contacts', 'ContactController');
+
+        //events
+        Route::post('events/search', 'EventController@index');
+
+        //event
+        Route::get('events/{id}', 'EventController@show');
+
+        //settings / team settings
+        Route::get('settings/team', 'SettingsController@team')
+            ->name('settings.team');
 
         //talents
         Route::get('talents/locations', 'TalentController@locations')->name('talents.locations');
@@ -44,15 +51,8 @@ Route::group(['prefix' => 'v1'], function () {
         //talent boards
         Route::apiResource('talent-boards', 'TalentBoardController');
 
-        //team settings
-        Route::get('settings/team', 'SettingsController@team')
-            ->name('settings.team');
-
-        //events
-        Route::post('events/search', 'EventController@index');
-
-        //event
-        Route::get('events/{id}', 'EventController@show');
+        //teams
+        Route::post('teams', 'TeamController@store');
 
         //users
         Route::post('users/search', 'UserController@index');
