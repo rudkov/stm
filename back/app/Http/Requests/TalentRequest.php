@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 use App\Rules\ValidateEach;
 
 use App\Models\Company;
@@ -24,11 +26,6 @@ use App\Models\User;
 
 class TalentRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -74,26 +71,26 @@ class TalentRequest extends FormRequest
             'is_vegetarian' => 'nullable|boolean',
 
             // Relationships
-            'board_id' => 'nullable|exists:' . TalentBoard::class . ',id',
-            'cup_size_id' => 'nullable|exists:' . TalentCupSize::class . ',id',
-            'dress_size_id' => 'nullable|exists:' . TalentDressSize::class . ',id',
-            'eye_color_id' => 'nullable|exists:' . TalentEyeColor::class . ',id',
-            'gender_id' => 'nullable|exists:' . TalentGender::class . ',id',
-            'hair_color_id' => 'nullable|exists:' . TalentHairColor::class . ',id',
-            'hair_length_id' => 'nullable|exists:' . TalentHairLength::class . ',id',
-            'manager_id' => 'nullable|exists:' . User::class . ',id',
-            'marital_status_id' => 'nullable|exists:' . TalentMaritalStatus::class . ',id',
-            'mother_agency_id' => 'nullable|exists:' . Company::class . ',id',
-            'shirt_size_id' => 'nullable|exists:' . TalentShirtSize::class . ',id',
-            'shoe_size_id' => 'nullable|exists:' . TalentShoeSize::class . ',id',
-            'skin_color_id' => 'nullable|exists:' . TalentSkinColor::class . ',id',
-            'suit_cut_id' => 'nullable|exists:' . TalentSuitCut::class . ',id',
+            'board_id' => ['nullable', Rule::exists(TalentBoard::class, 'id')],
+            'cup_size_id' => ['nullable', Rule::exists(TalentCupSize::class, 'id')],
+            'dress_size_id' => ['nullable', Rule::exists(TalentDressSize::class, 'id')],
+            'eye_color_id' => ['nullable', Rule::exists(TalentEyeColor::class, 'id')],
+            'gender_id' => ['nullable', Rule::exists(TalentGender::class, 'id')],
+            'hair_color_id' => ['nullable', Rule::exists(TalentHairColor::class, 'id')],
+            'hair_length_id' => ['nullable', Rule::exists(TalentHairLength::class, 'id')],
+            'manager_id' => ['nullable', Rule::exists(User::class, 'id')],
+            'marital_status_id' => ['nullable', Rule::exists(TalentMaritalStatus::class, 'id')],
+            'mother_agency_id' => ['nullable', Rule::exists(Company::class, 'id')],
+            'shirt_size_id' => ['nullable', Rule::exists(TalentShirtSize::class, 'id')],
+            'shoe_size_id' => ['nullable', Rule::exists(TalentShoeSize::class, 'id')],
+            'skin_color_id' => ['nullable', Rule::exists(TalentSkinColor::class, 'id')],
+            'suit_cut_id' => ['nullable', Rule::exists(TalentSuitCut::class, 'id')],
 
             // Collections - Many-to-many relationships (arrays of IDs)
-            'citizenships' => ['nullable', 'array'],
-            'citizenships.*' => ['required', 'exists:' . Country::class . ',alpha_2'],
-            'languages' => ['nullable', 'array'],
-            'languages.*' => ['required', 'exists:' . Language::class . ',id'],
+            'citizenships' => 'nullable|array',
+            'citizenships.*' => ['required', Rule::exists(Country::class, 'alpha_2')],
+            'languages' => 'nullable|array',
+            'languages.*' => ['required', Rule::exists(Language::class, 'id')],
 
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],

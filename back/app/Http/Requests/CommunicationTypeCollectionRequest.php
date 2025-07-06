@@ -10,21 +10,18 @@ use App\Models\CommunicationType;
 
 class CommunicationTypeCollectionRequest extends FormRequest
 {
-
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         $rules = [];
+        $teamId = Auth::user()->team_id;
 
         foreach (CommunicationType::getDefaultTypes() as $type) {
             $rules[$type] = 'sometimes|array|nullable';
             $rules["{$type}.*.id"] = [
                 'sometimes',
                 'integer',
-                Rule::exists('communication_types', 'id')
-                    ->where('team_id', Auth::user()->team_id)
+                Rule::exists(CommunicationType::class, 'id')
+                    ->where('team_id', $teamId)
                     ->where('type', $type),
             ];
             $rules["{$type}.*.name"] = 'required|string|max:255';
@@ -33,9 +30,6 @@ class CommunicationTypeCollectionRequest extends FormRequest
         return $rules;
     }
 
-    /**
-     * Configure the validator instance.
-     */
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {

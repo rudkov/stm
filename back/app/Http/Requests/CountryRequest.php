@@ -3,18 +3,16 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+use App\Models\Country;
 
 class CountryRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            'alpha_2' => 'required|exists:countries,alpha_2',
+            'alpha_2' => ['required', Rule::exists(Country::class, 'alpha_2')],
         ];
     }
 }
