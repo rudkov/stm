@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\Event;
 use App\Models\EventChunk;
 
+use App\Traits\BelongsToTeam;
 use App\Traits\HasEmails;
 use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
@@ -23,6 +24,7 @@ class Contact extends Model
     use HasUuids;
     use SoftDeletes;
 
+    use BelongsToTeam;
     use HasEmails;
     use HasMessengers;
     use HasPhones;

@@ -13,6 +13,7 @@ use App\Models\EventChunk;
 use App\Models\EventType;
 use App\Models\Talent;
 
+use App\Traits\BelongsToTeam;
 use App\Traits\HasUserTracking;
 
 class Event extends Model
@@ -21,6 +22,7 @@ class Event extends Model
     use HasUuids;
     use SoftDeletes;
 
+    use BelongsToTeam;
     use HasUserTracking;
 
     protected $hidden = [

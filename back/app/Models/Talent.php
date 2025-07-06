@@ -23,6 +23,7 @@ use App\Models\TalentSuitCut;
 use App\Models\TalentBoard;
 use App\Models\User;
 
+use App\Traits\BelongsToTeam;
 use App\Traits\HasAddresses;
 use App\Traits\HasEmails;
 use App\Traits\HasMessengers;
@@ -36,6 +37,7 @@ class Talent extends Model
     use HasUuids;
     use SoftDeletes;
 
+    use BelongsToTeam;
     use HasAddresses;
     use HasEmails;
     use HasMessengers;

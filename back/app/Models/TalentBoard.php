@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Talent;
 
+use App\Traits\BelongsToTeam;
 use App\Traits\HasUserTracking;
 
 class TalentBoard extends Model
@@ -15,6 +16,7 @@ class TalentBoard extends Model
     use HasFactory;
     use SoftDeletes;
 
+    use BelongsToTeam;
     use HasUserTracking;
 
     protected $fillable = [

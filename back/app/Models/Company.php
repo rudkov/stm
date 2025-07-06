@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-use App\Models\Event;
 use App\Models\Contact;
+use App\Models\Event;
 use App\Models\Talent;
 
+use App\Traits\BelongsToTeam;
 use App\Traits\HasUserTracking;
 
 class Company extends Model
@@ -19,6 +20,7 @@ class Company extends Model
     use HasUuids;
     use SoftDeletes;
 
+    use BelongsToTeam;
     use HasUserTracking;
 
     protected $table = 'companies';

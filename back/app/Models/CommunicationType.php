@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\BelongsToTeam;
+
 class CommunicationType extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToTeam;
 
     public $timestamps = false;
 
@@ -17,14 +19,6 @@ class CommunicationType extends Model
         'weight',
         'team_id',
     ];
-
-    /**
-     * Get the team that owns this communication type.
-     */
-    public function team()
-    {
-        return $this->belongsTo(Team::class);
-    }
 
     /**
      * Get the default communication types, specified in the config file.
