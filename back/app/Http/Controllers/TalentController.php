@@ -90,7 +90,7 @@ class TalentController extends Controller
             sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
             sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
             sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
             sync_relation($talent->weblinks(), $validated['weblinks'] ?? [], ['info']);
@@ -115,7 +115,7 @@ class TalentController extends Controller
             sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
             sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
             sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
             sync_relation($talent->weblinks(), $validated['weblinks'] ?? [], ['info']);

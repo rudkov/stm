@@ -174,7 +174,7 @@ function TalentForm(props) {
         if (values.messengers) {
             values.messengers = values.messengers.map(messenger => ({
                 ...messenger,
-                messenger_type_id: messenger.messenger_type_id ?? null
+                type: { id: messenger.type.id ?? null }
             }));
         }
         if (values.phones) {
@@ -206,7 +206,7 @@ function TalentForm(props) {
         values.emails = cleanCollection(values.emails, { requiredAny: ['info'] });
         values.phones = cleanCollection(values.phones, { requiredAny: ['info'] });
         values.relatives = cleanCollection(values.relatives, { requiredAny: ['info'] });
-        values.messengers = cleanCollection(values.messengers, { requiredAll: ['messenger_type_id', 'info'] });
+        values.messengers = cleanCollection(values.messengers, { requiredAll: ['type.id', 'info'] });
         values.social_medias = cleanCollection(values.social_medias, { requiredAll: ['social_media_type_id', 'info'] });
         values.weblinks = cleanCollection(values.weblinks, { requiredAny: ['info'] });
 

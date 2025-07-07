@@ -14,8 +14,8 @@ class MessengerRequest extends FormRequest
     {
         return [
             'id' => ['sometimes', Rule::exists(Messenger::class, 'id')],
-            'messenger_type_id' => ['required_with:info', Rule::exists(MessengerType::class, 'id')],
-            'info' => 'required_with:messenger_type_id|string|max:255',
+            'type.id' => ['required', Rule::exists(MessengerType::class, 'id')],
+            'info' => 'required|string|max:255',
         ];
     }
 }

@@ -85,7 +85,7 @@ function TalentSectionContacts(props) {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-contacts__item' key={`talent.messenger.${key}`}>
                                         <div className='talent-section-form-contacts__data'>
-                                            <Form.Item {...restField} name={[name, 'messenger_type_id']}>
+                                            <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
                                                     options={settings.messenger_types.map(item => ({
@@ -119,7 +119,7 @@ function TalentSectionContacts(props) {
                         <Button type='dashed' onClick={() => {
                             const phonesList = props.form.getFieldValue('phones');
                             props.form.setFieldsValue({
-                                phones: [...phonesList, { phone_type_id: null, info: '' }]
+                                phones: [...phonesList, { type: { id: null }, info: '' }]
                             });
                         }}>Add Phone</Button>
                     </Form.Item>
@@ -127,7 +127,7 @@ function TalentSectionContacts(props) {
                         <Button type='dashed' onClick={() => {
                             const emailsList = props.form.getFieldValue('emails');
                             props.form.setFieldsValue({
-                                emails: [...emailsList, { email_type_id: null, info: '' }]
+                                emails: [...emailsList, { type: { id: null }, info: '' }]
                             });
                         }}>Add Email</Button>
                     </Form.Item>
@@ -135,7 +135,7 @@ function TalentSectionContacts(props) {
                         <Button type='dashed' onClick={() => {
                             const messengersList = props.form.getFieldValue('messengers');
                             props.form.setFieldsValue({
-                                messengers: [...messengersList, { messenger_type_id: null, info: '' }]
+                                messengers: [...messengersList, { type: { id: null }, info: '' }]
                             });
                         }}>Add Messenger</Button>
                     </Form.Item>
