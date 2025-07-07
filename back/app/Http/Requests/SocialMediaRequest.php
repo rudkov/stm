@@ -14,8 +14,8 @@ class SocialMediaRequest extends FormRequest
     {
         return [
             'id' => ['sometimes', Rule::exists(SocialMedia::class, 'id')],
-            'social_media_type_id' => ['required_with:info', Rule::exists(SocialMediaType::class, 'id')],
-            'info' => 'required_with:social_media_type_id|string|max:255',
+            'type.id' => ['required', Rule::exists(SocialMediaType::class, 'id')],
+            'info' => 'required|string|max:255',
         ];
     }
 }

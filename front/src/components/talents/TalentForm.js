@@ -87,7 +87,7 @@ function TalentForm(props) {
                 : [{ type: { id: null }, info: '' }],
             social_medias: (values.social_medias && values.social_medias.length > 0)
                 ? values.social_medias
-                : [{ social_media_type_id: null, info: '' }],
+                : [{ type: { id: null }, info: '' }],
             emails: values.emails || null,
             messengers: values.messengers || null,
             weblinks: values.weblinks || null,
@@ -192,7 +192,7 @@ function TalentForm(props) {
         if (values.social_medias) {
             values.social_medias = values.social_medias.map(socialMedia => ({
                 ...socialMedia,
-                social_media_type_id: socialMedia.social_media_type_id ?? null
+                type: { id: socialMedia.type.id ?? null }
             }));
         }
         if (values.weblinks) {
@@ -207,7 +207,7 @@ function TalentForm(props) {
         values.phones = cleanCollection(values.phones, { requiredAny: ['info'] });
         values.relatives = cleanCollection(values.relatives, { requiredAny: ['info'] });
         values.messengers = cleanCollection(values.messengers, { requiredAll: ['type.id', 'info'] });
-        values.social_medias = cleanCollection(values.social_medias, { requiredAll: ['social_media_type_id', 'info'] });
+        values.social_medias = cleanCollection(values.social_medias, { requiredAll: ['type.id', 'info'] });
         values.weblinks = cleanCollection(values.weblinks, { requiredAny: ['info'] });
 
         if (isNewTalent) {

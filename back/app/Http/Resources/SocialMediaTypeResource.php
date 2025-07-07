@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SocialMediaResource extends JsonResource
+class SocialMediaTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,9 @@ class SocialMediaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'info' => $this->info,
-            'type' => $this->whenLoaded('type', fn() => new SocialMediaTypeResource($this->type)),
+            'name' => $this->name,
+            'system_name' => $this->system_name,
+            'url' => $this->url,
         ];
     }
 }

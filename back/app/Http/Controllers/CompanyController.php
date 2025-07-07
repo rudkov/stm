@@ -58,7 +58,7 @@ class CompanyController extends Controller
             sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
             sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
             sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
         });
 
@@ -79,7 +79,7 @@ class CompanyController extends Controller
             sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
             sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
             sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
         });
 
