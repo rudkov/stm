@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+use App\Models\Address;
 use App\Models\CommunicationType;
 use App\Models\Company;
 use App\Models\Contact;
@@ -12,6 +13,8 @@ use App\Models\Email;
 use App\Models\Messenger;
 use App\Models\MessengerType;
 use App\Models\Phone;
+use App\Models\SocialMedia;
+use App\Models\SocialMediaType;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Weblink;
@@ -72,13 +75,17 @@ class ContactControllerTest extends TestCase
         // Create necessary types
         $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
         $phoneType = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
+        $addressType = CommunicationType::factory()->create(['type' => 'address', 'team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
+        $socialMediaType = SocialMediaType::factory()->create();
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
         // Use factories to generate realistic test data
         $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->toArray();
         $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->toArray();
+        $addressData = Address::factory()->make(['communication_type_id' => $addressType->id])->toArray();
         $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->toArray();
+        $socialMediaData = SocialMedia::factory()->make(['social_media_type_id' => $socialMediaType->id])->toArray();
         $weblinkData = Weblink::factory()->make()->only(['info']);
 
         $response = $this->actingAs($this->user)
@@ -108,10 +115,24 @@ class ContactControllerTest extends TestCase
                         'info' => $emailData['info']
                     ]
                 ],
+                'addresses' => [
+                    [
+                        'type' => [
+                            'id' => $addressData['communication_type_id']
+                        ],
+                        'info' => $addressData['info']
+                    ]
+                ],
                 'messengers' => [
                     [
                         'messenger_type_id' => $messengerData['messenger_type_id'],
                         'info' => $messengerData['info']
+                    ]
+                ],
+                'social_medias' => [
+                    [
+                        'social_media_type_id' => $socialMediaData['social_media_type_id'],
+                        'info' => $socialMediaData['info']
                     ]
                 ],
                 'weblinks' => [$weblinkData]
@@ -151,12 +172,28 @@ class ContactControllerTest extends TestCase
             'info' => $emailData['info']
         ]);
 
+        // Check address was created
+        $this->assertDatabaseHas('addresses', [
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressData['communication_type_id'],
+            'info' => $addressData['info']
+        ]);
+
         // Check messenger was created
         $this->assertDatabaseHas('messengers', [
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
             'messenger_type_id' => $messengerData['messenger_type_id'],
             'info' => $messengerData['info']
+        ]);
+
+        // Check social media was created
+        $this->assertDatabaseHas('social_media', [
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaData['social_media_type_id'],
+            'info' => $socialMediaData['info']
         ]);
 
         // Check weblink was created
@@ -174,6 +211,95 @@ class ContactControllerTest extends TestCase
         ]);
 
         $response->assertStatus(401);
+    }
+
+    public function test_store_contact_with_addresses()
+    {
+        $communicationType = CommunicationType::factory()->create([
+            'team_id' => $this->team->id,
+            'type' => 'address'
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('contacts.store'), [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'addresses' => [
+                    [
+                        'type' => ['id' => $communicationType->id],
+                        'info' => '123 Main St, City, State 12345'
+                    ],
+                    [
+                        'type' => ['id' => $communicationType->id],
+                        'info' => '456 Work Ave, Business District'
+                    ]
+                ]
+            ]);
+
+        $response->assertStatus(201);
+
+        $contact = Contact::where('first_name', 'John')->where('last_name', 'Doe')->first();
+        $this->assertNotNull($contact);
+
+        // Verify addresses were created
+        $this->assertDatabaseHas('addresses', [
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $communicationType->id,
+            'info' => '123 Main St, City, State 12345'
+        ]);
+
+        $this->assertDatabaseHas('addresses', [
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $communicationType->id,
+            'info' => '456 Work Ave, Business District'
+        ]);
+
+        $this->assertEquals(2, $contact->addresses()->count());
+    }
+
+    public function test_store_contact_with_social_medias()
+    {
+        $socialMediaType = SocialMediaType::factory()->create();
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('contacts.store'), [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'social_medias' => [
+                    [
+                        'social_media_type_id' => $socialMediaType->id,
+                        'info' => 'john_doe_contact'
+                    ],
+                    [
+                        'social_media_type_id' => $socialMediaType->id,
+                        'info' => 'john.doe.official'
+                    ]
+                ]
+            ]);
+
+        $response->assertStatus(201);
+
+        $contact = Contact::where('first_name', 'John')->where('last_name', 'Doe')->first();
+        $this->assertNotNull($contact);
+
+        // Verify social medias were created
+        $this->assertDatabaseHas('social_media', [
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType->id,
+            'info' => 'john_doe_contact'
+        ]);
+
+        $this->assertDatabaseHas('social_media', [
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType->id,
+            'info' => 'john.doe.official'
+        ]);
+
+        $this->assertEquals(2, $contact->socialMedias()->count());
     }
 
     public function test_update_contact_basic_info()
@@ -696,12 +822,16 @@ class ContactControllerTest extends TestCase
         $company = Company::factory()->create(['team_id' => $this->team->id]);
         $phoneType = CommunicationType::factory()->create(['type' => 'phone', 'team_id' => $this->team->id]);
         $emailType = CommunicationType::factory()->create(['type' => 'email', 'team_id' => $this->team->id]);
+        $addressType = CommunicationType::factory()->create(['type' => 'address', 'team_id' => $this->team->id]);
         $messengerType = MessengerType::factory()->create();
+        $socialMediaType = SocialMediaType::factory()->create();
 
         // Generate realistic test data using factories
         $phoneData = Phone::factory()->make(['communication_type_id' => $phoneType->id])->only(['communication_type_id', 'info']);
         $emailData = Email::factory()->make(['communication_type_id' => $emailType->id])->only(['communication_type_id', 'info']);
+        $addressData = Address::factory()->make(['communication_type_id' => $addressType->id])->only(['communication_type_id', 'info']);
         $messengerData = Messenger::factory()->make(['messenger_type_id' => $messengerType->id])->only(['messenger_type_id', 'info']);
+        $socialMediaData = SocialMedia::factory()->make(['social_media_type_id' => $socialMediaType->id])->only(['social_media_type_id', 'info']);
         $weblinkData = Weblink::factory()->make()->only(['info']);
 
         $response = $this->actingAs($this->user)
@@ -731,7 +861,16 @@ class ContactControllerTest extends TestCase
                         'info' => $emailData['info']
                     ]
                 ],
+                'addresses' => [
+                    [
+                        'type' => [
+                            'id' => $addressData['communication_type_id']
+                        ],
+                        'info' => $addressData['info']
+                    ]
+                ],
                 'messengers' => [$messengerData],
+                'social_medias' => [$socialMediaData],
                 'weblinks' => [$weblinkData]
             ]);
 
@@ -769,11 +908,23 @@ class ContactControllerTest extends TestCase
             'emailable_type' => 'contact',
         ], $emailData));
 
+        // Check address was created
+        $this->assertDatabaseHas('addresses', array_merge([
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+        ], $addressData));
+
         // Check messenger was created
         $this->assertDatabaseHas('messengers', array_merge([
             'messengerable_id' => $contact->id,
             'messengerable_type' => 'contact',
         ], $messengerData));
+
+        // Check social media was created
+        $this->assertDatabaseHas('social_media', array_merge([
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+        ], $socialMediaData));
 
         // Check weblink was created
         $this->assertDatabaseHas('weblinks', array_merge([
@@ -783,6 +934,183 @@ class ContactControllerTest extends TestCase
 
         // Check updated_by was set correctly
         $this->assertEquals($this->user->id, $contact->fresh()->updated_by);
+    }
+
+    public function test_update_contact_addresses()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        $addressType1 = CommunicationType::factory()->create(['type' => 'address', 'team_id' => $this->team->id]);
+        $addressType2 = CommunicationType::factory()->create(['type' => 'address', 'team_id' => $this->team->id]);
+
+        // Create initial addresses
+        $existingAddress1 = Address::factory()->create([
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType1->id,
+            'info' => 'Old Address 1',
+        ]);
+
+        $existingAddress2 = Address::factory()->create([
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType2->id,
+            'info' => 'Old Address 2',
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [],
+                'addresses' => [
+                    // Update first existing address
+                    [
+                        'id' => $existingAddress1->id,
+                        'type' => ['id' => $addressType1->id],
+                        'info' => 'Updated Address 1'
+                    ],
+                    // Update second existing address
+                    [
+                        'id' => $existingAddress2->id,
+                        'type' => ['id' => $addressType2->id],
+                        'info' => 'Updated Address 2'
+                    ],
+                    // Add new address
+                    [
+                        'type' => ['id' => $addressType1->id],
+                        'info' => 'New Address 3'
+                    ]
+                ]
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check first address was updated
+        $this->assertDatabaseHas('addresses', [
+            'id' => $existingAddress1->id,
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType1->id,
+            'info' => 'Updated Address 1'
+        ]);
+
+        // Check second address was updated
+        $this->assertDatabaseHas('addresses', [
+            'id' => $existingAddress2->id,
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType2->id,
+            'info' => 'Updated Address 2'
+        ]);
+
+        // Check new address was added
+        $this->assertDatabaseHas('addresses', [
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType1->id,
+            'info' => 'New Address 3'
+        ]);
+
+        // Check total count of addresses
+        $this->assertEquals(3, $contact->fresh()->addresses()->count());
+    }
+
+    public function test_update_contact_social_medias()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        $socialMediaType1 = SocialMediaType::factory()->create();
+        $socialMediaType2 = SocialMediaType::factory()->create();
+
+        // Create initial social medias
+        $existingSocialMedia1 = SocialMedia::factory()->create([
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType1->id,
+            'info' => 'old_handle_1',
+        ]);
+
+        $existingSocialMedia2 = SocialMedia::factory()->create([
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType2->id,
+            'info' => 'old_handle_2',
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [],
+                'addresses' => [],
+                'social_medias' => [
+                    // Update first existing social media
+                    [
+                        'id' => $existingSocialMedia1->id,
+                        'social_media_type_id' => $socialMediaType1->id,
+                        'info' => 'updated_handle_1'
+                    ],
+                    // Update second existing social media
+                    [
+                        'id' => $existingSocialMedia2->id,
+                        'social_media_type_id' => $socialMediaType2->id,
+                        'info' => 'updated_handle_2'
+                    ],
+                    // Add new social media
+                    [
+                        'social_media_type_id' => $socialMediaType1->id,
+                        'info' => 'new_handle_3'
+                    ]
+                ]
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check first social media was updated
+        $this->assertDatabaseHas('social_media', [
+            'id' => $existingSocialMedia1->id,
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType1->id,
+            'info' => 'updated_handle_1'
+        ]);
+
+        // Check second social media was updated
+        $this->assertDatabaseHas('social_media', [
+            'id' => $existingSocialMedia2->id,
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType2->id,
+            'info' => 'updated_handle_2'
+        ]);
+
+        // Check new social media was added
+        $this->assertDatabaseHas('social_media', [
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType1->id,
+            'info' => 'new_handle_3'
+        ]);
+
+        // Check total count of social medias
+        $this->assertEquals(3, $contact->fresh()->socialMedias()->count());
     }
 
     public function test_update_contact_validation_for_email()
@@ -1002,6 +1330,108 @@ class ContactControllerTest extends TestCase
 
         // Check total count of weblinks
         $this->assertEquals(3, $contact->fresh()->weblinks()->count());
+    }
+
+    public function test_delete_contact_addresses()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        $addressType = CommunicationType::factory()->create(['type' => 'address', 'team_id' => $this->team->id]);
+
+        // Create initial addresses
+        $existingAddress1 = Address::factory()->create([
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType->id,
+        ]);
+
+        $existingAddress2 = Address::factory()->create([
+            'addressable_id' => $contact->id,
+            'addressable_type' => 'contact',
+            'communication_type_id' => $addressType->id,
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [],
+                'addresses' => [], // No addresses, should delete existing
+                'social_medias' => [],
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check addresses were deleted
+        $this->assertDatabaseMissing('addresses', [
+            'id' => $existingAddress1->id
+        ]);
+
+        $this->assertDatabaseMissing('addresses', [
+            'id' => $existingAddress2->id
+        ]);
+
+        // Check total count of addresses
+        $this->assertEquals(0, $contact->fresh()->addresses()->count());
+    }
+
+    public function test_delete_contact_social_medias()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        $socialMediaType = SocialMediaType::factory()->create();
+
+        // Create initial social medias
+        $existingSocialMedia1 = SocialMedia::factory()->create([
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType->id,
+        ]);
+
+        $existingSocialMedia2 = SocialMedia::factory()->create([
+            'social_mediaable_id' => $contact->id,
+            'social_mediaable_type' => 'contact',
+            'social_media_type_id' => $socialMediaType->id,
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->putJson(route('contacts.update', $contact), [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'companies' => [],
+                'phones' => [],
+                'emails' => [],
+                'messengers' => [],
+                'weblinks' => [],
+                'addresses' => [],
+                'social_medias' => [], // No social medias, should delete existing
+            ]);
+
+        $response->assertStatus(200);
+
+        // Check social medias were deleted
+        $this->assertDatabaseMissing('social_media', [
+            'id' => $existingSocialMedia1->id
+        ]);
+
+        $this->assertDatabaseMissing('social_media', [
+            'id' => $existingSocialMedia2->id
+        ]);
+
+        // Check total count of social medias
+        $this->assertEquals(0, $contact->fresh()->socialMedias()->count());
     }
 
     public function test_contact_weblinks_relationship_returns_correct_data()

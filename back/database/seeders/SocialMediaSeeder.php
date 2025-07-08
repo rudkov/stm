@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\SocialMediaType;
 
 use App\Models\Company;
+use App\Models\Contact;
 use App\Models\Talent;
 
 class SocialMediaSeeder extends Seeder
@@ -19,6 +20,7 @@ class SocialMediaSeeder extends Seeder
         $socialMediaTypes = SocialMediaType::all();
 
         $companies = Company::all();
+        $contacts = Contact::all();
         $talents = Talent::all();
 
         foreach ($companies as $company) {
@@ -26,6 +28,17 @@ class SocialMediaSeeder extends Seeder
 
             foreach ($randomSocialMediaTypes as $randomSocialMediaType) {
                 $company->socialMedias()->create([
+                    'info' => fake()->userName,
+                    'social_media_type_id' => $randomSocialMediaType->id,
+                ]);
+            }
+        }
+
+        foreach ($contacts as $contact) {
+            $randomSocialMediaTypes = $socialMediaTypes->random(rand(1, count($socialMediaTypes)));
+
+            foreach ($randomSocialMediaTypes as $randomSocialMediaType) {
+                $contact->socialMedias()->create([
                     'info' => fake()->userName,
                     'social_media_type_id' => $randomSocialMediaType->id,
                 ]);
