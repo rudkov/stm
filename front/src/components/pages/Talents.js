@@ -17,16 +17,21 @@ function Talents() {
     const [isNewTalent, setIsNewTalent] = useState();
     const { filters, updateFilter } = useTalentsFilters();
 
-    // Memoized function to fetch talents with current filters
-    const fetchTalentsWithFilters = useCallback(() => {
+    // Fetch talents when filters change (only filtered results)
+    useEffect(() => {
+        dispatch(fetchTalents(filters));
+    }, [dispatch, filters]);
+
+    // Fetch managers once on component mount
+    useEffect(() => {
+        dispatch(fetchTalentsManagers());
+    }, [dispatch]);
+
+    // Function to call both API endpoints after talent save/update
+    const fetchAfterTalentSaveOrUpdate = useCallback(() => {
         dispatch(fetchTalents(filters));
         dispatch(fetchTalentsManagers());
     }, [dispatch, filters]);
-
-    // Fetch talents when filters change
-    useEffect(() => {
-        fetchTalentsWithFilters();
-    }, [fetchTalentsWithFilters]);
 
     const createTalent = () => {
         setIsNewTalent(true);
@@ -64,7 +69,7 @@ function Talents() {
                 open={isTalentFormOpen}
                 closeForm={closeTalentForm}
                 isNewTalent={isNewTalent}
-                onAfterSubmit={fetchTalentsWithFilters}
+                onAfterSubmit={fetchAfterTalentSaveOrUpdate}
             />
         </>
     );
