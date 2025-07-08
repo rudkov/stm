@@ -136,8 +136,6 @@ class TeamInitializationServiceTest extends TestCase
             $this->assertDatabaseHas('talent_boards', [
                 'team_id' => $this->team->id,
                 'name' => $defaultBoard['name'],
-                'created_by' => null,
-                'updated_by' => null,
             ]);
         }
     }
@@ -311,14 +309,6 @@ class TeamInitializationServiceTest extends TestCase
             $this->assertNotNull($board->name);
             $this->assertNotEmpty($board->name);
             $this->assertEquals($this->team->id, $board->team_id);
-
-            // Assert tracking fields are null (no user context in service)
-            $this->assertNull($board->created_by);
-            $this->assertNull($board->updated_by);
-
-            // Assert timestamps are present
-            $this->assertNotNull($board->created_at);
-            $this->assertNotNull($board->updated_at);
         }
     }
 

@@ -48,8 +48,6 @@ class TeamInitializationService
             foreach ($defaultBoards as $board) {
                 $this->team->talentBoards()->create([
                     'name' => $board['name'],
-                    'created_by' => null,
-                    'updated_by' => null,
                 ]);
             }
         });

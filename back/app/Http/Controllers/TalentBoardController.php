@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TalentBoard;
 use App\Http\Requests\TalentBoardRequest;
-use App\Http\Resources\TalentBoardCollection;
+use App\Http\Resources\TalentBoardResource;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -20,12 +20,11 @@ class TalentBoardController extends Controller
         $talentBoards = TalentBoard::where('team_id', Auth::user()->team_id)
             ->orderBy('name', 'asc')
             ->get();
-        return new TalentBoardCollection($talentBoards);
+        return TalentBoardResource::collection($talentBoards);
     }
 
     public function show(TalentBoard $talentBoard)
     {
-        $talentBoard->load('createdBy', 'updatedBy');
         return $talentBoard->toResource();
     }
 
