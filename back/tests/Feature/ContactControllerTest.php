@@ -125,13 +125,13 @@ class ContactControllerTest extends TestCase
                 ],
                 'messengers' => [
                     [
-                        'messenger_type_id' => $messengerData['messenger_type_id'],
+                        'type' => ['id' => $messengerData['messenger_type_id']],
                         'info' => $messengerData['info']
                     ]
                 ],
                 'social_medias' => [
                     [
-                        'social_media_type_id' => $socialMediaData['social_media_type_id'],
+                        'type' => ['id' => $socialMediaData['social_media_type_id']],
                         'info' => $socialMediaData['info']
                     ]
                 ],
@@ -269,11 +269,11 @@ class ContactControllerTest extends TestCase
                 'last_name' => 'Doe',
                 'social_medias' => [
                     [
-                        'social_media_type_id' => $socialMediaType->id,
+                        'type' => ['id' => $socialMediaType->id],
                         'info' => 'john_doe_contact'
                     ],
                     [
-                        'social_media_type_id' => $socialMediaType->id,
+                        'type' => ['id' => $socialMediaType->id],
                         'info' => 'john.doe.official'
                     ]
                 ]
@@ -696,18 +696,18 @@ class ContactControllerTest extends TestCase
                     // Update first existing messenger
                     [
                         'id' => $existingMessenger1->id,
-                        'messenger_type_id' => $messengerType1->id,
+                        'type' => ['id' => $messengerType1->id],
                         'info' => $updatedMessenger1Data['info']
                     ],
                     // Update second existing messenger
                     [
                         'id' => $existingMessenger2->id,
-                        'messenger_type_id' => $messengerType2->id,
+                        'type' => ['id' => $messengerType2->id],
                         'info' => $updatedMessenger2Data['info']
                     ],
                     // Add new messenger
                     [
-                        'messenger_type_id' => $messengerType3->id,
+                        'type' => ['id' => $messengerType3->id],
                         'info' => $newMessengerData['info']
                     ]
                 ],
@@ -869,8 +869,18 @@ class ContactControllerTest extends TestCase
                         'info' => $addressData['info']
                     ]
                 ],
-                'messengers' => [$messengerData],
-                'social_medias' => [$socialMediaData],
+                'messengers' => [
+                    [
+                        'type' => ['id' => $messengerData['messenger_type_id']],
+                        'info' => $messengerData['info']
+                    ]
+                ],
+                'social_medias' => [
+                    [
+                        'type' => ['id' => $socialMediaData['social_media_type_id']],
+                        'info' => $socialMediaData['info']
+                    ]
+                ],
                 'weblinks' => [$weblinkData]
             ]);
 
@@ -1064,18 +1074,18 @@ class ContactControllerTest extends TestCase
                     // Update first existing social media
                     [
                         'id' => $existingSocialMedia1->id,
-                        'social_media_type_id' => $socialMediaType1->id,
+                        'type' => ['id' => $socialMediaType1->id],
                         'info' => 'updated_handle_1'
                     ],
                     // Update second existing social media
                     [
                         'id' => $existingSocialMedia2->id,
-                        'social_media_type_id' => $socialMediaType2->id,
+                        'type' => ['id' => $socialMediaType2->id],
                         'info' => 'updated_handle_2'
                     ],
                     // Add new social media
                     [
-                        'social_media_type_id' => $socialMediaType1->id,
+                        'type' => ['id' => $socialMediaType1->id],
                         'info' => 'new_handle_3'
                     ]
                 ]
