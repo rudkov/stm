@@ -18,6 +18,16 @@ class CompanyController extends Controller
         $this->authorizeResource(Company::class);
     }
 
+    private function sync_relations(Company $company, array $validated)
+    {
+        sync_relation($company->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
+        sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
+        sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
+    }
+
     public function index()
     {
         $companies = Company::where('team_id', Auth::user()->team->id)
@@ -54,12 +64,7 @@ class CompanyController extends Controller
         DB::transaction(function () use ($company, $validated) {
             $company->update($validated);
 
-            sync_relation($company->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-            sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-            sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
+            $this->sync_relations($company, $validated);
         });
 
         return $this->show($company);
@@ -75,12 +80,7 @@ class CompanyController extends Controller
             $company->team_id = Auth::user()->team_id;
             $company->save();
 
-            sync_relation($company->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-            sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-            sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
+            $this->sync_relations($company, $validated);
         });
 
         return $this->show($company);
