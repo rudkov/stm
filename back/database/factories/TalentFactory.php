@@ -257,19 +257,19 @@ class TalentFactory extends Factory
             'is_swimwear' => rand(0, 1),
             'is_sports' => rand(0, 1),
 
-            // Relationship IDs
-            'gender_id' => self::$lookupCache['gender_id'],
-            'marital_status_id' => self::$lookupCache['marital_status_id'],
-            'hair_color_id' => self::$lookupCache['hair_color_id'],
-            'hair_length_id' => self::$lookupCache['hair_length_id'],
-            'eye_color_id' => self::$lookupCache['eye_color_id'],
-            'cup_size_id' => self::$lookupCache['cup_size_id'],
-            'shoe_size_id' => self::$lookupCache['shoe_size_id'],
-            'shirt_size_id' => self::$lookupCache['shirt_size_id'],
-            'suit_cut_id' => self::$lookupCache['suit_cut_id'],
-            'dress_size_id' => self::$lookupCache['dress_size_id'],
-            'skin_color_id' => self::$lookupCache['skin_color_id'],
-            'board_id' => $teamData['board_id'],
+            // Relationship IDs - randomly select from cached arrays
+            'gender_id' => self::$lookupCache['gender_ids'][array_rand(self::$lookupCache['gender_ids'])],
+            'marital_status_id' => self::$lookupCache['marital_status_ids'][array_rand(self::$lookupCache['marital_status_ids'])],
+            'hair_color_id' => self::$lookupCache['hair_color_ids'][array_rand(self::$lookupCache['hair_color_ids'])],
+            'hair_length_id' => self::$lookupCache['hair_length_ids'][array_rand(self::$lookupCache['hair_length_ids'])],
+            'eye_color_id' => self::$lookupCache['eye_color_ids'][array_rand(self::$lookupCache['eye_color_ids'])],
+            'cup_size_id' => self::$lookupCache['cup_size_ids'][array_rand(self::$lookupCache['cup_size_ids'])],
+            'shoe_size_id' => self::$lookupCache['shoe_size_ids'][array_rand(self::$lookupCache['shoe_size_ids'])],
+            'shirt_size_id' => self::$lookupCache['shirt_size_ids'][array_rand(self::$lookupCache['shirt_size_ids'])],
+            'suit_cut_id' => self::$lookupCache['suit_cut_ids'][array_rand(self::$lookupCache['suit_cut_ids'])],
+            'dress_size_id' => self::$lookupCache['dress_size_ids'][array_rand(self::$lookupCache['dress_size_ids'])],
+            'skin_color_id' => self::$lookupCache['skin_color_ids'][array_rand(self::$lookupCache['skin_color_ids'])],
+            'board_id' => self::$lookupCache['board_ids'][array_rand(self::$lookupCache['board_ids'])],
             'manager_id' => $teamData['user_id'],
             'mother_agency_id' => rand(0, 1) ? $teamData['company_id'] : null,
 
@@ -286,17 +286,18 @@ class TalentFactory extends Factory
     private function initializeLookupCache()
     {
         self::$lookupCache = [
-            'gender_id' => TalentGender::first()?->id,
-            'marital_status_id' => TalentMaritalStatus::first()?->id,
-            'hair_color_id' => TalentHairColor::first()?->id,
-            'hair_length_id' => TalentHairLength::first()?->id,
-            'eye_color_id' => TalentEyeColor::first()?->id,
-            'cup_size_id' => TalentCupSize::first()?->id,
-            'shoe_size_id' => TalentShoeSize::first()?->id,
-            'shirt_size_id' => TalentShirtSize::first()?->id,
-            'suit_cut_id' => TalentSuitCut::first()?->id,
-            'dress_size_id' => TalentDressSize::first()?->id,
-            'skin_color_id' => TalentSkinColor::first()?->id,
+            'gender_ids' => TalentGender::pluck('id')->toArray(),
+            'marital_status_ids' => TalentMaritalStatus::pluck('id')->toArray(),
+            'hair_color_ids' => TalentHairColor::pluck('id')->toArray(),
+            'hair_length_ids' => TalentHairLength::pluck('id')->toArray(),
+            'eye_color_ids' => TalentEyeColor::pluck('id')->toArray(),
+            'cup_size_ids' => TalentCupSize::pluck('id')->toArray(),
+            'shoe_size_ids' => TalentShoeSize::pluck('id')->toArray(),
+            'shirt_size_ids' => TalentShirtSize::pluck('id')->toArray(),
+            'suit_cut_ids' => TalentSuitCut::pluck('id')->toArray(),
+            'dress_size_ids' => TalentDressSize::pluck('id')->toArray(),
+            'skin_color_ids' => TalentSkinColor::pluck('id')->toArray(),
+            'board_ids' => TalentBoard::pluck('id')->toArray(),
         ];
     }
 
