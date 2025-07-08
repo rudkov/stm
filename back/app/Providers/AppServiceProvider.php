@@ -28,10 +28,11 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
 
         Relation::enforceMorphMap([
-            'contact' => 'App\Models\Contact',
-            'event' => 'App\Models\Event',
-            'event-chunk' => 'App\Models\EventChunk',
-            'talent' => 'App\Models\Talent',
+            'company'       => 'App\Models\Company',
+            'contact'       => 'App\Models\Contact',
+            'event'         => 'App\Models\Event',
+            'event-chunk'   => 'App\Models\EventChunk',
+            'talent'        => 'App\Models\Talent',
         ]);
     }
 }

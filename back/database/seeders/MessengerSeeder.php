@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\MessengerType;
 
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Talent;
 
@@ -18,8 +19,20 @@ class MessengerSeeder extends Seeder
     {
         $messengerTypes = MessengerType::all();
 
+        $companies = Company::all();
         $contacts = Contact::all();
         $talents = Talent::all();
+
+        foreach ($companies as $company) {
+            $randomMessengerTypes = $messengerTypes->random(rand(1, count($messengerTypes)));
+
+            foreach ($randomMessengerTypes as $randomMessengerType) {
+                $company->messengers()->create([
+                    'info' => fake()->userName,
+                    'messenger_type_id' => $randomMessengerType->id,
+                ]);
+            }
+        }
 
         foreach ($contacts as $contact) {
             $randomMessengerTypes = $messengerTypes->random(rand(1, count($messengerTypes)));
@@ -28,8 +41,6 @@ class MessengerSeeder extends Seeder
                 $contact->messengers()->create([
                     'info' => fake()->userName,
                     'messenger_type_id' => $randomMessengerType->id,
-                    'messengerable_type' => $contact::class,
-                    'messengerable_id' => $contact->id,
                 ]);
             }
         }
@@ -41,8 +52,6 @@ class MessengerSeeder extends Seeder
                 $talent->messengers()->create([
                     'info' => fake()->userName,
                     'messenger_type_id' => $randomMessengerType->id,
-                    'messengerable_type' => $talent::class,
-                    'messengerable_id' => $talent->id,
                 ]);
             }
         }

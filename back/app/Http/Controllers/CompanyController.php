@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\CompanyCollection;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Company;
+
+use function App\Helpers\sync_relation;
 
 class CompanyController extends Controller
 {
@@ -26,7 +30,18 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         $company->load(
+            'addresses',
+            'addresses.type',
             'contacts',
+            'emails',
+            'emails.type',
+            'messengers',
+            'messengers.type',
+            'phones',
+            'phones.type',
+            'socialMedias',
+            'socialMedias.type',
+            'weblinks',
             'createdBy',
             'updatedBy'
         );
@@ -36,7 +51,16 @@ class CompanyController extends Controller
     public function update(CompanyRequest $request, Company $company)
     {
         $validated = $request->validated();
-        $company->update($validated);
+        DB::transaction(function () use ($company, $validated) {
+            $company->update($validated);
+
+            sync_relation($company->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
+        });
 
         return $this->show($company);
     }
@@ -44,12 +68,20 @@ class CompanyController extends Controller
     public function store(CompanyRequest $request)
     {
         $company = new Company();
-        $user = Auth::user();
         $validated = $request->validated();
 
-        $company->fill($validated);
-        $company->team_id = $user->team->id;
-        $company->save();
+        DB::transaction(function () use ($company, $validated) {
+            $company->fill($validated);
+            $company->team_id = Auth::user()->team_id;
+            $company->save();
+
+            sync_relation($company->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+            sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
+        });
 
         return $this->show($company);
     }

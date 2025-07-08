@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 use App\Models\CommunicationType;
+
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Talent;
 
@@ -20,8 +22,20 @@ class EmailSeeder extends Seeder
             ->get()
             ->groupBy('team_id');
 
+        $companies = Company::all();
         $contacts = Contact::all();
         $talents = Talent::all();
+
+        foreach ($companies as $company) {
+            $randomEmailTypes = $emailTypes[$company->team_id]->random(rand(1, count($emailTypes[$company->team_id])));
+
+            foreach ($randomEmailTypes as $randomEmailType) {
+                $company->emails()->create([
+                    'info' => fake()->email,
+                    'communication_type_id' => $randomEmailType->id,
+                ]);
+            }
+        }
 
         foreach ($contacts as $contact) {
             $randomEmailTypes = $emailTypes[$contact->team_id]->random(rand(1, count($emailTypes[$contact->team_id])));
@@ -30,8 +44,6 @@ class EmailSeeder extends Seeder
                 $contact->emails()->create([
                     'info' => fake()->email,
                     'communication_type_id' => $randomEmailType->id,
-                    'emailable_type' => $contact::class,
-                    'emailable_id' => $contact->id,
                 ]);
             }
         }
@@ -43,8 +55,6 @@ class EmailSeeder extends Seeder
                 $talent->emails()->create([
                     'info' => fake()->email,
                     'communication_type_id' => $randomEmailType->id,
-                    'emailable_type' => $talent::class,
-                    'emailable_id' => $talent->id,
                 ]);
             }
         }

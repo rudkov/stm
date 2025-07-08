@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Talent;
 
@@ -14,8 +15,19 @@ class WeblinkSeeder extends Seeder
      */
     public function run(): void
     {
+        $companies = Company::all();
         $contacts = Contact::all();
         $talents = Talent::all();
+
+        foreach ($companies as $company) {
+            $randomNumberOfWeblinks = rand(0, 2);
+
+            for ($i = 0; $i < $randomNumberOfWeblinks; $i++) {
+                $company->weblinks()->create([
+                    'info' => fake()->url,
+                ]);
+            }
+        }
 
         foreach ($contacts as $contact) {
             $randomNumberOfWeblinks = rand(0, 2);
@@ -23,8 +35,6 @@ class WeblinkSeeder extends Seeder
             for ($i = 0; $i < $randomNumberOfWeblinks; $i++) {
                 $contact->weblinks()->create([
                     'info' => fake()->url,
-                    'weblinkable_type' => $contact::class,
-                    'weblinkable_id' => $contact->id,
                 ]);
             }
         }
@@ -35,8 +45,6 @@ class WeblinkSeeder extends Seeder
             for ($i = 0; $i < $randomNumberOfWeblinks; $i++) {
                 $talent->weblinks()->create([
                     'info' => fake()->url,
-                    'weblinkable_type' => $talent::class,
-                    'weblinkable_id' => $talent->id,
                 ]);
             }
         }

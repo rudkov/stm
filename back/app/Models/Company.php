@@ -12,7 +12,13 @@ use App\Models\Event;
 use App\Models\Talent;
 
 use App\Traits\BelongsToTeam;
+use App\Traits\HasAddresses;
+use App\Traits\HasEmails;
+use App\Traits\HasMessengers;
+use App\Traits\HasPhones;
+use App\Traits\HasSocialMedia;
 use App\Traits\HasUserTracking;
+use App\Traits\HasWeblinks;
 
 class Company extends Model
 {
@@ -21,7 +27,13 @@ class Company extends Model
     use SoftDeletes;
 
     use BelongsToTeam;
+    use HasAddresses;
+    use HasEmails;
+    use HasMessengers;
+    use HasPhones;
+    use HasSocialMedia;
     use HasUserTracking;
+    use HasWeblinks;
 
     protected $table = 'companies';
 
