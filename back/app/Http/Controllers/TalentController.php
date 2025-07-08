@@ -87,7 +87,7 @@ class TalentController extends Controller
             $talent->citizenships()->sync($validated['citizenships'] ?? []);
             $talent->languages()->sync($validated['languages'] ?? []);
 
-            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
+            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id' => 'type.id', 'info']);
             sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
@@ -112,7 +112,7 @@ class TalentController extends Controller
             $talent->citizenships()->sync($validated['citizenships'] ?? []);
             $talent->languages()->sync($validated['languages'] ?? []);
 
-            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id', 'info']);
+            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id' => 'type.id', 'info']);
             sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);

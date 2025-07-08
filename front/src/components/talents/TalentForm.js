@@ -78,7 +78,7 @@ function TalentForm(props) {
 
             relatives: (values.relatives && values.relatives.length > 0)
                 ? values.relatives
-                : [{ relative_type_id: null, info: '' }],
+                : [{ type: { id: null }, info: '' }],
             addresses: (values.addresses && values.addresses.length > 0)
                 ? values.addresses
                 : [{ type: { id: null }, info: '' }],
@@ -186,7 +186,7 @@ function TalentForm(props) {
         if (values.relatives) {
             values.relatives = values.relatives.map(relative => ({
                 ...relative,
-                relative_type_id: relative.relative_type_id ?? null
+                type: { id: relative.type.id ?? null }
             }));
         }
         if (values.social_medias) {
