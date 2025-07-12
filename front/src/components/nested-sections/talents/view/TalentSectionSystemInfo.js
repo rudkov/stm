@@ -1,6 +1,6 @@
 import '../../../../helpers/shared.css';
 
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 function TalentSectionSystemInfo(props) {
     const talent = props.talent;

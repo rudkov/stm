@@ -6,7 +6,7 @@ import { Button, Form, Input, Select } from 'antd';
 import { useSettings } from '../../../../context/SettingsContext';
 import { useTeamSettings } from '../../../../context/TeamSettingsContext';
 
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20x20.svg';
 

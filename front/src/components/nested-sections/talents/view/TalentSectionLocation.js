@@ -11,7 +11,7 @@ import { updateLocation, getLocationResponse } from '../../../../store/talents/t
 import { fetchTalents, fetchTalentsLocations } from '../../../../store/talents/talents';
 import { useTalentsFilters } from '../../../talents/TalentsFilters';
 
-import TalentLocation from '../../components/TalentLocation';
+import TalentLocation from '../../../talents/components/TalentLocation';
 
 function TalentSectionLocation(props) {
 

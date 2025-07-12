@@ -2,7 +2,7 @@ import './TalentSectionPreferences.css';
 
 import { useSettings } from '../../../../context/SettingsContext';
 
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 import { YesNoIcons } from '../../../ui-components/Icons';
 

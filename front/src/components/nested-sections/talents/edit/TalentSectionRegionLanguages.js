@@ -4,7 +4,7 @@ import { Form, Radio, Select } from 'antd';
 
 import { useSettings } from '../../../../context/SettingsContext';
 
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 import { Flag } from '../../../ui-components/Flag';
 

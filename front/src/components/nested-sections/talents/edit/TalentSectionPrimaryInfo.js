@@ -10,7 +10,7 @@ import { fetchCompanies, getCompanies } from '../../../../store/contacts/compani
 import { useSettings } from '../../../../context/SettingsContext';
 
 import CustomSelect from '../../../ui-components/CustomSelect';
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 const lifestyleOrFashion = [
     {

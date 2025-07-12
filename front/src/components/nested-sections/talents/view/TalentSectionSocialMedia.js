@@ -1,4 +1,4 @@
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 import Weblink from '../../../ui-components/Weblink';
 

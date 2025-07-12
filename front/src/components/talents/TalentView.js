@@ -9,21 +9,21 @@ import { getTalent, fetchTalentById } from '../../store/talents/talent';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
-import TalentSectionAchievements from './sections/view/TalentSectionAchievements';
-import TalentSectionAddresses from './sections/view/TalentSectionAddresses';
-import TalentSectionBiography from './sections/view/TalentSectionBiography';
-import TalentSectionBody from './sections/view/TalentSectionBody';
-import TalentSectionContacts from './sections/view/TalentSectionContacts';
-import TalentSectionFoodAllergies from './sections/view/TalentSectionFoodAllergies';
-import TalentSectionMain from './sections/view/TalentSectionMain';
-import TalentSectionNotes from './sections/view/TalentSectionNotes';
-import TalentSectionPerformanceSkills from './sections/view/TalentSectionPerformanceSkills';
-import TalentSectionPreferences from './sections/view/TalentSectionPreferences';
-import TalentSectionPrimaryInfo from './sections/view/TalentSectionPrimaryInfo';
-import TalentSectionRegionLanguages from './sections/view/TalentSectionRegionLanguages';
-import TalentSectionRelatives from './sections/view/TalentSectionRelatives';
-import TalentSectionSocialMedia from './sections/view/TalentSectionSocialMedia';
-import TalentSectionSystemInfo from './sections/view/TalentSectionSystemInfo';
+import TalentSectionAchievements from '../nested-sections/talents/view/TalentSectionAchievements';
+import TalentSectionAddresses from '../nested-sections/talents/view/TalentSectionAddresses';
+import TalentSectionBiography from '../nested-sections/talents/view/TalentSectionBiography';
+import TalentSectionBody from '../nested-sections/talents/view/TalentSectionBody';
+import TalentSectionContacts from '../nested-sections/talents/view/TalentSectionContacts';
+import TalentSectionFoodAllergies from '../nested-sections/talents/view/TalentSectionFoodAllergies';
+import TalentSectionMain from '../nested-sections/talents/view/TalentSectionMain';
+import TalentSectionNotes from '../nested-sections/talents/view/TalentSectionNotes';
+import TalentSectionPerformanceSkills from '../nested-sections/talents/view/TalentSectionPerformanceSkills';
+import TalentSectionPreferences from '../nested-sections/talents/view/TalentSectionPreferences';
+import TalentSectionPrimaryInfo from '../nested-sections/talents/view/TalentSectionPrimaryInfo';
+import TalentSectionRegionLanguages from '../nested-sections/talents/view/TalentSectionRegionLanguages';
+import TalentSectionRelatives from '../nested-sections/talents/view/TalentSectionRelatives';
+import TalentSectionSocialMedia from '../nested-sections/talents/view/TalentSectionSocialMedia';
+import TalentSectionSystemInfo from '../nested-sections/talents/view/TalentSectionSystemInfo';
 
 function TalentView(props) {
     const dispatch = useDispatch();

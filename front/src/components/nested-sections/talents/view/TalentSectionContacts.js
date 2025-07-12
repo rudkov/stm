@@ -1,4 +1,4 @@
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 import { MessengersIcons } from '../../../ui-components/Icons';
 

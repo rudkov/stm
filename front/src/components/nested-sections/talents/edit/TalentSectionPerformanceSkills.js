@@ -1,13 +1,13 @@
 import { Form, Input } from 'antd';
 
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
-function TalentSectionAchievements(props) {
+function TalentSectionPerformanceSkills(props) {
     return (
         <NestedSection className={props.className} id={props.id}>
-            <NestedSection.Header>Achievements</NestedSection.Header>
+            <NestedSection.Header>Performance Skills</NestedSection.Header>
             <NestedSection.Body>
-                <Form.Item name='achievements'>
+                <Form.Item name='performance_skills'>
                     <Input.TextArea autoSize={{ minRows: 2 }} />
                 </Form.Item>
             </NestedSection.Body>
@@ -15,4 +15,4 @@ function TalentSectionAchievements(props) {
     );
 }
 
-export default TalentSectionAchievements;
+export default TalentSectionPerformanceSkills;

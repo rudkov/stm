@@ -1,6 +1,6 @@
 import { Form, Input, Radio } from 'antd';
 
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 import { binaryRadioOptions } from '../../../../constants/form';
 
 function TalentSectionFoodAllergies(props) {

@@ -1,4 +1,4 @@
-import NestedSection from '../../../ui-components/NestedSection';
+import NestedSection from '../../NestedSection';
 
 import IconColorBadge from '../../../ui-components/IconColorBadge';
 
