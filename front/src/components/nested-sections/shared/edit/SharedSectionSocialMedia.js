@@ -1,4 +1,4 @@
-import './TalentSectionSocialMedia.css';
+import './SharedSectionSocialMedia.css';
 import '../../../../helpers/form.css';
 
 import { Button, Form, Input, Select } from 'antd';
@@ -11,20 +11,20 @@ import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20
 
 import { SocialMediaIcons } from '../../../ui-components/Icons';
 
-function TalentSectionSocialMedia(props) {
+function SharedSectionSocialMedia(props) {
     const { settings } = useSettings();
 
     return (
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Social Media & Websites</NestedSection.Header>
-            <NestedSection.Body className='talent-section-form-social-media__body'>
+            <NestedSection.Body className='shared-section-form-social-media__body'>
                 <Form.List name='social_medias'>
                     {(fields, { add, remove }) => (
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
-                                    <div className='talent-section-form-social-media__item' key={`talent.socialMedia.${key}`}>
-                                        <div className='talent-section-form-social-media__data'>
+                                    <div className='shared-section-form-social-media__item' key={`socialMedia.${key}`}>
+                                        <div className='shared-section-form-social-media__data'>
                                             <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
@@ -45,8 +45,8 @@ function TalentSectionSocialMedia(props) {
                                                 <Input placeholder='Username' />
                                             </Form.Item>
                                         </div>
-                                        <div className='talent-section-form-social-media__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        <div className='shared-section-form-social-media__button'>
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))
@@ -59,15 +59,15 @@ function TalentSectionSocialMedia(props) {
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
-                                    <div className='talent-section-form-social-media__item' key={`talent.weblink.${key}`}>
-                                        <div className='talent-section-form-social-media__data'>
-                                            <div className='talent-section-form-social-media__label'>Website</div>
+                                    <div className='shared-section-form-social-media__item' key={`weblink.${key}`}>
+                                        <div className='shared-section-form-social-media__data'>
+                                            <div className='shared-section-form-social-media__label'>Website</div>
                                             <Form.Item {...restField} name={[name, 'info']}>
                                                 <Input placeholder='Website URL' />
                                             </Form.Item>
                                         </div>
-                                        <div className='talent-section-form-social-media__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        <div className='shared-section-form-social-media__button'>
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))
@@ -75,7 +75,7 @@ function TalentSectionSocialMedia(props) {
                         </>
                     )}
                 </Form.List>
-                <div className='talent-section-form-contacts__controls'>
+                <div className='shared-section-form-social-media__controls'>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
                             const socialMediasList = props.form.getFieldValue('social_medias');
@@ -98,4 +98,4 @@ function TalentSectionSocialMedia(props) {
     );
 }
 
-export default TalentSectionSocialMedia;
+export default SharedSectionSocialMedia;

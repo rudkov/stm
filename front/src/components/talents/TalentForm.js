@@ -26,19 +26,20 @@ import { sanitizeWeblinkForStorage } from '../ui-components/Weblink';
 import { LoadingOutlined } from '@ant-design/icons';
 import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
 
+import SharedSectionAddresses from '../nested-sections/shared/edit/SharedSectionAddresses';
+import SharedSectionContacts from '../nested-sections/shared/edit/SharedSectionContacts';
+import SharedSectionNotes from '../nested-sections/shared/edit/SharedSectionNotes';
+import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSectionSocialMedia';
+
 import TalentSectionAchievements from '../nested-sections/talents/edit/TalentSectionAchievements';
-import TalentSectionAddresses from '../nested-sections/talents/edit/TalentSectionAddresses';
 import TalentSectionBiography from '../nested-sections/talents/edit/TalentSectionBiography';
 import TalentSectionBody from '../nested-sections/talents/edit/TalentSectionBody';
-import TalentSectionContacts from '../nested-sections/talents/edit/TalentSectionContacts';
 import TalentSectionFoodAllergies from '../nested-sections/talents/edit/TalentSectionFoodAllergies';
-import TalentSectionNotes from '../nested-sections/talents/edit/TalentSectionNotes';
 import TalentSectionPerformanceSkills from '../nested-sections/talents/edit/TalentSectionPerformanceSkills';
 import TalentSectionPreferences from '../nested-sections/talents/edit/TalentSectionPreferences';
 import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSectionPrimaryInfo';
 import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
 import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
-import TalentSectionSocialMedia from '../nested-sections/talents/edit/TalentSectionSocialMedia';
 
 function TalentForm(props) {
     const dispatch = useDispatch();
@@ -426,15 +427,15 @@ function TalentForm(props) {
                                 />
                             </div>
                             <div className='talent-form__body'>
-                                <TalentSectionNotes id='notes' />
+                                <SharedSectionNotes id='notes' />
                                 <TalentSectionPrimaryInfo id='primary-info' form={form} />
                                 <TalentSectionFoodAllergies id='food-allergies' />
                                 <TalentSectionBody id='body' />
-                                <TalentSectionContacts id='contacts' form={form} />
+                                <SharedSectionContacts id='contacts' form={form} />
                                 <TalentSectionRegionLanguages id='region-languages' />
                                 <TalentSectionPreferences id='preferences' />
-                                <TalentSectionSocialMedia id='social-media' form={form} />
-                                <TalentSectionAddresses id='addresses' />
+                                <SharedSectionSocialMedia id='social-media' form={form} />
+                                <SharedSectionAddresses id='addresses' />
                                 <TalentSectionRelatives id='relatives' />
                                 <TalentSectionBiography id='biography' />
                                 <TalentSectionAchievements id='achievements' />

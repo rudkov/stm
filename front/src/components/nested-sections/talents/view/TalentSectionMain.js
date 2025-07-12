@@ -5,7 +5,7 @@ import { Avatar, Button } from "antd";
 import TalentSectionLocation from './TalentSectionLocation';
 
 function TalentSectionMain(props) {
-    const talent = props.talent;
+    const talent = props.data;
 
     return (
         <div className='talent-section-main'>

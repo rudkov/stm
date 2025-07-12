@@ -1,4 +1,5 @@
 import './TalentSectionRelatives.css';
+import '../../../../helpers/form.css';
 
 import { Button, Form, Input, Select } from 'antd';
 
@@ -33,7 +34,7 @@ function TalentSectionRelatives(props) {
                                             </Form.Item>
                                         </div>
                                         <div className='talent-section-form-relatives__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))

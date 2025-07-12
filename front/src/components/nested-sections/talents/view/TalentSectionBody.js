@@ -3,7 +3,7 @@ import NestedSection from '../../NestedSection';
 import IconColorBadge from '../../../ui-components/IconColorBadge';
 
 function TalentSectionBody(props) {
-    const talent = props.talent;
+    const talent = props.data;
 
     return (
         <NestedSection className={props.className}>

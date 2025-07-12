@@ -2,16 +2,16 @@ import '../../../../helpers/shared.css';
 
 import NestedSection from '../../NestedSection';
 
-function TalentSectionSystemInfo(props) {
-    const talent = props.talent;
+function SharedSectionSystemInfo(props) {
+    const data = props.data;
 
     return (
         <NestedSection className={`nested-section__system-info ${props.className}`}>
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     <div>
-                        Last updated by {talent.updated_by?.name} on {talent.updated_at}.
-                        Created by {talent.created_by?.name} on {talent.created_at}.
+                        Last updated by {data.updated_by?.name} on {data.updated_at}.
+                        Created by {data.created_by?.name} on {data.created_at}.
                     </div>
                 </div>
             </NestedSection.Body>
@@ -19,4 +19,4 @@ function TalentSectionSystemInfo(props) {
     );
 }
 
-export default TalentSectionSystemInfo;
+export default SharedSectionSystemInfo;

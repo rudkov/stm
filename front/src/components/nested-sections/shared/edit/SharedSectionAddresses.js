@@ -1,4 +1,5 @@
-import './TalentSectionAddresses.css';
+import './SharedSectionAddresses.css';
+import '../../../../helpers/form.css';
 
 import { Button, Form, Input, Select } from 'antd';
 
@@ -8,20 +9,20 @@ import NestedSection from '../../NestedSection';
 
 import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20x20.svg';
 
-function TalentSectionAddresses(props) {
+function SharedSectionAddresses(props) {
     const { teamSettings } = useTeamSettings();
 
     return (
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Addresses</NestedSection.Header>
-            <NestedSection.Body className='talent-section-form-addresses__body'>
+            <NestedSection.Body className='shared-section-form-addresses__body'>
                 <Form.List name='addresses'>
                     {(fields, { add, remove }) => (
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
-                                    <div className='talent-section-form-addresses__item' key={`talent.address.${key}`}>
-                                        <div className='talent-section-form-addresses__data'>
+                                    <div className='shared-section-form-addresses__item' key={`address.${key}`}>
+                                        <div className='shared-section-form-addresses__data'>
                                             <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
@@ -32,8 +33,8 @@ function TalentSectionAddresses(props) {
                                                 <Input.TextArea autoSize={{ minRows: 2 }} placeholder='Address' />
                                             </Form.Item>
                                         </div>
-                                        <div className='talent-section-form-addresses__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        <div className='shared-section-form-addresses__button'>
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))
@@ -49,4 +50,4 @@ function TalentSectionAddresses(props) {
     );
 }
 
-export default TalentSectionAddresses;
+export default SharedSectionAddresses;

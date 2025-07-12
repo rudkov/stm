@@ -8,7 +8,7 @@ import { YesNoIcons } from '../../../ui-components/Icons';
 
 function TalentSectionPreferences(props) {
     const { settings } = useSettings();
-    const talent = props.talent;
+    const talent = props.data;
 
     return (
         <NestedSection className={props.className}>

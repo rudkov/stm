@@ -5,6 +5,11 @@
     align-items: center;
 }
 
+.form__icon-button,
+.form__icon-button:hover {
+    color: var(--icon-primary) !important;
+}
+
 /* Override Antd styles */
 
 .ant-btn-color-primary,

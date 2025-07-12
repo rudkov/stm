@@ -1,14 +1,14 @@
 import NestedSection from '../../NestedSection';
 
-function TalentSectionNotes(props) {
-    const talent = props.talent;
+function SharedSectionNotes(props) {
+    const data = props.data;
 
     return (
         <NestedSection className={props.className}>
             <NestedSection.Header>Notes</NestedSection.Header>
-            <NestedSection.Body>{talent.notes}</NestedSection.Body>
+            <NestedSection.Body>{data.notes}</NestedSection.Body>
         </NestedSection>
     );
 }
 
-export default TalentSectionNotes;
+export default SharedSectionNotes;

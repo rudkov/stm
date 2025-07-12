@@ -1,7 +1,7 @@
 import NestedSection from '../../NestedSection';
 
 function TalentSectionAchievements(props) {
-    const talent = props.talent;
+    const talent = props.data;
 
     return (
         <NestedSection className={props.className}>

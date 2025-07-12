@@ -42,11 +42,6 @@
     width: 100%;
 }
 
-.talent-form__icon-button,
-.talent-form__icon-button:hover {
-    color: var(--icon-primary) !important;
-}
-
 .talent-form-row__left-label .ant-row {
     display: grid;
     grid-template-columns: 140px auto;

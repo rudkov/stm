@@ -1,4 +1,4 @@
-import './TalentSectionContacts.css';
+import './SharedSectionContacts.css';
 import '../../../../helpers/form.css';
 
 import { Button, Form, Input, Select } from 'antd';
@@ -12,21 +12,21 @@ import { ReactComponent as IconDelete } from '../../../../assets/icons/delete-20
 
 import { MessengersIcons } from '../../../ui-components/Icons';
 
-function TalentSectionContacts(props) {
+function SharedSectionContacts(props) {
     const { settings } = useSettings();
     const { teamSettings } = useTeamSettings();
 
     return (
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Contacts</NestedSection.Header>
-            <NestedSection.Body className='talent-section-form-contacts__body'>
+            <NestedSection.Body className='shared-section-form-contacts__body'>
                 <Form.List name='phones'>
                     {(fields, { add, remove }) => (
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
-                                    <div className='talent-section-form-contacts__item' key={`talent.phone.${key}`}>
-                                        <div className='talent-section-form-contacts__data'>
+                                    <div className='shared-section-form-contacts__item' key={`phone.${key}`}>
+                                        <div className='shared-section-form-contacts__data'>
                                             <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
@@ -40,8 +40,8 @@ function TalentSectionContacts(props) {
                                                 <Input placeholder='Phone number' />
                                             </Form.Item>
                                         </div>
-                                        <div className='talent-section-form-contacts__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        <div className='shared-section-form-contacts__button'>
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))
@@ -54,8 +54,8 @@ function TalentSectionContacts(props) {
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
-                                    <div className='talent-section-form-contacts__item' key={`talent.email.${key}`}>
-                                        <div className='talent-section-form-contacts__data'>
+                                    <div className='shared-section-form-contacts__item' key={`email.${key}`}>
+                                        <div className='shared-section-form-contacts__data'>
                                             <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
@@ -69,8 +69,8 @@ function TalentSectionContacts(props) {
                                                 <Input placeholder='Email' />
                                             </Form.Item>
                                         </div>
-                                        <div className='talent-section-form-contacts__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        <div className='shared-section-form-contacts__button'>
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))
@@ -83,8 +83,8 @@ function TalentSectionContacts(props) {
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
-                                    <div className='talent-section-form-contacts__item' key={`talent.messenger.${key}`}>
-                                        <div className='talent-section-form-contacts__data'>
+                                    <div className='shared-section-form-contacts__item' key={`messenger.${key}`}>
+                                        <div className='shared-section-form-contacts__data'>
                                             <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
@@ -105,8 +105,8 @@ function TalentSectionContacts(props) {
                                                 <Input placeholder='Messenger' />
                                             </Form.Item>
                                         </div>
-                                        <div className='talent-section-form-contacts__button'>
-                                            <Button className='talent-form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
+                                        <div className='shared-section-form-contacts__button'>
+                                            <Button className='form__icon-button' type='text' icon={<IconDelete />} onClick={() => remove(name)} />
                                         </div>
                                     </div>
                                 ))
@@ -114,7 +114,7 @@ function TalentSectionContacts(props) {
                         </>
                     )}
                 </Form.List>
-                <div className='talent-section-form-contacts__controls'>
+                <div className='shared-section-form-contacts__controls'>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
                             const phonesList = props.form.getFieldValue('phones');
@@ -145,4 +145,4 @@ function TalentSectionContacts(props) {
     );
 }
 
-export default TalentSectionContacts;
+export default SharedSectionContacts;

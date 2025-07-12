@@ -3,7 +3,7 @@ import '../../../../helpers/shared.css';
 import NestedSection from '../../NestedSection';
 
 function TalentSectionPrimaryInfo(props) {
-    const talent = props.talent;
+    const talent = props.data;
 
     return (
         <NestedSection className={props.className}>

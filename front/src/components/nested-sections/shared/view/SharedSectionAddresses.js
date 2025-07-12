@@ -1,7 +1,7 @@
 import NestedSection from '../../NestedSection';
 
-function TalentSectionAddresses(props) {
-    const talent = props.talent;
+function SharedSectionAddresses(props) {
+    const data = props.data;
 
     return (
         <NestedSection className={props.className}>
@@ -9,9 +9,9 @@ function TalentSectionAddresses(props) {
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     {
-                        talent.addresses?.map((address) => {
+                        data.addresses?.map((address) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.address.` + address.id}>
+                                <div className='nested-section__cell-horizontal' key={`address.` + address.id}>
                                     <div className='text-light'>{address.type?.name}</div>
                                     <div>{address.info}</div>
                                 </div>
@@ -24,4 +24,4 @@ function TalentSectionAddresses(props) {
     );
 }
 
-export default TalentSectionAddresses;
+export default SharedSectionAddresses;

@@ -2,8 +2,8 @@ import NestedSection from '../../NestedSection';
 
 import { MessengersIcons } from '../../../ui-components/Icons';
 
-function TalentSectionContacts(props) {
-    const talent = props.talent;
+function SharedSectionContacts(props) {
+    const data = props.data;
 
     return (
         <NestedSection className={props.className}>
@@ -11,9 +11,9 @@ function TalentSectionContacts(props) {
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     {
-                        talent.phones?.map((phone) => {
+                        data.phones?.map((phone) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.phone.` + phone.id}>
+                                <div className='nested-section__cell-horizontal' key={`phone.` + phone.id}>
                                     <div className='text-light'>{phone.type?.name}</div>
                                     <div className='ellipsis'>{<a href={`tel:${phone.info}`}>{phone.info}</a>}</div>
                                 </div>
@@ -21,9 +21,9 @@ function TalentSectionContacts(props) {
                         })
                     }
                     {
-                        talent.emails?.map((email) => {
+                        data.emails?.map((email) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.email.` + email.id}>
+                                <div className='nested-section__cell-horizontal' key={`email.` + email.id}>
                                     <div className='text-light'>{email.type?.name}</div>
                                     <div className='ellipsis'>{<a href={`mailto:${email.info}`}>{email.info}</a>}</div>
                                 </div>
@@ -31,9 +31,9 @@ function TalentSectionContacts(props) {
                         })
                     }
                     {
-                        talent.messengers?.map((messenger) => {
+                        data.messengers?.map((messenger) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.messenger.` + messenger.id}>
+                                <div className='nested-section__cell-horizontal' key={`messenger.` + messenger.id}>
                                     <div className='text-light'>{messenger.type?.name}</div>
                                     <div className='nested-section__item_with_icon ellipsis'>
                                         <div className='nested-section__icon'>{MessengersIcons[messenger.type?.system_name]}</div>
@@ -55,4 +55,4 @@ function TalentSectionContacts(props) {
     );
 }
 
-export default TalentSectionContacts;
+export default SharedSectionContacts;

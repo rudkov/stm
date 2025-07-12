@@ -2,7 +2,7 @@ import { Form, Input } from 'antd';
 
 import NestedSection from '../../NestedSection';
 
-function TalentSectionNotes(props) {
+function SharedSectionNotes(props) {
     return (
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Notes</NestedSection.Header>
@@ -15,4 +15,4 @@ function TalentSectionNotes(props) {
     );
 }
 
-export default TalentSectionNotes;
+export default SharedSectionNotes;

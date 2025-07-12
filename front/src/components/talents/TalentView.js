@@ -9,21 +9,22 @@ import { getTalent, fetchTalentById } from '../../store/talents/talent';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
+import SharedSectionAddresses from '../nested-sections/shared/view/SharedSectionAddresses';
+import SharedSectionContacts from '../nested-sections/shared/view/SharedSectionContacts';
+import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNotes';
+import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
+import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
+
 import TalentSectionAchievements from '../nested-sections/talents/view/TalentSectionAchievements';
-import TalentSectionAddresses from '../nested-sections/talents/view/TalentSectionAddresses';
 import TalentSectionBiography from '../nested-sections/talents/view/TalentSectionBiography';
 import TalentSectionBody from '../nested-sections/talents/view/TalentSectionBody';
-import TalentSectionContacts from '../nested-sections/talents/view/TalentSectionContacts';
 import TalentSectionFoodAllergies from '../nested-sections/talents/view/TalentSectionFoodAllergies';
 import TalentSectionMain from '../nested-sections/talents/view/TalentSectionMain';
-import TalentSectionNotes from '../nested-sections/talents/view/TalentSectionNotes';
 import TalentSectionPerformanceSkills from '../nested-sections/talents/view/TalentSectionPerformanceSkills';
 import TalentSectionPreferences from '../nested-sections/talents/view/TalentSectionPreferences';
 import TalentSectionPrimaryInfo from '../nested-sections/talents/view/TalentSectionPrimaryInfo';
 import TalentSectionRegionLanguages from '../nested-sections/talents/view/TalentSectionRegionLanguages';
 import TalentSectionRelatives from '../nested-sections/talents/view/TalentSectionRelatives';
-import TalentSectionSocialMedia from '../nested-sections/talents/view/TalentSectionSocialMedia';
-import TalentSectionSystemInfo from '../nested-sections/talents/view/TalentSectionSystemInfo';
 
 function TalentView(props) {
     const dispatch = useDispatch();
@@ -60,23 +61,23 @@ function TalentView(props) {
         result =
             <ScrollableView className='talent-profile'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
-                    <TalentSectionMain talent={talent} editAction={context?.editTalent} />
+                    <TalentSectionMain data={talent} editAction={context?.editTalent} />
                 </ScrollableView.Header>
                 <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='talent-profile__body'>
-                    <TalentSectionAchievements talent={talent} className='talent-section__achievements' />
-                    <TalentSectionAddresses talent={talent} className='talent-section__addresses' />
-                    <TalentSectionBiography talent={talent} className='talent-section__biography' />
-                    <TalentSectionBody talent={talent} className='talent-section__body' />
-                    <TalentSectionContacts talent={talent} className='talent-section__contacts' />
-                    <TalentSectionFoodAllergies talent={talent} className='talent-section__food-allergies' />
-                    <TalentSectionNotes talent={talent} className='talent-section__notes' />
-                    <TalentSectionPerformanceSkills talent={talent} className='talent-section__performance-skills' />
-                    <TalentSectionPreferences talent={talent} className='talent-section__preferences' />
-                    <TalentSectionPrimaryInfo talent={talent} className='talent-section__primary-info' />
-                    <TalentSectionRegionLanguages talent={talent} className='talent-section__region-languages' />
-                    <TalentSectionRelatives talent={talent} className='talent-section__relatives' />
-                    <TalentSectionSocialMedia talent={talent} className='talent-section__social-media' />
-                    <TalentSectionSystemInfo talent={talent} className='talent-section__system-info' />
+                    <TalentSectionAchievements data={talent} className='talent-section__achievements' />
+                    <SharedSectionAddresses data={talent} className='talent-section__addresses' />
+                    <TalentSectionBiography data={talent} className='talent-section__biography' />
+                    <TalentSectionBody data={talent} className='talent-section__body' />
+                    <SharedSectionContacts data={talent} className='talent-section__contacts' />
+                    <TalentSectionFoodAllergies data={talent} className='talent-section__food-allergies' />
+                    <SharedSectionNotes data={talent} className='talent-section__notes' />
+                    <TalentSectionPerformanceSkills data={talent} className='talent-section__performance-skills' />
+                    <TalentSectionPreferences data={talent} className='talent-section__preferences' />
+                    <TalentSectionPrimaryInfo data={talent} className='talent-section__primary-info' />
+                    <TalentSectionRegionLanguages data={talent} className='talent-section__region-languages' />
+                    <TalentSectionRelatives data={talent} className='talent-section__relatives' />
+                    <SharedSectionSocialMedia data={talent} className='talent-section__social-media' />
+                    <SharedSectionSystemInfo data={talent} className='talent-section__system-info' />
                 </ScrollableView.Body>
             </ScrollableView>
             ;

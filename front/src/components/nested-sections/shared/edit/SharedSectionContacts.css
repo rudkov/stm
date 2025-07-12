@@ -1,25 +1,25 @@
-.talent-section-form-social-media__body {
+.shared-section-form-contacts__body {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.talent-section-form-social-media__item {
+.shared-section-form-contacts__item {
     display: flex;
     flex-direction: row;
     gap: 4px;
     align-items: flex-start;
 }
 
-.talent-section-form-social-media__data {
+.shared-section-form-contacts__data {
     display: grid;
     grid-template-columns: 140px auto;
     gap: 4px;
     width: 100%;
 }
 
-.talent-section-form-social-media__label {
+.shared-section-form-contacts__controls {
     display: flex;
-    align-items: center;
-    color: var(--text-secondary);
+    flex-direction: row;
+    gap: 4px;
 }

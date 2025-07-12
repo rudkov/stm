@@ -4,8 +4,8 @@ import Weblink from '../../../ui-components/Weblink';
 
 import { SocialMediaIcons } from '../../../ui-components/Icons';
 
-function TalentSectionSocialMedia(props) {
-    const talent = props.talent;
+function SharedSectionSocialMedia(props) {
+    const data = props.data;
 
     return (
         <NestedSection className={props.className}>
@@ -13,9 +13,9 @@ function TalentSectionSocialMedia(props) {
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     {
-                        talent.social_medias?.map((socialMedia) => {
+                        data.social_medias?.map((socialMedia) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.socialMedia.` + socialMedia.id}>
+                                <div className='nested-section__cell-horizontal' key={`socialMedia.` + socialMedia.id}>
                                     <div className='text-light'>{socialMedia.type?.name}</div>
                                     <div className='nested-section__item_with_icon ellipsis'>
                                         <div className='nested-section__icon'>{SocialMediaIcons[socialMedia.type?.system_name]}</div>
@@ -32,9 +32,9 @@ function TalentSectionSocialMedia(props) {
                         })
                     }
                     {
-                        talent.weblinks?.map((weblink) => {
+                        data.weblinks?.map((weblink) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.weblink.` + weblink.id}>
+                                <div className='nested-section__cell-horizontal' key={`weblink.` + weblink.id}>
                                     <div className='text-light'>Website</div>
                                     <div className='ellipsis'><Weblink url={weblink.info} /></div>
                                 </div>
@@ -47,4 +47,4 @@ function TalentSectionSocialMedia(props) {
     );
 }
 
-export default TalentSectionSocialMedia;
+export default SharedSectionSocialMedia;

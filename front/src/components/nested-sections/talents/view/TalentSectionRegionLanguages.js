@@ -3,7 +3,7 @@ import NestedSection from '../../NestedSection';
 import { Flag } from '../../../ui-components/Flag';
 
 function TalentSectionRegionLanguages(props) {
-    const talent = props.talent;
+    const talent = props.data;
 
     return (
         <NestedSection className={props.className}>
