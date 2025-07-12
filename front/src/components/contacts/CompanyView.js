@@ -9,6 +9,12 @@ import { getCompany, fetchCompanyById } from '../../store/contacts/company';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
+import SharedSectionAddresses from '../nested-sections/shared/view/SharedSectionAddresses';
+import SharedSectionContacts from '../nested-sections/shared/view/SharedSectionContacts';
+import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNotes';
+import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
+import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
+
 function CompanyView() {
     const dispatch = useDispatch();
     const params = useParams();
@@ -33,10 +39,6 @@ function CompanyView() {
                     <h3>{company.name}</h3>
                 </ScrollableView.Header>
                 <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-profile__body'>
-
-                    <h4>Notes</h4>
-                    <div>{company.notes}</div>
-
                     <h4>Category</h4>
                     <div>
                         <div>Category 1</div>
@@ -51,47 +53,11 @@ function CompanyView() {
                         </div>
                     ))}
 
-                    <h4>Addresses</h4>
-                    {company?.addresses?.map((address) => (
-                        <div key={address.id}>
-                            {address.type?.name} – {address.info}
-                        </div>
-                    ))}
-
-                    <h4>Emails</h4>
-                    {company?.emails?.map((email) => (
-                        <div key={email.id}>
-                            {email.type?.name} – {email.info}
-                        </div>
-                    ))}
-
-                    <h4>Phones</h4>
-                    {company?.phones?.map((phone) => (
-                        <div key={phone.id}>
-                            {phone.type?.name} – {phone.info}
-                        </div>
-                    ))}
-
-                    <h4>Messengers</h4>
-                    {company?.messengers?.map((messenger) => (
-                        <div key={messenger.id}>
-                            {messenger.type.name} – {messenger.info}
-                        </div>
-                    ))}
-
-                    <h4>Social Media</h4>
-                    {company?.social_medias?.map((social_media) => (
-                        <div key={social_media.id}>
-                            {social_media.type.name} – {social_media.info}
-                        </div>
-                    ))}
-
-                    <h4>Weblinks</h4>
-                    {company?.weblinks?.map((weblink) => (
-                        <div key={weblink.id}>
-                            {weblink.info}
-                        </div>
-                    ))}
+                    <SharedSectionNotes data={company} className='company-section__notes' />
+                    <SharedSectionAddresses data={company} className='company-section__addresses' />
+                    <SharedSectionContacts data={company} className='company-section__contacts' />
+                    <SharedSectionSocialMedia data={company} className='company-section__social-media' />
+                    <SharedSectionSystemInfo data={company} className='company-section__system-info' />
 
                 </ScrollableView.Body>
             </ScrollableView>
