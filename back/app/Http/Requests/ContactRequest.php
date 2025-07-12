@@ -13,7 +13,7 @@ class ContactRequest extends FormRequest
         return [
             'first_name' => 'required_without:last_name|string|max:255',
             'last_name' => 'required_without:first_name|string|max:255',
-            'comment' => 'nullable|string',
+            'notes' => 'nullable|string',
 
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],

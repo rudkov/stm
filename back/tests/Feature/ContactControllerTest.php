@@ -92,7 +92,7 @@ class ContactControllerTest extends TestCase
             ->postJson(route('contacts.store'), [
                 'first_name' => 'John',
                 'last_name' => 'Doe',
-                'comment' => 'Test comment',
+                'notes' => 'Test note',
                 'companies' => [
                     [
                         'id' => $company->id,
@@ -142,7 +142,7 @@ class ContactControllerTest extends TestCase
             ->assertJson([
                 'first_name' => 'John',
                 'last_name' => 'Doe',
-                'comment' => 'Test comment',
+                'notes' => 'Test note',
             ]);
 
         // Check contact was created
@@ -310,14 +310,14 @@ class ContactControllerTest extends TestCase
             'updated_by' => $this->user->id,
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'comment' => 'Old comment',
+            'notes' => 'Old note',
         ]);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('contacts.update', $contact), [
                 'first_name' => 'Updated',
                 'last_name' => 'Name',
-                'comment' => 'New comment',
+                'notes' => 'New note',
                 'companies' => [],
                 'phones' => [],
                 'emails' => [],
@@ -329,14 +329,14 @@ class ContactControllerTest extends TestCase
             ->assertJson([
                 'first_name' => 'Updated',
                 'last_name' => 'Name',
-                'comment' => 'New comment',
+                'notes' => 'New note',
             ]);
 
         $this->assertDatabaseHas('contacts', [
             'id' => $contact->id,
             'first_name' => 'Updated',
             'last_name' => 'Name',
-            'comment' => 'New comment',
+            'notes' => 'New note',
             'updated_by' => $this->user->id,
         ]);
     }
@@ -838,7 +838,7 @@ class ContactControllerTest extends TestCase
             ->putJson(route('contacts.update', $contact), [
                 'first_name' => 'Complete',
                 'last_name' => 'Update',
-                'comment' => 'Full update test',
+                'notes' => 'Full update test',
                 'companies' => [
                     [
                         'id' => $company->id,
@@ -888,7 +888,7 @@ class ContactControllerTest extends TestCase
             ->assertJson([
                 'first_name' => 'Complete',
                 'last_name' => 'Update',
-                'comment' => 'Full update test',
+                'notes' => 'Full update test',
             ]);
 
         // Check contact was updated
@@ -896,7 +896,7 @@ class ContactControllerTest extends TestCase
             'id' => $contact->id,
             'first_name' => 'Complete',
             'last_name' => 'Update',
-            'comment' => 'Full update test',
+            'notes' => 'Full update test',
         ]);
 
         // Check company relationship

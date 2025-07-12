@@ -818,7 +818,7 @@ class CompanyControllerTest extends TestCase
         $this->assertArrayHasKey('first_name', $contactData);
         $this->assertArrayHasKey('last_name', $contactData);
         $this->assertArrayHasKey('job_title', $contactData);
-        $this->assertArrayNotHasKey('comment', $contactData); // Full contact data should not be included
+        $this->assertArrayNotHasKey('notes', $contactData); // Full contact data should not be included
         $this->assertArrayNotHasKey('created_at', $contactData);
     }
 

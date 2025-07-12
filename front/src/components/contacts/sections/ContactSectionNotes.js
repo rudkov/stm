@@ -20,7 +20,7 @@ function ContactSectionNotes(props) {
                 <div className='info-panel--section_1col text-regular'>
                     <DataCell
                         className='invisible-bottom-border'
-                        value={contact.comment}
+                        value={contact.notes}
                     />
                 </div>
             </div>
@@ -28,7 +28,7 @@ function ContactSectionNotes(props) {
                 <div className='info-panel--section_1col text-regular'>
                     <DataCell
                         value={
-                            <Form.Item name='comment' className='form-item--border-bottom'>
+                            <Form.Item name='notes' className='form-item--border-bottom'>
                                 <Input.TextArea autoSize={{ minRows: 1 }} />
                             </Form.Item>
                         }

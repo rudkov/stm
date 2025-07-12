@@ -93,7 +93,7 @@ class ContactBasicResourceTest extends TestCase
         $contact->id = 999;
         $contact->first_name = 'Alice';
         $contact->last_name = 'Johnson';
-        $contact->comment = 'This should not be included';
+        $contact->notes = 'This should not be included';
         $contact->created_at = '2023-01-01 00:00:00';
         $contact->updated_at = '2023-01-02 00:00:00';
 
@@ -111,7 +111,7 @@ class ContactBasicResourceTest extends TestCase
         $this->assertArrayHasKey('job_title', $result);
 
         // Verify unwanted fields are not present
-        $this->assertArrayNotHasKey('comment', $result);
+        $this->assertArrayNotHasKey('notes', $result);
         $this->assertArrayNotHasKey('created_at', $result);
         $this->assertArrayNotHasKey('updated_at', $result);
 
