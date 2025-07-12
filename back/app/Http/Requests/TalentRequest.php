@@ -41,7 +41,7 @@ class TalentRequest extends FormRequest
             'achievements' => 'nullable|string',
             'allergies' => 'nullable|string',
             'biography' => 'nullable|string',
-            'comment' => 'nullable|string',
+            'notes' => 'nullable|string',
             'performance_skills' => 'nullable|string',
             'piercings' => 'nullable|string',
             'scars' => 'nullable|string',

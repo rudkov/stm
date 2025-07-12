@@ -224,7 +224,7 @@ class TalentFactory extends Factory
             'legal_last_name' => $this->faker->lastName(),
             'birth_date' => $this->faker->dateTime(),
             'location' => [null, $this->faker->city()][rand(0, 1)],
-            'comment' => $this->faker->sentence(20),
+            'notes' => $this->faker->sentence(20),
             'achievements' => $this->faker->sentence(20),
             'biography' => $this->faker->sentence(20),
             'performance_skills' => $this->faker->sentence(20),

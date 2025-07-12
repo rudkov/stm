@@ -74,7 +74,7 @@ function TalentForm(props) {
             board_id: values.board?.id || '',
             mother_agency_id: values.mother_agency?.id || '',
 
-            comment: values.comment || '',
+            notes: values.notes || '',
 
             relatives: (values.relatives && values.relatives.length > 0)
                 ? values.relatives

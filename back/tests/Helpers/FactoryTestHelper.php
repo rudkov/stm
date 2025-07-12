@@ -179,7 +179,7 @@ class FactoryTestHelper
         return [
             'first_name' => 'Jane',
             'last_name' => 'Smith',
-            'comment' => 'Created using factory helpers',
+            'notes' => 'Created using factory helpers',
             'companies' => [],
             'emails' => [$emailData],
             'phones' => [$phoneData],
