@@ -11,8 +11,9 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
+            $table->text('notes')->nullable();
 
-            $table->foreignId('team_id')->nullable()->constrained();
+            $table->foreignId('team_id')->index()->constrained()->onDelete('cascade');
             
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users');

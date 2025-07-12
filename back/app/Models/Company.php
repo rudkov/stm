@@ -43,6 +43,7 @@ class Company extends Model
 
     protected $fillable = [
         'name',
+        'notes',
     ];
 
     public function events()

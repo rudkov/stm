@@ -18,6 +18,7 @@ class CompanyFactory extends Factory
         
         return [
             'name' => $this->faker->company(),
+            'notes' => $this->faker->sentence(),
             'team_id' => $team_id,
             'created_by' => $users[$team_id]->random()->id,
             'updated_by' => $users[$team_id]->random()->id,
