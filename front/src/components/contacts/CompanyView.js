@@ -15,6 +15,8 @@ import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNote
 import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
 import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
 
+import CompanySectionContacts from '../nested-sections/companies/view/CompanySectionContacts';
+
 function CompanyView() {
     const dispatch = useDispatch();
     const params = useParams();
@@ -46,16 +48,10 @@ function CompanyView() {
                         <div>Category 3</div>
                     </div>
 
-                    <h4>Contacts</h4>
-                    {company?.contacts?.map((contact) => (
-                        <div key={contact.id}>
-                            {contact.first_name} {contact.last_name} – {contact.job_title}
-                        </div>
-                    ))}
-
                     <SharedSectionNotes data={company} className='company-section__notes' />
-                    <SharedSectionAddresses data={company} className='company-section__addresses' />
                     <SharedSectionContacts data={company} className='company-section__contacts' />
+                    <CompanySectionContacts data={company} className='company-section__contacts' />
+                    <SharedSectionAddresses data={company} className='company-section__addresses' />
                     <SharedSectionSocialMedia data={company} className='company-section__social-media' />
                     <SharedSectionSystemInfo data={company} className='company-section__system-info' />
 

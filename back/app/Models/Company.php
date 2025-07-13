@@ -53,7 +53,10 @@ class Company extends Model
 
     public function contacts()
     {
-        return $this->belongsToMany(Contact::class)->withPivot('job_title');
+        return $this->belongsToMany(Contact::class)
+            ->withPivot('job_title')
+            ->orderBy('first_name', 'asc')
+            ->orderBy('last_name', 'asc');
     }
 
     public function talents()
