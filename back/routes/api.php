@@ -46,7 +46,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('talents/managers', 'TalentController@managers')->name('talents.managers');
         Route::post('talents/search', 'TalentController@search')->name('talents.search');
         Route::put('talents/{talent}/locations/current', 'TalentController@updateLocation')->name('talents.update-location');
-        Route::apiResource('talents', 'TalentController');
+        Route::apiResource('talents', 'TalentController', ['except' => ['index']]);
 
         //talent boards
         Route::apiResource('talent-boards', 'TalentBoardController');

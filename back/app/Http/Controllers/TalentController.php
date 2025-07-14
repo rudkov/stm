@@ -21,18 +21,11 @@ class TalentController extends Controller
         $this->authorizeResource(Talent::class);
     }
 
-    public function index()
-    {
-        return $this->search(new TalentSearchRequest());
-    }
-
     public function search(TalentSearchRequest $request)
     {
         $this->authorize('viewAny', Talent::class);
 
-        $filters = request()->hasAny(array_keys($request->rules())) 
-            ? $request->validated() 
-            : [];
+        $filters = $request?->validated() ?? [];
 
         $query = new TalentQuery(Auth::user());
         $talents = $query->applyFilters($filters)->get();

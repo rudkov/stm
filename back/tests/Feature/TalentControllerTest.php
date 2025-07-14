@@ -380,35 +380,6 @@ class TalentControllerTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_index_returns_talent_collection()
-    {
-        // Create test talents
-        Talent::factory()->count(3)->create([
-            'team_id' => $this->team->id,
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
-        ]);
-
-        // Create a talent for another team (shouldn't be visible)
-        $otherTeam = Team::factory()->create();
-        Talent::factory()->create([
-            'team_id' => $otherTeam->id,
-        ]);
-
-        $response = $this->actingAs($this->user)
-            ->getJson(route('talents.index'));
-
-        $response->assertStatus(200);
-
-        // Should only return talents from user's team - check if it's wrapped in data or not
-        $json = $response->json();
-        if (isset($json['data'])) {
-            $this->assertCount(3, $json['data']);
-        } else {
-            $this->assertCount(3, $json);
-        }
-    }
-
     public function test_search_with_filters()
     {
         // Create talents with different attributes
