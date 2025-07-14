@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getCompany, fetchCompanyById } from '../../store/contacts/company';
+import { getCompany, fetchCompanyById } from '../../store/companies/company';
 
 import ScrollableView from '../ui-components/ScrollableView';
 

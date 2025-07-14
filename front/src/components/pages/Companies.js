@@ -1,17 +1,17 @@
-import './Contacts.css';
+import './Companies.css';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
 
 import { fetchCompanies } from '../../store/companies/companies';
-import { useContactsFilters } from '../contacts/ContactsFilters';
+import { useCompaniesFilters } from '../companies/CompaniesFilters';
 
 import CompaniesList from '../companies/CompaniesList';
 
-function Contacts() {
+function Companies() {
     const dispatch = useDispatch();
-    const { filters, updateFilter } = useContactsFilters();
+    const { filters, updateFilter } = useCompaniesFilters();
 
     useEffect(() => {
         dispatch(fetchCompanies());
@@ -19,12 +19,12 @@ function Contacts() {
 
     return (
         <>
-            <div className='contacts-page'>
+            <div className='companies-page'>
                 <CompaniesList
                     filters={filters}
                     updateFilter={updateFilter}
                 />
-                <div className='contacts-page__right-column'>
+                <div className='companies-page__right-column'>
                     <div className='section-primary'>
                         <Outlet />
                     </div>
@@ -34,4 +34,4 @@ function Contacts() {
     );
 }
 
-export default Contacts;
+export default Companies;

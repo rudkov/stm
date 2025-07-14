@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
 
-import { getCompanies, fetchCompanies, filterCompanies } from '../../store/contacts/companies';
+import { getCompanies, fetchCompanies, filterCompanies } from '../../store/companies/companies';
 
 import Filter from './Filter';
 

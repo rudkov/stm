@@ -14,8 +14,10 @@ import Logout from './components/auth/Logout';
 import Register from './components/auth/Register';
 import Main from './components/Main';
 
+import Companies from './components/pages/Companies';
+import CompanyView from './components/companies/CompanyView';
+
 import Contacts from './components/pages/Contacts';
-import CompanyView from './components/contacts/CompanyView';
 
 import Events from './components/pages/Events';
 import EventInfo from './components/events/EventInfo';
@@ -47,6 +49,10 @@ function App() {
 
                                     <Route path='calendar' element={<Events />}>
                                         <Route path=':id' element={<EventInfo />} />
+                                    </Route>
+
+                                    <Route path='companies' element={<Companies />}>
+                                        <Route path=':id' element={<CompanyView />} />
                                     </Route>
 
                                     <Route path='contacts' element={<Contacts />}>

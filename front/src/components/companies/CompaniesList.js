@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import { Button, Empty, Form, Input } from 'antd';
 
-import { getCompanies, filterCompanies } from '../../store/contacts/companies';
+import { getCompanies, filterCompanies } from '../../store/companies/companies';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
