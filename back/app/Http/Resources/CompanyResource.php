@@ -12,6 +12,7 @@ class CompanyResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'notes' => $this->notes,
 
             // Collections
             'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),
