@@ -25,7 +25,7 @@ class TalentController extends Controller
     {
         $this->authorize('viewAny', Talent::class);
 
-        $filters = $request?->validated() ?? [];
+        $filters = $request->validated();
 
         $query = new TalentQuery(Auth::user());
         $talents = $query->applyFilters($filters)->get();
