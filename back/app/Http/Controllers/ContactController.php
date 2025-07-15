@@ -18,6 +18,17 @@ class ContactController extends Controller
         $this->authorizeResource(Contact::class);
     }
 
+    private function sync_relations(Contact $contact, array $validated)
+    {
+        sync_relation($contact->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
+        sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
+        sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
+        sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
+    }
+
     public function index()
     {
         $innerQuery = DB::table('contacts')
@@ -94,13 +105,7 @@ class ContactController extends Controller
         DB::transaction(function () use ($contact, $validated) {
             $contact->update($validated);
 
-            sync_relation($contact->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
-            sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-            sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-            sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
+            $this->sync_relations($contact, $validated);
         });
 
         return $this->show($contact);
@@ -116,13 +121,7 @@ class ContactController extends Controller
             $contact->team_id = Auth::user()->team_id;
             $contact->save();
 
-            sync_relation($contact->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
-            sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-            sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-            sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
+            $this->sync_relations($contact, $validated);
         });
 
         return $this->show($contact);

@@ -21,6 +21,20 @@ class TalentController extends Controller
         $this->authorizeResource(Talent::class);
     }
 
+    private function sync_relations(Talent $talent, array $validated)
+    {
+        $talent->citizenships()->sync($validated['citizenships'] ?? []);
+        $talent->languages()->sync($validated['languages'] ?? []);
+
+        sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
+        sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id' => 'type.id', 'info']);
+        sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
+        sync_relation($talent->weblinks(), $validated['weblinks'] ?? [], ['info']);
+    }
+
     public function search(TalentSearchRequest $request)
     {
         $this->authorize('viewAny', Talent::class);
@@ -76,16 +90,7 @@ class TalentController extends Controller
         DB::transaction(function () use ($talent, $validated) {
             $talent->update($validated);
 
-            $talent->citizenships()->sync($validated['citizenships'] ?? []);
-            $talent->languages()->sync($validated['languages'] ?? []);
-
-            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id' => 'type.id', 'info']);
-            sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-            sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-            sync_relation($talent->weblinks(), $validated['weblinks'] ?? [], ['info']);
+            $this->sync_relations($talent, $validated);
         });
 
         return $this->show($talent);
@@ -101,16 +106,7 @@ class TalentController extends Controller
             $talent->team_id = Auth::user()->team_id;
             $talent->save();
 
-            $talent->citizenships()->sync($validated['citizenships'] ?? []);
-            $talent->languages()->sync($validated['languages'] ?? []);
-
-            sync_relation($talent->relatives(), $validated['relatives'] ?? [], ['relative_type_id' => 'type.id', 'info']);
-            sync_relation($talent->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-            sync_relation($talent->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($talent->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-            sync_relation($talent->weblinks(), $validated['weblinks'] ?? [], ['info']);
+            $this->sync_relations($talent, $validated);
         });
 
         return $this->show($talent);
