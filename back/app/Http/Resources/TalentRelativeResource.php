@@ -7,23 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TalentRelativeResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'relative_type_id' => $this->relative_type_id,
-            'type' => $this->whenLoaded('type', function ($type) {
-                return [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                ];
-            }),
+            'type' => $this->whenLoaded('type', fn() => new TalentRelativeTypeResource($this->type)),
         ];
     }
 }

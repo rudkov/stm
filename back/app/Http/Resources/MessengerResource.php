@@ -7,25 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class MessengerResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'messenger_type_id' => $this->messenger_type_id,
-            'type' => $this->whenLoaded('type', function ($type) {
-                return [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                    'system_name' => $type->system_name,
-                    'url' => $type->url,
-                ];
-            }),
+            'type' => $this->whenLoaded('type', fn() => new MessengerTypeResource($this->type)),
         ];
     }
 }

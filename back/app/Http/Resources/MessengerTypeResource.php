@@ -5,14 +5,15 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SocialMediaResource extends JsonResource
+class MessengerTypeResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'info' => $this->info,
-            'type' => $this->whenLoaded('type', fn() => new SocialMediaTypeResource($this->type)),
+            'name' => $this->name,
+            'system_name' => $this->system_name,
+            'url' => $this->url,
         ];
     }
 }

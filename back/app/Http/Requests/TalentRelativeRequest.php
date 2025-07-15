@@ -14,7 +14,7 @@ class TalentRelativeRequest extends FormRequest
     {
         return [
             'id' => ['sometimes', Rule::exists(TalentRelative::class, 'id')],
-            'relative_type_id' => ['nullable', Rule::exists(TalentRelativeType::class, 'id')],
+            'type.id' => ['nullable', Rule::exists(TalentRelativeType::class, 'id')],
             'info' => 'required|string|max:255',
         ];
     }

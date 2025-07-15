@@ -22,7 +22,7 @@ function TalentSectionRelatives(props) {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-relatives__item' key={`talent.relative.${key}`}>
                                         <div className='talent-section-form-relatives__data'>
-                                            <Form.Item {...restField} name={[name, 'relative_type_id']}>
+                                            <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
                                                     options={settings.talent_relative_types.map(item => ({ label: item.name, value: item.id }))}

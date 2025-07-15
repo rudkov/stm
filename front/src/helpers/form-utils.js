@@ -79,7 +79,7 @@ const getNestedValue = (obj, path) => {
  * cleanCollection(values.addresses, { requiredAny: ['info'] })
  * 
  * // For social_medias/messengers (both type and info required)
- * cleanCollection(values.social_medias, { requiredAll: ['social_media_type_id', 'info'] })
+ * cleanCollection(values.social_medias, { requiredAll: ['type.id', 'info'] })
  * 
  * // For complex nested fields
  * cleanCollection(values.addresses, { requiredAny: ['info'], requiredAll: ['type.id'] })

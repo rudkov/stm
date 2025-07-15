@@ -97,9 +97,9 @@ class ContactController extends Controller
             sync_relation($contact->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
             sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
             sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
             sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
         });
 
@@ -119,9 +119,9 @@ class ContactController extends Controller
             sync_relation($contact->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
             sync_relation($contact->companies(), $validated['companies'] ?? [], ['job_title']);
             sync_relation($contact->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id', 'info']);
+            sync_relation($contact->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
             sync_relation($contact->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-            sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id', 'info']);
+            sync_relation($contact->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
             sync_relation($contact->weblinks(), $validated['weblinks'] ?? [], ['info']);
         });
 

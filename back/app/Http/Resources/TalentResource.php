@@ -7,11 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TalentResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -72,15 +67,15 @@ class TalentResource extends JsonResource
             'mother_agency' => $this->whenLoaded('motherAgency'),
 
             // Collections
-            'relatives' => TalentRelativeResource::collection($this->whenLoaded('relatives')),
+            'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),
             'citizenships' => $this->whenLoaded('citizenships'),
+            'emails' => $this->whenLoaded('emails', fn() => EmailResource::collection($this->emails)),
             'languages' => $this->whenLoaded('languages'),
-            'addresses' => AddressResource::collection($this->whenLoaded('addresses')),
-            'phones' => PhoneResource::collection($this->whenLoaded('phones')),
-            'emails' => EmailResource::collection($this->whenLoaded('emails')),
-            'social_medias' => SocialMediaResource::collection($this->whenLoaded('socialMedias')),
-            'messengers' => MessengerResource::collection($this->whenLoaded('messengers')),
-            'weblinks' => WeblinkResource::collection($this->whenLoaded('weblinks')),
+            'messengers' => $this->whenLoaded('messengers', fn() => MessengerResource::collection($this->messengers)),
+            'phones' => $this->whenLoaded('phones', fn() => PhoneResource::collection($this->phones)),
+            'relatives' => $this->whenLoaded('relatives', fn() => TalentRelativeResource::collection($this->relatives)),
+            'social_medias' => $this->whenLoaded('socialMedias', fn() => SocialMediaResource::collection($this->socialMedias)),
+            'weblinks' => $this->whenLoaded('weblinks', fn() => WeblinkResource::collection($this->weblinks)),
 
             // Timestamps and user tracking
             'created_at' => $this->created_at,

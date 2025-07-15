@@ -18,14 +18,14 @@ function TalentSectionSocialMedia(props) {
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Social Media & Websites</NestedSection.Header>
             <NestedSection.Body className='talent-section-form-social-media__body'>
-            <Form.List name='social_medias'>
+                <Form.List name='social_medias'>
                     {(fields, { add, remove }) => (
                         <>
                             {
                                 fields.map(({ key, name, ...restField }) => (
                                     <div className='talent-section-form-social-media__item' key={`talent.socialMedia.${key}`}>
                                         <div className='talent-section-form-social-media__data'>
-                                            <Form.Item {...restField} name={[name, 'social_media_type_id']}>
+                                            <Form.Item {...restField} name={[name, 'type', 'id']}>
                                                 <Select
                                                     allowClear
                                                     options={settings.social_media_types.map(item => ({
@@ -80,7 +80,7 @@ function TalentSectionSocialMedia(props) {
                         <Button type='dashed' onClick={() => {
                             const socialMediasList = props.form.getFieldValue('social_medias');
                             props.form.setFieldsValue({
-                                social_medias: [...socialMediasList, { social_media_type_id: null, info: '' }]
+                                social_medias: [...socialMediasList, { type: { id: null }, info: '' }]
                             });
                         }}>Add Social Media</Button>
                     </Form.Item>

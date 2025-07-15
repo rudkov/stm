@@ -399,11 +399,11 @@ class CompanyControllerTest extends TestCase
                 'name' => 'Test Company',
                 'messengers' => [
                     [
-                        'messenger_type_id' => $messengerType->id,
+                        'type' => ['id' => $messengerType->id],
                         'info' => 'testcompany_messenger'
                     ],
                     [
-                        'messenger_type_id' => $messengerType->id,
+                        'type' => ['id' => $messengerType->id],
                         'info' => 'testcompany_support'
                     ]
                 ]
@@ -441,11 +441,11 @@ class CompanyControllerTest extends TestCase
                 'name' => 'Test Company',
                 'social_medias' => [
                     [
-                        'social_media_type_id' => $socialMediaType->id,
+                        'type' => ['id' => $socialMediaType->id],
                         'info' => 'testcompany_social'
                     ],
                     [
-                        'social_media_type_id' => $socialMediaType->id,
+                        'type' => ['id' => $socialMediaType->id],
                         'info' => 'testcompany_official'
                     ]
                 ]
@@ -542,13 +542,13 @@ class CompanyControllerTest extends TestCase
                 ],
                 'messengers' => [
                     [
-                        'messenger_type_id' => $messengerType->id,
+                        'type' => ['id' => $messengerType->id],
                         'info' => 'complete_messenger'
                     ]
                 ],
                 'social_medias' => [
                     [
-                        'social_media_type_id' => $socialMediaType->id,
+                        'type' => ['id' => $socialMediaType->id],
                         'info' => 'complete_social'
                     ]
                 ],

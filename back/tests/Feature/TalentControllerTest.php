@@ -153,7 +153,7 @@ class TalentControllerTest extends TestCase
                 ],
                 'messengers' => [
                     array_merge([
-                        'messenger_type_id' => $messengerType->id
+                        'type' => ['id' => $messengerType->id]
                     ], $messengerData)
                 ],
                 'social_medias' => [],
