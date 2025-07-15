@@ -26,19 +26,20 @@ import { sanitizeWeblinkForStorage } from '../ui-components/Weblink';
 import { LoadingOutlined } from '@ant-design/icons';
 import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
 
-import TalentSectionAchievements from './sections/edit/TalentSectionAchievements';
-import TalentSectionAddresses from './sections/edit/TalentSectionAddresses';
-import TalentSectionBiography from './sections/edit/TalentSectionBiography';
-import TalentSectionBody from './sections/edit/TalentSectionBody';
-import TalentSectionContacts from './sections/edit/TalentSectionContacts';
-import TalentSectionFoodAllergies from './sections/edit/TalentSectionFoodAllergies';
-import TalentSectionNotes from './sections/edit/TalentSectionNotes';
-import TalentSectionPerformanceSkills from './sections/edit/TalentSectionPerformanceSkills';
-import TalentSectionPreferences from './sections/edit/TalentSectionPreferences';
-import TalentSectionPrimaryInfo from './sections/edit/TalentSectionPrimaryInfo';
-import TalentSectionRegionLanguages from './sections/edit/TalentSectionRegionLanguages';
-import TalentSectionRelatives from './sections/edit/TalentSectionRelatives';
-import TalentSectionSocialMedia from './sections/edit/TalentSectionSocialMedia';
+import SharedSectionAddresses from '../nested-sections/shared/edit/SharedSectionAddresses';
+import SharedSectionContacts from '../nested-sections/shared/edit/SharedSectionContacts';
+import SharedSectionNotes from '../nested-sections/shared/edit/SharedSectionNotes';
+import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSectionSocialMedia';
+
+import TalentSectionAchievements from '../nested-sections/talents/edit/TalentSectionAchievements';
+import TalentSectionBiography from '../nested-sections/talents/edit/TalentSectionBiography';
+import TalentSectionBody from '../nested-sections/talents/edit/TalentSectionBody';
+import TalentSectionFoodAllergies from '../nested-sections/talents/edit/TalentSectionFoodAllergies';
+import TalentSectionPerformanceSkills from '../nested-sections/talents/edit/TalentSectionPerformanceSkills';
+import TalentSectionPreferences from '../nested-sections/talents/edit/TalentSectionPreferences';
+import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSectionPrimaryInfo';
+import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
+import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
 
 function TalentForm(props) {
     const dispatch = useDispatch();
@@ -426,15 +427,15 @@ function TalentForm(props) {
                                 />
                             </div>
                             <div className='talent-form__body'>
-                                <TalentSectionNotes id='notes' />
+                                <SharedSectionNotes id='notes' />
                                 <TalentSectionPrimaryInfo id='primary-info' form={form} />
                                 <TalentSectionFoodAllergies id='food-allergies' />
                                 <TalentSectionBody id='body' />
-                                <TalentSectionContacts id='contacts' form={form} />
+                                <SharedSectionContacts id='contacts' form={form} />
                                 <TalentSectionRegionLanguages id='region-languages' />
                                 <TalentSectionPreferences id='preferences' />
-                                <TalentSectionSocialMedia id='social-media' form={form} />
-                                <TalentSectionAddresses id='addresses' />
+                                <SharedSectionSocialMedia id='social-media' form={form} />
+                                <SharedSectionAddresses id='addresses' />
                                 <TalentSectionRelatives id='relatives' />
                                 <TalentSectionBiography id='biography' />
                                 <TalentSectionAchievements id='achievements' />

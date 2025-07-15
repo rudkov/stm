@@ -1,0 +1,19 @@
+.shared-section-form-addresses__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.shared-section-form-addresses__item {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.shared-section-form-addresses__data {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}

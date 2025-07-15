@@ -1,0 +1,31 @@
+.shared-section-form-social-media__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.shared-section-form-social-media__item {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.shared-section-form-social-media__data {
+    display: grid;
+    grid-template-columns: 140px auto;
+    gap: 4px;
+    width: 100%;
+}
+
+.shared-section-form-social-media__controls {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.shared-section-form-social-media__label {
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+}
