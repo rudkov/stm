@@ -17,7 +17,7 @@ class TalentResource extends JsonResource
             'legal_last_name' => $this->legal_last_name,
             'birth_date' => $this->birth_date,
             'location' => $this->location,
-            'comment' => $this->comment,
+            'notes' => $this->notes,
             'achievements' => $this->achievements,
             'biography' => $this->biography,
             'performance_skills' => $this->performance_skills,

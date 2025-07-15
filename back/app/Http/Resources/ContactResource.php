@@ -13,7 +13,7 @@ class ContactResource extends JsonResource
             'id' => $this->id,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'comment' => $this->comment,
+            'notes' => $this->notes,
 
             // Collections
             'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),

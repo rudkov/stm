@@ -9,7 +9,7 @@ class UpdateTalentsTable extends Migration
     public function up()
     {
         Schema::table('talents', function (Blueprint $table) {
-            $table->foreignId('team_id')->nullable()->constrained();
+            $table->foreignId('team_id')->index()->constrained()->onDelete('cascade');
         });
     }
 

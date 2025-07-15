@@ -12,9 +12,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->text('comment')->nullable();
+            $table->text('notes')->nullable();
 
-            $table->foreignId('team_id')->nullable()->constrained();
+            $table->foreignId('team_id')->index()->constrained()->onDelete('cascade');
             
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users');

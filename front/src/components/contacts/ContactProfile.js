@@ -45,7 +45,7 @@ function ContactProfile(props) {
         form.setFieldsValue({
             first_name: contact.first_name || '',
             last_name: contact.last_name || '',
-            comment: contact.comment || '',
+            notes: contact.notes || '',
             
             companies: contact.companies || null,
 

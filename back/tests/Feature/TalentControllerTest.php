@@ -126,7 +126,7 @@ class TalentControllerTest extends TestCase
                 'mother_agency_id' => $company->id,
                 'height_cm' => 180,
                 'weight_kg' => 75,
-                'comment' => 'Test comment',
+                'notes' => 'Test note',
                 'citizenships' => [],
                 'languages' => [],
                 'relatives' => [],
@@ -166,7 +166,7 @@ class TalentControllerTest extends TestCase
                 'last_name' => 'Doe',
                 'legal_first_name' => 'Jonathan',
                 'legal_last_name' => 'Doe',
-                'comment' => 'Test comment',
+                'notes' => 'Test note',
             ]);
 
         // Check talent was created
@@ -257,14 +257,14 @@ class TalentControllerTest extends TestCase
             'updated_by' => $this->user->id,
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'comment' => 'Old comment',
+            'notes' => 'Old note',
         ]);
 
         $response = $this->actingAs($this->user)
             ->putJson(route('talents.update', $talent->id), [
                 'first_name' => 'Updated',
                 'last_name' => 'Name',
-                'comment' => 'New comment',
+                'notes' => 'New note',
                 'citizenships' => [],
                 'languages' => [],
                 'relatives' => [],
@@ -280,14 +280,14 @@ class TalentControllerTest extends TestCase
             ->assertJson([
                 'first_name' => 'Updated',
                 'last_name' => 'Name',
-                'comment' => 'New comment',
+                'notes' => 'New note',
             ]);
 
         $this->assertDatabaseHas('talents', [
             'id' => $talent->id,
             'first_name' => 'Updated',
             'last_name' => 'Name',
-            'comment' => 'New comment',
+            'notes' => 'New note',
             'updated_by' => $this->user->id,
         ]);
     }

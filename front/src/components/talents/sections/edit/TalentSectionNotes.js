@@ -7,7 +7,7 @@ function TalentSectionNotes(props) {
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Notes</NestedSection.Header>
             <NestedSection.Body>
-                <Form.Item name='comment'>
+                <Form.Item name='notes'>
                     <Input.TextArea autoSize={{ minRows: 1 }} />
                 </Form.Item>
             </NestedSection.Body>

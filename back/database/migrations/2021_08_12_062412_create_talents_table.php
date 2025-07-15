@@ -16,7 +16,6 @@ class CreateTalentsTable extends Migration
         Schema::create('talents', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            // primary info
             $table->string('first_name');
             $table->string('last_name');
             $table->string('legal_first_name')->nullable();
@@ -28,7 +27,6 @@ class CreateTalentsTable extends Migration
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->foreign('manager_id')->references('id')->on('users');
 
-            // measurements
             $table->unsignedBigInteger('hair_color_id')->nullable();
             $table->unsignedBigInteger('hair_length_id')->nullable();
             $table->unsignedBigInteger('eye_color_id')->nullable();
@@ -50,27 +48,12 @@ class CreateTalentsTable extends Migration
 
             $table->string('location')->nullable();
 
-            // other info
-            // citizenships
-            // languages
             $table->boolean('is_vegetarian')->nullable();
             $table->text('allergies')->nullable();
             $table->boolean('is_accent')->nullable();
 
-            // comment
-            $table->text('comment')->nullable();
+            $table->text('notes')->nullable();
 
-            // emails
-
-            // phones
-
-            // addresses
-
-            // social media
-
-            // messengers
-
-            // how to name this section
             $table->boolean('is_lingerie')->nullable();
             $table->boolean('is_nude')->nullable();
             $table->boolean('is_fur')->nullable();
@@ -83,13 +66,8 @@ class CreateTalentsTable extends Migration
             $table->boolean('is_swimwear')->nullable();
             $table->boolean('is_sports')->nullable();
 
-            // achievements
             $table->text('achievements')->nullable();
-
-            // biography
             $table->text('biography')->nullable();
-
-            // performance skills
             $table->text('performance_skills')->nullable();
 
             $table->unsignedBigInteger('created_by')->nullable();

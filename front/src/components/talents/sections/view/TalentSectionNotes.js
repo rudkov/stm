@@ -6,7 +6,7 @@ function TalentSectionNotes(props) {
     return (
         <NestedSection className={props.className}>
             <NestedSection.Header>Notes</NestedSection.Header>
-            <NestedSection.Body>{talent.comment}</NestedSection.Body>
+            <NestedSection.Body>{talent.notes}</NestedSection.Body>
         </NestedSection>
     );
 }

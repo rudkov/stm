@@ -224,7 +224,7 @@ class TalentFactory extends Factory
             'legal_last_name' => $this->faker->lastName(),
             'birth_date' => $this->faker->dateTime(),
             'location' => [null, $this->faker->city()][rand(0, 1)],
-            'comment' => $this->faker->sentence(20),
+            'notes' => $this->faker->sentence(20),
             'achievements' => $this->faker->sentence(20),
             'biography' => $this->faker->sentence(20),
             'performance_skills' => $this->faker->sentence(20),
@@ -258,18 +258,18 @@ class TalentFactory extends Factory
             'is_sports' => rand(0, 1),
 
             // Relationship IDs - randomly select from cached arrays
-            'gender_id' => self::$lookupCache['gender_ids'][array_rand(self::$lookupCache['gender_ids'])],
-            'marital_status_id' => self::$lookupCache['marital_status_ids'][array_rand(self::$lookupCache['marital_status_ids'])],
-            'hair_color_id' => self::$lookupCache['hair_color_ids'][array_rand(self::$lookupCache['hair_color_ids'])],
-            'hair_length_id' => self::$lookupCache['hair_length_ids'][array_rand(self::$lookupCache['hair_length_ids'])],
-            'eye_color_id' => self::$lookupCache['eye_color_ids'][array_rand(self::$lookupCache['eye_color_ids'])],
-            'cup_size_id' => self::$lookupCache['cup_size_ids'][array_rand(self::$lookupCache['cup_size_ids'])],
-            'shoe_size_id' => self::$lookupCache['shoe_size_ids'][array_rand(self::$lookupCache['shoe_size_ids'])],
-            'shirt_size_id' => self::$lookupCache['shirt_size_ids'][array_rand(self::$lookupCache['shirt_size_ids'])],
-            'suit_cut_id' => self::$lookupCache['suit_cut_ids'][array_rand(self::$lookupCache['suit_cut_ids'])],
-            'dress_size_id' => self::$lookupCache['dress_size_ids'][array_rand(self::$lookupCache['dress_size_ids'])],
-            'skin_color_id' => self::$lookupCache['skin_color_ids'][array_rand(self::$lookupCache['skin_color_ids'])],
-            'board_id' => self::$lookupCache['board_ids'][array_rand(self::$lookupCache['board_ids'])],
+            'gender_id' => $this->getRandomLookupId('gender_ids'),
+            'marital_status_id' => $this->getRandomLookupId('marital_status_ids'),
+            'hair_color_id' => $this->getRandomLookupId('hair_color_ids'),
+            'hair_length_id' => $this->getRandomLookupId('hair_length_ids'),
+            'eye_color_id' => $this->getRandomLookupId('eye_color_ids'),
+            'cup_size_id' => $this->getRandomLookupId('cup_size_ids'),
+            'shoe_size_id' => $this->getRandomLookupId('shoe_size_ids'),
+            'shirt_size_id' => $this->getRandomLookupId('shirt_size_ids'),
+            'suit_cut_id' => $this->getRandomLookupId('suit_cut_ids'),
+            'dress_size_id' => $this->getRandomLookupId('dress_size_ids'),
+            'skin_color_id' => $this->getRandomLookupId('skin_color_ids'),
+            'board_id' => $this->getRandomLookupId('board_ids'),
             'manager_id' => $teamData['user_id'],
             'mother_agency_id' => rand(0, 1) ? $teamData['company_id'] : null,
 
@@ -299,6 +299,15 @@ class TalentFactory extends Factory
             'skin_color_ids' => TalentSkinColor::pluck('id')->toArray(),
             'board_ids' => TalentBoard::pluck('id')->toArray(),
         ];
+    }
+
+    /**
+     * Safely get a random ID from a lookup cache array, returning null if empty
+     */
+    private function getRandomLookupId(string $cacheKey)
+    {
+        $ids = self::$lookupCache[$cacheKey] ?? [];
+        return empty($ids) ? null : $ids[array_rand($ids)];
     }
 
     /**

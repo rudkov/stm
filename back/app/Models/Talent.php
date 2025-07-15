@@ -101,7 +101,7 @@ class Talent extends Model
         'is_swimwear',
         'is_sports',
 
-        'comment',
+        'notes',
 
         'achievements',
         'biography',

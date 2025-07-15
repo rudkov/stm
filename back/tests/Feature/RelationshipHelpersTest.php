@@ -42,29 +42,24 @@ class RelationshipHelpersTest extends TestCase
         // Clear factory cache to avoid stale data in tests
         TalentFactory::clearCache();
 
-        // Create team and user
         $this->team = Team::factory()->create();
         $this->user = User::factory()->create(['team_id' => $this->team->id]);
 
-        // Create talent for testing - use minimal data to avoid foreign key constraints
-        $this->talent = new Talent([
+        $this->talent = Talent::factory()->create([
             'first_name' => 'Test',
             'last_name' => 'Talent',
             'team_id' => $this->team->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
-        $this->talent->save();
 
-        // Create contact for testing - use minimal data to avoid foreign key constraints
-        $this->contact = new Contact([
+        $this->contact = Contact::factory()->create([
             'first_name' => 'Test',
             'last_name' => 'Contact',
             'team_id' => $this->team->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
-        $this->contact->save();
     }
 
     // ==================== belongs_to_many Tests ====================
@@ -72,8 +67,13 @@ class RelationshipHelpersTest extends TestCase
     public function test_sync_relation_belongs_to_many_creates_new_records_with_direct_pivot_fields()
     {
         // Create companies for testing
-        $company1 = Company::factory()->create(['team_id' => $this->team->id]);
-        $company2 = Company::factory()->create(['team_id' => $this->team->id]);
+        $company1 = Company::factory()->create();
+        // $company1->team_id = $this->team->id;
+        // $company1->save();
+
+        $company2 = Company::factory()->create();
+        // $company2->team_id = $this->team->id;
+        // $company2->save();
 
         $items = [
             [
@@ -489,15 +489,13 @@ class RelationshipHelpersTest extends TestCase
     {
         $company = Company::factory()->create(['team_id' => $this->team->id]);
 
-        // Create another contact with companies
-        $otherContact = new Contact([
+        $otherContact = Contact::factory()->create([
             'first_name' => 'Other',
             'last_name' => 'Contact',
             'team_id' => $this->team->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
-        $otherContact->save();
 
         $otherContact->companies()->attach($company->id, ['job_title' => 'Other Job']);
 
@@ -1097,15 +1095,13 @@ class RelationshipHelpersTest extends TestCase
     {
         $communicationType = CommunicationType::factory()->create(['team_id' => $this->team->id]);
 
-        // Create another talent with emails
-        $otherTalent = new Talent([
+        $otherTalent = Talent::factory()->create([
             'first_name' => 'Other',
             'last_name' => 'Talent',
             'team_id' => $this->team->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
-        $otherTalent->save();
 
         $otherEmail = Email::factory()->create([
             'emailable_id' => $otherTalent->id,
