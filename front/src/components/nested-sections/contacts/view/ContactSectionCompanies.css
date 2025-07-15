@@ -1,4 +1,4 @@
-.company-section-contacts__contact {
+.contact-section-companies__company {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -7,19 +7,19 @@
     border: 1px solid var(--divider-color);
 }
 
-.company-section-contacts__contact:hover {
+.contact-section-companies__company:hover {
     box-shadow: var(--menu-item-hover-box-shadow);
 }
 
-.company-section-contacts__contact.active {
+.contact-section-companies__company.active {
     background-color: var(--menu-item-background-color-active);
 }
 
-.company-section-contacts__contact_name {
+.contact-section-companies__company_name {
     font-weight: 700;
     color: var(--text-primary);
 }
 
-.company-section-contacts__contact_job_title {
+.contact-section-companies__company_categories {
     color: var(--text-secondary);
 }

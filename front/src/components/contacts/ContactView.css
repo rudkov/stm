@@ -1,8 +1,8 @@
-.company-view__right-column {
+.contact-view__right-column {
     height: 100vh;
 }
 
-.company-view__body {
+.contact-view__body {
     padding: 0 6px 12px 12px;
     display: flex;
     flex-direction: column;

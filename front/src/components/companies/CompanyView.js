@@ -1,4 +1,4 @@
-// import './CompanyView.css';
+import './CompanyView.css';
 import '../../helpers/shared.css';
 
 import { useParams } from 'react-router';
@@ -16,16 +16,17 @@ import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSecti
 import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
 
 import CompanySectionContacts from '../nested-sections/companies/view/CompanySectionContacts';
+import CompanySectionMain from '../nested-sections/companies/view/CompanySectionMain';
 
-function CompanyView() {
+function CompanyView({ inLayout = false }) {
     const dispatch = useDispatch();
     const params = useParams();
     const company = useSelector(getCompany);
     const scrollContainerRef = useRef(null);
 
     useEffect(() => {
-        dispatch(fetchCompanyById(params.id));
-    }, [params.id, dispatch]);
+        dispatch(fetchCompanyById(params.companyId));
+    }, [params.companyId, dispatch]);
 
     useEffect(() => {
         if (scrollContainerRef.current)
@@ -36,21 +37,15 @@ function CompanyView() {
 
     if (company && Object.getPrototypeOf(company) === Object.prototype) {
         result =
-            <ScrollableView className='company-profile'>
+            <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
-                    <h3>{company.name}</h3>
+                    <CompanySectionMain data={company} />
                 </ScrollableView.Header>
-                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-profile__body'>
-                    <h4>Category</h4>
-                    <div>
-                        <div>Category 1</div>
-                        <div>Category 2</div>
-                        <div>Category 3</div>
-                    </div>
+                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-view__body'>
 
                     <SharedSectionNotes data={company} className='company-section__notes' />
                     <SharedSectionContacts data={company} className='company-section__contacts' />
-                    <CompanySectionContacts data={company} className='company-section__contacts' />
+                    <CompanySectionContacts data={company} inLayout={inLayout} className='company-section__contacts' />
                     <SharedSectionAddresses data={company} className='company-section__addresses' />
                     <SharedSectionSocialMedia data={company} className='company-section__social-media' />
                     <SharedSectionSystemInfo data={company} className='company-section__system-info' />

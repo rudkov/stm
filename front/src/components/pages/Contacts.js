@@ -4,30 +4,28 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
 
-import { fetchCompanies } from '../../store/companies/companies';
+import { fetchContacts } from '../../store/contacts/contacts';
 import { useContactsFilters } from '../contacts/ContactsFilters';
 
-import CompaniesList from '../companies/CompaniesList';
+import ContactsList from '../contacts/ContactsList';
 
 function Contacts() {
     const dispatch = useDispatch();
     const { filters, updateFilter } = useContactsFilters();
 
     useEffect(() => {
-        dispatch(fetchCompanies());
+        dispatch(fetchContacts());
     }, [dispatch]);
 
     return (
         <>
             <div className='contacts-page'>
-                <CompaniesList
+                <ContactsList
                     filters={filters}
                     updateFilter={updateFilter}
                 />
                 <div className='contacts-page__right-column'>
-                    <div className='section-primary'>
-                        <Outlet />
-                    </div>
+                    <Outlet />
                 </div>
             </div>
         </>

@@ -1,23 +1,26 @@
 import './CompanySectionContacts.css';
 import '../../../../helpers/shared.css';
 
+import { NavLink } from 'react-router';
+
 import NestedSection from '../../NestedSection';
 
-function CompanySectionContacts(props) {
-    const company = props.data;
+function CompanySectionContacts({ data, className, inLayout = false }) {
+    const company = data;
+    const url = inLayout ? '/app/companies/' + company.id + '/' : '/app/contacts/';
 
     return (
-        <NestedSection className={props.className}>
+        <NestedSection className={className}>
             <NestedSection.Header>Contacts</NestedSection.Header>
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     {
                         company.contacts?.map((contact) => {
                             return (
-                                <div className='nested-section__cell' key={`company.contact.` + contact.id}>
-                                    <div>{contact.first_name} {contact.last_name}</div>
-                                    <div className='text-light'>{contact.job_title}</div>
-                                </div>
+                                <NavLink className='company-section-contacts__contact' to={url + contact.id} key={`company.contact.` + contact.id}>
+                                    <div className='company-section-contacts__contact_name'>{contact.first_name} {contact.last_name}</div>
+                                    <div className='company-section-contacts__contact_job_title'>{contact.job_title}</div>
+                                </NavLink>
                             );
                         })
                     }

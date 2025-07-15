@@ -15,9 +15,12 @@ import Register from './components/auth/Register';
 import Main from './components/Main';
 
 import Companies from './components/pages/Companies';
+import CompanyLayout from './components/companies/CompanyLayout';
 import CompanyView from './components/companies/CompanyView';
 
 import Contacts from './components/pages/Contacts';
+import ContactLayout from './components/contacts/ContactLayout';
+import ContactView from './components/contacts/ContactView';
 
 import Events from './components/pages/Events';
 import EventInfo from './components/events/EventInfo';
@@ -52,11 +55,15 @@ function App() {
                                     </Route>
 
                                     <Route path='companies' element={<Companies />}>
-                                        <Route path=':id' element={<CompanyView />} />
+                                        <Route path=':companyId' element={<CompanyLayout />}>
+                                            <Route path=':contactId' element={<ContactView />} />
+                                        </Route>
                                     </Route>
 
                                     <Route path='contacts' element={<Contacts />}>
-                                        <Route path=':id' element={<CompanyView />} />
+                                        <Route path=':contactId' element={<ContactLayout />}>
+                                            <Route path=':companyId' element={<CompanyView />} />
+                                        </Route>
                                     </Route>
 
                                     <Route path='talents' element={<Talents />}>

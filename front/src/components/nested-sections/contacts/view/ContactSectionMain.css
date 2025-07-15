@@ -1,0 +1,21 @@
+.contact-section-main {
+    display: flex;
+    flex-direction: row;
+    padding: 12px;
+}
+
+.contact-section-main__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.contact-section-main__controls {
+    margin-left: auto;
+}
+
+.contact-section-main__contact_name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}

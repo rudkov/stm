@@ -25,9 +25,7 @@ function Companies() {
                     updateFilter={updateFilter}
                 />
                 <div className='companies-page__right-column'>
-                    <div className='section-primary'>
-                        <Outlet />
-                    </div>
+                    <Outlet />
                 </div>
             </div>
         </>

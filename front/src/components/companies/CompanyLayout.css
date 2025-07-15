@@ -1,0 +1,7 @@
+.company-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    gap: 12px;
+    padding: 12px 12px 12px 0;
+}
