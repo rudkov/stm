@@ -31,6 +31,7 @@ export const authApi = createApi({
             transformResponse: (response) => ({
                 isAuthenticated: response.is_authenticated,
                 activeTeam: response.user?.team_id || null,
+                hasVerifiedEmail: response.user?.email_verified_at != null,
             }),
         }),
     }),
