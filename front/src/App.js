@@ -12,6 +12,8 @@ import RequireTeam from './components/teams/RequireTeam';
 import Login from './components/auth/Login';
 import Logout from './components/auth/Logout';
 import Register from './components/auth/Register';
+import EmailVerification from './components/auth/EmailVerification';
+import ResendVerificationEmail from './components/auth/ResendVerificationEmail';
 import Main from './components/Main';
 
 import Contacts from './components/pages/Contacts';
@@ -57,6 +59,8 @@ function App() {
 
                         <Route element={<RequireAuth />}>
                             <Route path='logout' element={<Logout />} />
+                            <Route path='email-verify/:id/:hash' element={<EmailVerification />} />
+                            <Route path='email-verify/resend' element={<ResendVerificationEmail />} />
                             
                             <Route element={<RequireTeam />}>
 

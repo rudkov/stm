@@ -12,8 +12,22 @@ export const registerApi = createApi({
                 body: credentials,
             })
         }),
-        
+        verifyEmail: builder.mutation({
+            query: ({ id, hash, expires, signature }) => ({
+                url: `/email-verify/${id}/${hash}?expires=${expires}&signature=${signature}`,
+                method: 'GET',
+            }),
+        }),
+        resendEmail: builder.mutation({
+            query: () => ({
+                url: '/email-verify/resend',
+                method: 'POST',
+            }),
+            transformResponse: (returnValue, meta) => ({
+                status: meta.response?.status,
+            }),
+        }),
     }),
 });
 
-export const { useRegisterMutation } = registerApi; 
+export const { useRegisterMutation, useVerifyEmailMutation, useResendEmailMutation } = registerApi;  
