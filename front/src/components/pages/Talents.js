@@ -29,7 +29,7 @@ function Talents() {
     }, [dispatch]);
 
     // Function to call both API endpoints after talent save/update
-    const fetchAfterTalentSaveOrUpdate = useCallback(() => {
+    const fetchAfterSaveOrUpdate = useCallback(() => {
         dispatch(fetchTalents(filters));
         dispatch(fetchTalentsManagers());
     }, [dispatch, filters]);
@@ -74,7 +74,7 @@ function Talents() {
                 closeForm={closeTalentForm}
                 isNewTalent={isNewTalent}
                 talentId={currentTalentId}
-                onAfterSubmit={fetchAfterTalentSaveOrUpdate}
+                onAfterSubmit={fetchAfterSaveOrUpdate}
             />
         </>
     );
