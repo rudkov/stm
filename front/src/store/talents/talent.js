@@ -19,17 +19,19 @@ const initialState = {
     locationResponse: {},
 };
 
-export const fetchTalentById = createAsyncThunk('talent/fetchTalentById', async (talentId) => {
+export const fetchTalent = createAsyncThunk('talent/fetch', async (args) => {
+    const { id } = args;
+
     try {
-        const response = await axios.get('/api/v1/talents/' + talentId);
+        const response = await axios.get(`/api/v1/talents/${id}`);
         return response.data;
     } catch (err) {
         return err.message;
     }
 });
 
-export const createTalent = createAsyncThunk('talent/createTalent', async (args) => {
-    const values = args.values;
+export const createTalent = createAsyncThunk('talent/create', async (args) => {
+    const { values } = args;
 
     try {
         const response = await axios({
@@ -44,14 +46,13 @@ export const createTalent = createAsyncThunk('talent/createTalent', async (args)
     }
 });
 
-export const updateTalentById = createAsyncThunk('talent/updateTalentById', async (args) => {
-    const talentId = args.talentId;
-    const values = args.values;
+export const updateTalent = createAsyncThunk('talent/update', async (args) => {
+    const { id, values } = args;
 
     try {
         const response = await axios({
             method: 'put',
-            url: '/api/v1/talents/' + talentId,
+            url: `/api/v1/talents/${id}`,
             data: values,
         });
         return response.data;
@@ -61,13 +62,13 @@ export const updateTalentById = createAsyncThunk('talent/updateTalentById', asyn
     }
 });
 
-export const deleteTalentById = createAsyncThunk('talent/deleteTalentById', async (args) => {
-    const talentId = args.talentId;
+export const deleteTalent = createAsyncThunk('talent/delete', async (args) => {
+    const { id } = args;
 
     try {
         const response = await axios({
             method: 'delete',
-            url: '/api/v1/talents/' + talentId,
+            url: `/api/v1/talents/${id}`,
         });
         return response.data;
     } catch (err) {
@@ -77,11 +78,10 @@ export const deleteTalentById = createAsyncThunk('talent/deleteTalentById', asyn
 });
 
 export const updateLocation = createAsyncThunk('talent/updateLocation', async (args) => {
-    const talentId = args[0];
-    const value = args[1];
+    const { id, value } = args;
 
     try {
-        const response = await axios.put('/api/v1/talents/' + talentId + '/locations/current', {
+        const response = await axios.put(`/api/v1/talents/${id}/locations/current`, {
             location: value,
         });
         return response.data;
@@ -250,7 +250,7 @@ const talentSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchTalentById.fulfilled, (state, action) => {
+            .addCase(fetchTalent.fulfilled, (state, action) => {
                 prepareTalent(state, action.payload);
             })
 
@@ -259,21 +259,21 @@ const talentSlice = createSlice({
             })
             .addCase(createTalent.fulfilled, (state, action) => {
                 state.createResponse.status = 'fulfilled';
-                state.createResponse.talentId = action.payload.id;
+                state.createResponse.id = action.payload.id;
             })
 
-            .addCase(updateTalentById.pending, (state, action) => {
+            .addCase(updateTalent.pending, (state, action) => {
                 state.updateResponse.status = 'pending';
             })
-            .addCase(updateTalentById.fulfilled, (state, action) => {
+            .addCase(updateTalent.fulfilled, (state, action) => {
                 state.updateResponse.status = 'fulfilled';
                 prepareTalent(state, action.payload);
             })
 
-            .addCase(deleteTalentById.pending, (state, action) => {
+            .addCase(deleteTalent.pending, (state, action) => {
                 state.deleteResponse.status = 'pending';
             })
-            .addCase(deleteTalentById.fulfilled, (state, action) => {
+            .addCase(deleteTalent.fulfilled, (state, action) => {
                 state.deleteResponse.status = 'fulfilled';
             })
 

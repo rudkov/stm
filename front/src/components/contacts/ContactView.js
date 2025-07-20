@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getContact, fetchContactById } from '../../store/contacts/contact';
+import { getContact, fetchContact } from '../../store/contacts/contact';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
@@ -24,8 +24,8 @@ function ContactView({ inLayout = false }) {
     const scrollContainerRef = useRef(null);
 
     useEffect(() => {
-        dispatch(fetchContactById(params.contactId));
-    }, [params.contactId, dispatch]);
+        dispatch(fetchContact({ id: params.contactId }));
+    }, [dispatch, params.contactId]);
 
     useEffect(() => {
         if (scrollContainerRef.current)

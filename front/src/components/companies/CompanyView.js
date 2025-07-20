@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getCompany, fetchCompanyById } from '../../store/companies/company';
+import { getCompany, fetchCompany } from '../../store/companies/company';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
@@ -25,8 +25,8 @@ function CompanyView({ inLayout = false }) {
     const scrollContainerRef = useRef(null);
 
     useEffect(() => {
-        dispatch(fetchCompanyById(params.companyId));
-    }, [params.companyId, dispatch]);
+        dispatch(fetchCompany({ id: params.companyId }));
+    }, [dispatch, params.companyId]);
 
     useEffect(() => {
         if (scrollContainerRef.current)

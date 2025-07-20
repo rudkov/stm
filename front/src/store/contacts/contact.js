@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import dayjs from "dayjs";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 //TODO: Below is a temporary solution. We need to place date format into user settings.
 //TODO: this format also appears in all date time antd controls. To double check
@@ -13,17 +13,19 @@ const initialState = {
     deleteResponse: {},
 };
 
-export const fetchContactById = createAsyncThunk('contact/fetchContactById', async (contactId) => {
+export const fetchContact = createAsyncThunk('contact/fetch', async (args) => {
+    const { id } = args;
+
     try {
-        const response = await axios.get('/api/v1/contacts/' + contactId);
+        const response = await axios.get(`/api/v1/contacts/${id}`);
         return response.data;
     } catch (err) {
         return err.message;
     }
 });
 
-export const createContact = createAsyncThunk('contact/createContact', async (args) => {
-    const values = args.values;
+export const createContact = createAsyncThunk('contact/create', async (args) => {
+    const { values } = args;
 
     try {
         const response = await axios({
@@ -38,14 +40,13 @@ export const createContact = createAsyncThunk('contact/createContact', async (ar
     }
 });
 
-export const updateContactById = createAsyncThunk('contact/updateContactById', async (args) => {
-    const contactId = args.contactId;
-    const values = args.values;
+export const updateContact = createAsyncThunk('contact/update', async (args) => {
+    const { id, values } = args;
 
     try {
         const response = await axios({
             method: 'put',
-            url: '/api/v1/contacts/' + contactId,
+            url: `/api/v1/contacts/${id}`,
             data: values,
         });
         return response.data;
@@ -55,13 +56,13 @@ export const updateContactById = createAsyncThunk('contact/updateContactById', a
     }
 });
 
-export const deleteContactById = createAsyncThunk('contact/deleteContactById', async (args) => {
-    const contactId = args.contactId;
+export const deleteContact = createAsyncThunk('contact/delete', async (args) => {
+    const { id } = args;
 
     try {
         const response = await axios({
             method: 'delete',
-            url: '/api/v1/contacts/' + contactId,
+            url: `/api/v1/contacts/${id}`,
         });
         return response.data;
     } catch (err) {
@@ -99,15 +100,7 @@ const contactSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchContactById.fulfilled, (state, action) => {
-                prepareContact(state, action.payload);
-            })
-
-            .addCase(updateContactById.pending, (state, action) => {
-                state.updateResponse.status = 'pending';
-            })
-            .addCase(updateContactById.fulfilled, (state, action) => {
-                state.updateResponse.status = 'fulfilled';
+            .addCase(fetchContact.fulfilled, (state, action) => {
                 prepareContact(state, action.payload);
             })
 
@@ -116,13 +109,21 @@ const contactSlice = createSlice({
             })
             .addCase(createContact.fulfilled, (state, action) => {
                 state.createResponse.status = 'fulfilled';
-                state.createResponse.contactId = action.payload.id;
+                state.createResponse.id = action.payload.id;
             })
 
-            .addCase(deleteContactById.pending, (state, action) => {
+            .addCase(updateContact.pending, (state, action) => {
+                state.updateResponse.status = 'pending';
+            })
+            .addCase(updateContact.fulfilled, (state, action) => {
+                state.updateResponse.status = 'fulfilled';
+                prepareContact(state, action.payload);
+            })
+
+            .addCase(deleteContact.pending, (state, action) => {
                 state.deleteResponse.status = 'pending';
             })
-            .addCase(deleteContactById.fulfilled, (state, action) => {
+            .addCase(deleteContact.fulfilled, (state, action) => {
                 state.deleteResponse.status = 'fulfilled';
             })
     }

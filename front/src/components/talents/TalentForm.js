@@ -8,10 +8,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import dayjs from 'dayjs';
 
 import {
-    fetchTalentById, getTalent,
+    fetchTalent, getTalent,
     createTalent, getCreateResponse,
-    updateTalentById, getUpdateResponse,
-    deleteTalentById, getDeleteResponse,
+    updateTalent, getUpdateResponse,
+    deleteTalent, getDeleteResponse,
     talentActions
 } from '../../store/talents/talent';
 
@@ -215,7 +215,7 @@ function TalentForm(props) {
             dispatch(createTalent({ values: values }));
         }
         else {
-            dispatch(updateTalentById({ talentId: talent.id, values: values }));
+            dispatch(updateTalent({ id: talent.id, values: values }));
         }
     };
 
@@ -287,14 +287,14 @@ function TalentForm(props) {
         },
     ];
 
-    const deleteTalent = () => {
+    const deleteTalentAction = () => {
         setIsLoading(true);
-        dispatch(deleteTalentById({ talentId: talent.id }));
+        dispatch(deleteTalent({ id: talent.id }));
     };
 
     useEffect(() => {
         if (!isNewTalent && talent.id && isFormOpen) {
-            dispatch(fetchTalentById(talent.id));
+            dispatch(fetchTalent({ id: talent.id }));
         }
     }, [isNewTalent, talent.id, isFormOpen, dispatch]);
 
@@ -406,7 +406,7 @@ function TalentForm(props) {
                                 <LoadingOutlined className={`talent-form-header__throbber ${isLoading ? '' : 'hidden'}`} />
                                 <Popconfirm
                                     title='Delete Talent?'
-                                    onConfirm={deleteTalent}
+                                    onConfirm={deleteTalentAction}
                                     okText='Delete'
                                     cancelText='Cancel'
                                 >

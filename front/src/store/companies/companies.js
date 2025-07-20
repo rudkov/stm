@@ -5,7 +5,7 @@ const initialState = {
     items: [],
 };
 
-export const fetchCompanies = createAsyncThunk('companies/fetchCompanies', async () => {
+export const fetchCompanies = createAsyncThunk('companies/fetch', async () => {
     try {
         const response = await axios({
             method: 'get',

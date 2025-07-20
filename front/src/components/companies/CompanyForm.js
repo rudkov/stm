@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 import {
-    fetchCompanyById, getCompany,
+    fetchCompany, getCompany,
     createCompany, getCreateResponse,
-    updateCompanyById, getUpdateResponse,
-    deleteCompanyById, getDeleteResponse,
+    updateCompany, getUpdateResponse,
+    deleteCompany, getDeleteResponse,
     companyActions
 } from '../../store/companies/company';
 
@@ -121,18 +121,18 @@ function CompanyForm(props) {
             dispatch(createCompany({ values: values }));
         }
         else {
-            dispatch(updateCompanyById({ companyId: company.id, values: values }));
+            dispatch(updateCompany({ id: company.id, values: values }));
         }
     };
 
-    const deleteCompany = () => {
+    const deleteCompanyAction = () => {
         setIsLoading(true);
-        dispatch(deleteCompanyById({ companyId: company.id }));
+        dispatch(deleteCompany({ id: company.id }));
     };
 
     useEffect(() => {
         if (!isNewCompany && company.id && isFormOpen) {
-            dispatch(fetchCompanyById(company.id));
+            dispatch(fetchCompany({ id: company.id }));
         }
     }, [isNewCompany, company.id, isFormOpen, dispatch]);
 
@@ -152,7 +152,7 @@ function CompanyForm(props) {
             showNotification({ type: 'SUCCESS', message: 'Changes saved' });
             onAfterSubmit();
             dispatch(companyActions.resetResponse('create'));
-            navigate('/app/companies/' + createResponse.companyId);
+            navigate('/app/companies/' + createResponse.id);
             onClose();
         }
     }, [createResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit]);
@@ -227,7 +227,7 @@ function CompanyForm(props) {
                                 <LoadingOutlined className={`company-form-header__throbber ${isLoading ? '' : 'hidden'}`} />
                                 <Popconfirm
                                     title='Delete Company?'
-                                    onConfirm={deleteCompany}
+                                    onConfirm={deleteCompanyAction}
                                     okText='Delete'
                                     cancelText='Cancel'
                                 >
@@ -248,6 +248,7 @@ function CompanyForm(props) {
                     </ScrollableView>
                 </CustomDrawer>
             </Form>
+
             <Modal
                 title='Save Changes?'
                 closable={true}
@@ -282,6 +283,6 @@ function CompanyForm(props) {
             </Modal>
         </>
     );
-};
+}
 
 export default CompanyForm;

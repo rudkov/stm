@@ -29,7 +29,7 @@ const transformFilters = (filters) => ({
     weight: filters.body?.weight,
 });
 
-export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (filters = {}) => {
+export const fetchTalents = createAsyncThunk('talents/fetch', async (filters = {}) => {
     try {
         const response = await axios({
             method: 'post',
@@ -42,7 +42,7 @@ export const fetchTalents = createAsyncThunk('talents/fetchTalents', async (filt
     }
 });
 
-export const fetchTalentsLocations = createAsyncThunk('talents/fetchTalentsLocations', async (filters = {}) => {
+export const fetchTalentsLocations = createAsyncThunk('talents/fetchLocations', async (filters = {}) => {
     try {
         const response = await axios({
             method: 'get',
@@ -54,7 +54,7 @@ export const fetchTalentsLocations = createAsyncThunk('talents/fetchTalentsLocat
     }
 });
 
-export const fetchTalentsManagers = createAsyncThunk('talents/fetchTalentsManagers', async (filters = {}) => {
+export const fetchTalentsManagers = createAsyncThunk('talents/fetchManagers', async (filters = {}) => {
     try {
         const response = await axios({
             method: 'get',
