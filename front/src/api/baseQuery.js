@@ -18,6 +18,7 @@ const baseQuery = async (args, api, extraOptions) => {
             if (token) {
                 headers.set('X-XSRF-TOKEN', token);
             }
+            headers.set('Accept', 'application/json');
             return headers;
         },
     });

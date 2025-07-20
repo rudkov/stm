@@ -46,7 +46,7 @@ function Menu(props) {
             </div>
             <div className='menu__items menu__items-bottom'>
                 <Tooltip title={props.isCollapsed ? 'Log out' : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>
-                    <NavLink to='logout' className='menu-item'>
+                    <NavLink to='/logout' className='menu-item'>
                         <div className='menu-item__icon'><IconLogout /></div>
                         <div className='menu-item__text'>Log out</div>
                     </NavLink>

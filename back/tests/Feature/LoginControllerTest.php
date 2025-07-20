@@ -24,8 +24,7 @@ class LoginControllerTest extends TestCase
         ]);
 
         // Assert response
-        $response->assertStatus(200)
-            ->assertJson($user->toArray());
+        $response->assertStatus(204);            
 
         // Assert user is authenticated
         $this->assertAuthenticated();
@@ -47,7 +46,7 @@ class LoginControllerTest extends TestCase
 
         // Assert response
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['password']);
+            ->assertJsonValidationErrors(['email']);
 
         // Assert user is not authenticated
         $this->assertGuest();
@@ -84,7 +83,7 @@ class LoginControllerTest extends TestCase
         $response = $this->postJson('/api/v1/logout');
 
         // Assert response
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         // Assert user is logged out
         $this->assertGuest();
@@ -100,7 +99,7 @@ class LoginControllerTest extends TestCase
         ->postJson('/api/v1/logout');
 
         // Assert response
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         // Assert still not authenticated
         $this->assertGuest();

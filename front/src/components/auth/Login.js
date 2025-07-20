@@ -13,9 +13,9 @@ const Login = () => {
     const { data: authData } = useCheckAuthQuery();
     const [form] = Form.useForm();
 
-    const to = location.state?.from?.pathname 
+    const to = location.state?.from?.pathname + location.state?.from?.search
         || new URLSearchParams(location.search).get('from')
-        || '/app/calendar';
+        || '/app';
 
     useEffect(() => {
         if (authData?.isAuthenticated) {
