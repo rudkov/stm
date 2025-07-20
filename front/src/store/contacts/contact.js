@@ -90,11 +90,18 @@ const contactSlice = createSlice({
             return initialState;
         },
         resetResponse(state, responseName) {
-            if (responseName.payload === 'delete') {
-                state.deleteResponse.status = '';
-            }
-            else if (responseName.payload === 'create') {
-                state.createResponse.status = '';
+            switch (responseName.payload) {
+                case 'create':
+                    state.createResponse.status = null;
+                    break;
+                case 'update':
+                    state.updateResponse.status = null;
+                    break;
+                case 'delete':
+                    state.deleteResponse.status = null;
+                    break;
+                default:
+                    break;
             }
         }
     },
