@@ -61,7 +61,8 @@ function App() {
                         {/* End of Temporary Auth Routes */}
 
                         <Route element={<RequireAuth />}>
-
+                            <Route path='logout' element={<Logout />} />
+                            
                             <Route element={<RequireTeam />}>
 
                                 <Route path='app' element={<Main />}>
@@ -92,8 +93,6 @@ function App() {
                             </Route>
 
                             <Route path='app/teams/create' element={<NewTeam />} />
-                            <Route path='app/logout' element={<Logout />} />
-
                         </Route>
 
                         <Route path='*' element={<>404</>} />
