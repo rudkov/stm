@@ -1,7 +1,7 @@
 import './CompanyView.css';
 import '../../helpers/shared.css';
 
-import { useParams } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
@@ -23,6 +23,7 @@ function CompanyView({ inLayout = false }) {
     const params = useParams();
     const company = useSelector(getCompany);
     const scrollContainerRef = useRef(null);
+    const context = useOutletContext();
 
     useEffect(() => {
         dispatch(fetchCompany({ id: params.companyId }));
@@ -39,7 +40,7 @@ function CompanyView({ inLayout = false }) {
         result =
             <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
-                    <CompanySectionMain data={company} />
+                    <CompanySectionMain data={company} editAction={context?.editCompany} />
                 </ScrollableView.Header>
                 <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-view__body'>
 
