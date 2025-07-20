@@ -13,6 +13,10 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
     Route::get('is-logged-in', 'Auth\LoginController@isLoggedIn');
     Route::post('register', 'Auth\RegisterController@createAndAuthenticate');
+    
+    // Email verification routes
+    Route::get('/email-verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
+    Route::post('/email-verify/resend', 'Auth\VerificationController@resend');
 
     //settings
     Route::get('settings', 'SettingsController@index');
