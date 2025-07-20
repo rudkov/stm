@@ -55,6 +55,13 @@ services:
             - 8080:8080
         networks:
             - sail
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '6379:6379'
+        networks:
+            - sail
+        restart: always
 networks:
     sail:
         driver: bridge
