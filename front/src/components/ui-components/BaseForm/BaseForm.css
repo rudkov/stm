@@ -41,6 +41,7 @@
 .base-form-row__left-label .ant-row {
     display: grid;
     grid-template-columns: 140px auto;
+    align-items: center;
 }
 
 .base-form-row__left-label .ant-row .ant-form-item-label {
