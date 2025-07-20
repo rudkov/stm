@@ -56,7 +56,7 @@ function BaseForm({
     updateSuccessMessage,
     deleteSuccessMessage,
     getTitle,
-    deleteConfirmationText,
+    getDeleteConfirmationText,
     ...props
 }) {
     const [form] = Form.useForm();
@@ -68,7 +68,6 @@ function BaseForm({
         entity,
         submitForm,
         deleteEntity,
-        fetchEntity
     } = useFormCrud({
         crudActions,
         selectors,
@@ -80,7 +79,8 @@ function BaseForm({
         form,
         createSuccessMessage,
         updateSuccessMessage,
-        deleteSuccessMessage
+        deleteSuccessMessage,
+        isFormOpen: open
     });
 
     const {
@@ -100,7 +100,6 @@ function BaseForm({
         onInitForm,
         form,
         getTitle,
-        fetchEntity,
         setOriginalFormValues
     });
 
@@ -153,13 +152,14 @@ function BaseForm({
                                 title={formTitle}
                                 isLoading={isLoading}
                                 enableDelete={enableDelete}
+                                entity={entity}
                                 onSubmit={handleDrawerSubmit}
                                 onDelete={deleteEntity}
                                 onClose={closeForm}
                                 headerTitleClass={headerTitleClass}
                                 headerControlsClass={headerControlsClass}
                                 headerThrobberClass={headerThrobberClass}
-                                deleteConfirmationText={deleteConfirmationText}
+                                getDeleteConfirmationText={getDeleteConfirmationText}
                             />
                         </ScrollableView.Header>
 

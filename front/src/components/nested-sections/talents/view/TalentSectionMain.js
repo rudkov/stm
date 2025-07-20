@@ -19,7 +19,7 @@ function TalentSectionMain(props) {
                 </div>
             </div>
             <div className='talent-section-main__controls'>
-                <Button onClick={props.editAction}>Edit</Button>
+                <Button onClick={() => props.editAction(talent.id)}>Edit</Button>
             </div>
         </div>
     );

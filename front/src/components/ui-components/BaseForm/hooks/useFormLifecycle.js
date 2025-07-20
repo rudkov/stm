@@ -9,7 +9,6 @@ import { useEffect, useState, useCallback } from 'react';
  * @param {Function} config.onInitForm - Callback to initialize form with values
  * @param {Object} config.form - Ant Design form instance
  * @param {Function} config.getTitle - A function that returns the form title string.
- * @param {Function} config.fetchEntity - The action to fetch the entity.
  * @param {Function} config.setOriginalFormValues - Function to set the original form values for change detection.
  */
 export function useFormLifecycle({
@@ -19,7 +18,6 @@ export function useFormLifecycle({
     onInitForm,
     form,
     getTitle,
-    fetchEntity,
     setOriginalFormValues
 }) {
     const [formTitle, setFormTitle] = useState();
@@ -39,15 +37,6 @@ export function useFormLifecycle({
         }
     }, [form, onInitForm, setOriginalFormValues]);
 
-    // Fetch entity when form opens (for existing entities)
-    useEffect(() => {
-        if (!isNew && entityId && isFormOpen) {
-            if (fetchEntity) {
-                fetchEntity(entityId);
-            }
-        }
-    }, [isNew, entityId, isFormOpen, fetchEntity]);
-
     useEffect(() => {
         if (getTitle) {
             const title = getTitle(entity, isNew);
@@ -56,10 +45,11 @@ export function useFormLifecycle({
 
         if (isNew) {
             initForm({});
-        } else if (entity?.id) {
+        } else if (entity?.id === entityId) {
+            // Only init form if the entity in the store matches the entity we want to edit
             initForm(entity);
         }
-    }, [isNew, entity, getTitle, initForm]);
+    }, [isNew, entity, entityId, getTitle, initForm]);
 
     return {
         formTitle,

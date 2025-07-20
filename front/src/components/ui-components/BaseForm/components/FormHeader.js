@@ -9,13 +9,14 @@ function FormHeader({
     title,
     isLoading,
     enableDelete,
+    entity,
     onSubmit,
     onDelete,
     onClose,
     headerTitleClass,
     headerControlsClass,
     headerThrobberClass,
-    deleteConfirmationText = 'Delete item?'
+    getDeleteConfirmationText = () => 'Delete item?'
 }) {
     return (
         <>
@@ -26,7 +27,7 @@ function FormHeader({
                 <LoadingOutlined className={`${headerThrobberClass} ${isLoading ? '' : 'hidden'}`} />
                 {enableDelete && (
                     <Popconfirm
-                        title={deleteConfirmationText}
+                        title={getDeleteConfirmationText(entity)}
                         onConfirm={onDelete}
                         okText='Delete'
                         cancelText='Cancel'

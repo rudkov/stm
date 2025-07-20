@@ -15,6 +15,7 @@ function Talents() {
     const dispatch = useDispatch();
     const [isTalentFormOpen, setIsTalentFormOpen] = useState(false);
     const [isNewTalent, setIsNewTalent] = useState();
+    const [currentTalentId, setCurrentTalentId] = useState(null);
     const { filters, updateFilter } = useTalentsFilters();
 
     // Fetch talents when filters change (only filtered results)
@@ -35,16 +36,19 @@ function Talents() {
 
     const createTalent = () => {
         setIsNewTalent(true);
+        setCurrentTalentId(null);
         setIsTalentFormOpen(true);
     }
 
-    const editTalent = () => {
+    const editTalent = (id) => {
         setIsNewTalent(false);
+        setCurrentTalentId(id);
         setIsTalentFormOpen(true);
     }
 
     const closeTalentForm = () => {
         setIsTalentFormOpen(false);
+        setCurrentTalentId(null);
     }
 
     return (
@@ -69,6 +73,7 @@ function Talents() {
                 open={isTalentFormOpen}
                 closeForm={closeTalentForm}
                 isNewTalent={isNewTalent}
+                talentId={currentTalentId}
                 onAfterSubmit={fetchAfterTalentSaveOrUpdate}
             />
         </>

@@ -1,6 +1,3 @@
-/* BaseForm Component - Base Styles */
-
-/* Base header styles - can be combined with entity-specific classes */
 .base-form-header {
     display: flex;
     flex-direction: row;
@@ -33,7 +30,6 @@
     display: none;
 }
 
-/* Base body styles */
 .base-form__body {
     display: flex;
     flex-direction: column;
@@ -42,12 +38,15 @@
     width: 100%;
 }
 
-/* Base sidebar styles */
-.base-form__sidebar {
-    /* Default sidebar styling, can be overridden */
+.base-form-row__left-label .ant-row {
+    display: grid;
+    grid-template-columns: 140px auto;
 }
 
-/* Layout variants */
+.base-form-row__left-label .ant-row .ant-form-item-label {
+    text-align: start;
+}
+
 .base-form--with-sidebar {
     display: flex;
     flex-direction: row;

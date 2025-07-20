@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { useNotification } from '../../notifications/NotificationProvider';
+import { useNotification } from '../../../notifications/NotificationProvider';
 
 /**
  * Hook to handle CRUD operations for forms
@@ -28,7 +28,8 @@ export function useFormCrud({
     form,
     createSuccessMessage = 'Item created',
     updateSuccessMessage = 'Changes saved',
-    deleteSuccessMessage = 'Item deleted'
+    deleteSuccessMessage = 'Item deleted',
+    isFormOpen
 }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -42,9 +43,15 @@ export function useFormCrud({
     const deleteResponse = useSelector(selectors.deleteResponse);
 
     // Fetch entity data
-    const fetchEntity = (id) => {
-        dispatch(crudActions.fetch(id));
-    };
+    const fetchEntity = useCallback((id) => {
+        dispatch(crudActions.fetch({ id }));
+    }, [dispatch, crudActions]);
+
+    useEffect(() => {
+        if (!isNew && entityId && isFormOpen) {
+            fetchEntity(entityId);
+        }
+    }, [entityId, isNew, isFormOpen, fetchEntity]);
 
     // Submit form (create or update)
     const submitForm = (formValues) => {
@@ -83,7 +90,7 @@ export function useFormCrud({
             }
             onClose();
         }
-    }, [createResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage]);
+    }, [createResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage, crudActions]);
 
     // Handle update response
     useEffect(() => {
@@ -94,7 +101,7 @@ export function useFormCrud({
             dispatch(crudActions.resetResponse('update'));
             onClose();
         }
-    }, [updateResponse, dispatch, onClose, showNotification, onAfterSubmit, updateSuccessMessage]);
+    }, [updateResponse, dispatch, onClose, showNotification, onAfterSubmit, updateSuccessMessage, crudActions]);
 
     // Handle delete response
     useEffect(() => {
@@ -106,11 +113,10 @@ export function useFormCrud({
             navigate(entityUrl, { replace: true });
             onClose();
         }
-    }, [deleteResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage]);
+    }, [deleteResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage, crudActions]);
 
     return {
         isLoading,
-        setIsLoading,
         entity,
         submitForm,
         deleteEntity,
