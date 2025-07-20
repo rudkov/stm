@@ -62,6 +62,15 @@ services:
         networks:
             - sail
         restart: always
+    mailhog:
+        image: mailhog/mailhog:v1.0.1
+        ports:
+            - "8025:8025"
+        logging:
+            driver: none
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge
