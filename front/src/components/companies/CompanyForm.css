@@ -1,0 +1,49 @@
+.company-form {
+    display: flex;
+    height: 100%;
+}
+
+.company-form-header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--divider-color);
+}
+
+.company-form-header__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.company-form-header__controls {
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.company-form-header__throbber {
+    font-size: 22px;
+    color: var(--accent);
+}
+
+.company-form__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 4px 12px 0;
+    width: 100%;
+}
+
+.talent-form-row__left-label .ant-row {
+    display: grid;
+    grid-template-columns: 140px auto;
+}
+
+.talent-form-row__left-label .ant-row .ant-form-item-label {
+    text-align: start;
+}
