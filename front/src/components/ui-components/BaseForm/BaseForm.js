@@ -1,7 +1,7 @@
 import './BaseForm.css';
 
 import { Form } from 'antd';
-import { useRef } from 'react';
+import { Children, cloneElement, useRef } from 'react';
 
 import CustomDrawer from '../CustomDrawer';
 import ScrollableView from '../ScrollableView';
@@ -175,7 +175,7 @@ function BaseForm({
                             )}
 
                             <div className={bodyClass}>
-                                {children}
+                                {Children.map(children, child => cloneElement(child, { form }))}
                             </div>
                         </ScrollableView.Body>
                     </ScrollableView>
