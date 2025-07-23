@@ -13,7 +13,7 @@ import TalentForm from '../talents/TalentForm';
 
 function Talents() {
     const dispatch = useDispatch();
-    const [isTalentFormOpen, setIsTalentFormOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentTalentId, setCurrentTalentId] = useState(null);
     const { filters, updateFilter } = useTalentsFilters();
 
@@ -35,16 +35,16 @@ function Talents() {
 
     const createTalent = () => {
         setCurrentTalentId(null);
-        setIsTalentFormOpen(true);
+        setIsFormOpen(true);
     }
 
     const editTalent = (id) => {
         setCurrentTalentId(id);
-        setIsTalentFormOpen(true);
+        setIsFormOpen(true);
     }
 
     const handleClose = () => {
-        setIsTalentFormOpen(false);
+        setIsFormOpen(false);
         setCurrentTalentId(null);
     }
 
@@ -67,7 +67,7 @@ function Talents() {
                 </div>
             </div>
             <TalentForm
-                isFormOpen={isTalentFormOpen}
+                isFormOpen={isFormOpen}
                 onClose={handleClose}
                 talentId={currentTalentId}
                 onAfterSubmit={handleSubmit}

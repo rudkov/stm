@@ -12,7 +12,7 @@ import CompanyForm from '../companies/CompanyForm';
 
 function Companies() {
     const dispatch = useDispatch();
-    const [isCompanyFormOpen, setIsCompanyFormOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentCompanyId, setCurrentCompanyId] = useState(null);
     const { filters, updateFilter } = useCompaniesFilters();
 
@@ -26,16 +26,16 @@ function Companies() {
 
     const createCompany = () => {
         setCurrentCompanyId(null);
-        setIsCompanyFormOpen(true);
+        setIsFormOpen(true);
     }
 
     const editCompany = (id) => {
         setCurrentCompanyId(id);
-        setIsCompanyFormOpen(true);
+        setIsFormOpen(true);
     }
 
     const handleClose = () => {
-        setIsCompanyFormOpen(false);
+        setIsFormOpen(false);
         setCurrentCompanyId(null);
     }
 
@@ -52,7 +52,7 @@ function Companies() {
                 </div>
             </div>
             <CompanyForm
-                isFormOpen={isCompanyFormOpen}
+                isFormOpen={isFormOpen}
                 onClose={handleClose}
                 companyId={currentCompanyId}
                 onAfterSubmit={handleSubmit}
