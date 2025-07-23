@@ -26,7 +26,7 @@ import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSecti
 
 import CompanySectionPrimaryInfo from '../nested-sections/companies/edit/CompanySectionPrimaryInfo';
 
-function CompanyForm({ open: isFormOpen, closeForm: onClose, onAfterSubmit, companyId }) {
+function CompanyForm({ isFormOpen, onClose, onAfterSubmit, companyId }) {
 
     const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({

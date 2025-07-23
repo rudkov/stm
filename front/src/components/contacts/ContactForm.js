@@ -26,7 +26,7 @@ import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSecti
 
 import ContactSectionPrimaryInfo from '../nested-sections/contacts/edit/ContactSectionPrimaryInfo';
 
-function ContactForm({ open: isFormOpen, closeForm: onClose, onAfterSubmit, contactId }) {
+function ContactForm({ isFormOpen, onClose, onAfterSubmit, contactId }) {
 
     const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({

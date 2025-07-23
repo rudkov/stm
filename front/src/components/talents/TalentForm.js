@@ -38,7 +38,7 @@ import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSect
 import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
 import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
 
-function TalentForm({ open: isFormOpen, closeForm: onClose, onAfterSubmit, talentId }) {
+function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
     const user_id = useSelector((state) => state.auth.user_id);
 
     const onInitForm = useCallback((values, form) => {

@@ -20,7 +20,7 @@ function Contacts() {
         dispatch(fetchContacts(filters));
     }, [dispatch, filters]);
 
-    const fetchAfterSaveOrUpdate = useCallback(() => {
+    const handleSubmit = useCallback(() => {
         dispatch(fetchContacts(filters));
     }, [dispatch, filters]);
 
@@ -34,7 +34,7 @@ function Contacts() {
         setContactFormOpen(true);
     }
 
-    const closeContactForm = () => {
+    const handleClose = () => {
         setContactFormOpen(false);
         setCurrentContactId(null);
     }
@@ -52,10 +52,10 @@ function Contacts() {
                 </div>
             </div>
             <ContactForm
-                open={isContactFormOpen}
-                closeForm={closeContactForm}
+                isFormOpen={isContactFormOpen}
+                onClose={handleClose}
                 contactId={currentContactId}
-                onAfterSubmit={fetchAfterSaveOrUpdate}
+                onAfterSubmit={handleSubmit}
             />
         </>
     );

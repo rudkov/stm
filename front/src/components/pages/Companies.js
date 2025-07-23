@@ -20,7 +20,7 @@ function Companies() {
         dispatch(fetchCompanies(filters));
     }, [dispatch, filters]);
 
-    const fetchAfterSaveOrUpdate = useCallback(() => {
+    const handleSubmit = useCallback(() => {
         dispatch(fetchCompanies(filters));
     }, [dispatch, filters]);
 
@@ -34,7 +34,7 @@ function Companies() {
         setIsCompanyFormOpen(true);
     }
 
-    const closeCompanyForm = () => {
+    const handleClose = () => {
         setIsCompanyFormOpen(false);
         setCurrentCompanyId(null);
     }
@@ -52,10 +52,10 @@ function Companies() {
                 </div>
             </div>
             <CompanyForm
-                open={isCompanyFormOpen}
-                closeForm={closeCompanyForm}
+                isFormOpen={isCompanyFormOpen}
+                onClose={handleClose}
                 companyId={currentCompanyId}
-                onAfterSubmit={fetchAfterSaveOrUpdate}
+                onAfterSubmit={handleSubmit}
             />
         </>
     );
