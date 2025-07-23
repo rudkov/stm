@@ -26,7 +26,7 @@ import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSecti
 
 import CompanySectionPrimaryInfo from '../nested-sections/companies/edit/CompanySectionPrimaryInfo';
 
-function CompanyForm({ isNewCompany, open: isFormOpen, closeForm: onClose, onAfterSubmit, companyId }) {
+function CompanyForm({ open: isFormOpen, closeForm: onClose, onAfterSubmit, companyId }) {
 
     const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({
@@ -65,7 +65,7 @@ function CompanyForm({ isNewCompany, open: isFormOpen, closeForm: onClose, onAft
 
     return (
         <BaseForm
-            entityId={isNewCompany ? null : companyId}
+            entityId={companyId}
             entityName='company'
             entityUrl='/app/companies'
 

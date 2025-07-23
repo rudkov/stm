@@ -13,7 +13,6 @@ import ContactForm from '../contacts/ContactForm';
 function Contacts() {
     const dispatch = useDispatch();
     const [isContactFormOpen, setContactFormOpen] = useState(false);
-    const [isNewContact, setIsNewContact] = useState();
     const [currentContactId, setCurrentContactId] = useState(null);
     const { filters, updateFilter } = useContactsFilters();
 
@@ -26,13 +25,11 @@ function Contacts() {
     }, [dispatch, filters]);
 
     const createContact = () => {
-        setIsNewContact(true);
         setCurrentContactId(null);
         setContactFormOpen(true);
     }
 
     const editContact = (id) => {
-        setIsNewContact(false);
         setCurrentContactId(id);
         setContactFormOpen(true);
     }
@@ -57,7 +54,6 @@ function Contacts() {
             <ContactForm
                 open={isContactFormOpen}
                 closeForm={closeContactForm}
-                isNewContact={isNewContact}
                 contactId={currentContactId}
                 onAfterSubmit={fetchAfterSaveOrUpdate}
             />

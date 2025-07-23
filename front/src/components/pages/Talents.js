@@ -14,7 +14,6 @@ import TalentForm from '../talents/TalentForm';
 function Talents() {
     const dispatch = useDispatch();
     const [isTalentFormOpen, setIsTalentFormOpen] = useState(false);
-    const [isNewTalent, setIsNewTalent] = useState();
     const [currentTalentId, setCurrentTalentId] = useState(null);
     const { filters, updateFilter } = useTalentsFilters();
 
@@ -35,13 +34,11 @@ function Talents() {
     }, [dispatch, filters]);
 
     const createTalent = () => {
-        setIsNewTalent(true);
         setCurrentTalentId(null);
         setIsTalentFormOpen(true);
     }
 
     const editTalent = (id) => {
-        setIsNewTalent(false);
         setCurrentTalentId(id);
         setIsTalentFormOpen(true);
     }
@@ -72,7 +69,6 @@ function Talents() {
             <TalentForm
                 open={isTalentFormOpen}
                 closeForm={closeTalentForm}
-                isNewTalent={isNewTalent}
                 talentId={currentTalentId}
                 onAfterSubmit={fetchAfterSaveOrUpdate}
             />

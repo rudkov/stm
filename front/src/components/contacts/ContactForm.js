@@ -26,7 +26,7 @@ import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSecti
 
 import ContactSectionPrimaryInfo from '../nested-sections/contacts/edit/ContactSectionPrimaryInfo';
 
-function ContactForm({ isNewContact, open: isFormOpen, closeForm: onClose, onAfterSubmit, contactId }) {
+function ContactForm({ open: isFormOpen, closeForm: onClose, onAfterSubmit, contactId }) {
 
     const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({
@@ -66,7 +66,7 @@ function ContactForm({ isNewContact, open: isFormOpen, closeForm: onClose, onAft
 
     return (
         <BaseForm
-            entityId={isNewContact ? null : contactId}
+            entityId={contactId}
             entityName='contact'
             entityUrl='/app/contacts'
 

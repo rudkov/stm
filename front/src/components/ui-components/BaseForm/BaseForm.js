@@ -20,7 +20,6 @@ import { cx } from '../../../helpers/classNames';
  * @param {Object} props - Component props
  * @param {string} props.entityName - Name of the entity (talent, company, contact)
  * @param {number|null} props.entityId - ID of the entity being edited
- * @param {boolean} props.isNew - Whether this is creating a new entity
  * @param {number} props.formWidth - Width of the form drawer
  * @param {boolean} props.enableDelete - Whether delete functionality is enabled
  * @param {boolean} props.enableAnchorNavigation - Whether to show anchor navigation
