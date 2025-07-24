@@ -150,7 +150,7 @@ function BaseForm({
                             <FormHeader
                                 title={formTitle}
                                 isLoading={isLoading}
-                                enableDelete={enableDelete}
+                                enableDelete={enableDelete && entityId}
                                 entity={entity}
                                 onSubmit={handleDrawerSubmit}
                                 onDelete={deleteEntity}
