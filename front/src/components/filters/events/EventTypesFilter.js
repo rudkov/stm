@@ -1,12 +1,12 @@
-import './Filter.css';
+import '../Filter.css';
 import './EventTypesFilter.css';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
-import { useSettings } from '../../context/SettingsContext';
-import { useTheme } from '../../context/ThemeContext';
+import { useSettings } from '../../../context/SettingsContext';
+import { useTheme } from '../../../context/ThemeContext';
 
-import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
+import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
 
 function EventTypesFilter(props) {
     const { settings } = useSettings();

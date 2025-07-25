@@ -14,9 +14,9 @@ import { getEvents, fetchEvents } from '../../store/events/events';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
-import ClientsFilter from '../filters/ClientsFilter';
-import EventTypesFilter from '../filters/EventTypesFilter';
-import TalentsFilter from '../filters/TalentsFilter';
+import ClientsFilter from '../filters/events/ClientsFilter';
+import EventTypesFilter from '../filters/events/EventTypesFilter';
+import TalentsFilter from '../filters/events/TalentsFilter';
 
 function EventsCalendar() {
     const dispatch = useDispatch();

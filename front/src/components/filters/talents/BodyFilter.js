@@ -1,15 +1,15 @@
-import './Filter.css';
+import '../Filter.css';
 import './BodyFilter.css';
-import '../../helpers/shared.css';
+import '../../../helpers/shared.css';
 
 import { useEffect, useState, useCallback } from 'react';
 import { Form, Select, Slider } from 'antd';
 
-import { useSettings } from '../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
-import IconColorBadge from '../ui-components/IconColorBadge';
+import IconColorBadge from '../../ui-components/IconColorBadge';
 
 function BodyFilter(props) {
     const [form] = Form.useForm();

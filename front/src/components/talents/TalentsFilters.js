@@ -3,13 +3,14 @@ import './TalentsFilters.css';
 import { useEffect, useState } from 'react';
 import ScrollableView from '../ui-components/ScrollableView';
 
-import BoardFilter from '../filters/BoardFilter';
-import BodyFilter from '../filters/BodyFilter';
-import GendersFilter from '../filters/GendersFilter';
-import LocationsFilter from '../filters/LocationsFilter';
-import ManagersFilter from '../filters/ManagersFilter';
-import NoContactsFilter from '../filters/NoContactsFilter';
-import PreferencesFilter from '../filters/PreferencesFilter';
+import NoContactsFilter from '../filters/shared/NoContactsFilter';
+
+import BoardFilter from '../filters/talents/BoardFilter';
+import BodyFilter from '../filters/talents/BodyFilter';
+import GendersFilter from '../filters/talents/GendersFilter';
+import LocationsFilter from '../filters/talents/LocationsFilter';
+import ManagersFilter from '../filters/talents/ManagersFilter';
+import PreferencesFilter from '../filters/talents/PreferencesFilter';
 
 export const FILTERS_CONFIG = {
     search: {

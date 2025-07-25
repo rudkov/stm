@@ -1,14 +1,14 @@
-import './Filter.css';
+import '../Filter.css';
 import './ManagersFilter.css';
 
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getTalentsManagers, fetchTalentsManagers } from '../../store/talents/talents';
+import { getTalentsManagers, fetchTalentsManagers } from '../../../store/talents/talents';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
-import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
+import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
 
 function ManagersFilter(props) {
     const dispatch = useDispatch();

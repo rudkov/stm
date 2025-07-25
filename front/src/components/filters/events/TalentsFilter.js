@@ -1,16 +1,16 @@
-import './Filter.css';
+import '../Filter.css';
 import './TalentsFilter.css';
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
 
-import { getTalents, fetchTalents, filterTalents } from '../../store/talents/talents';
+import { getTalents, fetchTalents, filterTalents } from '../../../store/talents/talents';
 
-import Filter from './Filter';
-import TalentUsername from '../talents/components/TalentUsername';
+import Filter from '../Filter';
+import TalentUsername from '../../talents/components/TalentUsername';
 
-import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
+import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
 
 function TalentsFilter(props) {
     const dispatch = useDispatch();

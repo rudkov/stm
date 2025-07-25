@@ -1,15 +1,15 @@
-import './Filter.css';
+import '../Filter.css';
 import './ClientsFilter.css';
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
 
-import { getCompanies, fetchCompanies, filterCompanies } from '../../store/companies/companies';
+import { getCompanies, fetchCompanies, filterCompanies } from '../../../store/companies/companies';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
-import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
+import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
 
 function ClientsFilter(props) {
     const dispatch = useDispatch();

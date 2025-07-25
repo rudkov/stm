@@ -1,13 +1,13 @@
-import './Filter.css';
+import '../Filter.css';
 import './LocationsFilter.css';
 
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
-import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
-import { getTalentsLocations, fetchTalentsLocations } from '../../store/talents/talents';
+import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
+import { getTalentsLocations, fetchTalentsLocations } from '../../../store/talents/talents';
 
 function LocationsFilter(props) {
     const dispatch = useDispatch();

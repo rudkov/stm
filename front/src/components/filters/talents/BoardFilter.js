@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Select } from 'antd';
 
-import { fetchTalentBoards, getTalentBoards } from '../../store/talents/talentBoards';
+import { fetchTalentBoards, getTalentBoards } from '../../../store/talents/talentBoards';
 
 function BoardFilter(props) {
     const dispatch = useDispatch();

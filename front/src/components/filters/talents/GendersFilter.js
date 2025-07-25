@@ -1,11 +1,11 @@
-import './Filter.css';
+import '../Filter.css';
 import './GendersFilter.css';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
-import { useSettings } from '../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 
-import { ReactComponent as IconCheckSmall } from '../../assets/icons/check-small.svg';
+import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
 
 function GendersFilter(props) {
     const { settings } = useSettings();
