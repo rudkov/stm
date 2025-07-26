@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 use App\Traits\BelongsToTeam;
 use App\Notifications\VerifyEmailQueued;
+use App\Notifications\ResetPasswordQueued;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -40,5 +41,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmailQueued);
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordQueued($token));
     }
 }
