@@ -27,7 +27,41 @@ export const registerApi = createApi({
                 status: meta.response?.status,
             }),
         }),
+        forgotPassword: builder.mutation({
+            query: (email) => ({
+                url: '/forgot-password',
+                method: 'POST',
+                body: { email },
+            }),
+        }),
+        resetPassword: builder.mutation({
+            query: ({ token, email, password }) => ({
+                url: '/reset-password',
+                method: 'POST',
+                body: { token, email, password, password_confirmation: password},
+            }),
+            transformErrorResponse: (response) => {
+                const originalErrors = response?.data?.errors || {};
+                const messages = Object.values(originalErrors)
+                  .flat()
+                  .filter(Boolean);
+            
+                const fieldErrors = (response?.fieldErrors || []).map(({ errors }) => ({
+                    name: 'password',
+                    errors,
+                  }));
+                return {
+                  ...response,
+                  data: {
+                    errors: {
+                        password: messages, 
+                    },
+                  },
+                  fieldErrors,
+                };
+            },
+        }),
     }),
 });
 
-export const { useRegisterMutation, useVerifyEmailMutation, useResendEmailMutation } = registerApi;  
+export const { useRegisterMutation, useVerifyEmailMutation, useResendEmailMutation, useForgotPasswordMutation, useResetPasswordMutation } = registerApi;  

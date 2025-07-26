@@ -18,6 +18,10 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/email-verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
     Route::post('/email-verify/resend', 'Auth\VerificationController@resend');
 
+    // Password recovery routes
+    Route::post('/forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/reset-password', 'Auth\ResetPasswordController@reset');
+
     //settings
     Route::get('settings', 'SettingsController@index');
 

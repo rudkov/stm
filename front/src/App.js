@@ -9,11 +9,19 @@ import NotificationProvider from './components/notifications/NotificationProvide
 
 import RequireAuth from './components/auth/RequireAuth';
 import RequireTeam from './components/teams/RequireTeam';
+
 import Login from './components/auth/Login';
 import Logout from './components/auth/Logout';
+
 import Register from './components/auth/Register';
+
 import EmailVerification from './components/auth/EmailVerification';
-import ResendVerificationEmail from './components/auth/ResendVerificationEmail';
+import ResendVerificationEmail from './components/auth/ResendVerificationEmail'
+
+import ForgotPassword from './components/auth/ForgotPassword';
+import ForgotPasswordSuccess from './components/auth/ForgotPasswordSuccess';
+import ResetPassword from './components/auth/ResetPassword';
+
 import Main from './components/Main';
 
 import Companies from './components/pages/Companies';
@@ -31,16 +39,12 @@ import Talents from './components/pages/Talents';
 import TalentsZeroState from './components/talents/TalentsZeroState';
 import TalentView from './components/talents/TalentView';
 
-// import { default as TmpLogin } from './components/auth/tmp/Login';
-// import { default as TmpRegister } from './components/auth/tmp/Register';
 // import { default as TmpCreateTeam } from './components/auth/tmp/CreateTeam';
-// import { default as TmpResetPassword } from './components/auth/tmp/ResetPassword';
-// import { default as TmpResetPasswordStep2 } from './components/auth/tmp/ResetPasswordStep2';
-// import { default as TmpResetPasswordStep3 } from './components/auth/tmp/ResetPasswordStep3';
 
 import NewTeam from './components/teams/NewTeam';
 
 import Tmp from './components/pages/Tmp';
+
 
 function App() {
     const { theme } = useTheme();
@@ -53,13 +57,14 @@ function App() {
                         <Route path='login' element={<Login />} />
                         <Route path='register' element={<Register />} />
 
+                        <Route path='forgot-password' element={<ForgotPassword />} />
+                        <Route path='forgot-password/success' element={<ForgotPasswordSuccess />} />
+                        <Route path='reset-password/:token' element={<ResetPassword />} />
+
                         {/* Temporary Auth Routes */}
-                        {/* <Route path='tmp/login' element={<TmpLogin />} />
-                        <Route path='tmp/register' element={<TmpRegister />} />
+                        {/* 
                         <Route path='tmp/create-team' element={<TmpCreateTeam />} />
-                        <Route path='tmp/reset-password' element={<TmpResetPassword />} />
-                        <Route path='tmp/reset-password-step-2' element={<TmpResetPasswordStep2 />} />
-                        <Route path='tmp/reset-password-step-3' element={<TmpResetPasswordStep3 />} /> */}
+                         */}
                         {/* End of Temporary Auth Routes */}
 
                         <Route element={<RequireAuth />}>
