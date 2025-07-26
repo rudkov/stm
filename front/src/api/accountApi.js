@@ -30,6 +30,7 @@ export const accountApi = createApi({
             providesTags: ['Auth'],
             transformResponse: (response) => ({
                 isAuthenticated: response.is_authenticated,
+                user: response.user,
                 activeTeam: response.user?.team_id || null,
                 hasVerifiedEmail: response.user?.email_verified_at != null,
             }),

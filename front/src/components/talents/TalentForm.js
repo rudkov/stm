@@ -37,9 +37,11 @@ import TalentSectionPreferences from '../nested-sections/talents/edit/TalentSect
 import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSectionPrimaryInfo';
 import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
 import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
+import { useCheckAuthQuery } from '../../api/accountApi';
 
 function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
-    const user_id = useSelector((state) => state.auth.user_id);
+    const { data: authData } = useCheckAuthQuery();
+    const user_id = authData.user.id;
 
     const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({
