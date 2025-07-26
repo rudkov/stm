@@ -1,9 +1,24 @@
 import { Button, Form, Input } from 'antd';
 
 import AuthLayout from './AuthLayout';
+import { useCreateTeamMutation } from '../../api/accountApi';
+import { useEffect } from 'react';
 
 function CreateTeam() {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm();    
+    const [createTeam, { isLoading, error }] = useCreateTeamMutation();
+
+    const onFinish = ({ name }) => {
+        createTeam(name);
+    };
+
+    useEffect(()=> {
+        if (error?.isValidationError) {
+            form.setFields(error.fieldErrors);
+        } else if (error) {
+            console.log('Team creation failed. Please try again.');
+        }
+    }, [form, error]);
 
     return (
         <AuthLayout>
@@ -18,6 +33,7 @@ function CreateTeam() {
                     requiredMark={false}
                     size='large'
                     className='auth-form'
+                    onFinish={onFinish}
                 >
                     <Form.Item
                         name='name'
@@ -26,7 +42,9 @@ function CreateTeam() {
                         <Input placeholder='Agency name' />
                     </Form.Item>
                     <Form.Item>
-                        <Button type='primary' htmlType='submit' block>Create Agency</Button>
+                        <Button type='primary' htmlType='submit' block loading={isLoading}>
+                            Create Agency
+                        </Button>
                     </Form.Item>
                 </Form>
             </AuthLayout.Body>

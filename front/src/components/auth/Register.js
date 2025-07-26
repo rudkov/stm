@@ -1,7 +1,7 @@
 import './Register.css';
 import { Button, Form, Input, message } from 'antd';
 import AuthLayout from './AuthLayout';
-import { useRegisterMutation } from '../../api/registerApi';
+import { useRegisterMutation } from '../../api/accountApi';
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
 
@@ -15,7 +15,7 @@ function Register() {
             const response = await register(values).unwrap();
             if (response.success) {
                 message.success(response.message || 'Registration successful!');
-                navigate('/app/calendar');
+                navigate('/create-team');
             }
         } catch (error) {
             message.error(error.message || 'Registration failed');

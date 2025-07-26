@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd';
 
 import AuthLayout from './AuthLayout';
-import { useForgotPasswordMutation } from '../../api/registerApi'; 
+import { useForgotPasswordMutation } from '../../api/accountApi'; 
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
 

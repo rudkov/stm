@@ -1,5 +1,5 @@
 import { useLocation, Navigate, Outlet } from "react-router";
-import { useCheckAuthQuery } from "../../api/authApi";
+import { useCheckAuthQuery } from "../../api/accountApi";
 import Loading from "../ui-components/Loading";
 
 const RequireAuth = () => {

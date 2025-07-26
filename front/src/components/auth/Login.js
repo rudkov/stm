@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router';
 
 import { Form, Input, Button } from 'antd';
-import { useLoginMutation, useCheckAuthQuery } from '../../api/authApi';
+import { useLoginMutation, useCheckAuthQuery } from '../../api/accountApi';
 import { useEffect } from 'react';
 
 import AuthLayout from './AuthLayout';

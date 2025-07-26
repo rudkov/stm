@@ -8,12 +8,15 @@ import { SettingsProvider } from './context/SettingsContext';
 import NotificationProvider from './components/notifications/NotificationProvider';
 
 import RequireAuth from './components/auth/RequireAuth';
-import RequireTeam from './components/teams/RequireTeam';
 
 import Login from './components/auth/Login';
 import Logout from './components/auth/Logout';
 
 import Register from './components/auth/Register';
+
+import RequireTeam from './components/teams/RequireTeam';
+import RedirectIfTeam from './components/teams/RedirectIfTeam';
+import CreateTeam from './components/auth/CreateTeam';
 
 import EmailVerification from './components/auth/EmailVerification';
 import ResendVerificationEmail from './components/auth/ResendVerificationEmail'
@@ -34,10 +37,6 @@ import Talents from './components/pages/Talents';
 import TalentsZeroState from './components/talents/TalentsZeroState';
 import TalentView from './components/talents/TalentView';
 
-// import { default as TmpCreateTeam } from './components/auth/tmp/CreateTeam';
-
-import NewTeam from './components/teams/NewTeam';
-
 import Tmp from './components/pages/Tmp';
 
 
@@ -55,12 +54,6 @@ function App() {
                         <Route path='forgot-password' element={<ForgotPassword />} />
                         <Route path='forgot-password/success' element={<ForgotPasswordSuccess />} />
                         <Route path='reset-password/:token' element={<ResetPassword />} />
-
-                        {/* Temporary Auth Routes */}
-                        {/* 
-                        <Route path='tmp/create-team' element={<TmpCreateTeam />} />
-                         */}
-                        {/* End of Temporary Auth Routes */}
 
                         <Route element={<RequireAuth />}>
                             <Route path='logout' element={<Logout />} />
@@ -88,7 +81,7 @@ function App() {
 
                             </Route>
 
-                            <Route path='app/teams/create' element={<NewTeam />} />
+                            <Route path='/create-team' element={<RedirectIfTeam><CreateTeam /></RedirectIfTeam>} />
                         </Route>
 
                         <Route path='*' element={<>404</>} />
