@@ -40,6 +40,7 @@ import TalentSectionPreferences from '../nested-sections/talents/edit/TalentSect
 import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSectionPrimaryInfo';
 import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
 import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
+import { useCheckAuthQuery } from '../../api/accountApi';
 
 function TalentForm(props) {
     const dispatch = useDispatch();
@@ -49,7 +50,8 @@ function TalentForm(props) {
     const createResponse = useSelector(getCreateResponse);
     const updateResponse = useSelector(getUpdateResponse);
     const deleteResponse = useSelector(getDeleteResponse);
-    // const user_id = useSelector((state) => state.auth.user_id);
+    const { data: authData } = useCheckAuthQuery();
+    const user_id = authData.user.id;
     const getContainer = () => containerRef.current;
     const containerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
