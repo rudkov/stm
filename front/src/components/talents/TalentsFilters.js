@@ -1,6 +1,6 @@
 import './TalentsFilters.css';
 
-import { useEffect, useState } from 'react';
+import { useFilters } from '../filters/useFilters';
 import ScrollableView from '../ui-components/ScrollableView';
 
 import NoContactsFilter from '../filters/shared/NoContactsFilter';
@@ -56,38 +56,7 @@ export const FILTERS_CONFIG = {
 };
 
 export function useTalentsFilters() {
-    const [filters, setFilters] = useState(() => {
-        const initialFilters = {};
-        for (const [key, config] of Object.entries(FILTERS_CONFIG)) {
-            const storedValue = sessionStorage.getItem(config.name);
-            initialFilters[key] = storedValue !== null
-                ? config.storage(storedValue)
-                : config.value;
-        }
-        return initialFilters;
-    });
-
-    // Update sessionStorage when filters change
-    useEffect(() => {
-        Object.entries(FILTERS_CONFIG).forEach(([key, config]) => {
-            const value = filters[key];
-            const storageValue = typeof value === 'string' ? value : JSON.stringify(value);
-            sessionStorage.setItem(config.name, storageValue);
-        });
-    }, [filters]);
-
-    const updateFilter = (key, value) => {
-        setFilters(prev => ({
-            ...prev,
-            [key]: value
-        }));
-    };
-
-    return {
-        filters,
-        setFilters,
-        updateFilter
-    };
+    return useFilters(FILTERS_CONFIG);
 }
 
 export function TalentsFilters({ filters, updateFilter }) {
@@ -140,4 +109,4 @@ const TalentsFiltersExports = {
     FILTERS_CONFIG
 };
 
-export default TalentsFiltersExports; 
+export default TalentsFiltersExports;
