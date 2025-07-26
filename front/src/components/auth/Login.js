@@ -74,7 +74,7 @@ const Login = () => {
                         <Input.Password placeholder='Password' />
                     </Form.Item>
                     <div>
-                        <a href='#'>Forgot password?</a>
+                        <a href='/forgot-password'>Forgot password?</a>
                     </div>
                     <Form.Item>
                         <Button type='primary' htmlType='submit' loading={isLoading} block>Sign In</Button>

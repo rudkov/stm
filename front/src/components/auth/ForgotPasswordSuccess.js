@@ -1,8 +1,8 @@
-import './ResetPasswordStep2.css';
+import './ForgotPasswordSuccess.css';
 
 import AuthLayout from './AuthLayout';
 
-function ResetPasswordStep2() {
+function ForgotPasswordSuccess() {
     return (
         <AuthLayout>
             <AuthLayout.Header>
@@ -15,4 +15,4 @@ function ResetPasswordStep2() {
     );
 }
 
-export default ResetPasswordStep2;
+export default ForgotPasswordSuccess;
