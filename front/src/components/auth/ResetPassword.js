@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from 'antd';
 import AuthLayout from './AuthLayout';
 import { useParams, useSearchParams, useNavigate } from 'react-router';
-import { useResetPasswordMutation } from '../../api/registerApi';
+import { useResetPasswordMutation } from '../../api/accountApi';
 import { useEffect } from 'react';
 
 

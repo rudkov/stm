@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router';
 import { Spin, Result, Button } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons';
-import { useVerifyEmailMutation } from '../../api/registerApi'; // adjust path if needed
-import { useCheckAuthQuery } from '../../api/authApi';
+import { useVerifyEmailMutation } from '../../api/accountApi'; // adjust path if needed
+import { useCheckAuthQuery } from '../../api/accountApi';
 
 import AuthLayout from './AuthLayout';
 import './EmailVerification.css';

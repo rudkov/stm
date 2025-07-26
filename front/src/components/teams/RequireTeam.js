@@ -1,7 +1,6 @@
-import { Outlet } from "react-router";
-import { useCheckAuthQuery } from '../../api/authApi';
+import { Navigate, Outlet } from "react-router";
+import { useCheckAuthQuery } from '../../api/accountApi';
 import { TeamSettingsProvider } from '../../context/TeamSettingsContext';
-import NewTeam from "./NewTeam";
 import Loading from "../ui-components/Loading";
 
 const RequireTeam = () => {
@@ -19,7 +18,7 @@ const RequireTeam = () => {
         );
     }
     else {
-        return <NewTeam />;
+        return <Navigate to="/create-team" replace />;
     }
 }
 
