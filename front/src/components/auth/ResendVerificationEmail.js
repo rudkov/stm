@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { MailOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useResendEmailMutation } from '../../api/accountApi';
 import { useCheckAuthQuery } from '../../api/accountApi';
+import { useNotification } from '../notifications/NotificationProvider';
 import AuthLayout from './AuthLayout';
 
 
@@ -13,6 +14,7 @@ const ResendVerificationEmail = () => {
     const { data: authData } = useCheckAuthQuery();
     const location = useLocation();
     const navigate = useNavigate();
+    const showNotification = useNotification();
 
     const autoSubmit = location.state?.autoSubmit;
 
@@ -27,14 +29,17 @@ const ResendVerificationEmail = () => {
             } else {
                 setStatus('success');
             }
-        } catch (e) {
+        } catch (error) {
+            showNotification({ type: 'ERROR', message: 'Something went wrong. Please try again.' });
         }
-    }, [resendEmail]);
+    }, [resendEmail, showNotification]);
 
     useEffect(() => {
         if (autoSubmit && !alreadyVerified && !hasAutoSubmitted.current) {
             hasAutoSubmitted.current = true;
             handleResend();
+            // After auto-submitting, update the navigation history to remove the autoSubmit state.
+            // This prevents the resend action from triggering again if the user refreshes the page.
             navigate(location.pathname, { replace: true });
         }
     }, [autoSubmit, alreadyVerified, navigate, location.pathname, handleResend]);

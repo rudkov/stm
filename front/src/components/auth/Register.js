@@ -1,35 +1,15 @@
 import './Register.css';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
 import AuthLayout from './AuthLayout';
 import { useRegisterMutation } from '../../api/accountApi';
-import { useNavigate } from 'react-router';
-import { useEffect } from 'react';
+import BaseForm from './BaseForm';
 
 function Register() {
-    const [form] = Form.useForm();
-    const [register, { isLoading, error }] = useRegisterMutation();
-    const navigate = useNavigate();
+    const [register, result] = useRegisterMutation();
 
-    const onFinish = async (values) => {
-        try {
-            const response = await register(values).unwrap();
-            if (response.success) {
-                message.success(response.message || 'Registration successful!');
-                navigate('/create-team');
-            }
-        } catch (error) {
-            message.error(error.message || 'Registration failed');
-        }
+    const handleSubmit = ({name, email, password}) => {
+        register({name, email, password});
     };
-
-    useEffect(() => {
-        if (error?.isValidationError) {
-            form.setFields(error.fieldErrors);
-        } else if (error) {
-            // TODO: Handle general error
-            console.log('Registration failed. Please try again.');
-        }
-    }, [form, error]);
 
     return (
         <AuthLayout>
@@ -37,15 +17,15 @@ function Register() {
                 <h3 className='auth-page__title'>Create an Account</h3>
             </AuthLayout.Header>
             <AuthLayout.Body>
-                <Form
+                <BaseForm
                     name='register'
-                    form={form}
                     layout='vertical'
-                    requiredMark={false}
                     size='large'
                     className='auth-form'
-                    validateTrigger='onBlur'
-                    onFinish={onFinish}
+                    result={result}
+                    onFinish={handleSubmit}
+                    navigateOnSuccess={['/create-team', { replace: true }]}
+                    successNotification="You're in! Check your email to verify your account."
                 >
                     <Form.Item
                         name='name'
@@ -79,7 +59,7 @@ function Register() {
                             type='primary' 
                             htmlType='submit' 
                             block 
-                            loading={isLoading}
+                            loading={result.isLoading}
                         >
                             Create Account
                         </Button>
@@ -89,7 +69,7 @@ function Register() {
                         <a href='#'>Terms of Service</a> and&nbsp;
                         <a href='#'>Privacy Policy</a>.
                     </div>
-                </Form>
+                </BaseForm>
             </AuthLayout.Body>
             <AuthLayout.Footer>
                 Already have an account? <a href='/login'>Sign in</a>
