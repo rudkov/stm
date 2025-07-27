@@ -4,7 +4,7 @@ import '../../helpers/shared.css';
 import { v4 } from "uuid";
 
 import Notification from './Notification';
-import { createContext, useReducer, useContext } from 'react';
+import { createContext, useReducer, useContext, useCallback } from 'react';
 
 const NotificationContext = createContext();
 
@@ -36,7 +36,7 @@ const NotificationProvider = (props) => {
 export const useNotification = () => {
     const dispatch = useContext(NotificationContext);
 
-    return (props) => {
+    return useCallback((props) => {
         dispatch({
             type: "ADD_NOTIFICATION",
             payload: {
@@ -44,7 +44,7 @@ export const useNotification = () => {
                 ...props
             }
         })
-    };
+    }, [dispatch]);
 };
 
 export default NotificationProvider;
