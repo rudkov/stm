@@ -7,23 +7,22 @@ import { SettingsProvider } from './context/SettingsContext';
 
 import NotificationProvider from './components/notifications/NotificationProvider';
 
-import RequireAuth from './components/auth/RequireAuth';
+import RequireAuth from 'components/account/auth/RequireAuth';
+import Login from 'components/account/auth/Login';
+import Logout from 'components/account/auth/Logout';
 
-import Login from './components/auth/Login';
-import Logout from './components/auth/Logout';
+import Register from 'components/account/Register';
 
-import Register from './components/auth/Register';
+import RequireTeam from 'components/account/team/RequireTeam';
+import RedirectIfTeam from 'components/account/team/RedirectIfTeam';
+import CreateTeam from 'components/account/team/CreateTeam';
 
-import RequireTeam from './components/teams/RequireTeam';
-import RedirectIfTeam from './components/teams/RedirectIfTeam';
-import CreateTeam from './components/auth/CreateTeam';
+import EmailVerification from 'components/account/email-verify/EmailVerification';
+import ResendVerificationEmail from 'components/account/email-verify/ResendVerificationEmail'
 
-import EmailVerification from './components/auth/EmailVerification';
-import ResendVerificationEmail from './components/auth/ResendVerificationEmail'
-
-import ForgotPassword from './components/auth/ForgotPassword';
-import ForgotPasswordSuccess from './components/auth/ForgotPasswordSuccess';
-import ResetPassword from './components/auth/ResetPassword';
+import ForgotPassword from 'components/account/reset-password/ForgotPassword';
+import ForgotPasswordSuccess from 'components/account/reset-password/ForgotPasswordSuccess';
+import ResetPassword from 'components/account/reset-password/ResetPassword';
 
 import Main from './components/Main';
 
