@@ -1,0 +1,35 @@
+.checkbox-filter__item {
+    display: grid;
+    grid-template-columns: 14px auto;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--border-radius);
+    padding: 2px 6px;
+    cursor: pointer;
+}
+
+.checkbox-filter__item:hover {
+    box-shadow: var(--menu-item-hover-box-shadow);
+}
+
+.checkbox-filter__checkbox {
+    width: 14px;
+    height: 14px;
+    font-size: 0;
+    border: none;
+    border-radius: 3px;
+    background-color: var(--filter-icon-inactive-checkbox-color);
+}
+
+.checkbox-filter__check {
+    position: relative;
+    left: -5px;
+    top: -5px;
+    color: var(--accent);
+}
+
+.checkbox-filter__value {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

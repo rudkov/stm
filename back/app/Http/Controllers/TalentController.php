@@ -9,6 +9,7 @@ use App\Http\Requests\TalentRequest;
 use App\Http\Requests\TalentSearchRequest;
 use App\Http\Requests\TalentLocationRequest;
 use App\Http\Resources\TalentCollection;
+use App\Http\Resources\TalentLocationResource;
 use App\Models\Talent;
 use App\Queries\TalentQuery;
 
@@ -148,7 +149,8 @@ class TalentController extends Controller
             ->distinct()
             ->orderByRaw('CASE WHEN location IS NULL THEN 0 ELSE 1 END, location')
             ->pluck('location');
-        return $uniqueLocations;
+
+        return TalentLocationResource::collection($uniqueLocations);
     }
 
     public function managers()

@@ -99,6 +99,13 @@ export const filterTalents = (items, query) => {
     return items;
 };
 
+const prepareTalentLocations = (locations) => {
+    return locations.map(location => ({
+        id: location.name,
+        name: location.name || 'In Town'
+    }));
+}
+
 const talentsSlice = createSlice({
     name: 'talents',
     initialState: initialState,
@@ -108,7 +115,7 @@ const talentsSlice = createSlice({
                 state.items = action.payload;
             })
             .addCase(fetchTalentsLocations.fulfilled, (state, action) => {
-                state.locations = action.payload;
+                state.locations = prepareTalentLocations(action.payload);
             })
             .addCase(fetchTalentsManagers.fulfilled, (state, action) => {
                 state.managers = action.payload;

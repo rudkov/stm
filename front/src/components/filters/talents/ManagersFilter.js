@@ -1,76 +1,25 @@
-import '../Filter.css';
-import './ManagersFilter.css';
-
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getTalentsManagers, fetchTalentsManagers } from '../../../store/talents/talents';
-
-import Filter from '../Filter';
-
-import { ReactComponent as IconCheckSmall } from '../../../assets/icons/check-small.svg';
+import CheckboxFilter from '../CheckboxFilter';
 
 function ManagersFilter(props) {
     const dispatch = useDispatch();
-    const fetchedTalentsManagers = useSelector(getTalentsManagers);
-    const [managers, setManagers] = useState([]);
+    const managers = useSelector(getTalentsManagers);
 
     useEffect(() => {
         dispatch(fetchTalentsManagers());
     }, [dispatch]);
 
-    useEffect(() => {
-        setManagers(fetchedTalentsManagers);
-    }, [fetchedTalentsManagers]);
-
-    const toggleItem = (item) => {
-        let items = [...props.selectedItems];
-        const index = items.indexOf(item);
-        index === -1 ? items.push(item) : items.splice(index, 1);
-        props.setFiltered(items);
-        sessionStorage.setItem(props.uniqueName, JSON.stringify(items));
-    }
-
-    const clearFilter = (item) => {
-        const items = [];
-        props.setFiltered(items);
-        sessionStorage.setItem(props.uniqueName, JSON.stringify(items));
-    }
-
-    let result = null;
-
-    if (managers && Object.keys(managers).length > 0) {
-        result = managers.map((manager, index) => {
-            return (
-                <div
-                    className='filter__checkbox-item managers-filter__checkbox-item'
-                    key={'filter.managers.' + manager.id}
-                    onClick={toggleItem.bind(this, manager.id)}
-                >
-                    <div className='filter__checkbox'>
-                        {
-                            props.selectedItems?.includes(manager.id)
-                                ? <div className='filter__check'><IconCheckSmall /></div>
-                                : ''
-                        }
-                    </div>
-                    <div className='managers-filter__checkbox-name'>{manager.name}</div>
-                </div>
-            );
-        });
-    }
-
     return (
-        <Filter
+        <CheckboxFilter
             title='Manager'
             uniqueName={props.uniqueName}
-            applied={props.selectedItems && Object.keys(props.selectedItems).length > 0}
-            clearFilter={clearFilter}
-        >
-            <div className='managers-filter'>
-                {result}
-            </div>
-        </Filter>
+            selectedItems={props.selectedItems}
+            setFiltered={props.setFiltered}
+            data={managers}
+        />
     );
 }
 
