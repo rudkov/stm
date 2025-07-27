@@ -1,8 +1,8 @@
 import { Button, Form, Input } from 'antd';
 
-import AuthLayout from './AuthLayout';
-import BaseForm from './BaseForm';
-import { useForgotPasswordMutation } from '../../api/accountApi'; 
+import AuthLayout from 'components/auth/AuthLayout';
+import BaseForm from 'components/auth/BaseForm';
+import { useForgotPasswordMutation } from 'api/accountApi'; 
 
 function ForgotPassword() {
     const [forgotPassword, result] = useForgotPasswordMutation();

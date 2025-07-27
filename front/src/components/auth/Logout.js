@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useLogoutMutation } from '../../api/accountApi';
+import { useLogoutMutation } from 'api/accountApi';
 import { useEffect } from 'react';
 
 const Logout = () => {

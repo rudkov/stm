@@ -1,5 +1,6 @@
-import './AuthLayout.css';
-import '../../helpers/shared.css';
+import React from "react";
+import "./AuthLayout.css";
+import 'helpers/shared.css';
 
 const AuthLayout = ({ children, className = '', ...props }) => {
     return (
