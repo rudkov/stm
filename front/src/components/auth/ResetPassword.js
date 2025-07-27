@@ -1,32 +1,18 @@
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
 import AuthLayout from './AuthLayout';
-import { useParams, useSearchParams, useNavigate } from 'react-router';
+import BaseForm from './BaseForm';
+import { useParams, useSearchParams } from 'react-router';
 import { useResetPasswordMutation } from '../../api/accountApi';
-import { useEffect } from 'react';
-
 
 function ResetPassword() {
-    const [form] = Form.useForm();
     const [searchParams] = useSearchParams();
     const email = searchParams.get('email');
     const { token } = useParams();
-    const navigate = useNavigate();
-    const [resetPassword, { isLoading, error }] = useResetPasswordMutation();
+    const [resetPassword, result] = useResetPasswordMutation();
 
     const onFinish = ({ password }) => {
-        resetPassword({ token, email, password }).unwrap().then((response) => {
-            message.success(response.message || 'Your password has been reset!');
-            navigate('/login', { replace: true });
-        }).catch(() => {});
+        resetPassword({ token, email, password });
     };
-
-    useEffect(()=> {
-        if (error?.isValidationError) {
-            form.setFields(error.fieldErrors);
-        } else if (error) {
-            message.error('Failed to reset password. Please try again.');
-        }
-    }, [form, error]);
 
     return (
         <AuthLayout>
@@ -34,16 +20,21 @@ function ResetPassword() {
                 <h3 className='auth-page__title'>Reset Your Password</h3>
             </AuthLayout.Header>
             <AuthLayout.Body>
-                <Form
+                <BaseForm
                     name='reset-password'
-                    form={form}
                     layout='vertical'
-                    requiredMark={false}
                     size='large'
                     className='auth-form'
-                    validateTrigger='onBlur'
+                    result={result}
+                    navigateOnSuccess={['/login', { replace: true }]}
+                    successNotification='Your password has been reset!'
                     onFinish={onFinish}
                 >
+                    <Form.Item
+                        name='email'
+                    >
+                        <strong>{ email }</strong>
+                    </Form.Item>
                     <Form.Item
                         name='password'
                         rules={[
@@ -54,11 +45,11 @@ function ResetPassword() {
                         <Input.Password placeholder='New password' />
                     </Form.Item>
                     <Form.Item>
-                        <Button type='primary' htmlType='submit' block loading={isLoading}>
+                        <Button type='primary' htmlType='submit' block loading={result.isLoading}>
                             Reset Password
                         </Button>
                     </Form.Item>
-                </Form>
+                </BaseForm>
             </AuthLayout.Body>
         </AuthLayout>
     );

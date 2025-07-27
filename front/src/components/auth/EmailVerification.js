@@ -46,7 +46,7 @@ const EmailVerification = () => {
     }, [id, hash, searchParams, authData, verifyEmail]);
 
     const handleContinue = () => {
-        navigate('/app')
+        navigate('/app', { replace: true })
     };
 
     const handleResendEmail = () => {
@@ -60,7 +60,7 @@ const EmailVerification = () => {
             <AuthLayout.Header>
                 <h1 className="text-h1 text-primary">Email Verification</h1>
             </AuthLayout.Header>
-            
+
             <AuthLayout.Body>
                 {verificationStatus === 'verifying' && (
                     <Result

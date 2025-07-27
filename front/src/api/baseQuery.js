@@ -23,20 +23,7 @@ const baseQuery = async (args, api, extraOptions) => {
         },
     });
 
-    const result = await fetch(args, api, extraOptions);
-
-    // Handle 422
-    if (result.error?.status === 422 && result.error.data?.errors) {
-        const fieldErrors = Object.entries(result.error.data.errors).map(([field, messages]) => ({
-            name: field,
-            errors: messages,
-        }));
-
-        result.error.isValidationError = true;
-        result.error.fieldErrors = fieldErrors;
-    }
-
-    return result;
+    return await fetch(args, api, extraOptions);
 };
 
 export default baseQuery;

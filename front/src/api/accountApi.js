@@ -8,13 +8,10 @@ export const accountApi = createApi({
     endpoints: (builder) => ({
         // Auth endpoints
         login: builder.mutation({
-            query: (credentials) => ({
+            query: ({ email, password }) => ({
                 url: '/login',
                 method: 'POST',
-                body: {
-                    ...credentials,
-                    remember: true,
-                },
+                body: { email, password, remember: true },
             }),
             invalidatesTags: ['Auth'],
         }),
@@ -37,10 +34,10 @@ export const accountApi = createApi({
         }),
         // Register endpoints
         register: builder.mutation({
-            query: (credentials) => ({
+            query: ({name, email, password}) => ({
                 url: '/register',
                 method: 'POST',
-                body: credentials,
+                body: {name, email, password},
             })
         }),
         // Email verify endpoints
@@ -74,26 +71,6 @@ export const accountApi = createApi({
                 method: 'POST',
                 body: { token, email, password, password_confirmation: password },
             }),
-            transformErrorResponse: (response) => {
-                const originalErrors = response?.data?.errors || {};
-                const messages = Object.values(originalErrors)
-                  .flat()
-                  .filter(Boolean);
-
-                const fieldErrors = (response?.fieldErrors || []).map(({ errors }) => ({
-                    name: 'password',
-                    errors,
-                }));
-                return {
-                  ...response,
-                  data: {
-                    errors: {
-                        password: messages, 
-                    },
-                  },
-                  fieldErrors,
-                };
-            },
         }),
         // Create team endpoint
         createTeam: builder.mutation({
