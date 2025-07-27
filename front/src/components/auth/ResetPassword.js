@@ -1,8 +1,8 @@
 import { Button, Form, Input } from 'antd';
-import AuthLayout from './AuthLayout';
-import BaseForm from './BaseForm';
+import AuthLayout from 'components/auth/AuthLayout';
+import BaseForm from 'components/auth/BaseForm';
 import { useParams, useSearchParams } from 'react-router';
-import { useResetPasswordMutation } from '../../api/accountApi';
+import { useResetPasswordMutation } from 'api/accountApi';
 
 function ResetPassword() {
     const [searchParams] = useSearchParams();

@@ -1,8 +1,8 @@
 import { Button, Form, Input } from 'antd';
 
-import AuthLayout from './AuthLayout';
-import BaseForm from './BaseForm';
-import { useCreateTeamMutation } from '../../api/accountApi';
+import AuthLayout from 'components/auth/AuthLayout';
+import BaseForm from 'components/auth/BaseForm';
+import { useCreateTeamMutation } from 'api/accountApi';
 
 function CreateTeam() {
     const [createTeam, result] = useCreateTeamMutation();

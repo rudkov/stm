@@ -1,6 +1,6 @@
 import './ForgotPasswordSuccess.css';
 
-import AuthLayout from './AuthLayout';
+import AuthLayout from 'components/auth/AuthLayout';
 
 function ForgotPasswordSuccess() {
     return (

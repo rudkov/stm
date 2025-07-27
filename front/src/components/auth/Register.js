@@ -1,8 +1,9 @@
 import './Register.css';
 import { Button, Form, Input } from 'antd';
-import AuthLayout from './AuthLayout';
-import { useRegisterMutation } from '../../api/accountApi';
-import BaseForm from './BaseForm';
+import AuthLayout from 'components/auth/AuthLayout';
+import BaseForm from 'components/auth/BaseForm';
+import { useRegisterMutation } from 'api/accountApi';
+
 
 function Register() {
     const [register, result] = useRegisterMutation();
