@@ -1,11 +1,11 @@
-// import './CompanyView.css';
+import './CompanyView.css';
 import '../../helpers/shared.css';
 
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getCompany, fetchCompanyById } from '../../store/contacts/company';
+import { getCompany, fetchCompanyById } from '../../store/companies/company';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
@@ -15,15 +15,18 @@ import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNote
 import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
 import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
 
-function CompanyView() {
+import CompanySectionContacts from '../nested-sections/companies/view/CompanySectionContacts';
+import CompanySectionMain from '../nested-sections/companies/view/CompanySectionMain';
+
+function CompanyView({ inLayout = false }) {
     const dispatch = useDispatch();
     const params = useParams();
     const company = useSelector(getCompany);
     const scrollContainerRef = useRef(null);
 
     useEffect(() => {
-        dispatch(fetchCompanyById(params.id));
-    }, [params.id, dispatch]);
+        dispatch(fetchCompanyById(params.companyId));
+    }, [params.companyId, dispatch]);
 
     useEffect(() => {
         if (scrollContainerRef.current)
@@ -34,28 +37,16 @@ function CompanyView() {
 
     if (company && Object.getPrototypeOf(company) === Object.prototype) {
         result =
-            <ScrollableView className='company-profile'>
+            <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
-                    <h3>{company.name}</h3>
+                    <CompanySectionMain data={company} />
                 </ScrollableView.Header>
-                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-profile__body'>
-                    <h4>Category</h4>
-                    <div>
-                        <div>Category 1</div>
-                        <div>Category 2</div>
-                        <div>Category 3</div>
-                    </div>
-
-                    <h4>Contacts</h4>
-                    {company?.contacts?.map((contact) => (
-                        <div key={contact.id}>
-                            {contact.first_name} {contact.last_name} – {contact.job_title}
-                        </div>
-                    ))}
+                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-view__body'>
 
                     <SharedSectionNotes data={company} className='company-section__notes' />
-                    <SharedSectionAddresses data={company} className='company-section__addresses' />
                     <SharedSectionContacts data={company} className='company-section__contacts' />
+                    <CompanySectionContacts data={company} inLayout={inLayout} className='company-section__contacts' />
+                    <SharedSectionAddresses data={company} className='company-section__addresses' />
                     <SharedSectionSocialMedia data={company} className='company-section__social-media' />
                     <SharedSectionSystemInfo data={company} className='company-section__system-info' />
 

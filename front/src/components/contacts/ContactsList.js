@@ -1,4 +1,4 @@
-import './CompaniesList.css';
+import './ContactsList.css';
 import '../../helpers/shared.css';
 
 import { useEffect, useRef, useState } from 'react';
@@ -6,61 +6,61 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import { Button, Empty, Form, Input } from 'antd';
 
-import { getCompanies, filterCompanies } from '../../store/contacts/companies';
+import { getContacts, filterContacts } from '../../store/contacts/contacts';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
 import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
 
-function CompaniesList({ createCompany, filters, updateFilter }) {
+function ContactsList({ createContact, filters, updateFilter }) {
     const [form] = Form.useForm();
-    const fetchedCompanies = useSelector(getCompanies);
-    const [companies, setCompanies] = useState([]);
+    const fetchedContacts = useSelector(getContacts);
+    const [contacts, setContacts] = useState([]);
     const scrollContainerRef = useRef(null);
 
     useEffect(() => {
-        setCompanies(
-            filterCompanies(
-                [...fetchedCompanies],
+        setContacts(
+            filterContacts(
+                [...fetchedContacts],
                 {
                     searchString: filters.search
                 }
             )
         );
-    }, [fetchedCompanies, filters.search]);
+    }, [fetchedContacts, filters.search]);
 
-    const searchCompanies = (item) => {
+    const searchContacts = (item) => {
         updateFilter('search', item.search);
     }
 
     let result = null;
 
-    if (companies && Object.keys(companies).length > 0) {
-        result = companies.map((company) => {
+    if (contacts && Object.keys(contacts).length > 0) {
+        result = contacts.map((contact) => {
             return (
-                <NavLink className='companies-list__item' key={'company.' + company.id} to={company.id}>
-                    {company.name}
+                <NavLink className='contacts-list__item' key={'contact.' + contact.id} to={contact.id}>
+                    {contact.name}
                 </NavLink>
             );
         });
     }
     else {
         result = (
-            <div className='companies-list__empty'>
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No companies found' />
+            <div className='contacts-list__empty'>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No contacts found' />
             </div>
         );
     }
 
     return (
-        <div className='companies-list'>
-            <ScrollableView scrollContainerRef={scrollContainerRef} className='companies-list__section section-primary'>
-                <ScrollableView.Header className='companies-list__header'>
+        <div className='contacts-list'>
+            <ScrollableView scrollContainerRef={scrollContainerRef} className='contacts-list__section section-primary'>
+                <ScrollableView.Header className='contacts-list__header'>
                     <Form
                         form={form}
-                        name='talents.search.form'
+                        name='contacts.search.form'
                         initialValues={{ search: filters.search }}
-                        onValuesChange={searchCompanies}
+                        onValuesChange={searchContacts}
                         autoComplete='off'
                     >
                         <Form.Item name='search'>
@@ -70,9 +70,9 @@ function CompaniesList({ createCompany, filters, updateFilter }) {
                             />
                         </Form.Item>
                     </Form>
-                    <Button type='primary' icon={<IconAdd />} onClick={createCompany} />
+                    <Button type='primary' icon={<IconAdd />} onClick={createContact} />
                 </ScrollableView.Header>
-                <ScrollableView.Body className='companies-list__body'>
+                <ScrollableView.Body className='contacts-list__body'>
                     {result}
                 </ScrollableView.Body>
             </ScrollableView>
@@ -80,4 +80,4 @@ function CompaniesList({ createCompany, filters, updateFilter }) {
     );
 }
 
-export default CompaniesList;
+export default ContactsList;

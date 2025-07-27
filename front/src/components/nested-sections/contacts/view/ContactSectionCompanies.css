@@ -1,0 +1,25 @@
+.contact-section-companies__company {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px;
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--divider-color);
+}
+
+.contact-section-companies__company:hover {
+    box-shadow: var(--menu-item-hover-box-shadow);
+}
+
+.contact-section-companies__company.active {
+    background-color: var(--menu-item-background-color-active);
+}
+
+.contact-section-companies__company_name {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.contact-section-companies__company_categories {
+    color: var(--text-secondary);
+}

@@ -1,0 +1,21 @@
+.company-section-main {
+    display: flex;
+    flex-direction: row;
+    padding: 12px;
+}
+
+.company-section-main__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.company-section-main__controls {
+    margin-left: auto;
+}
+
+.company-section-main__company_name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}

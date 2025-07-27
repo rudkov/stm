@@ -7,6 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 
 import { ReactComponent as IconTalents } from '../assets/icons/talents.svg';
 import { ReactComponent as IconCalendar } from '../assets/icons/calendar.svg';
+import { ReactComponent as IconCompanies } from '../assets/icons/companies.svg';
 import { ReactComponent as IconContacts } from '../assets/icons/contacts.svg';
 import { ReactComponent as IconLogout } from '../assets/icons/logout.svg';
 import { ReactComponent as IconLeftPanelOpen } from '../assets/icons/left-panel-open.svg';
@@ -35,6 +36,12 @@ function Menu(props) {
                     <NavLink to='calendar' className='menu-item'>
                         <div className='menu-item__icon'><IconCalendar /></div>
                         <div className='menu-item__text'>Calendar</div>
+                    </NavLink>
+                </Tooltip>
+                <Tooltip title={props.isCollapsed ? 'Companies' : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>
+                    <NavLink to='companies' className='menu-item'>
+                        <div className='menu-item__icon'><IconCompanies /></div>
+                        <div className='menu-item__text'>Companies</div>
                     </NavLink>
                 </Tooltip>
                 <Tooltip title={props.isCollapsed ? 'Contacts' : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>

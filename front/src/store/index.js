@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth';
-import companiesReducer from './contacts/companies';
-import companyReducer from './contacts/company';
+import companiesReducer from './companies/companies';
+import companyReducer from './companies/company';
 import contactReducer from './contacts/contact';
 import contactsReducer from './contacts/contacts';
 import eventReducer from './events/event';

@@ -1,0 +1,10 @@
+.contact-view__right-column {
+    height: 100vh;
+}
+
+.contact-view__body {
+    padding: 0 6px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}

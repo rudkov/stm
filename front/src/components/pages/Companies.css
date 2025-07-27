@@ -1,10 +1,10 @@
-.contacts-page {
+.companies-page {
     display: grid;
     grid-template-columns: 240px auto;
     height: 100vh;
     gap: 12px;
 }
 
-.contacts-page__right-column {
+.companies-page__right-column {
     height: 100vh;
 }

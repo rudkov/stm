@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createTalentBoard, getCreateResponse as getCreateTalentBoardResponse, talentBoardActions } from '../../../../store/talents/talentBoard';
 import { fetchTalentBoards, getTalentBoards } from '../../../../store/talents/talentBoards';
 import { fetchUsers, getUsers } from '../../../../store/users/users';
-import { fetchCompanies, getCompanies } from '../../../../store/contacts/companies';
+import { fetchCompanies, getCompanies } from '../../../../store/companies/companies';
 
 import { useSettings } from '../../../../context/SettingsContext';
 
