@@ -13,17 +13,19 @@ const initialState = {
     deleteResponse: {},
 };
 
-export const fetchCompanyById = createAsyncThunk('company/fetchCompanyById', async (companyId) => {
+export const fetchCompany = createAsyncThunk('company/fetch', async (args) => {
+    const { id } = args;
+
     try {
-        const response = await axios.get('/api/v1/companies/' + companyId);
+        const response = await axios.get(`/api/v1/companies/${id}`);
         return response.data;
     } catch (err) {
         return err.message;
     }
 });
 
-export const createCompany = createAsyncThunk('company/createCompany', async (args) => {
-    const values = args.values;
+export const createCompany = createAsyncThunk('company/create', async (args) => {
+    const { values } = args;
 
     try {
         const response = await axios({
@@ -38,14 +40,13 @@ export const createCompany = createAsyncThunk('company/createCompany', async (ar
     }
 });
 
-export const updateCompanyById = createAsyncThunk('company/updateCompanyById', async (args) => {
-    const companyId = args.companyId;
-    const values = args.values;
+export const updateCompany = createAsyncThunk('company/update', async (args) => {
+    const { id, values } = args;
 
     try {
         const response = await axios({
             method: 'put',
-            url: '/api/v1/companies/' + companyId,
+            url: `/api/v1/companies/${id}`,
             data: values,
         });
         return response.data;
@@ -55,13 +56,13 @@ export const updateCompanyById = createAsyncThunk('company/updateCompanyById', a
     }
 });
 
-export const deleteCompanyById = createAsyncThunk('company/deleteCompanyById', async (args) => {
-    const companyId = args.companyId;
+export const deleteCompany = createAsyncThunk('company/delete', async (args) => {
+    const { id } = args;
 
     try {
         const response = await axios({
             method: 'delete',
-            url: '/api/v1/companies/' + companyId,
+            url: `/api/v1/companies/${id}`,
         });
         return response.data;
     } catch (err) {
@@ -106,15 +107,7 @@ const companySlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCompanyById.fulfilled, (state, action) => {
-                prepareCompany(state, action.payload);
-            })
-
-            .addCase(updateCompanyById.pending, (state, action) => {
-                state.updateResponse.status = 'pending';
-            })
-            .addCase(updateCompanyById.fulfilled, (state, action) => {
-                state.updateResponse.status = 'fulfilled';
+            .addCase(fetchCompany.fulfilled, (state, action) => {
                 prepareCompany(state, action.payload);
             })
 
@@ -123,13 +116,21 @@ const companySlice = createSlice({
             })
             .addCase(createCompany.fulfilled, (state, action) => {
                 state.createResponse.status = 'fulfilled';
-                state.createResponse.companyId = action.payload.id;
+                state.createResponse.id = action.payload.id;
             })
 
-            .addCase(deleteCompanyById.pending, (state, action) => {
+            .addCase(updateCompany.pending, (state, action) => {
+                state.updateResponse.status = 'pending';
+            })
+            .addCase(updateCompany.fulfilled, (state, action) => {
+                state.updateResponse.status = 'fulfilled';
+                prepareCompany(state, action.payload);
+            })
+
+            .addCase(deleteCompany.pending, (state, action) => {
                 state.deleteResponse.status = 'pending';
             })
-            .addCase(deleteCompanyById.fulfilled, (state, action) => {
+            .addCase(deleteCompany.fulfilled, (state, action) => {
                 state.deleteResponse.status = 'fulfilled';
             })
     }

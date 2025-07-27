@@ -13,7 +13,7 @@ function CompanySectionMain(props) {
             </div>
             {props.editAction && (
                 <div className='company-section-main__controls'>
-                    <Button onClick={props.editAction}>Edit</Button>
+                    <Button onClick={() => props.editAction(company.id)}>Edit</Button>
                 </div>
             )}
         </div>

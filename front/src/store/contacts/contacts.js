@@ -5,7 +5,7 @@ const initialState = {
     items: [],
 };
 
-export const fetchContacts = createAsyncThunk('contacts/fetchContacts', async () => {
+export const fetchContacts = createAsyncThunk('contacts/fetch', async () => {
     try {
         const response = await axios({
             method: 'get',

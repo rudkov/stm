@@ -1,30 +1,27 @@
-import './TalentForm.css';
+import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
 
-import { Anchor, Button, Form, Modal, Popconfirm } from 'antd';
-
-import { useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useRef, useState, useCallback } from 'react';
 import dayjs from 'dayjs';
 
+import BaseForm from '../ui-components/BaseForm';
+
 import {
-    fetchTalentById, getTalent,
+    fetchTalent, getTalent,
     createTalent, getCreateResponse,
-    updateTalentById, getUpdateResponse,
-    deleteTalentById, getDeleteResponse,
+    updateTalent, getUpdateResponse,
+    deleteTalent, getDeleteResponse,
     talentActions
 } from '../../store/talents/talent';
 
-import CustomDrawer from '../ui-components/CustomDrawer';
-import ScrollableView from '../ui-components/ScrollableView';
-
-import { useNotification } from '../notifications/NotificationProvider';
-
-import { cleanCollection } from '../../helpers/form-utils';
-import { sanitizeWeblinkForStorage } from '../ui-components/Weblink';
-
-import { LoadingOutlined } from '@ant-design/icons';
-import { ReactComponent as IconClose } from '../../assets/icons/close.svg';
+import {
+    initAddresses, processAddresses,
+    initEmails, processEmails,
+    initMessengers, processMessengers,
+    initPhones, processPhones,
+    initRelatives, processRelatives,
+    initSocialMedias, processSocialMedias,
+    initWeblinks, processWeblinks
+} from '../../helpers/form-utils';
 
 import SharedSectionAddresses from '../nested-sections/shared/edit/SharedSectionAddresses';
 import SharedSectionContacts from '../nested-sections/shared/edit/SharedSectionContacts';
@@ -41,30 +38,13 @@ import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSect
 import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
 import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
 
-function TalentForm(props) {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [form] = Form.useForm();
-    const talent = useSelector(getTalent);
-    const createResponse = useSelector(getCreateResponse);
-    const updateResponse = useSelector(getUpdateResponse);
-    const deleteResponse = useSelector(getDeleteResponse);
+function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
     const user_id = useSelector((state) => state.auth.user_id);
-    const getContainer = () => containerRef.current;
-    const containerRef = useRef(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [formTitle, setFormTitle] = useState();
-    const [originalFormValues, setOriginalFormValues] = useState();
-    const [isConfirmClosingModalOpen, setIsConfirmClosingModalOpen] = useState(false);
-    const showNotification = useNotification();
 
-    const { isNewTalent, open: isFormOpen, closeForm: onClose, onAfterSubmit } = props;
-
-    const initForm = useCallback((values) => {
+    const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({
             first_name: values.first_name || '',
             last_name: values.last_name || '',
-
             legal_first_name: values.legal_first_name || '',
             legal_last_name: values.legal_last_name || '',
             birth_date: values.birth_date ? dayjs(values.birth_date, 'DD.MM.YYYY') : null,
@@ -74,25 +54,7 @@ function TalentForm(props) {
             manager_id: values.manager?.id || user_id,
             board_id: values.board?.id || '',
             mother_agency_id: values.mother_agency?.id || '',
-
             notes: values.notes || '',
-
-            relatives: (values.relatives && values.relatives.length > 0)
-                ? values.relatives
-                : [{ type: { id: null }, info: '' }],
-            addresses: (values.addresses && values.addresses.length > 0)
-                ? values.addresses
-                : [{ type: { id: null }, info: '' }],
-            phones: (values.phones && values.phones.length > 0)
-                ? values.phones
-                : [{ type: { id: null }, info: '' }],
-            social_medias: (values.social_medias && values.social_medias.length > 0)
-                ? values.social_medias
-                : [{ type: { id: null }, info: '' }],
-            emails: values.emails || null,
-            messengers: values.messengers || null,
-            weblinks: values.weblinks || null,
-
             hair_color_id: values.hair_color?.id || '',
             hair_length_id: values.hair_length?.id || '',
             eye_color_id: values.eye_color?.id || '',
@@ -111,14 +73,11 @@ function TalentForm(props) {
             scars: values.scars || '',
             tattoos: values.tattoos || '',
             piercings: values.piercings || '',
-
             allergies: values.allergies || '',
             is_vegetarian: values.is_vegetarian,
-
             citizenships: (values.citizenships || []).map((d) => (d.alpha_2)),
             languages: (values.languages || []).map((d) => (d.id)),
             is_accent: values.is_accent,
-
             is_lingerie: values.is_lingerie,
             is_nude: values.is_nude,
             is_fur: values.is_fur,
@@ -130,355 +89,127 @@ function TalentForm(props) {
             is_topless: values.is_topless,
             is_swimwear: values.is_swimwear,
             is_sports: values.is_sports,
-
             achievements: values.achievements || '',
             performance_skills: values.performance_skills || '',
             biography: values.biography || '',
+
+            ...initAddresses(values),
+            ...initEmails(values),
+            ...initMessengers(values),
+            ...initPhones(values),
+            ...initRelatives(values),
+            ...initSocialMedias(values),
+            ...initWeblinks(values),
         });
-        setOriginalFormValues(form.getFieldsValue(true));
-    }, [form, user_id]);
+    }, [user_id]);
 
-    const submitForm = (formValues) => {
-        setIsLoading(true);
+    const onProcessFormData = useCallback((values) => {
+        const processed = {
+            ...values,
+            birth_date: values.birth_date ? values.birth_date.format('YYYY-MM-DD') : null,
+            marital_status_id: values.marital_status_id ?? null,
+            gender_id: values.gender_id ?? null,
+            is_lifestyle: (values.is_lifestyle === 'Lifestyle') ? 1 : (values.is_lifestyle === 'Fashion') ? 0 : null,
+            board_id: values.board_id ?? null,
+            mother_agency_id: values.mother_agency_id ?? null,
+            hair_color_id: values.hair_color_id ?? null,
+            hair_length_id: values.hair_length_id ?? null,
+            eye_color_id: values.eye_color_id ?? null,
+            skin_color_id: values.skin_color_id ?? null,
+            cup_size_id: values.cup_size_id ?? null,
+            shoe_size_id: values.shoe_size_id ?? null,
+            shirt_size_id: values.shirt_size_id ?? null,
+            suit_cut_id: values.suit_cut_id ?? null,
+            dress_size_id: values.dress_size_id ?? null,
+        };
 
-        const values = formValues || form.getFieldsValue();
+        return {
+            ...processed,
+            ...processAddresses(processed),
+            ...processEmails(processed),
+            ...processMessengers(processed),
+            ...processPhones(processed),
+            ...processRelatives(processed),
+            ...processSocialMedias(processed),
+            ...processWeblinks(processed),
+        };
+    }, []);
 
-        values.birth_date = values.birth_date ? values.birth_date.format('YYYY-MM-DD') : null;
-        values.marital_status_id = values.marital_status_id ?? null;
-        values.gender_id = values.gender_id ?? null;
-        values.is_lifestyle = (values.is_lifestyle === 'Lifestyle') ? 1 : (values.is_lifestyle === 'Fashion') ? 0 : null;
-        values.board_id = values.board_id ?? null;
-        values.mother_agency_id = values.mother_agency_id ?? null;
-
-        values.hair_color_id = values.hair_color_id ?? null;
-        values.hair_length_id = values.hair_length_id ?? null;
-        values.eye_color_id = values.eye_color_id ?? null;
-        values.skin_color_id = values.skin_color_id ?? null;
-        values.cup_size_id = values.cup_size_id ?? null;
-        values.shoe_size_id = values.shoe_size_id ?? null;
-        values.shirt_size_id = values.shirt_size_id ?? null;
-        values.suit_cut_id = values.suit_cut_id ?? null;
-        values.dress_size_id = values.dress_size_id ?? null;
-
-        if (values.addresses) {
-            values.addresses = values.addresses.map(address => ({
-                ...address,
-                type: { id: address.type.id ?? null }
-            }));
+    const getTitle = useCallback((entity, isNew) => {
+        if (isNew) {
+            return 'New Talent';
         }
-        if (values.emails) {
-            values.emails = values.emails.map(email => ({
-                ...email,
-                type: { id: email.type.id ?? null }
-            }));
-        }
-        if (values.messengers) {
-            values.messengers = values.messengers.map(messenger => ({
-                ...messenger,
-                type: { id: messenger.type.id ?? null }
-            }));
-        }
-        if (values.phones) {
-            values.phones = values.phones.map(phone => ({
-                ...phone,
-                type: { id: phone.type.id ?? null }
-            }));
-        }
-        if (values.relatives) {
-            values.relatives = values.relatives.map(relative => ({
-                ...relative,
-                type: { id: relative.type.id ?? null }
-            }));
-        }
-        if (values.social_medias) {
-            values.social_medias = values.social_medias.map(socialMedia => ({
-                ...socialMedia,
-                type: { id: socialMedia.type.id ?? null }
-            }));
-        }
-        if (values.weblinks) {
-            values.weblinks = values.weblinks.map(weblink => ({
-                ...weblink,
-                info: sanitizeWeblinkForStorage(weblink.info)
-            }));
-        }
+        return entity?.full_name || 'Edit Talent';
+    }, []);
 
-        values.addresses = cleanCollection(values.addresses, { requiredAny: ['info'] });
-        values.emails = cleanCollection(values.emails, { requiredAny: ['info'] });
-        values.phones = cleanCollection(values.phones, { requiredAny: ['info'] });
-        values.relatives = cleanCollection(values.relatives, { requiredAny: ['info'] });
-        values.messengers = cleanCollection(values.messengers, { requiredAll: ['type.id', 'info'] });
-        values.social_medias = cleanCollection(values.social_medias, { requiredAll: ['type.id', 'info'] });
-        values.weblinks = cleanCollection(values.weblinks, { requiredAny: ['info'] });
-
-        if (isNewTalent) {
-            dispatch(createTalent({ values: values }));
-        }
-        else {
-            dispatch(updateTalentById({ talentId: talent.id, values: values }));
-        }
-    };
-
-    const anchorItems = [
-        {
-            key: 'notes',
-            href: '#notes',
-            title: 'Notes',
-        },
-        {
-            key: 'primary-info',
-            href: '#primary-info',
-            title: 'Primary Info',
-        },
-        {
-            key: 'food-allergies',
-            href: '#food-allergies',
-            title: 'Food & Allergies',
-        },
-        {
-            key: 'body',
-            href: '#body',
-            title: 'Body',
-        },
-        {
-            key: 'contacts',
-            href: '#contacts',
-            title: 'Contacts',
-        },
-        {
-            key: 'region-languages',
-            href: '#region-languages',
-            title: 'Region & Languages',
-        },
-        {
-            key: 'preferences',
-            href: '#preferences',
-            title: 'Preferences',
-        },
-        {
-            key: 'social-media',
-            href: '#social-media',
-            title: 'Social Media',
-        },
-        {
-            key: 'addresses',
-            href: '#addresses',
-            title: 'Addresses',
-        },
-        {
-            key: 'relatives',
-            href: '#relatives',
-            title: 'Relatives',
-        },
-        {
-            key: 'biography',
-            href: '#biography',
-            title: 'Biography',
-        },
-        {
-            key: 'achievements',
-            href: '#achievements',
-            title: 'Achievements',
-        },
-        {
-            key: 'performance-skills',
-            href: '#performance-skills',
-            title: 'Performance Skills',
-        },
-    ];
-
-    const deleteTalent = () => {
-        setIsLoading(true);
-        dispatch(deleteTalentById({ talentId: talent.id }));
-    };
-
-    useEffect(() => {
-        if (!isNewTalent && talent.id && isFormOpen) {
-            dispatch(fetchTalentById(talent.id));
-        }
-    }, [isNewTalent, talent.id, isFormOpen, dispatch]);
-
-    useEffect(() => {
-        if (isNewTalent) {
-            setFormTitle('New Talent');
-            initForm({});
-        } else if (talent.id) {
-            setFormTitle(talent.full_name);
-            initForm(talent);
-        }
-    }, [isNewTalent, talent, form, initForm]);
-
-    useEffect(() => {
-        if (createResponse.status === 'fulfilled') {
-            setIsLoading(false);
-            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
-            onAfterSubmit();
-            dispatch(talentActions.resetResponse('create'));
-            navigate('/app/talents/' + createResponse.talentId);
-            onClose();
-        }
-    }, [createResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit]);
-
-    useEffect(() => {
-        if (updateResponse.status === 'fulfilled') {
-            setIsLoading(false);
-            showNotification({ type: 'SUCCESS', message: 'Changes saved' });
-            onAfterSubmit();
-            dispatch(talentActions.resetResponse('update'));
-            onClose();
-        }
-    }, [updateResponse, dispatch, onClose, showNotification, onAfterSubmit]);
-
-    useEffect(() => {
-        if (deleteResponse.status === 'fulfilled') {
-            setIsLoading(false);
-            showNotification({ type: 'SUCCESS', message: 'Talent deleted' });
-            onAfterSubmit();
-            dispatch(talentActions.resetResponse('delete'));
-            navigate('/app/talents', { replace: true });
-            onClose();
-        }
-    }, [deleteResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit]);
-
-    const anchorClicked = (e, link) => {
-        e.preventDefault();
-
-        const container = getContainer();
-        container.querySelectorAll('.nested-section').forEach(el => {
-            el.classList.remove('highlighted');
-        });
-
-        if (link) {
-            const targetId = link.href.replace('#', '');
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                targetElement.classList.add('highlighted');
-            }
-        }
-    };
-
-    const handleDrawerSubmit = () => {
-        form.submit();
-    };
-
-    const closeForm = () => {
-        const currentFormValues = form.getFieldsValue(true);
-        const hasChanged = JSON.stringify(currentFormValues) !== JSON.stringify(originalFormValues);
-        hasChanged ? setIsConfirmClosingModalOpen(true) : onClose();
-    };
-
-    const handleConfirmClosingModalSaveChanges = () => {
-        form.submit();
-        setIsConfirmClosingModalOpen(false);
-    };
-
-    const handleConfirmClosingModalDiscardChanges = () => {
-        setIsConfirmClosingModalOpen(false);
-        onClose();
-        form.setFieldsValue(originalFormValues);
-    };
-
-    const handleConfirmClosingModalCloseModal = () => {
-        setIsConfirmClosingModalOpen(false);
-    };
+    const getDeleteConfirmationText = useCallback((entity) => {
+        return `Delete ${entity?.full_name || 'talent'}?`;
+    }, []);
 
     return (
-        <>
-            <Form
-                name='talent'
-                form={form}
-                preserve={true}
-                colon={false}
-                onFinish={submitForm}
-                disabled={isLoading}
-            >
-                <CustomDrawer
-                    open={isFormOpen}
-                    onClose={closeForm}
-                    width={768}
-                >
-                    <ScrollableView ref={containerRef}>
-                        <ScrollableView.Header className='talent-form-header'>
-                            <div className='talent-form-header__title'>
-                                {formTitle}
-                            </div>
-                            <div className='talent-form-header__controls'>
-                                <LoadingOutlined className={`talent-form-header__throbber ${isLoading ? '' : 'hidden'}`} />
-                                <Popconfirm
-                                    title='Delete Talent?'
-                                    onConfirm={deleteTalent}
-                                    okText='Delete'
-                                    cancelText='Cancel'
-                                >
-                                    <Button danger>Delete</Button>
-                                </Popconfirm>
-                                <Button type='primary' onClick={handleDrawerSubmit}>Save</Button>
-                                <Button type='text' icon={<IconClose />} onClick={closeForm} className='custom-drawer__close-button' />
-                            </div>
-                        </ScrollableView.Header>
-                        <ScrollableView.Body className='talent-form'>
-                            <div className='talent-form__sidebar'>
-                                <Anchor
-                                    getContainer={getContainer}
-                                    items={anchorItems}
-                                    offsetTop={12}
-                                    affix={true}
-                                    onClick={anchorClicked}
-                                />
-                            </div>
-                            <div className='talent-form__body'>
-                                <SharedSectionNotes id='notes' />
-                                <TalentSectionPrimaryInfo id='primary-info' form={form} />
-                                <TalentSectionFoodAllergies id='food-allergies' />
-                                <TalentSectionBody id='body' />
-                                <SharedSectionContacts id='contacts' form={form} />
-                                <TalentSectionRegionLanguages id='region-languages' />
-                                <TalentSectionPreferences id='preferences' />
-                                <SharedSectionSocialMedia id='social-media' form={form} />
-                                <SharedSectionAddresses id='addresses' />
-                                <TalentSectionRelatives id='relatives' />
-                                <TalentSectionBiography id='biography' />
-                                <TalentSectionAchievements id='achievements' />
-                                <TalentSectionPerformanceSkills id='performance-skills' />
-                            </div>
-                        </ScrollableView.Body>
-                    </ScrollableView>
-                </CustomDrawer>
-            </Form>
-            <Modal
-                title='Save Changes?'
-                closable={true}
-                open={isConfirmClosingModalOpen}
-                zIndex={2000}
-                onOk={handleConfirmClosingModalSaveChanges}
-                onCancel={handleConfirmClosingModalCloseModal}
-                footer={[
-                    <Button
-                        key='back'
-                        onClick={handleConfirmClosingModalCloseModal}
-                    >
-                        Cancel
-                    </Button>,
-                    <Button
-                        key='discard'
-                        type='default'
-                        onClick={handleConfirmClosingModalDiscardChanges}
-                    >
-                        Don't Save
-                    </Button>,
-                    <Button
-                        key='submit'
-                        type='primary'
-                        onClick={handleConfirmClosingModalSaveChanges}
-                    >
-                        Save
-                    </Button>
-                ]}
-            >
-                <p>Your changes will be lost if you don't save them.</p>
-            </Modal>
-        </>
+        <BaseForm
+            entityId={talentId}
+            entityName='talent'
+            entityUrl='/app/talents'
+
+            enableDelete={true}
+            enableAnchorNavigation={true}
+            formWidth={768}
+
+            anchorItems={[
+                { key: 'notes', href: '#notes', title: 'Notes' },
+                { key: 'primary-info', href: '#primary-info', title: 'Primary Info' },
+                { key: 'food-allergies', href: '#food-allergies', title: 'Food & Allergies' },
+                { key: 'body', href: '#body', title: 'Body' },
+                { key: 'contacts', href: '#contacts', title: 'Contacts' },
+                { key: 'region-languages', href: '#region-languages', title: 'Region & Languages' },
+                { key: 'preferences', href: '#preferences', title: 'Preferences' },
+                { key: 'social-media', href: '#social-media', title: 'Social Media' },
+                { key: 'addresses', href: '#addresses', title: 'Addresses' },
+                { key: 'relatives', href: '#relatives', title: 'Relatives' },
+                { key: 'biography', href: '#biography', title: 'Biography' },
+                { key: 'achievements', href: '#achievements', title: 'Achievements' },
+                { key: 'performance-skills', href: '#performance-skills', title: 'Performance Skills' },
+            ]}
+
+            crudActions={{
+                fetch: fetchTalent,
+                create: createTalent,
+                update: updateTalent,
+                delete: deleteTalent,
+                resetResponse: talentActions.resetResponse
+            }}
+
+            selectors={{
+                entity: getTalent,
+                createResponse: getCreateResponse,
+                updateResponse: getUpdateResponse,
+                deleteResponse: getDeleteResponse
+            }}
+
+            onInitForm={onInitForm}
+            onProcessFormData={onProcessFormData}
+            getTitle={getTitle}
+            getDeleteConfirmationText={getDeleteConfirmationText}
+            open={isFormOpen}
+            onClose={onClose}
+            onAfterSubmit={onAfterSubmit}
+        >
+            <SharedSectionNotes id='notes' />
+            <TalentSectionPrimaryInfo id='primary-info' />
+            <TalentSectionFoodAllergies id='food-allergies' />
+            <TalentSectionBody id='body' />
+            <SharedSectionContacts id='contacts' />
+            <TalentSectionRegionLanguages id='region-languages' />
+            <TalentSectionPreferences id='preferences' />
+            <SharedSectionSocialMedia id='social-media' />
+            <SharedSectionAddresses id='addresses' />
+            <TalentSectionRelatives id='relatives' />
+            <TalentSectionBiography id='biography' />
+            <TalentSectionAchievements id='achievements' />
+            <TalentSectionPerformanceSkills id='performance-skills' />
+        </BaseForm>
     );
-};
+}
 
 export default TalentForm;

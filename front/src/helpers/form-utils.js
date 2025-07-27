@@ -2,6 +2,8 @@
  * Form utility functions for handling form data processing
  */
 
+import { sanitizeWeblinkForStorage } from '../components/ui-components/Weblink';
+
 /**
  * Checks if a field value is considered empty
  * 
@@ -89,4 +91,110 @@ export const cleanCollection = (array, config = {}) => {
 
     const filtered = array.filter(item => !isEmptyByConfig(item, config));
     return filtered.length === 0 ? null : filtered;
+};
+
+
+/**
+ * Functions to init and process form data
+ */
+
+export const initAddresses = (values) => ({
+    addresses: (values.addresses && values.addresses.length > 0)
+        ? values.addresses
+        : [{ type: { id: null }, info: '' }],
+});
+
+export const processAddresses = (values) => {
+    let processed = {};
+    if (values.addresses) {
+        processed.addresses = values.addresses.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    }
+    processed.addresses = cleanCollection(processed.addresses, { requiredAny: ['info'] });
+    return processed;
+};
+
+export const initEmails = (values) => ({
+    emails: values.emails || null
+});
+
+export const processEmails = (values) => {
+    let processed = {};
+    if (values.emails) {
+        processed.emails = values.emails.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    }
+    processed.emails = cleanCollection(processed.emails, { requiredAny: ['info'] });
+    return processed;
+};
+
+export const initMessengers = (values) => ({
+    messengers: values.messengers || null
+});
+
+export const processMessengers = (values) => {
+    let processed = {};
+    if (values.messengers) {
+        processed.messengers = values.messengers.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    }
+    processed.messengers = cleanCollection(processed.messengers, { requiredAll: ['type.id', 'info'] });
+    return processed;
+};
+
+export const initPhones = (values) => ({
+    phones: (values.phones && values.phones.length > 0)
+        ? values.phones
+        : [{ type: { id: null }, info: '' }],
+});
+
+export const processPhones = (values) => {
+    let processed = {};
+    if (values.phones) {
+        processed.phones = values.phones.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    }
+    processed.phones = cleanCollection(processed.phones, { requiredAny: ['info'] });
+    return processed;
+};
+
+export const initRelatives = (values) => ({
+    relatives: (values.relatives && values.relatives.length > 0)
+        ? values.relatives
+        : [{ type: { id: null }, info: '' }],
+});
+
+export const processRelatives = (values) => {
+    let processed = {};
+    if (values.relatives) {
+        processed.relatives = values.relatives.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    }
+    processed.relatives = cleanCollection(processed.relatives, { requiredAny: ['info'] });
+    return processed;
+};
+
+export const initSocialMedias = (values) => ({
+    social_medias: (values.social_medias && values.social_medias.length > 0)
+        ? values.social_medias
+        : [{ type: { id: null }, info: '' }],
+});
+export const processSocialMedias = (values) => {
+    let processed = {};
+    if (values.social_medias) {
+        processed.social_medias = values.social_medias.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    }
+    processed.social_medias = cleanCollection(processed.social_medias, { requiredAll: ['type.id', 'info'] });
+    return processed;
+};
+
+export const initWeblinks = (values) => ({
+    weblinks: values.weblinks || null
+});
+
+export const processWeblinks = (values) => {
+    let processed = {};
+    if (values.weblinks) {
+        processed.weblinks = values.weblinks.map(item => ({
+            ...item,
+            info: sanitizeWeblinkForStorage(item.info)
+        }));
+    }
+    processed.weblinks = cleanCollection(processed.weblinks, { requiredAny: ['info'] });
+    return processed;
 };

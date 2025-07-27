@@ -13,8 +13,8 @@ import TalentForm from '../talents/TalentForm';
 
 function Talents() {
     const dispatch = useDispatch();
-    const [isTalentFormOpen, setIsTalentFormOpen] = useState(false);
-    const [isNewTalent, setIsNewTalent] = useState();
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [currentTalentId, setCurrentTalentId] = useState(null);
     const { filters, updateFilter } = useTalentsFilters();
 
     // Fetch talents when filters change (only filtered results)
@@ -28,23 +28,24 @@ function Talents() {
     }, [dispatch]);
 
     // Function to call both API endpoints after talent save/update
-    const fetchAfterTalentSaveOrUpdate = useCallback(() => {
+    const handleSubmit = useCallback(() => {
         dispatch(fetchTalents(filters));
         dispatch(fetchTalentsManagers());
     }, [dispatch, filters]);
 
     const createTalent = () => {
-        setIsNewTalent(true);
-        setIsTalentFormOpen(true);
+        setCurrentTalentId(null);
+        setIsFormOpen(true);
     }
 
-    const editTalent = () => {
-        setIsNewTalent(false);
-        setIsTalentFormOpen(true);
+    const editTalent = (id) => {
+        setCurrentTalentId(id);
+        setIsFormOpen(true);
     }
 
-    const closeTalentForm = () => {
-        setIsTalentFormOpen(false);
+    const handleClose = () => {
+        setIsFormOpen(false);
+        setCurrentTalentId(null);
     }
 
     return (
@@ -66,10 +67,10 @@ function Talents() {
                 </div>
             </div>
             <TalentForm
-                open={isTalentFormOpen}
-                closeForm={closeTalentForm}
-                isNewTalent={isNewTalent}
-                onAfterSubmit={fetchAfterTalentSaveOrUpdate}
+                isFormOpen={isFormOpen}
+                onClose={handleClose}
+                talentId={currentTalentId}
+                onAfterSubmit={handleSubmit}
             />
         </>
     );

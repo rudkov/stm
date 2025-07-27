@@ -8,10 +8,10 @@ function TalentSectionFoodAllergies(props) {
         <NestedSection className={props.className} id={props.id}>
             <NestedSection.Header>Food & Allergies</NestedSection.Header>
             <NestedSection.Body className='nested-section__column'>
-                <Form.Item className='talent-form-row__left-label' label='Allergies' name='allergies'>
+                <Form.Item className='base-form-row__left-label' label='Allergies' name='allergies'>
                     <Input.TextArea autoSize={{ minRows: 2 }} />
                 </Form.Item>
-                <Form.Item className='talent-form-row__left-label' label='Vegetarian' name='is_vegetarian'>
+                <Form.Item className='base-form-row__left-label' label='Vegetarian' name='is_vegetarian'>
                     <Radio.Group options={binaryRadioOptions} />
                 </Form.Item>
             </NestedSection.Body>

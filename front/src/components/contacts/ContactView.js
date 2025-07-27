@@ -1,10 +1,10 @@
 import './ContactView.css';
 
-import { useParams } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getContact, fetchContactById } from '../../store/contacts/contact';
+import { getContact, fetchContact } from '../../store/contacts/contact';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
@@ -22,10 +22,11 @@ function ContactView({ inLayout = false }) {
     const params = useParams();
     const contact = useSelector(getContact);
     const scrollContainerRef = useRef(null);
+    const context = useOutletContext();
 
     useEffect(() => {
-        dispatch(fetchContactById(params.contactId));
-    }, [params.contactId, dispatch]);
+        dispatch(fetchContact({ id: params.contactId }));
+    }, [dispatch, params.contactId]);
 
     useEffect(() => {
         if (scrollContainerRef.current)
@@ -38,7 +39,7 @@ function ContactView({ inLayout = false }) {
         result =
             <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
-                    <ContactSectionMain data={contact} />
+                    <ContactSectionMain data={contact} editAction={context?.editContact} />
                 </ScrollableView.Header>
                 <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='contact-view__body'>
 

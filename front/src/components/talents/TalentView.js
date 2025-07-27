@@ -5,7 +5,7 @@ import { useParams, useOutletContext } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 
-import { getTalent, fetchTalentById } from '../../store/talents/talent';
+import { getTalent, fetchTalent } from '../../store/talents/talent';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
@@ -43,9 +43,9 @@ function TalentView(props) {
 
     useEffect(() => {
         if (talentId) {
-            dispatch(fetchTalentById(talentId));
+            dispatch(fetchTalent({ id: talentId }));
         }
-    }, [talentId, dispatch]);
+    }, [dispatch, talentId]);
 
     useEffect(() => {
         if (scrollContainerRef.current)

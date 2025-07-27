@@ -15,7 +15,7 @@ function TalentSectionPreferences(props) {
                 {
                     settings.talent_preferences.map((preference) => {
                         return (
-                            <Form.Item key={preference.system_name} className='talent-form-row__left-label' label={preference.name} name={preference.system_name}>
+                            <Form.Item key={preference.system_name} className='base-form-row__left-label' label={preference.name} name={preference.system_name}>
                                 <Radio.Group options={binaryRadioOptions} />
                             </Form.Item>
                         );

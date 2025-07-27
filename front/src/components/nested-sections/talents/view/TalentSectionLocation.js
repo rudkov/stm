@@ -38,7 +38,7 @@ function TalentSectionLocation(props) {
 
     const onFormSubmit = (values) => {
         setLoading(true);
-        dispatch(updateLocation([talent.id, values.location]));
+        dispatch(updateLocation({ id: talent.id, value: values.location }));
     };
 
     useEffect(() => {
@@ -97,4 +97,5 @@ function TalentSectionLocation(props) {
         </>
     );
 };
+
 export default TalentSectionLocation;
