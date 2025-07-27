@@ -1,6 +1,7 @@
 import './CheckboxFilter.css';
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
+import { Input } from 'antd';
 
 import Filter from './Filter';
 
@@ -14,9 +15,38 @@ function CheckboxFilter({
     data,
     renderItem,
     getCheckboxStyle,
+    isSearchable = false,
+    searchFilterFn,
     itemKey = 'id',
     itemValue = 'name',
 }) {
+    const searchSessionKey = `${uniqueName}.search`;
+
+    const [searchText, setSearchText] = useState(sessionStorage.getItem(searchSessionKey) ?? '');
+
+    useEffect(() => {
+        sessionStorage.setItem(searchSessionKey, searchText);
+    }, [searchText, searchSessionKey]);
+
+    const filteredData = useMemo(() => {
+        if (!searchText) {
+            return data;
+        }
+        const lowerCaseSearchText = searchText.toLowerCase();
+
+        if (searchFilterFn) {
+            return data.filter(item => searchFilterFn(item, lowerCaseSearchText));
+        }
+
+        return data.filter(item => {
+            const value = item[itemValue];
+            if (typeof value === 'string' || typeof value === 'number') {
+                return String(value).toLowerCase().includes(lowerCaseSearchText);
+            }
+            return false;
+        });
+    }, [data, searchText, searchFilterFn, itemValue]);
+
     const toggleItem = (item) => {
         const value = item[itemKey];
 
@@ -41,8 +71,18 @@ function CheckboxFilter({
             applied={selectedItems && selectedItems.length > 0}
             clearFilter={clearFilter}
         >
+            {isSearchable && (
+                <div className='checkbox-filter__search'>
+                    <Input
+                        placeholder='Search'
+                        allowClear
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                    />
+                </div>
+            )}
             <div>
-                {data && data.map((item, index) => (
+                {filteredData && filteredData.map((item, index) => (
                     <div
                         className='checkbox-filter__item'
                         key={`${uniqueName}.${index}`}

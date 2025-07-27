@@ -33,3 +33,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+.checkbox-filter__search {
+    margin-bottom: 6px;
+}
