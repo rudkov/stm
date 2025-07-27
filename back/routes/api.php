@@ -60,7 +60,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::apiResource('talent-boards', 'TalentBoardController');
 
         //teams
-        Route::post('teams', 'TeamController@store');
+        Route::post('teams', 'TeamController@store')->name('team.store');
 
         //users
         Route::post('users/search', 'UserController@index');
