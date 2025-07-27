@@ -3,8 +3,8 @@ import { useLocation } from 'react-router';
 import { Form, Input, Button } from 'antd';
 import { useLoginMutation } from 'api/accountApi';
 
-import AuthLayout from 'components/auth/AuthLayout';
-import BaseForm from 'components/auth/BaseForm';
+import AuthLayout from 'components/account/AuthLayout';
+import BaseForm from 'components/account/BaseForm';
 
 const Login = () => {
     const location = useLocation();

@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'antd';
-import AuthLayout from 'components/auth/AuthLayout';
-import BaseForm from 'components/auth/BaseForm';
+import AuthLayout from 'components/account/AuthLayout';
+import BaseForm from 'components/account/BaseForm';
 import { useParams, useSearchParams } from 'react-router';
 import { useResetPasswordMutation } from 'api/accountApi';
 

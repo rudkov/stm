@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
-import { useCheckAuthQuery } from '../../api/accountApi';
-import Loading from "../ui-components/Loading";
+import { useCheckAuthQuery } from 'api/accountApi';
+import Loading from "components/ui-components/Loading";
 
 const RedirectIfTeam = ({ children }) => {
     const { data: authData, isLoading } = useCheckAuthQuery();

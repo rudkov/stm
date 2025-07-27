@@ -5,7 +5,7 @@ import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-
 import { useVerifyEmailMutation } from 'api/accountApi'; // adjust path if needed
 import { useCheckAuthQuery } from 'api/accountApi';
 
-import AuthLayout from 'components/auth/AuthLayout';
+import AuthLayout from 'components/account/AuthLayout';
 import './EmailVerification.css';
 
 const EmailVerification = () => {

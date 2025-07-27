@@ -5,7 +5,7 @@ import { MailOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useResendEmailMutation } from 'api/accountApi';
 import { useCheckAuthQuery } from 'api/accountApi';
 import { useNotification } from 'components/notifications/NotificationProvider';
-import AuthLayout from 'components/auth/AuthLayout';
+import AuthLayout from 'components/account/AuthLayout';
 
 
 const ResendVerificationEmail = () => {

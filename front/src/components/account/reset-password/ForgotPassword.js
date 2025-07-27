@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd';
 
-import AuthLayout from 'components/auth/AuthLayout';
-import BaseForm from 'components/auth/BaseForm';
+import AuthLayout from 'components/account/AuthLayout';
+import BaseForm from 'components/account/BaseForm';
 import { useForgotPasswordMutation } from 'api/accountApi'; 
 
 function ForgotPassword() {
