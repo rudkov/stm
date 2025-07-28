@@ -68,6 +68,7 @@ function apply_no_contacts_filter($query, string $modelClass, array $request, ar
     if (isset($request['noContacts']) && ($request['noContacts'] === true || $request['noContacts'] === 'true')) {
         $mainModel = new $modelClass();
         $tableName = $mainModel->getTable();
+        $morphKey = $mainModel->getMorphClass();
 
         foreach ($relationshipClasses as $relationshipClass) {
             $relationshipModel = new $relationshipClass();
@@ -99,11 +100,11 @@ function apply_no_contacts_filter($query, string $modelClass, array $request, ar
                 $foreignKey = $relationshipObject->getForeignKeyName();
                 $typeKey = $relationshipObject->getMorphType();
 
-                $query->whereNotExists(function ($sub) use ($tableName, $modelClass, $relationshipTable, $foreignKey, $typeKey) {
+                $query->whereNotExists(function ($sub) use ($tableName, $morphKey, $relationshipTable, $foreignKey, $typeKey) {
                     $sub->select(DB::raw(1))
                         ->from($relationshipTable)
                         ->whereColumn("$relationshipTable.$foreignKey", "$tableName.id")
-                        ->where("$relationshipTable.$typeKey", $modelClass);
+                        ->where("$relationshipTable.$typeKey", $morphKey);
                 });
             }
         }
