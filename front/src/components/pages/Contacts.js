@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
 
 import { fetchContacts } from '../../store/contacts/contacts';
-import { useContactsFilters } from '../contacts/ContactsFilters';
+import { useContactsFilters, ContactsFilters } from '../contacts/ContactsFilters';
 
 import ContactsList from '../contacts/ContactsList';
 import ContactForm from '../contacts/ContactForm';
@@ -42,6 +42,10 @@ function Contacts() {
     return (
         <>
             <div className='contacts-page'>
+                <ContactsFilters
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
                 <ContactsList
                     createContact={createContact}
                     filters={filters}

@@ -29,7 +29,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::apiResource('companies', 'CompanyController');
 
         //contacts
-        Route::apiResource('contacts', 'ContactController');
+        Route::post('contacts/search', 'ContactController@search')->name('contacts.search');
+        Route::apiResource('contacts', 'ContactController')->except(['index', 'destroy']);
 
         //events
         Route::post('events/search', 'EventController@index');
