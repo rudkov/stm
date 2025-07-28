@@ -1,6 +1,6 @@
 .companies-page {
     display: grid;
-    grid-template-columns: 240px auto;
+    grid-template-columns: 240px 240px auto;
     height: 100vh;
     gap: 12px;
 }

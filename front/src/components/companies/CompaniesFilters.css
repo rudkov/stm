@@ -1,0 +1,8 @@
+.companies-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100vh;
+    overflow: auto;
+    padding: 12px 0;
+}

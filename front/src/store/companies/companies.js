@@ -5,11 +5,16 @@ const initialState = {
     items: [],
 };
 
-export const fetchCompanies = createAsyncThunk('companies/fetch', async () => {
+const transformFilters = (filters) => ({
+    noContacts: filters.noContacts,
+});
+
+export const fetchCompanies = createAsyncThunk('companies/fetch', async (filters = {}) => {
     try {
         const response = await axios({
-            method: 'get',
-            url: '/api/v1/companies',
+            method: 'post',
+            url: '/api/v1/companies/search',
+            data: transformFilters(filters),
         });
         return response.data;
     } catch (err) {
