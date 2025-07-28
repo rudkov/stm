@@ -4,8 +4,15 @@ namespace App\Queries;
 
 use App\Models\User;
 use App\Models\Contact;
+use App\Models\Email;
+use App\Models\Messenger;
+use App\Models\Phone;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+
+use function App\Helpers\apply_simple_filters;
+use function App\Helpers\apply_range_filters;
+use function App\Helpers\apply_no_contacts_filter;
 
 class ContactQuery
 {
@@ -26,39 +33,9 @@ class ContactQuery
 
     public function applyFilters(array $request): self
     {
-        // Apply simple filters
-        foreach ($this->simpleFilters as $column => $param) {
-            if (!empty($request[$param])) {
-                $this->query->whereIn("contacts.$column", $request[$param]);
-            }
-        }
-
-        // Apply range filters
-        foreach ($this->rangeFilters as $column => $param) {
-            if (!empty($request[$param]) && count($request[$param]) === 2) {
-                $this->query->whereBetween("contacts.$column", $request[$param]);
-            }
-        }
-
-        // Apply no contacts filter
-        if (isset($request['noContacts']) && ($request['noContacts'] === true || $request['noContacts'] === 'true')) {
-            $this->query->whereNotExists(function ($sub) {
-                $sub->select(DB::raw(1))
-                    ->from('emails')
-                    ->whereColumn('emails.emailable_id', 'contacts.id')
-                    ->where('emails.emailable_type', Contact::class);
-            })->whereNotExists(function ($sub) {
-                $sub->select(DB::raw(1))
-                    ->from('messengers')
-                    ->whereColumn('messengers.messengerable_id', 'contacts.id')
-                    ->where('messengers.messengerable_type', Contact::class);
-            })->whereNotExists(function ($sub) {
-                $sub->select(DB::raw(1))
-                    ->from('phones')
-                    ->whereColumn('phones.phoneable_id', 'contacts.id')
-                    ->where('phones.phoneable_type', Contact::class);
-            });
-        }
+        apply_simple_filters($this->query, Contact::class, $request, $this->simpleFilters);
+        apply_range_filters($this->query, Contact::class, $request, $this->rangeFilters);
+        apply_no_contacts_filter($this->query, Contact::class, $request, [Email::class, Messenger::class, Phone::class]);
 
         return $this;
     }
