@@ -7,11 +7,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\TeamInitializationService;
-use App\Http\Requests\StoreTeamRequest;
+use App\Http\Requests\TeamRequest;
 
 class TeamController extends Controller
 {
-    public function store(StoreTeamRequest $request)
+    public function store(TeamRequest $request)
     {
         $auth = Auth::user();
 

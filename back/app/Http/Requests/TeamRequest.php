@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 
-class StoreTeamRequest extends FormRequest
+class TeamRequest extends FormRequest
 {
     public function rules()
     {
