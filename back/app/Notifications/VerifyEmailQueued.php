@@ -21,10 +21,10 @@ class VerifyEmailQueued extends VerifyEmail implements ShouldQueue
     protected function buildMailMessage($url)
     {
         return (new MailMessage)
-            ->subject(__('Verify Email Address'))
+            ->subject(__('Verify Your Email Address'))
             ->line(__('Please click the button below to verify your email address.'))
             ->action(__('Verify Email Address'), $url)
-            ->line(__('If you did not create an account, no further action is required.'));
+            ->line(__('If you didn\'t create an account with us, you can safely ignore this email.'));
     }
 
     /**
