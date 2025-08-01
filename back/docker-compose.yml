@@ -55,6 +55,22 @@ services:
             - 8080:8080
         networks:
             - sail
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '6379:6379'
+        networks:
+            - sail
+        restart: always
+    mailhog:
+        image: mailhog/mailhog:v1.0.1
+        ports:
+            - "8025:8025"
+        logging:
+            driver: none
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge

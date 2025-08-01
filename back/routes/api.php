@@ -9,10 +9,18 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
 
     //auth
-    Route::post('login', 'LoginController@login');
-    Route::post('logout', 'LoginController@logout');
-    Route::get('is-logged-in', 'LoginController@isLoggedIn');
+    Route::post('login', 'Auth\LoginController@login');
+    Route::post('logout', 'Auth\LoginController@logout');
+    Route::get('check-auth', 'Auth\LoginController@checkAuth')->name('auth.check');
     Route::post('register', 'Auth\RegisterController@createAndAuthenticate');
+    
+    // Email verification routes
+    Route::get('/email-verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
+    Route::post('/email-verify/resend', 'Auth\VerificationController@resend');
+
+    // Password recovery routes
+    Route::post('/forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/reset-password', 'Auth\ResetPasswordController@reset');
 
     //settings
     Route::get('settings', 'SettingsController@index');
@@ -52,7 +60,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::apiResource('talent-boards', 'TalentBoardController');
 
         //teams
-        Route::post('teams', 'TeamController@store');
+        Route::post('teams', 'TeamController@store')->name('team.store');
 
         //users
         Route::post('users/search', 'UserController@index');

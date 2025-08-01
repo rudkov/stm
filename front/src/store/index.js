@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './auth';
+import { accountApi } from '../api/accountApi';
 import companiesReducer from './companies/companies';
 import companyReducer from './companies/company';
 import contactReducer from './contacts/contact';
@@ -14,7 +14,7 @@ import usersReducer from './users/users';
 
 const store = configureStore({
     reducer: {
-        auth: authReducer,
+        [accountApi.reducerPath]: accountApi.reducer,
         companies: companiesReducer,
         company: companyReducer,
         contact: contactReducer,
@@ -27,6 +27,10 @@ const store = configureStore({
         talents: talentsReducer,
         users: usersReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(
+            accountApi.middleware
+        ),
 });
 
 export default store;

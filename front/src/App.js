@@ -7,11 +7,23 @@ import { SettingsProvider } from './context/SettingsContext';
 
 import NotificationProvider from './components/notifications/NotificationProvider';
 
-import RequireAuth from './components/auth/RequireAuth';
-import RequireTeam from './components/teams/RequireTeam';
-import Login from './components/auth/Login';
-import Logout from './components/auth/Logout';
-import Register from './components/auth/Register';
+import RequireAuth from 'components/account/auth/RequireAuth';
+import Login from 'components/account/auth/Login';
+import Logout from 'components/account/auth/Logout';
+
+import Register from 'components/account/Register';
+
+import RequireTeam from 'components/account/team/RequireTeam';
+import RedirectIfTeam from 'components/account/team/RedirectIfTeam';
+import CreateTeam from 'components/account/team/CreateTeam';
+
+import EmailVerification from 'components/account/email-verify/EmailVerification';
+import ResendVerificationEmail from 'components/account/email-verify/ResendVerificationEmail'
+
+import ForgotPassword from 'components/account/reset-password/ForgotPassword';
+import ForgotPasswordSuccess from 'components/account/reset-password/ForgotPasswordSuccess';
+import ResetPassword from 'components/account/reset-password/ResetPassword';
+
 import Main from './components/Main';
 
 import Companies from './components/pages/Companies';
@@ -29,9 +41,8 @@ import Talents from './components/pages/Talents';
 import TalentsZeroState from './components/talents/TalentsZeroState';
 import TalentView from './components/talents/TalentView';
 
-import NewTeam from './components/teams/NewTeam';
-
 import Tmp from './components/pages/Tmp';
+
 
 function App() {
     const { theme } = useTheme();
@@ -44,8 +55,15 @@ function App() {
                         <Route path='login' element={<Login />} />
                         <Route path='register' element={<Register />} />
 
-                        <Route element={<RequireAuth />}>
+                        <Route path='forgot-password' element={<ForgotPassword />} />
+                        <Route path='forgot-password/success' element={<ForgotPasswordSuccess />} />
+                        <Route path='reset-password/:token' element={<ResetPassword />} />
 
+                        <Route element={<RequireAuth />}>
+                            <Route path='logout' element={<Logout />} />
+                            <Route path='email-verify/:id/:hash' element={<EmailVerification />} />
+                            <Route path='email-verify/resend' element={<ResendVerificationEmail />} />
+                            
                             <Route element={<RequireTeam />}>
 
                                 <Route path='app' element={<Main />}>
@@ -75,9 +93,7 @@ function App() {
 
                             </Route>
 
-                            <Route path='app/teams/create' element={<NewTeam />} />
-                            <Route path='app/logout' element={<Logout />} />
-
+                            <Route path='/create-team' element={<RedirectIfTeam><CreateTeam /></RedirectIfTeam>} />
                         </Route>
 
                         <Route path='*' element={<>404</>} />

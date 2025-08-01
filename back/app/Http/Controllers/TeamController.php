@@ -5,34 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TeamInitializationService;
+use App\Http\Requests\TeamRequest;
 
 class TeamController extends Controller
 {
-    public function store(Request $request)
+    public function store(TeamRequest $request)
     {
         $auth = Auth::user();
 
-        if (is_null($auth->team_id)) {
+        $user = null;
 
-            $user = null;
+        DB::transaction(function () use ($request, $auth, &$user) {
+            // Lock the user row for update
+            $user = User::where('id', $auth->id)->lockForUpdate()->firstOrFail();
 
-            DB::transaction(function () use ($request, $auth, &$user) {
-                $team = Team::create($request->all());
-                TeamInitializationService::run($team);
+            // Check if user already has a team
+            if ($user->team_id) {
+                abort(response()->json($user, 201));
+            }
 
-                $user = User::where('id', $auth->id)
-                    ->firstOrFail();
+            $team = Team::create($request->validated());
+            TeamInitializationService::run($team);
 
-                $user->team_id = $team->id;
-                $user->save();
-            });
+            $user->team_id = $team->id;
+            $user->save();
+        });
 
-            return response()->json($user, 201);
-        }
-
-        return false;
+        return response()->json($user, 201);
     }
 }

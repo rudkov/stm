@@ -16,6 +16,11 @@
 .ant-btn-color-default,
 .ant-btn-color-dangerous {
     box-shadow: none;
+    font-weight: 600;
+}
+
+.ant-btn-color-default {
+    color: var(--text-secondary);
 }
 
 /* TODO: Everything below is old, needs to be refactored and removed */
@@ -153,44 +158,6 @@ textarea {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-.form-item--border-bottom input,
-.form-item--border-bottom textarea,
-.form-item--border-bottom .ant-picker {
-    margin: 0;
-    padding: 0;
-    /* padding-bottom: 2px;
-    margin-bottom: -2px; */
-    border: 0;
-    border-radius: 0;
-    border-bottom: 1px #E5E5E5 solid;
-}
-
-.form-item--border-bottom .ant-select-selector {
-    height: auto !important;
-    padding: 0 !important;
-    border: 0 !important;
-    border-radius: 0;
-    border-bottom: 1px #E5E5E5 solid !important;
-}
-
-.ant-select:hover .ant-select-selector {
-    border-bottom: 1px solid rgba(24, 144, 255, 1) !important;
-}
-
-.form-item--border-bottom .ant-form-item-control-input {
-    min-height: auto;
-}
-
-.ant-form-item-control-input-content,
-.ant-form-item-control-input-content input,
-.ant-form-item-control-input-content textarea,
-.ant-form-item-control-input-content .ant-picker-input>input,
-.ant-form-item-control-input-content .ant-select-single .ant-select-selector .ant-select-selection-item,
-.ant-form-item-control-input-content .ant-select-single .ant-select-selector:after,
-.ant-form-item-control-input-content .ant-select-selection-placeholder {
-    line-height: 20px !important;
 }
 
 .ant-select-selection-item,
