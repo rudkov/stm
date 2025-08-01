@@ -14,6 +14,7 @@ const Logout = () => {
                 await logout().unwrap();
                 navigate('/', { replace: true });
             } catch (error) {
+                navigate(-1, { replace: true });
                 showNotification({ type: 'ERROR', message: 'Something went wrong. Please try again.' });
             }
         };
