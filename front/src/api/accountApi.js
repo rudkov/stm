@@ -23,7 +23,7 @@ export const accountApi = createApi({
             invalidatesTags: ['Auth'],
         }),
         checkAuth: builder.query({
-            query: () => '/is-logged-in',
+            query: () => '/check-auth',
             providesTags: ['Auth'],
             transformResponse: (response) => ({
                 isAuthenticated: response.is_authenticated,

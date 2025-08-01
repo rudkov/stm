@@ -19,7 +19,7 @@ class LoginController extends Controller
         }
     }
     
-    public function isLoggedIn()
+    public function checkAuth()
     {
         $user = Auth::user();
         return response()->json([

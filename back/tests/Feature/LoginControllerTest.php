@@ -105,14 +105,14 @@ class LoginControllerTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_is_logged_in_when_user_is_authenticated()
+    public function test_check_auth_when_user_is_authenticated()
     {
         // Create and login a test user
         $user = User::factory()->create();
         $this->actingAs($user);
 
         // Check login status
-        $response = $this->getJson('/api/v1/is-logged-in');
+        $response = $this->getJson(route('auth.check'));
 
         // Assert response
         $response->assertStatus(200)
@@ -122,10 +122,10 @@ class LoginControllerTest extends TestCase
             ]);
     }
 
-    public function test_is_logged_in_when_user_is_not_authenticated()
+    public function test_check_auth_when_user_is_not_authenticated()
     {
         // Check login status without being logged in
-        $response = $this->getJson('/api/v1/is-logged-in');
+        $response = $this->getJson(route('auth.check'));
 
         // Assert response
         $response->assertStatus(200)

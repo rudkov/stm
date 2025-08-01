@@ -11,7 +11,7 @@ Route::group(['prefix' => 'v1'], function () {
     //auth
     Route::post('login', 'Auth\LoginController@login');
     Route::post('logout', 'Auth\LoginController@logout');
-    Route::get('is-logged-in', 'Auth\LoginController@isLoggedIn');
+    Route::get('check-auth', 'Auth\LoginController@checkAuth')->name('auth.check');
     Route::post('register', 'Auth\RegisterController@createAndAuthenticate');
     
     // Email verification routes
