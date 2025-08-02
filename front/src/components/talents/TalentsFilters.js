@@ -1,92 +1,54 @@
 import './TalentsFilters.css';
 
-import { useEffect, useState } from 'react';
+import { useFilters } from '../filters/useFilters';
 import ScrollableView from '../ui-components/ScrollableView';
 
-import BoardFilter from '../filters/BoardFilter';
-import BodyFilter from '../filters/BodyFilter';
-import GendersFilter from '../filters/GendersFilter';
-import LocationsFilter from '../filters/LocationsFilter';
-import ManagersFilter from '../filters/ManagersFilter';
-import NoContactsFilter from '../filters/NoContactsFilter';
-import PreferencesFilter from '../filters/PreferencesFilter';
+import NoContactsFilter from '../filters/shared/NoContactsFilter';
+
+import BoardFilter from '../filters/talents/BoardFilter';
+import BodyFilter from '../filters/talents/BodyFilter';
+import GendersFilter from '../filters/talents/GendersFilter';
+import LocationsFilter from '../filters/talents/LocationsFilter';
+import ManagersFilter from '../filters/talents/ManagersFilter';
+import PreferencesFilter from '../filters/talents/PreferencesFilter';
 
 export const FILTERS_CONFIG = {
     search: {
         name: 'talents.filters.search',
         value: '',
-        storage: (value) => value, // No JSON parsing needed for string
     },
     board: {
         name: 'talents.filters.board',
         value: 0,
-        storage: JSON.parse,
     },
     body: {
         name: 'talents.filters.body',
         value: [],
-        storage: JSON.parse,
     },
     genders: {
         name: 'talents.filters.genders',
         value: [],
-        storage: JSON.parse,
     },
     locations: {
         name: 'talents.filters.locations',
         value: [],
-        storage: JSON.parse,
     },
     managers: {
         name: 'talents.filters.managers',
         value: [],
-        storage: JSON.parse,
     },
     noContacts: {
         name: 'talents.filters.noContacts',
         value: false,
-        storage: JSON.parse,
     },
     preferences: {
         name: 'talents.filters.preferences',
         value: [],
-        storage: JSON.parse,
     },
 };
 
 export function useTalentsFilters() {
-    const [filters, setFilters] = useState(() => {
-        const initialFilters = {};
-        for (const [key, config] of Object.entries(FILTERS_CONFIG)) {
-            const storedValue = sessionStorage.getItem(config.name);
-            initialFilters[key] = storedValue !== null
-                ? config.storage(storedValue)
-                : config.value;
-        }
-        return initialFilters;
-    });
-
-    // Update sessionStorage when filters change
-    useEffect(() => {
-        Object.entries(FILTERS_CONFIG).forEach(([key, config]) => {
-            const value = filters[key];
-            const storageValue = typeof value === 'string' ? value : JSON.stringify(value);
-            sessionStorage.setItem(config.name, storageValue);
-        });
-    }, [filters]);
-
-    const updateFilter = (key, value) => {
-        setFilters(prev => ({
-            ...prev,
-            [key]: value
-        }));
-    };
-
-    return {
-        filters,
-        setFilters,
-        updateFilter
-    };
+    return useFilters(FILTERS_CONFIG);
 }
 
 export function TalentsFilters({ filters, updateFilter }) {
@@ -139,4 +101,4 @@ const TalentsFiltersExports = {
     FILTERS_CONFIG
 };
 
-export default TalentsFiltersExports; 
+export default TalentsFiltersExports;

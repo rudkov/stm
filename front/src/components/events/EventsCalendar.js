@@ -14,9 +14,9 @@ import { getEvents, fetchEvents } from '../../store/events/events';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
-import ClientsFilter from '../filters/ClientsFilter';
-import EventTypesFilter from '../filters/EventTypesFilter';
-import TalentsFilter from '../filters/TalentsFilter';
+import ClientsFilter from '../filters/events/ClientsFilter';
+import TypesFilter from '../filters/events/TypesFilter';
+import TalentsFilter from '../filters/events/TalentsFilter';
 
 function EventsCalendar() {
     const dispatch = useDispatch();
@@ -117,7 +117,7 @@ function EventsCalendar() {
         <div className='events-calendar-page'>
             <ScrollableView>
                 <ScrollableView.Body className='events-calendar-page__filters'>
-                    <EventTypesFilter
+                    <TypesFilter
                         uniqueName='eventsPage.eventTypesFilter'
                         selectedItems={filteredEventTypes}
                         setFiltered={setFilteredEventTypes}

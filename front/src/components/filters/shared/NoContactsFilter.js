@@ -1,6 +1,6 @@
-import './Filter.css';
+import '../Filter.css';
 
-import Filter from './Filter';
+import Filter from '../Filter';
 
 import { Switch } from 'antd';
 

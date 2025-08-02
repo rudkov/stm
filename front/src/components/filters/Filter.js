@@ -4,7 +4,7 @@
 //import './Filter.css';
 import '../../helpers/shared.css';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Tooltip } from 'antd';
 
 import { ReactComponent as IconCircle } from '../../assets/icons/circle.svg';
@@ -61,4 +61,4 @@ function Filter({ children, className = '', ...props }) {
     );
 }
 
-export default Filter;
+export default memo(Filter);
