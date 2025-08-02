@@ -5,9 +5,16 @@ export function useFilters(FILTERS_CONFIG) {
         const initialFilters = {};
         for (const [key, config] of Object.entries(FILTERS_CONFIG)) {
             const storedValue = sessionStorage.getItem(config.name);
-            initialFilters[key] = storedValue !== null
-                ? config.storage(storedValue)
-                : config.value;
+            if (storedValue !== null && storedValue !== '') {
+                try {
+                    initialFilters[key] = JSON.parse(storedValue);
+                } catch (error) {
+                    // If JSON parsing fails, fall back to default value
+                    initialFilters[key] = config.value;
+                }
+            } else {
+                initialFilters[key] = config.value;
+            }
         }
         return initialFilters;
     });
@@ -15,9 +22,7 @@ export function useFilters(FILTERS_CONFIG) {
     // Update sessionStorage when filters change
     useEffect(() => {
         Object.entries(FILTERS_CONFIG).forEach(([key, config]) => {
-            const value = filters[key];
-            const storageValue = typeof value === 'string' ? value : JSON.stringify(value);
-            sessionStorage.setItem(config.name, storageValue);
+            sessionStorage.setItem(config.name, JSON.stringify(filters[key]));
         });
     }, [filters, FILTERS_CONFIG]);
 

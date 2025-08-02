@@ -16,42 +16,34 @@ export const FILTERS_CONFIG = {
     search: {
         name: 'talents.filters.search',
         value: '',
-        storage: (value) => value, // No JSON parsing needed for string
     },
     board: {
         name: 'talents.filters.board',
         value: 0,
-        storage: JSON.parse,
     },
     body: {
         name: 'talents.filters.body',
         value: [],
-        storage: JSON.parse,
     },
     genders: {
         name: 'talents.filters.genders',
         value: [],
-        storage: JSON.parse,
     },
     locations: {
         name: 'talents.filters.locations',
         value: [],
-        storage: JSON.parse,
     },
     managers: {
         name: 'talents.filters.managers',
         value: [],
-        storage: JSON.parse,
     },
     noContacts: {
         name: 'talents.filters.noContacts',
         value: false,
-        storage: JSON.parse,
     },
     preferences: {
         name: 'talents.filters.preferences',
         value: [],
-        storage: JSON.parse,
     },
 };
 
