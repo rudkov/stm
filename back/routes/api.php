@@ -27,11 +27,11 @@ Route::group(['prefix' => 'v1'], function () {
 
         //companies
         Route::post('companies/search', 'CompanyController@search')->name('companies.search');
-        Route::apiResource('companies', 'CompanyController')->except(['index', 'destroy']);
+        Route::apiResource('companies', 'CompanyController')->except(['index']);
 
         //contacts
         Route::post('contacts/search', 'ContactController@search')->name('contacts.search');
-        Route::apiResource('contacts', 'ContactController')->except(['index', 'destroy']);
+        Route::apiResource('contacts', 'ContactController')->except(['index']);
 
         //events
         Route::post('events/search', 'EventController@index');

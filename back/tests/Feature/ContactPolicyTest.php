@@ -53,7 +53,7 @@ class ContactPolicyTest extends TestCase
         // User from same team should be able to view the contact
         $response = $this->actingAs($this->user1)
             ->getJson(route('contacts.show', $this->team1Contact->id));
-        
+
         $response->assertStatus(200)
             ->assertJson([
                 'first_name' => 'Team1',
@@ -63,7 +63,7 @@ class ContactPolicyTest extends TestCase
         // User from different team should not be able to view the contact
         $response = $this->actingAs($this->user2)
             ->getJson(route('contacts.show', $this->team1Contact->id));
-        
+
         $response->assertStatus(403);
     }
 
@@ -77,7 +77,7 @@ class ContactPolicyTest extends TestCase
                 'first_name' => 'Updated',
                 'last_name' => 'Name'
             ]);
-        
+
         $response->assertStatus(200)
             ->assertJson([
                 'first_name' => 'Updated',
@@ -90,7 +90,7 @@ class ContactPolicyTest extends TestCase
                 'first_name' => 'Should',
                 'last_name' => 'Fail'
             ]);
-        
+
         $response->assertStatus(403);
     }
 
@@ -101,7 +101,7 @@ class ContactPolicyTest extends TestCase
         // User from different team should not be able to delete the contact
         $response = $this->actingAs($this->user2)
             ->deleteJson(route('contacts.destroy', $this->team1Contact->id));
-        
+
         $response->assertStatus(403);
 
         // Verify contact still exists
@@ -113,7 +113,7 @@ class ContactPolicyTest extends TestCase
         // User from same team should be able to delete the contact
         $response = $this->actingAs($this->user1)
             ->deleteJson(route('contacts.destroy', $this->team1Contact->id));
-        
+
         $response->assertStatus(204);
 
         // Verify contact is soft deleted
@@ -136,6 +136,7 @@ class ContactPolicyTest extends TestCase
         $response->assertStatus(201);
 
         // Create a user without a team
+        /** @var User $userWithoutTeam */
         $userWithoutTeam = User::factory()->create(['team_id' => null]);
         // User without team should not be able to create a contact
         $response = $this->actingAs($userWithoutTeam)
@@ -146,5 +147,4 @@ class ContactPolicyTest extends TestCase
 
         $response->assertStatus(403);
     }
-
 }
