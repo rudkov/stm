@@ -4,15 +4,12 @@ namespace App\Queries;
 
 use App\Models\User;
 use App\Models\Company;
-use App\Models\Email;
-use App\Models\Messenger;
-use App\Models\Phone;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 use function App\Helpers\apply_simple_filters;
 use function App\Helpers\apply_range_filters;
-use function App\Helpers\apply_relationship_filters;
+use function App\Helpers\apply_missing_morph_many_relationship_filters;
 
 class CompanyQuery
 {
@@ -32,7 +29,7 @@ class CompanyQuery
         $this->rangeFilters = [];
 
         $this->relationshipFilters = [
-            'noContacts' => [Email::class, Messenger::class, Phone::class],
+            'noContacts' => ['emails', 'messengers', 'phones'],
         ];
     }
 
@@ -40,7 +37,7 @@ class CompanyQuery
     {
         apply_simple_filters($this->query, Company::class, $request, $this->simpleFilters);
         apply_range_filters($this->query, Company::class, $request, $this->rangeFilters);
-        apply_relationship_filters($this->query, Company::class, $request, $this->relationshipFilters);
+        apply_missing_morph_many_relationship_filters($this->query, Company::class, $request, $this->relationshipFilters);
 
         return $this;
     }

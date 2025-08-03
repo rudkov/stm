@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 /**
  * Applies simple filters to a query builder based on a mapping of request parameter names
@@ -55,60 +56,46 @@ function apply_range_filters($query, string $modelClass, array $request, array $
 
 /**
  * Applies relationship filters to exclude records based on the presence or absence
- * of related models from the specified relationship model classes.
+ * of related models from the specified relationship method names.
  *
  * @param \Illuminate\Database\Query\Builder $query
  * @param string $modelClass The fully qualified model class name for the main model
  * @param array $request The request data containing filter values
- * @param array $relationshipFilters Array mapping filter names to arrays of relationship model classes
+ * @param array $relationshipFilters Array mapping filter names to arrays of relationship method names
  * @return \Illuminate\Database\Query\Builder
  */
-function apply_relationship_filters($query, string $modelClass, array $request, array $relationshipFilters)
+function apply_missing_morph_many_relationship_filters($query, string $modelClass, array $request, array $relationshipFilters)
 {
-    foreach ($relationshipFilters as $filterName => $relationshipClasses) {
-        if (isset($request[$filterName]) && ($request[$filterName] === true || $request[$filterName] === 'true')) {
-            $mainModel = new $modelClass();
-            $tableName = $mainModel->getTable();
-            $morphKey = $mainModel->getMorphClass();
+    $mainModel = new $modelClass();
+    $tableName = $mainModel->getTable();
+    $morphKey = $mainModel->getMorphClass();
 
-            foreach ($relationshipClasses as $relationshipClass) {
-                $relationshipModel = new $relationshipClass();
-                $relationshipTable = $relationshipModel->getTable();
+    foreach ($relationshipFilters as $filterName => $relationshipMethods) {
+        if (!isset($request[$filterName]) || !filter_var($request[$filterName], FILTER_VALIDATE_BOOLEAN)) {
+            continue;
+        }
 
-                // Find the relationship method on the main model that returns this relationship class
-                $relationshipObject = null;
-
-                // Get all methods from the main model to find the matching relationship
-                $reflection = new \ReflectionClass($mainModel);
-                foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                    if ($method->getNumberOfParameters() === 0 && !$method->isStatic()) {
-                        try {
-                            $result = $method->invoke($mainModel);
-                            if ($result instanceof MorphMany) {
-                                if ($result->getRelated() instanceof $relationshipClass) {
-                                    $relationshipObject = $result;
-                                    break;
-                                }
-                            }
-                        } catch (\Exception $e) {
-                            // Skip methods that throw exceptions
-                            continue;
-                        }
-                    }
-                }
-
-                if ($relationshipObject) {
-                    $foreignKey = $relationshipObject->getForeignKeyName();
-                    $typeKey = $relationshipObject->getMorphType();
-
-                    $query->whereNotExists(function ($sub) use ($tableName, $morphKey, $relationshipTable, $foreignKey, $typeKey) {
-                        $sub->select(DB::raw(1))
-                            ->from($relationshipTable)
-                            ->whereColumn("$relationshipTable.$foreignKey", "$tableName.id")
-                            ->where("$relationshipTable.$typeKey", $morphKey);
-                    });
-                }
+        foreach ($relationshipMethods as $relationshipMethod) {
+            if (!method_exists($mainModel, $relationshipMethod)) {
+                throw new InvalidArgumentException("Method '$relationshipMethod' does not exist on model '$modelClass'.");
             }
+
+            $relationshipObject = $mainModel->$relationshipMethod();
+
+            if (!$relationshipObject instanceof MorphMany) {
+                throw new InvalidArgumentException("Method '$relationshipMethod' must return a MorphMany relation.");
+            }
+
+            $relationshipTable = $relationshipObject->getRelated()->getTable();
+            $foreignKey = $relationshipObject->getForeignKeyName();
+            $typeKey = $relationshipObject->getMorphType();
+
+            $query->whereNotExists(function ($sub) use ($tableName, $morphKey, $relationshipTable, $foreignKey, $typeKey) {
+                $sub->select(DB::raw(1))
+                    ->from($relationshipTable)
+                    ->whereColumn("$relationshipTable.$foreignKey", "$tableName.id")
+                    ->where("$relationshipTable.$typeKey", $morphKey);
+            });
         }
     }
 
