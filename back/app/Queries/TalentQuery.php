@@ -7,11 +7,16 @@ use App\Models\Talent;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
+use function App\Helpers\apply_simple_filters;
+use function App\Helpers\apply_range_filters;
+use function App\Helpers\apply_missing_morph_many_relationship_filters;
+
 class TalentQuery
 {
     protected Builder $query;
     protected array $simpleFilters;
     protected array $rangeFilters;
+    protected array $relationshipFilters;
 
     public function __construct(User $user)
     {
@@ -20,64 +25,38 @@ class TalentQuery
             ->whereNull('talents.deleted_at');
 
         $this->simpleFilters = [
-            'board_id'       => 'board',
-            'cup_size_id'    => 'cupSize',
-            'dress_size_id'  => 'dressSize',
-            'eye_color_id'   => 'eyeColor',
-            'gender_id'      => 'genders',
-            'hair_color_id'  => 'hairColor',
-            'hair_length_id' => 'hairLength',
-            'manager_id'     => 'managers',
-            'skin_color_id'  => 'skinColor',
-            'shirt_size_id'  => 'shirtSize',
-            'shoe_size_id'   => 'shoeSize',
-            'suit_cut_id'    => 'suitCut',
+            'board'       => 'board_id',
+            'cupSize'     => 'cup_size_id',
+            'dressSize'   => 'dress_size_id',
+            'eyeColor'    => 'eye_color_id',
+            'genders'     => 'gender_id',
+            'hairColor'   => 'hair_color_id',
+            'hairLength'  => 'hair_length_id',
+            'managers'    => 'manager_id',
+            'skinColor'   => 'skin_color_id',
+            'shirtSize'   => 'shirt_size_id',
+            'shoeSize'    => 'shoe_size_id',
+            'suitCut'     => 'suit_cut_id',
         ];
 
         $this->rangeFilters = [
-            'bust_cm'   => 'bust',
-            'height_cm' => 'height',
-            'hips_cm'   => 'hips',
-            'waist_cm'  => 'waist',
-            'weight_kg' => 'weight',
+            'bust'   => 'bust_cm',
+            'height' => 'height_cm',
+            'hips'   => 'hips_cm',
+            'waist'  => 'waist_cm',
+            'weight' => 'weight_kg',
+        ];
+
+        $this->relationshipFilters = [
+            'noContacts' => ['emails', 'messengers', 'phones'],
         ];
     }
 
     public function applyFilters(array $request): self
     {
-        // Apply simple filters
-        foreach ($this->simpleFilters as $column => $param) {
-            if (!empty($request[$param])) {
-                $this->query->whereIn("talents.$column", $request[$param]);
-            }
-        }
-
-        // Apply range filters
-        foreach ($this->rangeFilters as $column => $param) {
-            if (!empty($request[$param]) && count($request[$param]) === 2) {
-                $this->query->whereBetween("talents.$column", $request[$param]);
-            }
-        }
-
-        // Apply no contacts filter
-        if (isset($request['noContacts']) && ($request['noContacts'] === true || $request['noContacts'] === 'true')) {
-            $this->query->whereNotExists(function ($sub) {
-                $sub->select(DB::raw(1))
-                    ->from('emails')
-                    ->whereColumn('emails.emailable_id', 'talents.id')
-                    ->where('emails.emailable_type', Talent::class);
-            })->whereNotExists(function ($sub) {
-                $sub->select(DB::raw(1))
-                    ->from('messengers')
-                    ->whereColumn('messengers.messengerable_id', 'talents.id')
-                    ->where('messengers.messengerable_type', Talent::class);
-            })->whereNotExists(function ($sub) {
-                $sub->select(DB::raw(1))
-                    ->from('phones')
-                    ->whereColumn('phones.phoneable_id', 'talents.id')
-                    ->where('phones.phoneable_type', Talent::class);
-            });
-        }
+        apply_simple_filters($this->query, Talent::class, $request, $this->simpleFilters);
+        apply_range_filters($this->query, Talent::class, $request, $this->rangeFilters);
+        apply_missing_morph_many_relationship_filters($this->query, Talent::class, $request, $this->relationshipFilters);
 
         // Apply preferences filter
         if (!empty($request['preferences'])) {

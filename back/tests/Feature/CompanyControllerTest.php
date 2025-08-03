@@ -202,31 +202,6 @@ class CompanyControllerTest extends TestCase
         ]);
     }
 
-    public function test_list_companies()
-    {
-        // Create multiple companies for the team
-        $companies = Company::factory()->count(3)->create([
-            'team_id' => $this->team->id,
-            'created_by' => $this->user->id,
-            'updated_by' => $this->user->id,
-        ]);
-
-        $response = $this->actingAs($this->user)
-            ->getJson(route('companies.index'));
-
-        $response->assertStatus(200);
-
-        // Check that all companies are returned and sorted by name
-        $responseData = $response->json();
-        $this->assertCount(3, $responseData);
-
-        // Verify the response structure matches CompanyCollection format
-        foreach ($responseData as $company) {
-            $this->assertArrayHasKey('id', $company);
-            $this->assertArrayHasKey('name', $company);
-        }
-    }
-
     public function test_show_company_details()
     {
         $company = Company::factory()->create([

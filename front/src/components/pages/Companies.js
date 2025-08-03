@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
 
 import { fetchCompanies } from '../../store/companies/companies';
-import { useCompaniesFilters } from '../companies/CompaniesFilters';
+import { useCompaniesFilters, CompaniesFilters } from '../companies/CompaniesFilters';
 
 import CompaniesList from '../companies/CompaniesList';
 import CompanyForm from '../companies/CompanyForm';
@@ -42,6 +42,10 @@ function Companies() {
     return (
         <>
             <div className='companies-page'>
+                <CompaniesFilters
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
                 <CompaniesList
                     createCompany={createCompany}
                     filters={filters}

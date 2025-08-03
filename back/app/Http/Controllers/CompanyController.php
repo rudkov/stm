@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\CompanySearchRequest;
 use App\Http\Resources\CompanyCollection;
 use App\Models\Company;
+use App\Queries\CompanyQuery;
 
 use function App\Helpers\sync_relation;
 
@@ -34,6 +36,17 @@ class CompanyController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
+        return new CompanyCollection($companies);
+    }
+
+    public function search(CompanySearchRequest $request)
+    {
+        $this->authorize('viewAny', Company::class);
+
+        $filters = $request->validated();
+
+        $query = new CompanyQuery(Auth::user());
+        $companies = $query->applyFilters($filters)->get();
         return new CompanyCollection($companies);
     }
 

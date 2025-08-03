@@ -458,9 +458,10 @@ class TalentControllerTest extends TestCase
 
         // Should have unique locations (including null)
         $this->assertCount(3, $locations);
-        $this->assertContains('New York', $locations);
-        $this->assertContains('Los Angeles', $locations);
-        $this->assertContains(null, $locations);
+        $locationNames = array_column($locations, 'name');
+        $this->assertContains('New York', $locationNames);
+        $this->assertContains('Los Angeles', $locationNames);
+        $this->assertContains(null, $locationNames);
     }
 
     public function test_locations_only_returns_team_talents()
@@ -485,8 +486,9 @@ class TalentControllerTest extends TestCase
 
         $locations = $response->json();
 
-        $this->assertContains('Team Location', $locations);
-        $this->assertNotContains('Other Team Location', $locations);
+        $locationNames = array_column($locations, 'name');
+        $this->assertContains('Team Location', $locationNames);
+        $this->assertNotContains('Other Team Location', $locationNames);
     }
 
     public function test_locations_requires_authentication()

@@ -5,11 +5,16 @@ const initialState = {
     items: [],
 };
 
-export const fetchContacts = createAsyncThunk('contacts/fetch', async () => {
+const transformFilters = (filters) => ({
+    noContacts: filters.noContacts,
+});
+
+export const fetchContacts = createAsyncThunk('contacts/fetch', async (filters = {}) => {
     try {
         const response = await axios({
-            method: 'get',
-            url: '/api/v1/contacts',
+            method: 'post',
+            url: '/api/v1/contacts/search',
+            data: transformFilters(filters),
         });
         return response.data;
     } catch (err) {

@@ -34,10 +34,12 @@ Route::group(['prefix' => 'v1'], function () {
             ->name('communication-types.update');
 
         //companies
-        Route::apiResource('companies', 'CompanyController');
+        Route::post('companies/search', 'CompanyController@search')->name('companies.search');
+        Route::apiResource('companies', 'CompanyController')->except(['index']);
 
         //contacts
-        Route::apiResource('contacts', 'ContactController');
+        Route::post('contacts/search', 'ContactController@search')->name('contacts.search');
+        Route::apiResource('contacts', 'ContactController')->except(['index']);
 
         //events
         Route::post('events/search', 'EventController@index');
