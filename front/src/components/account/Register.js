@@ -67,7 +67,9 @@ function Register() {
                     </Form.Item>
                     <div className='register-form__terms'>
                         By clicking 'Create Account', you agree to our&nbsp;
+                        {/* eslint-disable-next-line */}
                         <a href='#'>Terms of Service</a> and&nbsp;
+                        {/* eslint-disable-next-line */}
                         <a href='#'>Privacy Policy</a>.
                     </div>
                 </BaseForm>
