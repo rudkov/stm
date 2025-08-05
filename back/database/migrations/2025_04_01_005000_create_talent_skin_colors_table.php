@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('talent_skin_colors', function (Blueprint $table) {
             $table->id();
-            $table->string('system_name');
             $table->string('name');
+            $table->string('system_name')->unique();
             $table->softDeletes();
             $table->timestamps();
 

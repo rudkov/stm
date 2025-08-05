@@ -13,21 +13,17 @@ return new class extends Migration
             $table->string('title');
             $table->text('notes')->nullable();
 
-            $table->foreignId('team_id')->nullable()->constrained();
+            $table->foreignId('team_id')->nullable()->constrained()->onDelete('set null'); // TODO: remove nullable
+            $table->foreignId('event_type_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignUuid('client_id')->nullable()->constrained('companies')->onDelete('set null');
 
-            $table->foreignId('event_type_id')->nullable()->constrained();
-
-            $table->uuid('client_id')->nullable();
-            $table->foreign('client_id')->references('id')->on('companies');
-
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->foreign('created_by')->references('id')->on('users');
-
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
 
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('deleted_at');
         });
     }
 

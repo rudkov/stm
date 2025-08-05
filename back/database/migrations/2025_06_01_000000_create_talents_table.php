@@ -11,89 +11,70 @@ return new class extends Migration
         Schema::create('talents', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignId('team_id')->index()->constrained()->onDelete('cascade');
-
             $table->string('first_name');
             $table->string('last_name');
             $table->string('legal_first_name')->nullable();
             $table->string('legal_last_name')->nullable();
-            $table->unsignedBigInteger('gender_id')->nullable();
             $table->date('birth_date')->nullable();
-            $table->unsignedBigInteger('marital_status_id')->nullable();
-            $table->boolean('is_lifestyle')->nullable();
-            $table->unsignedBigInteger('manager_id')->nullable();
-            $table->foreign('manager_id')->references('id')->on('users');
 
-            $table->unsignedBigInteger('hair_color_id')->nullable();
-            $table->unsignedBigInteger('hair_length_id')->nullable();
-            $table->unsignedBigInteger('eye_color_id')->nullable();
-            $table->smallInteger('height_cm')->nullable()->unsigned();
-            $table->tinyInteger('bust_cm')->nullable()->unsigned();
-            $table->unsignedBigInteger('cup_size_id')->nullable();
-            $table->tinyInteger('waist_cm')->nullable()->unsigned();
-            $table->tinyInteger('hips_cm')->nullable()->unsigned();
-            $table->tinyInteger('weight_kg')->nullable()->unsigned();
-            $table->unsignedBigInteger('shoe_size_id')->nullable();
-            $table->unsignedBigInteger('shirt_size_id')->nullable();
-            $table->unsignedBigInteger('suit_cut_id')->nullable();
-            $table->unsignedBigInteger('dress_size_id')->nullable();
-            $table->unsignedBigInteger('skin_color_id')->nullable();
-            $table->boolean('is_ears_pierced')->nullable();
-            $table->text('scars')->nullable();
-            $table->text('tattoos')->nullable();
-            $table->text('piercings')->nullable();
+            $table->foreignId('team_id')->constrained()->onDelete('cascade');
+            $table->foreignId('manager_id')->nullable()->constrained('users')->onDelete('set null');
+
+            $table->foreignId('board_id')->nullable()->constrained('talent_boards')->onDelete('set null');
+            $table->foreignId('gender_id')->nullable()->constrained('talent_genders')->onDelete('set null');
+            $table->foreignId('marital_status_id')->nullable()->constrained('talent_marital_statuses')->onDelete('set null');
+            $table->foreignUuid('mother_agency_id')->nullable()->constrained('companies')->onDelete('set null');
 
             $table->string('location')->nullable();
 
-            $table->boolean('is_vegetarian')->nullable();
-            $table->text('allergies')->nullable();
+            $table->foreignId('cup_size_id')->nullable()->constrained('talent_cup_sizes')->onDelete('set null');
+            $table->foreignId('dress_size_id')->nullable()->constrained('talent_dress_sizes')->onDelete('set null');
+            $table->foreignId('eye_color_id')->nullable()->constrained('talent_eye_colors')->onDelete('set null');
+            $table->foreignId('hair_color_id')->nullable()->constrained('talent_hair_colors')->onDelete('set null');
+            $table->foreignId('hair_length_id')->nullable()->constrained('talent_hair_lengths')->onDelete('set null');
+            $table->foreignId('skin_color_id')->nullable()->constrained('talent_skin_colors')->onDelete('set null');
+            $table->foreignId('shirt_size_id')->nullable()->constrained('talent_shirt_sizes')->onDelete('set null');
+            $table->foreignId('shoe_size_id')->nullable()->constrained('talent_shoe_sizes')->onDelete('set null');
+            $table->foreignId('suit_cut_id')->nullable()->constrained('talent_suit_cuts')->onDelete('set null');
+
+            $table->tinyInteger('bust_cm')->nullable()->unsigned();
+            $table->smallInteger('height_cm')->nullable()->unsigned();
+            $table->tinyInteger('hips_cm')->nullable()->unsigned();
+            $table->tinyInteger('waist_cm')->nullable()->unsigned();
+            $table->tinyInteger('weight_kg')->nullable()->unsigned();
+
             $table->boolean('is_accent')->nullable();
-
-            $table->text('notes')->nullable();
-
-            $table->boolean('is_lingerie')->nullable();
-            $table->boolean('is_nude')->nullable();
-            $table->boolean('is_fur')->nullable();
-            $table->boolean('is_liquor_ads')->nullable();
-            $table->boolean('is_smoking_ads')->nullable();
-            $table->boolean('is_gambling_ads')->nullable();
+            $table->boolean('is_ears_pierced')->nullable();
             $table->boolean('is_faithbased_ads')->nullable();
+            $table->boolean('is_fur')->nullable();
+            $table->boolean('is_gambling_ads')->nullable();
+            $table->boolean('is_lifestyle')->nullable();
+            $table->boolean('is_lingerie')->nullable();
+            $table->boolean('is_liquor_ads')->nullable();
+            $table->boolean('is_nude')->nullable();
             $table->boolean('is_political_ads')->nullable();
-            $table->boolean('is_topless')->nullable();
-            $table->boolean('is_swimwear')->nullable();
+            $table->boolean('is_smoking_ads')->nullable();
             $table->boolean('is_sports')->nullable();
+            $table->boolean('is_swimwear')->nullable();
+            $table->boolean('is_topless')->nullable();
+            $table->boolean('is_vegetarian')->nullable();
 
             $table->text('achievements')->nullable();
+            $table->text('allergies')->nullable();
             $table->text('biography')->nullable();
+            $table->text('notes')->nullable();
             $table->text('performance_skills')->nullable();
+            $table->text('piercings')->nullable();
+            $table->text('scars')->nullable();
+            $table->text('tattoos')->nullable();
 
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->foreign('created_by')->references('id')->on('users');
-
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
-
-            $table->foreign('hair_color_id')->references('id')->on('talent_hair_colors');
-            $table->foreign('hair_length_id')->references('id')->on('talent_hair_lengths');
-            $table->foreign('eye_color_id')->references('id')->on('talent_eye_colors');
-            $table->foreign('cup_size_id')->references('id')->on('talent_cup_sizes');
-            $table->foreign('shoe_size_id')->references('id')->on('talent_shoe_sizes');
-            $table->foreign('skin_color_id')->references('id')->on('talent_skin_colors');
-            $table->foreign('shirt_size_id')->references('id')->on('talent_shirt_sizes');
-            $table->foreign('suit_cut_id')->references('id')->on('talent_suit_cuts');
-            $table->foreign('dress_size_id')->references('id')->on('talent_dress_sizes');
-
-            $table->foreign('marital_status_id')->references('id')->on('talent_marital_statuses');
-
-            $table->foreign('gender_id')->references('id')->on('talent_genders');
-
-            $table->foreignId('board_id')->nullable()->index()->constrained('talent_boards')->nullOnDelete();
-
-            $table->uuid('mother_agency_id')->nullable();
-            $table->foreign('mother_agency_id')->references('id')->on('companies');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
 
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('deleted_at');
         });
     }
 

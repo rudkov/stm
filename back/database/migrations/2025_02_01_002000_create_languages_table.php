@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('languages', function (Blueprint $table) {
-            $table->char('id', 2)->unique()->index();
+            $table->char('id', 2)->primary();
             $table->string('name');
             $table->softDeletes();
             $table->timestamps();

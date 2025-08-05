@@ -14,16 +14,15 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->text('notes')->nullable();
 
-            $table->foreignId('team_id')->index()->constrained()->onDelete('cascade');
-            
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreignId('team_id')->constrained()->onDelete('cascade');
 
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
 
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('deleted_at');
         });
     }
 

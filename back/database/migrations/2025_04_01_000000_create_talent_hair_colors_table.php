@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('talent_hair_colors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('system_name');
+            $table->string('system_name')->unique();
             $table->softDeletes();
             $table->timestamps();
 

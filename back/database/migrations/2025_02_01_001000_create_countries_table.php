@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('countries', function (Blueprint $table) {
             $table->string('name');
-            $table->char('alpha_2', 2)->unique()->index();
+            $table->char('alpha_2', 2)->primary();
             $table->char('country_code', 3)->unique();
             $table->softDeletes();
             $table->timestamps();

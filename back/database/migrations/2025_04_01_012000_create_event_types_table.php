@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('event_types', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('system_name');
             $table->string('color_light_theme');
             $table->string('color_dark_theme');
-            $table->string('name');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('deleted_at');
         });
     }
 

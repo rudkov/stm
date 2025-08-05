@@ -12,12 +12,9 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
+            $table->foreignId('communication_type_id')->nullable()->constrained()->onDelete('set null');
+            
             $table->uuidMorphs('addressable');
-
-            $table->foreignId('communication_type_id')
-                ->nullable()
-                ->constrained('communication_types')
-                ->onDelete('set null');
         });
     }
 

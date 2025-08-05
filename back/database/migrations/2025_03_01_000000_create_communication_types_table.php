@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('type')->index();
             $table->tinyInteger('weight')->index();
-            $table->foreignId('team_id')->index()->constrained()->onDelete('cascade');
+            $table->foreignId('team_id')->constrained()->onDelete('cascade');
 
             $table->unique(['name', 'type', 'team_id']);
             $table->unique(['type', 'weight', 'team_id']);

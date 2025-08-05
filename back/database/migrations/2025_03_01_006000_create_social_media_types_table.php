@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('social_media_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('url');
-            $table->string('system_name');
+            $table->string('system_name')->unique();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('deleted_at');
         });
     }
 

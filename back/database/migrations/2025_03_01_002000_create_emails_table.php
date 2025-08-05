@@ -11,13 +11,10 @@ return new class extends Migration
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
-
+            
+            $table->foreignId('communication_type_id')->nullable()->constrained()->onDelete('set null');
+            
             $table->uuidMorphs('emailable');
-
-            $table->foreignId('communication_type_id')
-                ->nullable()
-                ->constrained('communication_types')
-                ->onDelete('set null');
         });
     }
 

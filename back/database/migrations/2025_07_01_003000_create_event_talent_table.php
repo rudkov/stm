@@ -9,11 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('event_talent', function (Blueprint $table) {
-            $table->uuid('event_id')->nullable();
-            $table->foreign('event_id')->references('id')->on('events');
-            $table->uuid('talent_id')->nullable();
-            $table->foreign('talent_id')->references('id')->on('talents');
+            $table->foreignUuid('event_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('talent_id')->constrained('talents')->onDelete('cascade');
+
             $table->decimal('cost', total: 9, places: 2)->nullable();
+
+            $table->primary(['event_id', 'talent_id']);
         });
     }
 

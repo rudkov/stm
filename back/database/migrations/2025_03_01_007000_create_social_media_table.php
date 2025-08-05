@@ -12,8 +12,7 @@ return new class extends Migration
             $table->id();
             $table->text('info')->nullable();
 
-            $table->unsignedBigInteger('social_media_type_id')->nullable();
-            $table->foreign('social_media_type_id')->references('id')->on('social_media_types');
+            $table->foreignId('social_media_type_id')->nullable()->constrained()->onDelete('restrict');
 
             $table->uuidMorphs('social_mediaable');
         });
@@ -21,9 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('social_media', function (Blueprint $table) {
-            $table->dropForeign('social_media_social_media_type_id_foreign');
-        });
         Schema::dropIfExists('social_media');
     }
 };

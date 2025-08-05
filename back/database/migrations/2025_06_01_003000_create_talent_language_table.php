@@ -9,10 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('talent_language', function (Blueprint $table) {
-            $table->uuid('talent_id');
-            $table->foreign('talent_id')->references('id')->on('talents');
+            $table->foreignUuid('talent_id')->constrained('talents')->onDelete('cascade');
+            
             $table->char('language_id', 2);
-            $table->foreign('language_id')->references('id')->on('languages');
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('restrict');
         });
     }
 

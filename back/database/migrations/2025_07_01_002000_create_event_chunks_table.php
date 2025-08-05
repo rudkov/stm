@@ -12,10 +12,13 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->uuid('event_id');
-            $table->foreign('event_id')->references('id')->on('events');
+
+            $table->foreignUuid('event_id')->constrained()->onDelete('cascade');
+
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('deleted_at');
         });
     }
 

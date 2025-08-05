@@ -9,10 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('talent_citizenship', function (Blueprint $table) {
-            $table->uuid('talent_id');
-            $table->foreign('talent_id')->references('id')->on('talents');
+            $table->foreignUuid('talent_id')->constrained('talents')->onDelete('cascade');
+            
             $table->char('citizenship_id', 2);
-            $table->foreign('citizenship_id')->references('alpha_2')->on('countries');
+            $table->foreign('citizenship_id')->references('alpha_2')->on('countries')->onDelete('restrict');
+
+            $table->primary(['talent_id', 'citizenship_id']);
         });
     }
 
