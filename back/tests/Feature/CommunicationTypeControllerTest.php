@@ -29,21 +29,21 @@ class CommunicationTypeControllerTest extends TestCase
         CommunicationType::factory()->create([
             'name' => 'Work Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
         CommunicationType::factory()->create([
             'name' => 'Personal Email',
             'type' => 'email',
-            'weight' => 1,
+            'sort_order' => 1,
             'team_id' => $this->team->id
         ]);
 
         CommunicationType::factory()->create([
             'name' => 'Home Address',
             'type' => 'address',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
@@ -73,7 +73,7 @@ class CommunicationTypeControllerTest extends TestCase
         CommunicationType::factory()->create([
             'name' => 'User Team Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
@@ -81,7 +81,7 @@ class CommunicationTypeControllerTest extends TestCase
         CommunicationType::factory()->create([
             'name' => 'Other Team Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $otherTeam->id
         ]);
 
@@ -93,27 +93,27 @@ class CommunicationTypeControllerTest extends TestCase
             ->assertJsonMissing(['name' => 'Other Team Email']);
     }
 
-    public function test_index_orders_by_type_then_weight()
+    public function test_index_orders_by_type_then_sort_order()
     {
-        // Create types with different weights and types
+        // Create types with different sort_orders and types
         CommunicationType::factory()->create([
             'name' => 'Second Email',
             'type' => 'email',
-            'weight' => 1,
+            'sort_order' => 1,
             'team_id' => $this->team->id
         ]);
 
         CommunicationType::factory()->create([
             'name' => 'First Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
         CommunicationType::factory()->create([
             'name' => 'First Address',
             'type' => 'address',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
@@ -144,21 +144,21 @@ class CommunicationTypeControllerTest extends TestCase
         $this->assertDatabaseHas('communication_types', [
             'name' => 'Work Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
         $this->assertDatabaseHas('communication_types', [
             'name' => 'Personal Email',
             'type' => 'email',
-            'weight' => 1,
+            'sort_order' => 1,
             'team_id' => $this->team->id
         ]);
 
         $this->assertDatabaseHas('communication_types', [
             'name' => 'Home Address',
             'type' => 'address',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
     }
@@ -168,7 +168,7 @@ class CommunicationTypeControllerTest extends TestCase
         $existingType = CommunicationType::factory()->create([
             'name' => 'Old Name',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
@@ -188,7 +188,7 @@ class CommunicationTypeControllerTest extends TestCase
             'id' => $existingType->id,
             'name' => 'Updated Name',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
     }
@@ -198,14 +198,14 @@ class CommunicationTypeControllerTest extends TestCase
         $keepType = CommunicationType::factory()->create([
             'name' => 'Keep This',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
         $deleteType = CommunicationType::factory()->create([
             'name' => 'Delete This',
             'type' => 'email',
-            'weight' => 1,
+            'sort_order' => 1,
             'team_id' => $this->team->id
         ]);
 
@@ -230,7 +230,7 @@ class CommunicationTypeControllerTest extends TestCase
         ]);
     }
 
-    public function test_update_sets_weights_based_on_array_index()
+    public function test_update_sets_sort_orders_based_on_array_index()
     {
         $response = $this->actingAs($this->user)
             ->putJson(route('communication-types.update'), [
@@ -245,17 +245,17 @@ class CommunicationTypeControllerTest extends TestCase
 
         $this->assertDatabaseHas('communication_types', [
             'name' => 'Third Email',
-            'weight' => 0
+            'sort_order' => 0
         ]);
 
         $this->assertDatabaseHas('communication_types', [
             'name' => 'First Email',
-            'weight' => 1
+            'sort_order' => 1
         ]);
 
         $this->assertDatabaseHas('communication_types', [
             'name' => 'Second Email',
-            'weight' => 2
+            'sort_order' => 2
         ]);
     }
 
@@ -264,14 +264,14 @@ class CommunicationTypeControllerTest extends TestCase
         $updateType = CommunicationType::factory()->create([
             'name' => 'Old Name',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
         $deleteType = CommunicationType::factory()->create([
             'name' => 'To Delete',
             'type' => 'email',
-            'weight' => 1,
+            'sort_order' => 1,
             'team_id' => $this->team->id
         ]);
 
@@ -292,13 +292,13 @@ class CommunicationTypeControllerTest extends TestCase
         $this->assertDatabaseHas('communication_types', [
             'id' => $updateType->id,
             'name' => 'Updated Name',
-            'weight' => 0
+            'sort_order' => 0
         ]);
 
         // Created new
         $this->assertDatabaseHas('communication_types', [
             'name' => 'New Email Type',
-            'weight' => 1,
+            'sort_order' => 1,
             'type' => 'email',
             'team_id' => $this->team->id
         ]);
@@ -314,7 +314,7 @@ class CommunicationTypeControllerTest extends TestCase
         $existingType = CommunicationType::factory()->create([
             'name' => 'Existing Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $this->team->id
         ]);
 
@@ -338,7 +338,7 @@ class CommunicationTypeControllerTest extends TestCase
         $otherTeamType = CommunicationType::factory()->create([
             'name' => 'Other Team Email',
             'type' => 'email',
-            'weight' => 0,
+            'sort_order' => 0,
             'team_id' => $otherTeam->id
         ]);
 

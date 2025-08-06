@@ -58,7 +58,7 @@ class CommunicationTypeController extends Controller
     /**
      * Synchronize communication types for a specific type and team.
      * Implements the business logic:
-     * 1. Weights are calculated from array index (request weights ignored)
+     * 1. Sort_orders are calculated from array index (request sort_orders ignored)
      * 2. ID exists in request + DB → update name
      * 3. ID absent in request, exists in DB → delete from DB
      * 4. ID absent in both → create new
@@ -86,7 +86,7 @@ class CommunicationTypeController extends Controller
             CommunicationType::whereIn('id', $idsToDelete)->delete();
         }
 
-        // Step 2: Avoid uniqueness conflicts by temporarily setting negative weights and unique names
+        // Step 2: Avoid uniqueness conflicts by temporarily setting negative sort_orders and unique names
         // Only for records that will remain (not deleted)
         // TODO: Replace foreach with a raw query with CONCAT after migrating tests from SQLite to MySQL
         $remainingIds = array_diff($existingIds, $idsToDelete);
@@ -94,7 +94,7 @@ class CommunicationTypeController extends Controller
             foreach ($remainingIds as $id) {
                 CommunicationType::where('id', $id)
                     ->update([
-                        'weight' => DB::raw('-(weight + 1)'),
+                        'sort_order' => DB::raw('-(sort_order + 1)'),
                         'name' => "temp_name_{$id}"
                     ]);
             }
@@ -109,7 +109,7 @@ class CommunicationTypeController extends Controller
                 'id'      => $itemData['id'] ?? null,
                 'name'    => $itemData['name'],
                 'type'    => $type,
-                'weight'  => $index, // Rule 1: weight based on array index
+                'sort_order'  => $index, // Rule 1: sort_order based on array index
                 'team_id' => $teamId,
             ];
         }
@@ -118,8 +118,8 @@ class CommunicationTypeController extends Controller
         // The primary key (`id`) determines whether to insert or update.
         CommunicationType::upsert(
             $records,
-            ['id'],              // Columns that uniquely identify records
-            ['name', 'weight']   // Columns to be updated on conflict
+            ['id'],                  // Columns that uniquely identify records
+            ['name', 'sort_order']   // Columns to be updated on conflict
         );
     }
 }

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('talent_cup_sizes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->tinyInteger('weight')->unsigned()->index();
+            $table->tinyInteger('sort_order')->unsigned()->index();
             $table->softDeletes();
             $table->timestamps();
 

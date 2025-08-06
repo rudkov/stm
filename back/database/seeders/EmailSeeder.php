@@ -18,7 +18,7 @@ class EmailSeeder extends Seeder
     public function run(): void
     {
         $emailTypes = CommunicationType::where('type', 'email')
-            ->orderBy('weight')
+            ->orderBy('sort_order')
             ->get()
             ->groupBy('team_id');
 

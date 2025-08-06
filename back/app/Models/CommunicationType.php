@@ -16,7 +16,7 @@ class CommunicationType extends Model
     protected $fillable = [
         'name',
         'type',
-        'weight',
+        'sort_order',
         'team_id',
     ];
 
@@ -40,7 +40,7 @@ class CommunicationType extends Model
     {
         $types = self::where('team_id', $teamId)
             ->orderBy('type')
-            ->orderBy('weight')
+            ->orderBy('sort_order')
             ->get();
 
         // Group by type

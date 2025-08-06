@@ -68,7 +68,7 @@ class TeamInitializationService
                     $this->team->communicationTypes()->create([
                         'name' => $item['name'],
                         'type' => $type,
-                        'weight' => $item['weight'],
+                        'sort_order' => $item['sort_order'],
                         'team_id' => $this->team->id,
                     ]);
                 }

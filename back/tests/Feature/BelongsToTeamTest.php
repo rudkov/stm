@@ -82,7 +82,7 @@ class BelongsToTeamTest extends TestCase
         $communicationType = new CommunicationType();
         $communicationType->name = 'Email';
         $communicationType->type = 'email';
-        $communicationType->weight = 1;
+        $communicationType->sort_order = 1;
         $communicationType->team_id = $this->team->id;
         $communicationType->save();
 

@@ -18,7 +18,7 @@ class AddressSeeder extends Seeder
     public function run(): void
     {
         $addressTypes = CommunicationType::where('type', 'address')
-            ->orderBy('weight')
+            ->orderBy('sort_order')
             ->get()
             ->groupBy('team_id');
 
