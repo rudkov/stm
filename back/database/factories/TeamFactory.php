@@ -13,13 +13,13 @@ class TeamFactory extends Factory
 
     public function definition()
     {
-        $users = User::all()->groupBy('team_id');
-        $team_id = $users->keys()->random();
+        // Attempt to pick a random existing user ID (null if no users exist yet)
+        $randomUserId = User::inRandomOrder()->value('id');
 
         return [
             'name' => $this->faker->company(),
-            'created_by' => $users[$team_id]->random()->id,
-            'updated_by' => $users[$team_id]->random()->id,
+            'created_by' => $randomUserId,
+            'updated_by' => $randomUserId,
         ];
     }
 }
