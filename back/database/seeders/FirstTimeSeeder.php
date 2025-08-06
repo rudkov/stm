@@ -33,8 +33,9 @@ class FirstTimeSeeder extends Seeder
 {
     public function run()
     {
-        $this->teams();
         $this->users();
+        $this->teams();
+        $this->assignUsersToTeams();
 
         $this->countries();
         $this->languages();
@@ -57,6 +58,37 @@ class FirstTimeSeeder extends Seeder
         $this->talentDressSizes();
     }
 
+    public function users()
+    {
+        $items = [
+            [
+                'name' => 'Victor Rudkov',
+                'email' => 'victor.rudkov@gmail.com',
+                'email_verified_at' => now(),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'remember_token' => Str::random(10),
+            ],
+            [
+                'name' => 'Roman Larichev',
+                'email' => 'roman.f.larichev@gmail.com',
+                'email_verified_at' => now(),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'remember_token' => Str::random(10),
+            ],
+            [
+                'name' => 'Roman Selivanov',
+                'email' => '4romka@gmail.com',
+                'email_verified_at' => now(),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'remember_token' => Str::random(10),
+            ],
+        ];
+
+        foreach ($items as $item) {
+            User::create($item);
+        }
+    }
+
     public function teams()
     {
         $items = [
@@ -73,43 +105,13 @@ class FirstTimeSeeder extends Seeder
         }
     }
 
-    public function users()
+    public function assignUsersToTeams()
     {
-        $items = [
-            [
-                'name' => 'Victor Rudkov',
-                'email' => 'victor.rudkov@gmail.com',
-                'email_verified_at' => now(),
-                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'remember_token' => Str::random(10),
-                'team_id' => 1,
-            ],
-            [
-                'name' => 'Roman Larichev',
-                'email' => 'roman.f.larichev@gmail.com',
-                'email_verified_at' => now(),
-                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'remember_token' => Str::random(10),
-                'team_id' => 1,
-            ],
-            [
-                'name' => 'Roman Selivanov',
-                'email' => '4romka@gmail.com',
-                'email_verified_at' => now(),
-                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'remember_token' => Str::random(10),
-                'team_id' => 1,
-            ],
-        ];
+        $users = User::all();
+        // $teams = Team::all();
 
-        foreach ($items as $item) {
-            $user = new User();
-            $user->name = $item['name'];
-            $user->email = $item['email'];
-            $user->email_verified_at = $item['email_verified_at'];
-            $user->password = $item['password'];
-            $user->remember_token = $item['remember_token'];
-            $user->team_id = $item['team_id'];
+        foreach ($users as $user) {
+            $user->team_id = 1;
             $user->save();
         }
     }
