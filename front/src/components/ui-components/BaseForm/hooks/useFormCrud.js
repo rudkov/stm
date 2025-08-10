@@ -33,9 +33,9 @@ export function useFormCrud({
     const isNew = !entityId;
 
     const { data: entity, isLoading: isFetching } = apiActions.query({ id: entityId }, { skip: isNew });
-    const [create, { isLoading: isCreating, isSuccess: isCreateSuccess, data: createData }] = apiActions.create();
-    const [update, { isLoading: isUpdating, isSuccess: isUpdateSuccess }] = apiActions.update();
-    const [remove, { isLoading: isDeleting, isSuccess: isDeleteSuccess }] = apiActions.delete();
+    const [create, { data: createData, isLoading: isCreating, isSuccess: isCreateSuccess, reset: resetCreate }] = apiActions.create();
+    const [update, { isLoading: isUpdating, isSuccess: isUpdateSuccess, reset: resetUpdate }] = apiActions.update();
+    const [remove, { isLoading: isDeleting, isSuccess: isDeleteSuccess, reset: resetDelete }] = apiActions.delete();
 
     const isLoading = isFetching || isCreating || isUpdating || isDeleting;
 
@@ -66,8 +66,9 @@ export function useFormCrud({
                 navigate(`${entityUrl}/${newEntityId}`);
             }
             onClose();
+            resetCreate();
         }
-    }, [isCreateSuccess, createData, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage]);
+    }, [isCreateSuccess, createData, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage, resetCreate]);
 
     // Handle update response
     useEffect(() => {
@@ -75,8 +76,9 @@ export function useFormCrud({
             showNotification({ type: 'SUCCESS', message: updateSuccessMessage });
             if (onAfterSubmit) onAfterSubmit();
             onClose();
+            resetUpdate();
         }
-    }, [isUpdateSuccess, onClose, showNotification, onAfterSubmit, updateSuccessMessage]);
+    }, [isUpdateSuccess, onClose, showNotification, onAfterSubmit, updateSuccessMessage, resetUpdate]);
 
     // Handle delete response
     useEffect(() => {
@@ -85,8 +87,9 @@ export function useFormCrud({
             if (onAfterSubmit) onAfterSubmit();
             navigate(entityUrl, { replace: true });
             onClose();
+            resetDelete();
         }
-    }, [isDeleteSuccess, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage]);
+    }, [isDeleteSuccess, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage, resetDelete]);
 
     return {
         isLoading,

@@ -2,7 +2,7 @@ import './TalentView.css';
 import 'helpers/shared.css';
 
 import { useParams, useOutletContext } from 'react-router';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useGetTalentQuery } from 'api/talents/talentsApi';
 
@@ -27,18 +27,10 @@ import TalentSectionRelatives from 'components/nested-sections/talents/view/Tale
 
 function TalentView(props) {
     const params = useParams();
-    const [talentId, setTalentId] = useState(null);
     const scrollContainerRef = useRef(null);
     const context = useOutletContext();
 
-    useEffect(() => {
-        if (props.talentId)
-            setTalentId(props.talentId);
-        else if (params.id)
-            setTalentId(params.id);
-    }, [params.id, props.talentId]);
-
-    const { data: talent } = useGetTalentQuery({ id: talentId }, { skip: !talentId });
+    const { data: talent } = useGetTalentQuery({ id: params.id }, { skip: !params.id });
 
     useEffect(() => {
         if (scrollContainerRef.current)
