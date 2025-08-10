@@ -1,5 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useNotification } from '../../../notifications/NotificationProvider';
 
@@ -18,10 +17,9 @@ import { useNotification } from '../../../notifications/NotificationProvider';
  * @param {string} [config.deleteSuccessMessage] - Optional message on successful deletion.
  */
 export function useFormCrud({
-    crudActions,
-    selectors,
     entityUrl,
     entityId,
+    apiActions,
     onAfterSubmit,
     onClose,
     onProcessFormData,
@@ -29,97 +27,71 @@ export function useFormCrud({
     createSuccessMessage = 'Item created',
     updateSuccessMessage = 'Changes saved',
     deleteSuccessMessage = 'Item deleted',
-    isFormOpen
 }) {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const showNotification = useNotification();
-    const [isLoading, setIsLoading] = useState(false);
     const isNew = !entityId;
 
-    const entity = useSelector(selectors.entity);
-    const createResponse = useSelector(selectors.createResponse);
-    const updateResponse = useSelector(selectors.updateResponse);
-    const deleteResponse = useSelector(selectors.deleteResponse);
+    const { data: entity, isLoading: isFetching } = apiActions.query({ id: entityId }, { skip: isNew });
+    const [create, { isLoading: isCreating, isSuccess: isCreateSuccess, data: createData }] = apiActions.create();
+    const [update, { isLoading: isUpdating, isSuccess: isUpdateSuccess }] = apiActions.update();
+    const [remove, { isLoading: isDeleting, isSuccess: isDeleteSuccess }] = apiActions.delete();
 
-    // Fetch entity data
-    const fetchEntity = useCallback((id) => {
-        dispatch(crudActions.fetch({ id }));
-    }, [dispatch, crudActions]);
+    const isLoading = isFetching || isCreating || isUpdating || isDeleting;
 
-    useEffect(() => {
-        if (!isNew && entityId && isFormOpen) {
-            fetchEntity(entityId);
-        }
-    }, [entityId, isNew, isFormOpen, fetchEntity]);
-
-    // Submit form (create or update)
     const submitForm = (formValues) => {
-        setIsLoading(true);
-
         const values = formValues || form.getFieldsValue();
 
         // Apply custom data processing if provided
         const processedValues = onProcessFormData ? onProcessFormData(values) : values;
 
         if (isNew) {
-            dispatch(crudActions.create({ values: processedValues }));
+            create({ values: processedValues });
         } else {
-            dispatch(crudActions.update({ id: entityId, values: processedValues }));
+            update({ id: entityId, values: processedValues });
         }
     };
 
-    // Delete entity
     const deleteEntity = () => {
-        setIsLoading(true);
-        dispatch(crudActions.delete({ id: entityId }));
+        remove({ id: entityId });
     };
 
     // Handle create response
     useEffect(() => {
-        if (createResponse.status === 'fulfilled') {
-            setIsLoading(false);
+        if (isCreateSuccess) {
             showNotification({ type: 'SUCCESS', message: createSuccessMessage });
-            onAfterSubmit();
-            dispatch(crudActions.resetResponse('create'));
-
-            // Navigate to the new entity
-            const newEntityId = createResponse.id;
+            if (onAfterSubmit) onAfterSubmit();
+            const newEntityId = createData.id;
             if (newEntityId) {
                 navigate(`${entityUrl}/${newEntityId}`);
             }
             onClose();
         }
-    }, [createResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage, crudActions]);
+    }, [isCreateSuccess, createData, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage]);
 
     // Handle update response
     useEffect(() => {
-        if (updateResponse.status === 'fulfilled') {
-            setIsLoading(false);
+        if (isUpdateSuccess) {
             showNotification({ type: 'SUCCESS', message: updateSuccessMessage });
-            onAfterSubmit();
-            dispatch(crudActions.resetResponse('update'));
+            if (onAfterSubmit) onAfterSubmit();
             onClose();
         }
-    }, [updateResponse, dispatch, onClose, showNotification, onAfterSubmit, updateSuccessMessage, crudActions]);
+    }, [isUpdateSuccess, onClose, showNotification, onAfterSubmit, updateSuccessMessage]);
 
     // Handle delete response
     useEffect(() => {
-        if (deleteResponse.status === 'fulfilled') {
-            setIsLoading(false);
+        if (isDeleteSuccess) {
             showNotification({ type: 'SUCCESS', message: deleteSuccessMessage });
-            onAfterSubmit();
-            dispatch(crudActions.resetResponse('delete'));
+            if (onAfterSubmit) onAfterSubmit();
             navigate(entityUrl, { replace: true });
             onClose();
         }
-    }, [deleteResponse, dispatch, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage, crudActions]);
+    }, [isDeleteSuccess, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage]);
 
     return {
         isLoading,
         entity,
         submitForm,
         deleteEntity,
-        fetchEntity
     };
 } 

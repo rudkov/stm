@@ -1,4 +1,4 @@
-export const prepareFilters = (filters) => ({
+export const formatFiltersRequest = (filters) => ({
     board: filters.board && filters.board !== 0 ? [filters.board] : null,
     bust: filters.body?.bust,
     cupSize: filters.body?.cupSize,

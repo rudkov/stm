@@ -1,6 +1,6 @@
 import { apiSlice } from 'api/apiSlice';
-import { transformFilters } from './requestFormatters';
-import { prepareTalent, prepareTalentLocations } from './responseFormatters';
+import { formatFiltersRequest } from './requestFormatters';
+import { formatTalentResponse, formatTalentLocationsResponse } from './responseFormatters';
 
 export const talentsApi = apiSlice.injectEndpoints({
     endpoints: builder => ({
@@ -8,46 +8,42 @@ export const talentsApi = apiSlice.injectEndpoints({
             query: (filters = {}) => ({
                 url: '/talents/search',
                 method: 'POST',
-                body: transformFilters(filters),
+                body: formatFiltersRequest(filters),
             }),
             providesTags: ['Talent'],
         }),
-        getTalentLocations: builder.query({
-            query: () => '/talents/locations',
-            transformResponse: (response) => prepareTalentLocations(response),
-            providesTags: ['TalentLocation'],
-        }),
-        getTalentManagers: builder.query({
-            query: () => '/talents/managers',
-            providesTags: ['TalentManager'],
-        }),
         getTalent: builder.query({
-            query: (id) => `/talents/${id}`,
-            transformResponse: (response) => prepareTalent(response),
-            providesTags: (result, error, id) => [{ type: 'Talent', id }],
+            query: ({ id }) => `/talents/${id}`,
+            transformResponse: (response) => formatTalentResponse(response),
+            providesTags: (result, error, { id }) => [{ type: 'Talent', id }],
         }),
         createTalent: builder.mutation({
-            query: (values) => ({
+            query: ({ values }) => ({
                 url: '/talents',
                 method: 'POST',
                 body: values,
             }),
-            invalidatesTags: ['Talent'],
+            invalidatesTags: ['Talent', 'TalentManager'],
         }),
         updateTalent: builder.mutation({
-            query: ({ id, ...values }) => ({
+            query: ({ id, values }) => ({
                 url: `/talents/${id}`,
                 method: 'PUT',
                 body: values,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Talent', id }],
+            invalidatesTags: (result, error, { id }) => [{ type: 'Talent', id }, 'Talent', 'TalentManager'],
         }),
         deleteTalent: builder.mutation({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/talents/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Talent'],
+            invalidatesTags: ['Talent', 'TalentManager'],
+        }),
+        getTalentLocations: builder.query({
+            query: () => '/talents/locations',
+            transformResponse: (response) => formatTalentLocationsResponse(response),
+            providesTags: ['TalentLocation'],
         }),
         updateTalentLocation: builder.mutation({
             query: ({ id, location }) => ({
@@ -59,6 +55,10 @@ export const talentsApi = apiSlice.injectEndpoints({
                 { type: 'Talent', id },
                 'TalentLocation'
             ],
+        }),
+        getTalentManagers: builder.query({
+            query: () => '/talents/managers',
+            providesTags: ['TalentManager'],
         }),
     }),
 });

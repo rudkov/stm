@@ -8,7 +8,7 @@ const inputDateFormat = 'YYYY-MM-DD';
 const outputDateFormat = 'DD.MM.YYYY';
 const dateTimeFormat = 'DD.MM.YYYY, HH:mm';
 
-export const transformTalent = (values) => {
+export const formatTalentResponse = (values) => {
     let item = values;
 
     item.full_name = (values.first_name || '').concat(' ', values.last_name || '').trim();
@@ -143,7 +143,7 @@ export const transformTalent = (values) => {
     return item;
 };
 
-export const transformTalentLocations = (locations) => {
+export const formatTalentLocationsResponse = (locations) => {
     return locations.map(location => ({
         id: location.name,
         name: location.name || 'In Town'

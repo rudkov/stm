@@ -1,23 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useMemo } from 'react';
 import { Select } from 'antd';
 
-import { fetchTalentBoards, getTalentBoards } from '../../../store/talents/talentBoards';
+import { useGetTalentBoardsQuery } from 'api/talents/talentBoardsApi';
 
 function BoardFilter(props) {
-    const dispatch = useDispatch();
-    const fetchedBoards = useSelector(getTalentBoards);
-    const [boards, setBoards] = useState([]);
+    const { data: fetchedBoards } = useGetTalentBoardsQuery();
 
-    useEffect(() => {
-        dispatch(fetchTalentBoards());
-    }, [dispatch]);
-
-    useEffect(() => {
+    const boards = useMemo(() => {
         if (fetchedBoards) {
-            setBoards([{ id: 0, name: 'All Models' }, ...fetchedBoards]);
+            return [{ id: 0, name: 'All Models' }, ...fetchedBoards];
         }
+        return [];
     }, [fetchedBoards]);
 
     const onChange = (value) => {
@@ -27,7 +20,7 @@ function BoardFilter(props) {
 
     let result = null;
 
-    if (boards && Object.keys(boards).length > 0) {
+    if (boards.length > 0) {
         result = (
             <Select
                 options={boards.map(item => ({ label: item.name, value: item.id }))}

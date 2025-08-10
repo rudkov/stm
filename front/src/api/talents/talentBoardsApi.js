@@ -7,11 +7,11 @@ export const talentBoardsApi = apiSlice.injectEndpoints({
             providesTags: ['TalentBoard'],
         }),
         getTalentBoard: builder.query({
-            query: (id) => `/talent-boards/${id}`,
-            providesTags: (result, error, id) => [{ type: 'TalentBoard', id }],
+            query: ({ id }) => `/talent-boards/${id}`,
+            providesTags: (result, error, { id }) => [{ type: 'TalentBoard', id }],
         }),
         createTalentBoard: builder.mutation({
-            query: (values) => ({
+            query: ({ values }) => ({
                 url: '/talent-boards',
                 method: 'POST',
                 body: values,
@@ -19,7 +19,7 @@ export const talentBoardsApi = apiSlice.injectEndpoints({
             invalidatesTags: ['TalentBoard'],
         }),
         updateTalentBoard: builder.mutation({
-            query: ({ id, ...values }) => ({
+            query: ({ id, values }) => ({
                 url: `/talent-boards/${id}`,
                 method: 'PUT',
                 body: values,
@@ -27,7 +27,7 @@ export const talentBoardsApi = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, { id }) => [{ type: 'TalentBoard', id }],
         }),
         deleteTalentBoard: builder.mutation({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/talent-boards/${id}`,
                 method: 'DELETE',
             }),

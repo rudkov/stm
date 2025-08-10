@@ -1,35 +1,32 @@
 import './TalentView.css';
-import '../../helpers/shared.css';
+import 'helpers/shared.css';
 
 import { useParams, useOutletContext } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 
-import { getTalent, fetchTalent } from '../../store/talents/talent';
+import { useGetTalentQuery } from 'api/talents/talentsApi';
 
-import ScrollableView from '../ui-components/ScrollableView';
+import ScrollableView from 'components/ui-components/ScrollableView';
 
-import SharedSectionAddresses from '../nested-sections/shared/view/SharedSectionAddresses';
-import SharedSectionContacts from '../nested-sections/shared/view/SharedSectionContacts';
-import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNotes';
-import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
-import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
+import SharedSectionAddresses from 'components/nested-sections/shared/view/SharedSectionAddresses';
+import SharedSectionContacts from 'components/nested-sections/shared/view/SharedSectionContacts';
+import SharedSectionNotes from 'components/nested-sections/shared/view/SharedSectionNotes';
+import SharedSectionSocialMedia from 'components/nested-sections/shared/view/SharedSectionSocialMedia';
+import SharedSectionSystemInfo from 'components/nested-sections/shared/view/SharedSectionSystemInfo';
 
-import TalentSectionAchievements from '../nested-sections/talents/view/TalentSectionAchievements';
-import TalentSectionBiography from '../nested-sections/talents/view/TalentSectionBiography';
-import TalentSectionBody from '../nested-sections/talents/view/TalentSectionBody';
-import TalentSectionFoodAllergies from '../nested-sections/talents/view/TalentSectionFoodAllergies';
-import TalentSectionMain from '../nested-sections/talents/view/TalentSectionMain';
-import TalentSectionPerformanceSkills from '../nested-sections/talents/view/TalentSectionPerformanceSkills';
-import TalentSectionPreferences from '../nested-sections/talents/view/TalentSectionPreferences';
-import TalentSectionPrimaryInfo from '../nested-sections/talents/view/TalentSectionPrimaryInfo';
-import TalentSectionRegionLanguages from '../nested-sections/talents/view/TalentSectionRegionLanguages';
-import TalentSectionRelatives from '../nested-sections/talents/view/TalentSectionRelatives';
+import TalentSectionAchievements from 'components/nested-sections/talents/view/TalentSectionAchievements';
+import TalentSectionBiography from 'components/nested-sections/talents/view/TalentSectionBiography';
+import TalentSectionBody from 'components/nested-sections/talents/view/TalentSectionBody';
+import TalentSectionFoodAllergies from 'components/nested-sections/talents/view/TalentSectionFoodAllergies';
+import TalentSectionMain from 'components/nested-sections/talents/view/TalentSectionMain';
+import TalentSectionPerformanceSkills from 'components/nested-sections/talents/view/TalentSectionPerformanceSkills';
+import TalentSectionPreferences from 'components/nested-sections/talents/view/TalentSectionPreferences';
+import TalentSectionPrimaryInfo from 'components/nested-sections/talents/view/TalentSectionPrimaryInfo';
+import TalentSectionRegionLanguages from 'components/nested-sections/talents/view/TalentSectionRegionLanguages';
+import TalentSectionRelatives from 'components/nested-sections/talents/view/TalentSectionRelatives';
 
 function TalentView(props) {
-    const dispatch = useDispatch();
     const params = useParams();
-    const talent = useSelector(getTalent);
     const [talentId, setTalentId] = useState(null);
     const scrollContainerRef = useRef(null);
     const context = useOutletContext();
@@ -41,11 +38,7 @@ function TalentView(props) {
             setTalentId(params.id);
     }, [params.id, props.talentId]);
 
-    useEffect(() => {
-        if (talentId) {
-            dispatch(fetchTalent({ id: talentId }));
-        }
-    }, [dispatch, talentId]);
+    const { data: talent } = useGetTalentQuery({ id: talentId }, { skip: !talentId });
 
     useEffect(() => {
         if (scrollContainerRef.current)
@@ -54,10 +47,7 @@ function TalentView(props) {
 
     let result = null;
 
-    if (
-        talent
-        && Object.getPrototypeOf(talent) === Object.prototype
-    ) {
+    if (talent) {
         result =
             <ScrollableView className='talent-profile'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>

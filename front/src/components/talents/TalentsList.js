@@ -1,35 +1,32 @@
 import './TalentsList.css';
-import '../../helpers/shared.css';
+import 'helpers/shared.css';
 
-import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useMemo, useRef } from 'react';
 import { NavLink } from 'react-router';
 import { Button, Empty, Form, Input, Tooltip } from 'antd';
 
-import { getTalents, filterTalents } from '../../store/talents/talents';
+import { useGetTalentsQuery } from 'api/talents/talentsApi';
+import { applyLocalFilters } from 'components/filters/talents/applyLocalFilters';
 
-import ScrollableView from '../ui-components/ScrollableView';
+import ScrollableView from 'components/ui-components/ScrollableView';
 import TalentUsername from './components/TalentUsername';
 
-import { ReactComponent as IconInTown } from '../../assets/icons/in-town.svg';
-import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
+import { ReactComponent as IconInTown } from 'assets/icons/in-town.svg';
+import { ReactComponent as IconAdd } from 'assets/icons/add.svg';
 
 function TalentsList({ createTalent, filters, updateFilter }) {
     const [form] = Form.useForm();
-    const fetchedTalents = useSelector(getTalents);
-    const [talents, setTalents] = useState([]);
     const scrollContainerRef = useRef(null);
+    const { data: fetchedTalents = [] } = useGetTalentsQuery(filters);
 
-    useEffect(() => {
-        setTalents(
-            filterTalents(
-                [...fetchedTalents],
-                {
-                    searchString: filters.search,
-                    locations: filters.locations,
-                    managers: filters.managers
-                }
-            )
+    const talents = useMemo(() => {
+        return applyLocalFilters(
+            [...fetchedTalents],
+            {
+                searchString: filters.search,
+                locations: filters.locations,
+                managers: filters.managers
+            }
         );
     }, [fetchedTalents, filters.search, filters.locations, filters.managers]);
 

@@ -1,30 +1,23 @@
-import '../../../helpers/form.css';
-import '../../../helpers/info-panel.css';
-import '../../../helpers/shared.css';
+import 'helpers/form.css';
+import 'helpers/info-panel.css';
+import 'helpers/shared.css';
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useGetTalentsQuery } from 'api/talents/talentsApi';
 
 import { Form, Select, Space } from 'antd';
 
-import { getEvent } from '../../../store/events/event';
-import { getTalents, fetchTalents } from '../../../store/talents/talents';
+import { getEvent } from 'store/events/event';
 
-import DataCell from '../../ui-components/DataCell';
+import Button from 'components/buttons/Button';
+import DataCell from 'components/ui-components/DataCell';
 
-import { ReactComponent as IconCrossInCircle } from '../../../assets/icons/cross-in-circle.svg';
-import { ReactComponent as IconTalent } from '../../../assets/icons/talents.svg';
-
-import Button from '../../buttons/Button';
+import { ReactComponent as IconCrossInCircle } from 'assets/icons/cross-in-circle.svg';
+import { ReactComponent as IconTalent } from 'assets/icons/talents.svg';
 
 function EventSectionTalents(props) {
-    const dispatch = useDispatch();
-    const event = useSelector(getEvent);
-    const talents = useSelector(getTalents);
-
-    useEffect(() => {
-        dispatch(fetchTalents());
-    }, [dispatch]);
+    const event = useSelector(getEvent); // I've no idea how it works. I'll refactor it later with all Events.
+    const { data: talents = [] } = useGetTalentsQuery();
 
     const showTalentInfo = (item) => {
         props.showTalentInfo(item);

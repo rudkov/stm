@@ -1,16 +1,8 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { getTalentsLocations, fetchTalentsLocations } from '../../../store/talents/talents';
+import { useGetTalentLocationsQuery } from 'api/talents/talentsApi';
 import CheckboxFilter from '../CheckboxFilter';
 
 function LocationsFilter(props) {
-    const dispatch = useDispatch();
-    const locations = useSelector(getTalentsLocations);
-
-    useEffect(() => {
-        dispatch(fetchTalentsLocations());
-    }, [dispatch]);
+    const { data: locations } = useGetTalentLocationsQuery();
 
     return (
         <CheckboxFilter

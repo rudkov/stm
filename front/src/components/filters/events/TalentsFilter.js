@@ -1,20 +1,13 @@
 import './TalentsFilter.css';
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { getTalents, fetchTalents } from '../../../store/talents/talents';
+import { useGetTalentsQuery } from 'api/talents/talentsApi';
 
 import CheckboxFilter from '../CheckboxFilter';
-import TalentUsername from '../../talents/components/TalentUsername';
+
+import TalentUsername from 'components/talents/components/TalentUsername';
 
 function TalentsFilter(props) {
-    const dispatch = useDispatch();
-    const talents = useSelector(getTalents);
-
-    useEffect(() => {
-        dispatch(fetchTalents());
-    }, [dispatch]);
+    const { data: talents } = useGetTalentsQuery();
 
     return (
         <CheckboxFilter
