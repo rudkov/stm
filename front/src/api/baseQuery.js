@@ -23,7 +23,15 @@ const baseQuery = async (args, api, extraOptions) => {
         },
     });
 
-    return await fetch(args, api, extraOptions);
+    const result = await fetch(args, api, extraOptions);
+
+    if (result.error && [401, 419].includes(result.error.status)) {
+        if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+        }
+    }
+
+    return result;
 };
 
 export default baseQuery;
