@@ -1,12 +1,11 @@
-import './EventSectionMain.css';
 import '../../../helpers/shared.css';
 import '../../../helpers/form.css';
 
-import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { useGetEventQuery } from 'api/events/eventsApi';
 
 import { Form, Input, Space, Button, Select } from 'antd';
 
-import { getEvent } from '../../../store/events/event';
 import { useSettings } from '../../../context/SettingsContext';
 
 import DataCell from '../../ui-components/DataCell';
@@ -15,19 +14,18 @@ import IconColorBadge from '../../ui-components/IconColorBadge';
 import { LoadingOutlined } from '@ant-design/icons';
 
 function EventSectionMain(props) {
-    const event = useSelector(getEvent);
     const { settings } = useSettings();
+    const params = useParams();
+    const { data: event } = useGetEventQuery({ id: params.id }, { skip: !params.id || props.isNewEvent });
 
-    const handleCancel = (item) => {
-        props.handleCancel(item);
+    if (!event && !props.isNewEvent) {
+        return null;
     }
+
+    const { toggleForm, handleCancel } = props;
 
     const handleSave = (item) => {
         props.handleSave(item);
-    }
-
-    const toggleForm = () => {
-        props.toggleForm();
     }
 
     const deleteEvent = () => {

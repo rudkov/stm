@@ -1,13 +1,18 @@
 import '../../../helpers/info-panel.css';
 import '../../../helpers/shared.css';
 
-import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { useGetEventQuery } from 'api/events/eventsApi';
 
-import { getEvent } from '../../../store/events/event';
 import DataCell from '../../ui-components/DataCell';
 
 function EventSectionSystemInfo() {
-    const event = useSelector(getEvent);
+    const params = useParams();
+    const { data: event } = useGetEventQuery({ id: params.id }, { skip: !params.id });
+
+    if (!event) {
+        return null;
+    }
 
     return (
         <div className='info-panel--section info-panel--system-info'>

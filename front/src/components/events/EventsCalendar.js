@@ -1,16 +1,13 @@
 import './EventsCalendar.css';
 
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useState } from 'react';
 import * as dayjs from 'dayjs';
 import en from 'dayjs/locale/en';
 import * as weekday from 'dayjs/plugin/weekday';
 import _ from 'lodash';
 
 import DayItem from './DayItem';
-
-import { getEvents, fetchEvents } from '../../store/events/events';
+import { useGetEventsQuery } from 'api/events/eventsApi';
 
 import ScrollableView from '../ui-components/ScrollableView';
 
@@ -19,9 +16,7 @@ import TypesFilter from '../filters/events/TypesFilter';
 import TalentsFilter from '../filters/events/TalentsFilter';
 
 function EventsCalendar() {
-    const dispatch = useDispatch();
-    const events = useSelector(getEvents);
-    let datesToShow = useSelector((state) => state.events.dates) || [];
+    const [datesToShow] = useState({});
 
     const [filteredClients, setFilteredClients] = useState(JSON.parse(sessionStorage.getItem('eventsPage.filteredClients')) ?? []);
     const [filteredEventTypes, setFilteredEventTypes] = useState(JSON.parse(sessionStorage.getItem('eventsPage.filteredEventTypes')) ?? []);
@@ -42,6 +37,15 @@ function EventsCalendar() {
     else {
         firstDayOfCurrentMonth = dayjs(datesToShow.year + '/' + datesToShow.month + '/' + datesToShow.day);
     }
+
+    const { data: events } = useGetEventsQuery({
+        year: firstDayOfCurrentMonth.get('y'),
+        month: firstDayOfCurrentMonth.get('M') + 1,
+        day: firstDayOfCurrentMonth.get('D'),
+        clients: filteredClients,
+        eventTypes: filteredEventTypes,
+        talents: filteredTalents,
+    });
 
     const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -67,22 +71,9 @@ function EventsCalendar() {
 
     const weeks = _.chunk(dates, 7);
 
-    useEffect(() => {
-        dispatch(fetchEvents({
-            year: firstDayOfCurrentMonth.get('y'),
-            month: firstDayOfCurrentMonth.get('M') + 1,
-            day: firstDayOfCurrentMonth.get('D'),
-            clients: filteredClients,
-            eventTypes: filteredEventTypes,
-            talents: filteredTalents,
-        }));
-        // next line is needed to avoid warning about firstDayOfCurrentMonth in dependency array
-        // eslint-disable-next-line 
-    }, [dispatch, filteredClients, filteredEventTypes, filteredTalents]);
-
     let result = null;
 
-    if (events && Object.keys(events).length > 0) {
+    if (events && events.length > 0) {
         result =
             <table className='calendar'>
                 <thead>

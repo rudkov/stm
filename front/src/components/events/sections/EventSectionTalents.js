@@ -2,12 +2,12 @@ import 'helpers/form.css';
 import 'helpers/info-panel.css';
 import 'helpers/shared.css';
 
-import { useSelector } from 'react-redux';
-import { useGetTalentsQuery } from 'api/talents/talentsApi';
+import { useParams } from 'react-router';
 
 import { Form, Select, Space } from 'antd';
 
-import { getEvent } from 'store/events/event';
+import { useGetEventQuery } from 'api/events/eventsApi';
+import { useGetTalentsQuery } from 'api/talents/talentsApi';
 
 import Button from 'components/buttons/Button';
 import DataCell from 'components/ui-components/DataCell';
@@ -16,8 +16,13 @@ import { ReactComponent as IconCrossInCircle } from 'assets/icons/cross-in-circl
 import { ReactComponent as IconTalent } from 'assets/icons/talents.svg';
 
 function EventSectionTalents(props) {
-    const event = useSelector(getEvent); // I've no idea how it works. I'll refactor it later with all Events.
+    const params = useParams();
     const { data: talents = [] } = useGetTalentsQuery();
+    const { data: event } = useGetEventQuery({ id: params.id }, { skip: !params.id });
+
+    if (!event) {
+        return null;
+    }
 
     const showTalentInfo = (item) => {
         props.showTalentInfo(item);
