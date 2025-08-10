@@ -1,10 +1,9 @@
 import { DatePicker, Form, Input, Select, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { useGetTalentBoardsQuery, useCreateTalentBoardMutation } from 'api/talents/talentBoardsApi';
 import { useGetCompaniesQuery } from 'api/companies/companiesApi';
-import { fetchUsers, getUsers } from 'store/users/users';
+import { useGetUsersQuery } from 'api/usersApi';
 
 import { useSettings } from 'context/SettingsContext';
 
@@ -24,24 +23,14 @@ const lifestyleOrFashion = [
 
 function TalentSectionPrimaryInfo(props) {
     const { settings } = useSettings();
-    const outputDateFormat = 'DD.MM.YYYY';
-    const dispatch = useDispatch();
-    const fetchedUsers = useSelector(getUsers);
-    const [managers, setManagers] = useState([]);
+    const outputDateFormat = 'DD.MM.YYYY'; //TODO: move to settings
     const [isAddBoardInputOpen, setIsAddBoardInputOpen] = useState(false);
 
-    const { data: boards } = useGetTalentBoardsQuery();
+    const { data: boards = [] } = useGetTalentBoardsQuery();
     const [createBoard, { data: newBoard, isLoading: isCreateBoardLoading, isSuccess: isCreateBoardSuccess }] = useCreateTalentBoardMutation();
 
     const { data: companies = [] } = useGetCompaniesQuery();
-
-    useEffect(() => {
-        dispatch(fetchUsers());
-    }, [dispatch]);
-
-    useEffect(() => {
-        setManagers([...fetchedUsers]);
-    }, [fetchedUsers]);
+    const { data: managers = [] } = useGetUsersQuery();
 
     const handleAddBoard = (boardName) => {
         createBoard({ values: { name: boardName } });
