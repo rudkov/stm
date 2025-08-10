@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetTalentBoardsQuery, useCreateTalentBoardMutation } from 'api/talents/talentBoardsApi';
+import { useGetCompaniesQuery } from 'api/companies/companiesApi';
 import { fetchUsers, getUsers } from 'store/users/users';
-import { fetchCompanies, getCompanies } from 'store/companies/companies';
 
 import { useSettings } from 'context/SettingsContext';
 
@@ -26,8 +26,6 @@ function TalentSectionPrimaryInfo(props) {
     const { settings } = useSettings();
     const outputDateFormat = 'DD.MM.YYYY';
     const dispatch = useDispatch();
-    const fetchedCompanies = useSelector(getCompanies);
-    const [companies, setCompanies] = useState([]);
     const fetchedUsers = useSelector(getUsers);
     const [managers, setManagers] = useState([]);
     const [isAddBoardInputOpen, setIsAddBoardInputOpen] = useState(false);
@@ -35,14 +33,11 @@ function TalentSectionPrimaryInfo(props) {
     const { data: boards } = useGetTalentBoardsQuery();
     const [createBoard, { data: newBoard, isLoading: isCreateBoardLoading, isSuccess: isCreateBoardSuccess }] = useCreateTalentBoardMutation();
 
-    useEffect(() => {
-        dispatch(fetchCompanies());
-        dispatch(fetchUsers());
-    }, [dispatch]);
+    const { data: companies = [] } = useGetCompaniesQuery();
 
     useEffect(() => {
-        setCompanies([...fetchedCompanies]);
-    }, [fetchedCompanies]);
+        dispatch(fetchUsers());
+    }, [dispatch]);
 
     useEffect(() => {
         setManagers([...fetchedUsers]);

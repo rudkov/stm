@@ -1,31 +1,28 @@
 import './CompaniesList.css';
-import '../../helpers/shared.css';
+import 'helpers/shared.css';
 
-import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useMemo, useRef } from 'react';
 import { NavLink } from 'react-router';
 import { Button, Empty, Form, Input } from 'antd';
 
-import { getCompanies, filterCompanies } from '../../store/companies/companies';
+import { useGetCompaniesQuery } from 'api/companies/companiesApi';
+import { applyLocalFilters } from 'components/filters/companies/applyLocalFilters';
 
-import ScrollableView from '../ui-components/ScrollableView';
+import ScrollableView from 'components/ui-components/ScrollableView';
 
-import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
+import { ReactComponent as IconAdd } from 'assets/icons/add.svg';
 
 function CompaniesList({ createCompany, filters, updateFilter }) {
     const [form] = Form.useForm();
-    const fetchedCompanies = useSelector(getCompanies);
-    const [companies, setCompanies] = useState([]);
     const scrollContainerRef = useRef(null);
+    const { data: fetchedCompanies = [] } = useGetCompaniesQuery(filters);
 
-    useEffect(() => {
-        setCompanies(
-            filterCompanies(
-                [...fetchedCompanies],
-                {
-                    searchString: filters.search
-                }
-            )
+    const companies = useMemo(() => {
+        return applyLocalFilters(
+            [...fetchedCompanies],
+            {
+                searchString: filters.search
+            }
         );
     }, [fetchedCompanies, filters.search]);
 
@@ -35,7 +32,7 @@ function CompaniesList({ createCompany, filters, updateFilter }) {
 
     let result = null;
 
-    if (companies && Object.keys(companies).length > 0) {
+    if (companies && companies.length > 0) {
         result = companies.map((company) => {
             return (
                 <NavLink className='companies-list__item' key={'company.' + company.id} to={company.id}>

@@ -1,17 +1,9 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { getCompanies, fetchCompanies } from '../../../store/companies/companies';
+import { useGetCompaniesQuery } from 'api/companies/companiesApi';
 
 import CheckboxFilter from '../CheckboxFilter';
 
 function ClientsFilter(props) {
-    const dispatch = useDispatch();
-    const companies = useSelector(getCompanies);
-
-    useEffect(() => {
-        dispatch(fetchCompanies());
-    }, [dispatch]);
+    const { data: companies } = useGetCompaniesQuery();
 
     return (
         <CheckboxFilter

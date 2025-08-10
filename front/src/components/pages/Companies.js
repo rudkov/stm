@@ -1,28 +1,20 @@
 import './Companies.css';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { Outlet } from 'react-router';
 
-import { fetchCompanies } from '../../store/companies/companies';
-import { useCompaniesFilters, CompaniesFilters } from '../companies/CompaniesFilters';
+import { useGetCompaniesQuery } from 'api/companies/companiesApi';
+import { useCompaniesFilters, CompaniesFilters } from 'components/companies/CompaniesFilters';
 
-import CompaniesList from '../companies/CompaniesList';
-import CompanyForm from '../companies/CompanyForm';
+import CompaniesList from 'components/companies/CompaniesList';
+import CompanyForm from 'components/companies/CompanyForm';
 
 function Companies() {
-    const dispatch = useDispatch();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentCompanyId, setCurrentCompanyId] = useState(null);
     const { filters, updateFilter } = useCompaniesFilters();
 
-    useEffect(() => {
-        dispatch(fetchCompanies(filters));
-    }, [dispatch, filters]);
-
-    const handleSubmit = useCallback(() => {
-        dispatch(fetchCompanies(filters));
-    }, [dispatch, filters]);
+    useGetCompaniesQuery(filters);
 
     const createCompany = () => {
         setCurrentCompanyId(null);
@@ -59,7 +51,6 @@ function Companies() {
                 isFormOpen={isFormOpen}
                 onClose={handleClose}
                 companyId={currentCompanyId}
-                onAfterSubmit={handleSubmit}
             />
         </>
     );
