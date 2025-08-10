@@ -31,7 +31,7 @@ export const contactsApi = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: values,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Contact', id }],
+            invalidatesTags: (result, error, { id }) => [{ type: 'Contact', id }, 'Contact'],
         }),
         deleteContact: builder.mutation({
             query: ({ id }) => ({

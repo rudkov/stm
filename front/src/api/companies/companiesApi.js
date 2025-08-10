@@ -31,7 +31,7 @@ export const companiesApi = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: values,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Company', id }],
+            invalidatesTags: (result, error, { id }) => [{ type: 'Company', id }, 'Company'],
         }),
         deleteCompany: builder.mutation({
             query: ({ id }) => ({
