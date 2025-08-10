@@ -7,7 +7,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router';
 import axios from 'axios';
-import store from './store/index';
+import store from './store';
 
 axios.defaults.baseURL = process.env.REACT_APP_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
