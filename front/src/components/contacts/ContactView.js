@@ -1,32 +1,27 @@
 import './ContactView.css';
 
 import { useParams, useOutletContext } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getContact, fetchContact } from '../../store/contacts/contact';
+import { useGetContactQuery } from 'api/contacts/contactsApi';
 
-import ScrollableView from '../ui-components/ScrollableView';
+import ScrollableView from 'components/ui-components/ScrollableView';
 
-import SharedSectionAddresses from '../nested-sections/shared/view/SharedSectionAddresses';
-import SharedSectionContacts from '../nested-sections/shared/view/SharedSectionContacts';
-import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNotes';
-import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
-import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
+import SharedSectionAddresses from 'components/nested-sections/shared/view/SharedSectionAddresses';
+import SharedSectionContacts from 'components/nested-sections/shared/view/SharedSectionContacts';
+import SharedSectionNotes from 'components/nested-sections/shared/view/SharedSectionNotes';
+import SharedSectionSocialMedia from 'components/nested-sections/shared/view/SharedSectionSocialMedia';
+import SharedSectionSystemInfo from 'components/nested-sections/shared/view/SharedSectionSystemInfo';
 
-import ContactSectionCompanies from '../nested-sections/contacts/view/ContactSectionCompanies';
-import ContactSectionMain from '../nested-sections/contacts/view/ContactSectionMain';
+import ContactSectionCompanies from 'components/nested-sections/contacts/view/ContactSectionCompanies';
+import ContactSectionMain from 'components/nested-sections/contacts/view/ContactSectionMain';
 
 function ContactView({ inLayout = false }) {
-    const dispatch = useDispatch();
     const params = useParams();
-    const contact = useSelector(getContact);
     const scrollContainerRef = useRef(null);
     const context = useOutletContext();
 
-    useEffect(() => {
-        dispatch(fetchContact({ id: params.contactId }));
-    }, [dispatch, params.contactId]);
+    const { data: contact } = useGetContactQuery({ id: params.contactId }, { skip: !params.contactId });
 
     useEffect(() => {
         if (scrollContainerRef.current)
@@ -35,7 +30,7 @@ function ContactView({ inLayout = false }) {
 
     let result = null;
 
-    if (contact && Object.getPrototypeOf(contact) === Object.prototype) {
+    if (contact) {
         result =
             <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
