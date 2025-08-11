@@ -53,6 +53,7 @@ export const talentsApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, { id }) => [
                 { type: 'Talent', id },
+                'Talent',
                 'TalentLocation'
             ],
         }),
