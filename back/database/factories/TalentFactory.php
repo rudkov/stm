@@ -269,7 +269,7 @@ class TalentFactory extends Factory
             'suit_cut_id' => $this->getRandomLookupId('suit_cut_ids'),
             'dress_size_id' => $this->getRandomLookupId('dress_size_ids'),
             'skin_color_id' => $this->getRandomLookupId('skin_color_ids'),
-            'board_id' => $this->getRandomLookupId('board_ids'),
+            'board_id' => $teamData['board_id'],
             'manager_id' => $teamData['user_id'],
             'mother_agency_id' => rand(0, 1) ? $teamData['company_id'] : null,
 
@@ -297,7 +297,6 @@ class TalentFactory extends Factory
             'suit_cut_ids' => TalentSuitCut::pluck('id')->toArray(),
             'dress_size_ids' => TalentDressSize::pluck('id')->toArray(),
             'skin_color_ids' => TalentSkinColor::pluck('id')->toArray(),
-            'board_ids' => TalentBoard::pluck('id')->toArray(),
         ];
     }
 
@@ -335,13 +334,13 @@ class TalentFactory extends Factory
 
         // Cache processed team data
         self::$teamUserCache = $teamsWithUsers->map(function ($users, $teamId) {
-            $board = TalentBoard::where('team_id', $teamId)->first();
+            $boards = TalentBoard::where('team_id', $teamId)->pluck('id')->toArray();
             $companies = Company::where('team_id', $teamId)->pluck('id')->toArray();
 
             return [
                 'team_id' => $teamId,
                 'users' => $users->pluck('id')->toArray(),
-                'board_id' => $board->id,
+                'board_ids' => $boards,
                 'company_ids' => $companies,
             ];
         });
@@ -354,6 +353,9 @@ class TalentFactory extends Factory
     {
         $teamData = self::$teamUserCache->random();
         $userId = $teamData['users'][array_rand($teamData['users'])];
+        $boardId = !empty($teamData['board_ids'])
+            ? $teamData['board_ids'][array_rand($teamData['board_ids'])]
+            : null;
         $companyId = !empty($teamData['company_ids'])
             ? $teamData['company_ids'][array_rand($teamData['company_ids'])]
             : null;
@@ -361,7 +363,7 @@ class TalentFactory extends Factory
         return [
             'team_id' => $teamData['team_id'],
             'user_id' => $userId,
-            'board_id' => $teamData['board_id'],
+            'board_id' => $boardId,
             'company_id' => $companyId,
         ];
     }
