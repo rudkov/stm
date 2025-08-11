@@ -3,10 +3,7 @@ import { apiSlice } from 'api/apiSlice';
 export const usersApi = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getUsers: builder.query({
-            query: () => ({
-                url: '/users/search',
-                method: 'POST',
-            }),
+            query: () => '/users',
             providesTags: ['User'],
         }),
     }),

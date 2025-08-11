@@ -1,8 +1,4 @@
 <?php
-// GET: retrieve resources
-// POST: create resources
-// PUT: update resources
-// DELETE: delete resources
 
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +9,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
     Route::get('check-auth', 'Auth\LoginController@checkAuth')->name('auth.check');
     Route::post('register', 'Auth\RegisterController@createAndAuthenticate');
-    
+
     // Email verification routes
     Route::get('/email-verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
     Route::post('/email-verify/resend', 'Auth\VerificationController@resend');
@@ -56,7 +52,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('talents/managers', 'TalentController@managers')->name('talents.managers');
         Route::post('talents/search', 'TalentController@search')->name('talents.search');
         Route::put('talents/{talent}/locations/current', 'TalentController@updateLocation')->name('talents.update-location');
-        Route::apiResource('talents', 'TalentController', ['except' => ['index']]);
+        Route::apiResource('talents', 'TalentController')->except(['index']);
 
         //talent boards
         Route::apiResource('talent-boards', 'TalentBoardController');
@@ -65,6 +61,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('teams', 'TeamController@store')->name('team.store');
 
         //users
-        Route::post('users/search', 'UserController@index');
+        Route::get('users', 'UserController@index');
     });
 });
