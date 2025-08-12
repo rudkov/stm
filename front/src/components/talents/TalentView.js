@@ -17,13 +17,13 @@ import SharedSectionSystemInfo from 'components/nested-sections/shared/view/Shar
 import TalentSectionAchievements from 'components/nested-sections/talents/view/TalentSectionAchievements';
 import TalentSectionBiography from 'components/nested-sections/talents/view/TalentSectionBiography';
 import TalentSectionBody from 'components/nested-sections/talents/view/TalentSectionBody';
+import TalentSectionEmergencyContacts from 'components/nested-sections/talents/view/TalentSectionEmergencyContacts';
 import TalentSectionFoodAllergies from 'components/nested-sections/talents/view/TalentSectionFoodAllergies';
 import TalentSectionMain from 'components/nested-sections/talents/view/TalentSectionMain';
 import TalentSectionPerformanceSkills from 'components/nested-sections/talents/view/TalentSectionPerformanceSkills';
 import TalentSectionPreferences from 'components/nested-sections/talents/view/TalentSectionPreferences';
 import TalentSectionPrimaryInfo from 'components/nested-sections/talents/view/TalentSectionPrimaryInfo';
 import TalentSectionRegionLanguages from 'components/nested-sections/talents/view/TalentSectionRegionLanguages';
-import TalentSectionRelatives from 'components/nested-sections/talents/view/TalentSectionRelatives';
 
 function TalentView(props) {
     const params = useParams();
@@ -57,7 +57,7 @@ function TalentView(props) {
                     <TalentSectionPreferences data={talent} className='talent-section__preferences' />
                     <TalentSectionPrimaryInfo data={talent} className='talent-section__primary-info' />
                     <TalentSectionRegionLanguages data={talent} className='talent-section__region-languages' />
-                    <TalentSectionRelatives data={talent} className='talent-section__relatives' />
+                    <TalentSectionEmergencyContacts data={talent} className='talent-section__emergency-contacts' />
                     <SharedSectionSocialMedia data={talent} className='talent-section__social-media' />
                     <SharedSectionSystemInfo data={talent} className='talent-section__system-info' />
                 </ScrollableView.Body>

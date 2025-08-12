@@ -1,18 +1,18 @@
 import NestedSection from '../../NestedSection';
 
-function TalentSectionRelatives(props) {
+function TalentSectionEmergencyContacts(props) {
     const talent = props.data;
 
     return (
         <NestedSection className={props.className}>
-            <NestedSection.Header>Relatives</NestedSection.Header>
+            <NestedSection.Header>Relatives & Emergency Contacts</NestedSection.Header>
             <NestedSection.Body>
                 <div className='nested-section__grid'>
                     {
-                        talent.relatives?.map((relative) => {
+                        talent.emergency_contacts?.map((emergency_contact) => {
                             return (
-                                <div className='nested-section__cell' key={`talent.relative.` + relative.id}>
-                                    <div>{relative.info}</div>
+                                <div className='nested-section__cell' key={`talent.emergency-contact.` + emergency_contact.id}>
+                                    <div>{emergency_contact.info}</div>
                                 </div>
                             );
                         })
@@ -23,4 +23,4 @@ function TalentSectionRelatives(props) {
     );
 }
 
-export default TalentSectionRelatives;
+export default TalentSectionEmergencyContacts;
