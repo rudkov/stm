@@ -12,7 +12,6 @@ class TalentRelativeResource extends JsonResource
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'type' => $this->whenLoaded('type', fn() => new TalentRelativeTypeResource($this->type)),
         ];
     }
 }

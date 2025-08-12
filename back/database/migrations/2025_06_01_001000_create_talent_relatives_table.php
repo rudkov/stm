@@ -13,7 +13,6 @@ return new class extends Migration
             $table->text('info')->nullable();
 
             $table->foreignUuid('talent_id')->constrained('talents')->onDelete('cascade');
-            $table->foreignId('relative_type_id')->nullable()->constrained('talent_relative_types')->onDelete('set null');
 
             $table->timestamps();
         });

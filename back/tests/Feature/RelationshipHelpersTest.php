@@ -18,7 +18,6 @@ use App\Models\MessengerType;
 use App\Models\SocialMediaType;
 use App\Models\Talent;
 use App\Models\TalentRelative;
-use App\Models\TalentRelativeType;
 use App\Models\Team;
 use App\Models\User;
 
@@ -564,32 +563,25 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_creates_new_records()
     {
-        // Create a relative type for testing
-        $relativeType = TalentRelativeType::factory()->create();
-
         $items = [
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'John Doe - Father'
             ],
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Jane Doe - Mother'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['info']);
 
         // Assert records were created
         $this->assertDatabaseHas('talent_relatives', [
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'John Doe - Father'
         ]);
 
         $this->assertDatabaseHas('talent_relatives', [
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Jane Doe - Mother'
         ]);
 
@@ -598,30 +590,25 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_updates_existing_records()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
         // Create existing relative
         $existingRelative = TalentRelative::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Original Info'
         ]);
 
         $items = [
             [
                 'id' => $existingRelative->id,
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Updated Info'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['info']);
 
         // Assert record was updated
         $this->assertDatabaseHas('talent_relatives', [
             'id' => $existingRelative->id,
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Updated Info'
         ]);
 
@@ -630,18 +617,14 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_deletes_removed_records()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
         // Create existing relatives
         $relative1 = TalentRelative::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Keep This'
         ]);
 
         $relative2 = TalentRelative::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Delete This'
         ]);
 
@@ -649,12 +632,11 @@ class RelationshipHelpersTest extends TestCase
         $items = [
             [
                 'id' => $relative1->id,
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Keep This'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['info']);
 
         // Assert first relative still exists
         $this->assertDatabaseHas('talent_relatives', [
@@ -672,17 +654,14 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_handles_empty_input()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
         // Create existing relative
         TalentRelative::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Should be deleted'
         ]);
 
         // Sync with empty array
-        sync_relation($this->talent->relatives(), [], ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), [], ['info']);
 
         // Assert all relatives were deleted
         $this->assertEquals(0, $this->talent->relatives()->count());
@@ -690,18 +669,14 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_mixed_create_update_delete()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
         // Create existing relatives
         $existingRelative = TalentRelative::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'To Update'
         ]);
 
         $toDeleteRelative = TalentRelative::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'To Delete'
         ]);
 
@@ -709,18 +684,16 @@ class RelationshipHelpersTest extends TestCase
             // Update existing
             [
                 'id' => $existingRelative->id,
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Updated Info'
             ],
             // Create new
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'New Relative'
             ]
             // Note: toDeleteRelative is not included, so it should be deleted
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['info']);
 
         // Assert update
         $this->assertDatabaseHas('talent_relatives', [
@@ -744,22 +717,18 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_respects_fillable_fields()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
         $items = [
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Test Info',
                 'non_fillable_field' => 'Should be ignored'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->relatives(), $items, ['info']);
 
         // Assert only fillable fields were saved
         $this->assertDatabaseHas('talent_relatives', [
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Test Info'
         ]);
 
