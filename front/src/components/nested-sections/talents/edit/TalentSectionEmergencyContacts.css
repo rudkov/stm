@@ -1,17 +1,17 @@
-.talent-section-form-emergency_contacts__body {
+.talent-section-form-emergency-contacts__body {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.talent-section-form-emergency_contacts__item {
+.talent-section-form-emergency-contacts__item {
     display: flex;
     flex-direction: row;
     gap: 4px;
     align-items: flex-start;
 }
 
-.talent-section-form-emergency_contacts__data {
+.talent-section-form-emergency-contacts__data {
     display: flex;
     flex-direction: column;
     gap: 4px;
