@@ -11,8 +11,7 @@ function TalentSectionRelatives(props) {
                     {
                         talent.relatives?.map((relative) => {
                             return (
-                                <div className='nested-section__cell-horizontal' key={`talent.relative.` + relative.id}>
-                                    <div className='text-light'>{relative.type?.name}</div>
+                                <div className='nested-section__cell' key={`talent.relative.` + relative.id}>
                                     <div>{relative.info}</div>
                                 </div>
                             );

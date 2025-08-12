@@ -157,13 +157,13 @@ export const processPhones = (values) => {
 export const initRelatives = (values) => ({
     relatives: (values.relatives && values.relatives.length > 0)
         ? values.relatives
-        : [{ type: { id: null }, info: '' }],
+        : [{ info: '' }],
 });
 
 export const processRelatives = (values) => {
     let processed = {};
     if (values.relatives) {
-        processed.relatives = values.relatives.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+        processed.relatives = values.relatives.map(item => ({ ...item }));
     }
     processed.relatives = cleanCollection(processed.relatives, { requiredAny: ['info'] });
     return processed;
