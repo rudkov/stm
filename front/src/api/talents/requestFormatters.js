@@ -11,6 +11,7 @@ export const formatFiltersRequest = (filters) => ({
     hips: filters.body?.hips,
     managers: filters.managers,
     noContacts: filters.noContacts,
+    noRelatives: filters.noRelatives,
     preferences: filters.preferences,
     shirtSize: filters.body?.shirtSize,
     shoeSize: filters.body?.shoeSize,

@@ -10,6 +10,7 @@ import BodyFilter from '../filters/talents/BodyFilter';
 import GendersFilter from '../filters/talents/GendersFilter';
 import LocationsFilter from '../filters/talents/LocationsFilter';
 import ManagersFilter from '../filters/talents/ManagersFilter';
+import NoRelativesFilter from '../filters/talents/NoRelativesFilter';
 import PreferencesFilter from '../filters/talents/PreferencesFilter';
 
 export const FILTERS_CONFIG = {
@@ -39,6 +40,10 @@ export const FILTERS_CONFIG = {
     },
     noContacts: {
         name: 'talents.filters.noContacts',
+        value: false,
+    },
+    noRelatives: {
+        name: 'talents.filters.noRelatives',
         value: false,
     },
     preferences: {
@@ -89,6 +94,11 @@ export function TalentsFilters({ filters, updateFilter }) {
                     uniqueName={FILTERS_CONFIG.noContacts.name}
                     value={filters.noContacts}
                     setValue={(value) => updateFilter('noContacts', value)}
+                />
+                <NoRelativesFilter
+                    uniqueName={FILTERS_CONFIG.noRelatives.name}
+                    value={filters.noRelatives}
+                    setValue={(value) => updateFilter('noRelatives', value)}
                 />
             </ScrollableView.Body>
         </ScrollableView>
