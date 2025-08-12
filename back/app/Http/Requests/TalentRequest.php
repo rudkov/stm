@@ -98,7 +98,7 @@ class TalentRequest extends FormRequest
             'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
             'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],
             'social_medias' => ['nullable', 'array', new ValidateEach(new SocialMediaRequest())],
-            'relatives' => ['nullable', 'array', new ValidateEach(new TalentRelativeRequest())],
+            'emergency_contacts' => ['nullable', 'array', new ValidateEach(new TalentEmergencyContactRequest())],
             'weblinks' => ['nullable', 'array', new ValidateEach(new WeblinkRequest())],
         ];
     }

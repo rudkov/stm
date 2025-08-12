@@ -70,10 +70,10 @@ class TalentResource extends JsonResource
             'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),
             'citizenships' => $this->whenLoaded('citizenships'),
             'emails' => $this->whenLoaded('emails', fn() => EmailResource::collection($this->emails)),
+            'emergency_contacts' => $this->whenLoaded('emergencyContacts', fn() => TalentEmergencyContactResource::collection($this->emergencyContacts)),
             'languages' => $this->whenLoaded('languages'),
             'messengers' => $this->whenLoaded('messengers', fn() => MessengerResource::collection($this->messengers)),
             'phones' => $this->whenLoaded('phones', fn() => PhoneResource::collection($this->phones)),
-            'relatives' => $this->whenLoaded('relatives', fn() => TalentRelativeResource::collection($this->relatives)),
             'social_medias' => $this->whenLoaded('socialMedias', fn() => SocialMediaResource::collection($this->socialMedias)),
             'weblinks' => $this->whenLoaded('weblinks', fn() => WeblinkResource::collection($this->weblinks)),
 

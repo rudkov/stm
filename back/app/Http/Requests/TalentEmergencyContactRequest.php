@@ -5,14 +5,14 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-use App\Models\TalentRelative;
+use App\Models\TalentEmergencyContact;
 
-class TalentRelativeRequest extends FormRequest
+class TalentEmergencyContactRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'id' => ['sometimes', Rule::exists(TalentRelative::class, 'id')],
+            'id' => ['sometimes', Rule::exists(TalentEmergencyContact::class, 'id')],
             'info' => 'required|string|max:255',
         ];
     }

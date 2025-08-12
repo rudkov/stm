@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Talent;
 
-class TalentRelative extends Model
+class TalentEmergencyContact extends Model
 {
     use HasFactory;
 

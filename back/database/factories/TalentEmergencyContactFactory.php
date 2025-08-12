@@ -3,12 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Talent;
-use App\Models\TalentRelative;
+use App\Models\TalentEmergencyContact;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TalentRelativeFactory extends Factory
+class TalentEmergencyContactFactory extends Factory
 {
-    protected $model = TalentRelative::class;
+    protected $model = TalentEmergencyContact::class;
 
     public function definition()
     {

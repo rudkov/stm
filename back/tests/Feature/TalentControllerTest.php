@@ -53,7 +53,7 @@ class TalentControllerTest extends TestCase
                 'last_name' => '',
                 'citizenships' => [],
                 'languages' => [],
-                'relatives' => [],
+                'emergency_contacts' => [],
                 'addresses' => [],
                 'emails' => [],
                 'messengers' => [],
@@ -74,7 +74,7 @@ class TalentControllerTest extends TestCase
                 'last_name' => 'Doe',
                 'citizenships' => [],
                 'languages' => [],
-                'relatives' => [],
+                'emergency_contacts' => [],
                 'addresses' => [],
                 'emails' => [],
                 'messengers' => [],
@@ -129,7 +129,7 @@ class TalentControllerTest extends TestCase
                 'notes' => 'Test note',
                 'citizenships' => [],
                 'languages' => [],
-                'relatives' => [],
+                'emergency_contacts' => [],
                 'addresses' => [
                     array_merge([
                         'type' => [
@@ -175,7 +175,7 @@ class TalentControllerTest extends TestCase
 
         // Skip citizenship and language checks since we're not creating any
 
-        // Skip relatives check since we're not creating any
+        // Skip emergency_contacts check since we're not creating any
 
         $this->assertDatabaseHas('addresses', array_merge([
             'addressable_id' => $talent->id,
@@ -216,7 +216,7 @@ class TalentControllerTest extends TestCase
             'last_name' => 'Doe',
             'citizenships' => [],
             'languages' => [],
-            'relatives' => [],
+            'emergency_contacts' => [],
             'addresses' => [],
             'emails' => [],
             'messengers' => [],
@@ -267,7 +267,7 @@ class TalentControllerTest extends TestCase
                 'notes' => 'New note',
                 'citizenships' => [],
                 'languages' => [],
-                'relatives' => [],
+                'emergency_contacts' => [],
                 'addresses' => [],
                 'emails' => [],
                 'messengers' => [],
@@ -306,7 +306,7 @@ class TalentControllerTest extends TestCase
                 'last_name' => $talent->last_name,
                 'citizenships' => [],
                 'languages' => [],
-                'relatives' => [],
+                'emergency_contacts' => [],
                 'addresses' => [],
                 'emails' => [],
                 'messengers' => [],
@@ -337,7 +337,7 @@ class TalentControllerTest extends TestCase
                 'last_name' => 'Update',
                 'citizenships' => [],
                 'languages' => [],
-                'relatives' => [],
+                'emergency_contacts' => [],
                 'addresses' => [],
                 'emails' => [],
                 'messengers' => [],
