@@ -1,4 +1,5 @@
 import NestedSection from '../../NestedSection';
+import { renderParagraphs } from 'helpers/text';
 
 import IconColorBadge from '../../../ui-components/IconColorBadge';
 
@@ -161,15 +162,15 @@ function TalentSectionBody(props) {
                     </div>
                     <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Scars</div>
-                        <div>{talent.scars}</div>
+                        <div>{renderParagraphs(talent.scars)}</div>
                     </div>
                     <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Tattoos</div>
-                        <div>{talent.tattoos}</div>
+                        <div>{renderParagraphs(talent.tattoos)}</div>
                     </div>
                     <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Piercings</div>
-                        <div>{talent.piercings}</div>
+                        <div>{renderParagraphs(talent.piercings)}</div>
                     </div>
                 </div>
             </NestedSection.Body>

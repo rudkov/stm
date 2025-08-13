@@ -1,4 +1,5 @@
 import NestedSection from '../../NestedSection';
+import { renderParagraphs } from 'helpers/text';
 
 function TalentSectionEmergencyContacts(props) {
     const talent = props.data;
@@ -12,7 +13,7 @@ function TalentSectionEmergencyContacts(props) {
                         talent.emergency_contacts?.map((emergency_contact) => {
                             return (
                                 <div className='nested-section__cell' key={`talent.emergency-contact.` + emergency_contact.id}>
-                                    <div>{emergency_contact.info}</div>
+                                    <div>{renderParagraphs(emergency_contact.info)}</div>
                                 </div>
                             );
                         })

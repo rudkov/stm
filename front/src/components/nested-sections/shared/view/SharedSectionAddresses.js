@@ -1,4 +1,5 @@
 import NestedSection from '../../NestedSection';
+import { renderParagraphs } from 'helpers/text';
 
 function SharedSectionAddresses(props) {
     const data = props.data;
@@ -13,7 +14,7 @@ function SharedSectionAddresses(props) {
                             return (
                                 <div className='nested-section__cell-horizontal' key={`address.` + address.id}>
                                     <div className='text-light'>{address.type?.name}</div>
-                                    <div>{address.info}</div>
+                                    <div>{renderParagraphs(address.info)}</div>
                                 </div>
                             );
                         })

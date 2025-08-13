@@ -1,4 +1,5 @@
 import NestedSection from '../../NestedSection';
+import { renderParagraphs } from 'helpers/text';
 
 function SharedSectionNotes(props) {
     const data = props.data;
@@ -6,7 +7,7 @@ function SharedSectionNotes(props) {
     return (
         <NestedSection className={props.className}>
             <NestedSection.Header>Notes</NestedSection.Header>
-            <NestedSection.Body>{data.notes}</NestedSection.Body>
+            <NestedSection.Body>{renderParagraphs(data.notes)}</NestedSection.Body>
         </NestedSection>
     );
 }

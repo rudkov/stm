@@ -1,4 +1,5 @@
 import NestedSection from '../../NestedSection';
+import { renderParagraphs } from 'helpers/text';
 
 function TalentSectionFoodAllergies(props) {
     const talent = props.data;
@@ -22,7 +23,7 @@ function TalentSectionFoodAllergies(props) {
                     </div>
                     <div className='nested-section__cell-horizontal'>
                         <div className='text-light'>Allergies</div>
-                        <div>{talent.allergies}</div>
+                        <div>{renderParagraphs(talent.allergies)}</div>
                     </div>
                 </div>
             </NestedSection.Body>
