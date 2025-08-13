@@ -1,4 +1,5 @@
 import NestedSection from '../../NestedSection';
+import { renderParagraphs } from 'helpers/text';
 
 function TalentSectionPerformanceSkills(props) {
     const talent = props.data;
@@ -6,7 +7,7 @@ function TalentSectionPerformanceSkills(props) {
     return (
         <NestedSection className={props.className}>
             <NestedSection.Header>Performance Skills</NestedSection.Header>
-            <NestedSection.Body>{talent.performance_skills}</NestedSection.Body>
+            <NestedSection.Body>{renderParagraphs(talent.performance_skills)}</NestedSection.Body>
         </NestedSection>
     );
 }
