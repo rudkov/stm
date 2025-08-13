@@ -55,6 +55,11 @@ const formatWeblinkForDisplay = (url) => {
         result = result.substring(4); // Remove 'www.'
     }
 
+    // Remove trailing slash if present
+    if (result.endsWith('/')) {
+        result = result.slice(0, -1); // Remove trailing '/'
+    }
+
     return result;
 };
 
