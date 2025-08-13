@@ -12,6 +12,7 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'notes' => 'nullable|string',
 
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],
