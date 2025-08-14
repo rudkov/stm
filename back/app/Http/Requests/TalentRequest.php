@@ -60,6 +60,7 @@ class TalentRequest extends FormRequest
             'is_faithbased_ads' => 'nullable|boolean',
             'is_fur' => 'nullable|boolean',
             'is_gambling_ads' => 'nullable|boolean',
+            'is_lifestyle' => 'nullable|boolean',
             'is_lingerie' => 'nullable|boolean',
             'is_liquor_ads' => 'nullable|boolean',
             'is_nude' => 'nullable|boolean',
@@ -95,10 +96,10 @@ class TalentRequest extends FormRequest
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],
             'emails' => ['nullable', 'array', new ValidateEach(new EmailRequest())],
+            'emergency_contacts' => ['nullable', 'array', new ValidateEach(new TalentEmergencyContactRequest())],
             'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
             'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],
             'social_medias' => ['nullable', 'array', new ValidateEach(new SocialMediaRequest())],
-            'emergency_contacts' => ['nullable', 'array', new ValidateEach(new TalentEmergencyContactRequest())],
             'weblinks' => ['nullable', 'array', new ValidateEach(new WeblinkRequest())],
         ];
     }
