@@ -77,13 +77,8 @@ const getNestedValue = (obj, path) => {
  * @returns {Array|null} - The filtered array with empty objects removed, or null if empty
  * 
  * @example
- * // For addresses/emails/phones/emergency_contacts (info required, type optional)
  * cleanCollection(values.addresses, { requiredAny: ['info'] })
- * 
- * // For social_medias/messengers (both type and info required)
- * cleanCollection(values.social_medias, { requiredAll: ['type.id', 'info'] })
- * 
- * // For complex nested fields
+ * cleanCollection(values.addresses, { requiredAll: ['type.id', 'info'] })
  * cleanCollection(values.addresses, { requiredAny: ['info'], requiredAll: ['type.id'] })
  */
 export const cleanCollection = (array, config = {}) => {
@@ -156,7 +151,7 @@ export const processMessengers = (values) => {
     if (values.messengers) {
         processed.messengers = values.messengers.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
     }
-    processed.messengers = cleanCollection(processed.messengers, { requiredAll: ['type.id', 'info'] });
+    processed.messengers = cleanCollection(processed.messengers, { requiredAny: ['type.id', 'info'] });
     return processed;
 };
 
@@ -200,7 +195,7 @@ export const processSocialMedias = (values) => {
     if (values.social_medias) {
         processed.social_medias = values.social_medias.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
     }
-    processed.social_medias = cleanCollection(processed.social_medias, { requiredAll: ['type.id', 'info'] });
+    processed.social_medias = cleanCollection(processed.social_medias, { requiredAny: ['type.id', 'info'] });
     return processed;
 };
 
