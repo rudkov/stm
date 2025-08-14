@@ -30,7 +30,8 @@ class ValidateEach implements ValidationRule, ValidatorAwareRule
             }
 
             $request = new $this->requestClass();
-            $itemValidator = Validator::make($item, $request->rules());
+
+            $itemValidator = Validator::make($item, $request->rules(), $request->messages() ?? [], $request->attributes() ?? []);
 
             if ($itemValidator->fails()) {
                 foreach ($itemValidator->errors()->messages() as $field => $messages) {
