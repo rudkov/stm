@@ -2,14 +2,7 @@ import { Form } from 'antd';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useNotification } from 'components/notifications/NotificationProvider';
-
-// Helper function to transform validation errors
-const transformValidationErrors = (errors) => {
-    return Object.entries(errors).map(([field, messages]) => ({
-        name: field,
-        errors: messages,
-    }));
-};
+import { transformValidationErrors } from 'helpers/form-utils';
 
 export function BaseForm({ result, children, navigateOnSuccess, successNotification, ...formProps }) {
     const [form] = Form.useForm();

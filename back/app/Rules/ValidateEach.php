@@ -16,7 +16,7 @@ class ValidateEach implements ValidationRule, ValidatorAwareRule
         $this->requestClass = $requestClass;
     }
 
-    public function validate($attribute, $value, $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (!is_array($value)) {
             $fail('The :attribute must be an array.');
@@ -24,15 +24,19 @@ class ValidateEach implements ValidationRule, ValidatorAwareRule
         }
 
         foreach ($value as $index => $item) {
+            if (!is_array($item)) {
+                $this->validator->errors()->add("{$attribute}.{$index}", "The {$attribute}.{$index} must be an object.");
+                continue;
+            }
+
             $request = new $this->requestClass();
-            $request->merge($item);
-            
-            // Create a validator using the request's rules
-            $validator = Validator::make($item, $request->rules());
-            
-            if ($validator->fails()) {
-                foreach ($validator->errors()->all() as $error) {
-                    $fail("The :attribute.$index $error");
+            $itemValidator = Validator::make($item, $request->rules());
+
+            if ($itemValidator->fails()) {
+                foreach ($itemValidator->errors()->messages() as $field => $messages) {
+                    foreach ($messages as $message) {
+                        $this->validator->errors()->add("{$attribute}.{$index}.{$field}", $message);
+                    }
                 }
             }
         }

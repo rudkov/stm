@@ -2,7 +2,7 @@
  * Form utility functions for handling form data processing
  */
 
-import { sanitizeWeblinkForStorage } from '../components/ui-components/Weblink';
+import { sanitizeWeblinkForStorage } from 'components/ui-components/Weblink';
 
 /**
  * Checks if a field value is considered empty
@@ -93,6 +93,27 @@ export const cleanCollection = (array, config = {}) => {
     return filtered.length === 0 ? null : filtered;
 };
 
+/**
+ * Helper function to transform validation errors from Laravel to Ant Design format
+ * 
+ * @param {Object} errors - The validation errors from Laravel
+ * @returns {Array} - The transformed errors for Ant Design setFields
+ */
+export const transformValidationErrors = (errors) => {
+    return Object.entries(errors).map(([field, messages]) => {
+        const namePath = field.includes('.')
+            ? field.split('.').map(part => {
+                const num = parseInt(part, 10);
+                return isNaN(num) ? part : num;
+            })
+            : field;
+
+        return {
+            name: namePath,
+            errors: messages,
+        };
+    });
+};
 
 /**
  * Functions to init and process form data

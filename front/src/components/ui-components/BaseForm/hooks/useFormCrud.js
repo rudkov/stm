@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { useNotification } from '../../../notifications/NotificationProvider';
+import { useNotification } from 'components/notifications/NotificationProvider';
+import { transformValidationErrors } from 'helpers/form-utils';
 
 /**
  * Hook to handle CRUD operations for forms
@@ -33,11 +34,12 @@ export function useFormCrud({
     const isNew = !entityId;
 
     const { data: entity, isLoading: isFetching } = apiActions.query({ id: entityId }, { skip: isNew });
-    const [create, { data: createData, isLoading: isCreating, isSuccess: isCreateSuccess, reset: resetCreate }] = apiActions.create();
-    const [update, { isLoading: isUpdating, isSuccess: isUpdateSuccess, reset: resetUpdate }] = apiActions.update();
-    const [remove, { isLoading: isDeleting, isSuccess: isDeleteSuccess, reset: resetDelete }] = apiActions.delete();
+    const [create, { data: createData, isLoading: isCreating, isSuccess: isCreateSuccess, reset: resetCreate, error: createError }] = apiActions.create();
+    const [update, { isLoading: isUpdating, isSuccess: isUpdateSuccess, reset: resetUpdate, error: updateError }] = apiActions.update();
+    const [remove, { isLoading: isDeleting, isSuccess: isDeleteSuccess, reset: resetDelete, error: deleteError }] = apiActions.delete();
 
     const isLoading = isFetching || isCreating || isUpdating || isDeleting;
+    const error = createError || updateError || deleteError;
 
     const submitForm = (formValues) => {
         const values = formValues || form.getFieldsValue();
@@ -90,6 +92,20 @@ export function useFormCrud({
             resetDelete();
         }
     }, [isDeleteSuccess, navigate, onClose, showNotification, onAfterSubmit, entityUrl, deleteSuccessMessage, resetDelete]);
+
+    useEffect(() => {
+        if (error?.status === 422 && error?.data?.errors) {
+            form.setFields(transformValidationErrors(error.data.errors));
+        } else if (error) {
+            showNotification({ type: 'ERROR', message: 'Something went wrong. Please try again.' });
+        }
+
+        if (error) {
+            resetCreate();
+            resetUpdate();
+            resetDelete();
+        }
+    }, [error, form, showNotification, createError, updateError, deleteError, resetCreate, resetUpdate, resetDelete]);
 
     return {
         isLoading,
