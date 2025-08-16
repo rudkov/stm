@@ -41,6 +41,14 @@ export function useFormCrud({
     const isLoading = isFetching || isCreating || isUpdating || isDeleting;
     const error = createError || updateError || deleteError;
 
+    const clearFormErrors = () => {
+        form.setFields(
+            form.getFieldsError()
+                .filter(({ errors }) => errors.length > 0)
+                .map(({ name }) => ({ name, errors: [] }))
+        );
+    };
+
     const submitForm = (formValues) => {
         const values = formValues || form.getFieldsValue();
 
@@ -61,6 +69,7 @@ export function useFormCrud({
     // Handle create response
     useEffect(() => {
         if (isCreateSuccess) {
+            clearFormErrors();
             showNotification({ type: 'SUCCESS', message: createSuccessMessage });
             if (onAfterSubmit) onAfterSubmit();
             const newEntityId = createData.id;
@@ -75,6 +84,7 @@ export function useFormCrud({
     // Handle update response
     useEffect(() => {
         if (isUpdateSuccess) {
+            clearFormErrors();
             showNotification({ type: 'SUCCESS', message: updateSuccessMessage });
             if (onAfterSubmit) onAfterSubmit();
             onClose();
@@ -95,6 +105,7 @@ export function useFormCrud({
 
     useEffect(() => {
         if (error?.status === 422 && error?.data?.errors) {
+            clearFormErrors();
             form.setFields(transformValidationErrors(error.data.errors));
         } else if (error) {
             showNotification({ type: 'ERROR', message: 'Something went wrong. Please try again.' });
