@@ -13,7 +13,7 @@ class TalentEmergencyContactRequest extends FormRequest
     {
         return [
             'id' => ['sometimes', Rule::exists(TalentEmergencyContact::class, 'id')],
-            'info' => 'required|string|max:255',
+            'info' => 'required|string',
         ];
     }
 }
