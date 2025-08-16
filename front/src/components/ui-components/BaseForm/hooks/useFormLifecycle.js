@@ -43,13 +43,19 @@ export function useFormLifecycle({
             setFormTitle(title);
         }
 
+        if (!isFormOpen) {
+            return; // Do nothing if the drawer is not open
+        }
+
         if (isNew) {
+            // Reset the form completely to remove any preserved state from previous entity
+            form.resetFields();
             initForm({});
         } else if (entity?.id === entityId) {
             // Only init form if the entity in the store matches the entity we want to edit
             initForm(entity);
         }
-    }, [isNew, entity, entityId, getTitle, initForm]);
+    }, [isFormOpen, isNew, entity, entityId, getTitle, initForm, form]);
 
     return {
         formTitle,
