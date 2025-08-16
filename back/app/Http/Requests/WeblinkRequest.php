@@ -16,4 +16,12 @@ class WeblinkRequest extends FormRequest
             'info' => 'required|url|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'info.url' => 'URL format is wrong',
+            'info.max' => 'URL is too long – max 255 characters',
+        ];
+    }
 }

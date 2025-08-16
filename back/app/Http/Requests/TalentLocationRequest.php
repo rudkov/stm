@@ -12,4 +12,11 @@ class TalentLocationRequest extends FormRequest
             'location' => 'nullable|string|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'location.max' => 'Location is too long – max 255 characters',
+        ];
+    }
 }

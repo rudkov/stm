@@ -18,4 +18,11 @@ class MessengerRequest extends FormRequest
             'info' => 'required|string|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'info.max' => 'Account name is too long – max 255 characters',
+        ];
+    }
 }
