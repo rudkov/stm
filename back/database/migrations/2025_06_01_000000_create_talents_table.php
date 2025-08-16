@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,8 +12,8 @@ return new class extends Migration
         Schema::create('talents', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('legal_first_name')->nullable();
             $table->string('legal_last_name')->nullable();
             $table->date('birth_date')->nullable();
@@ -76,6 +77,12 @@ return new class extends Migration
 
             $table->index('deleted_at');
         });
+
+        // TODO: Remove this if statement once we migrate tests to MySQL
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE talents ADD CONSTRAINT first_name_or_last_name_required 
+                       CHECK (first_name IS NOT NULL OR last_name IS NOT NULL)');
+        }
     }
 
     public function down(): void
