@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('legal_first_name')->nullable();
             $table->string('legal_last_name')->nullable();
-            $table->date('birth_date')->nullable();
+            $table->date('birth_date')->nullable()->index();
 
             $table->foreignId('team_id')->constrained()->onDelete('cascade');
             $table->foreignId('manager_id')->nullable()->constrained('users')->onDelete('set null');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignId('marital_status_id')->nullable()->constrained('talent_marital_statuses')->onDelete('set null');
             $table->foreignUuid('mother_agency_id')->nullable()->constrained('companies')->onDelete('set null');
 
-            $table->string('location')->nullable();
+            $table->string('location')->nullable()->index();
 
             $table->foreignId('cup_size_id')->nullable()->constrained('talent_cup_sizes')->onDelete('set null');
             $table->foreignId('dress_size_id')->nullable()->constrained('talent_dress_sizes')->onDelete('set null');
@@ -37,27 +37,27 @@ return new class extends Migration
             $table->foreignId('shoe_size_id')->nullable()->constrained('talent_shoe_sizes')->onDelete('set null');
             $table->foreignId('suit_cut_id')->nullable()->constrained('talent_suit_cuts')->onDelete('set null');
 
-            $table->tinyInteger('bust_cm')->nullable()->unsigned();
-            $table->smallInteger('height_cm')->nullable()->unsigned();
-            $table->tinyInteger('hips_cm')->nullable()->unsigned();
-            $table->tinyInteger('waist_cm')->nullable()->unsigned();
-            $table->tinyInteger('weight_kg')->nullable()->unsigned();
+            $table->tinyInteger('bust_cm')->nullable()->unsigned()->index();
+            $table->smallInteger('height_cm')->nullable()->unsigned()->index();
+            $table->tinyInteger('hips_cm')->nullable()->unsigned()->index();
+            $table->tinyInteger('waist_cm')->nullable()->unsigned()->index();
+            $table->tinyInteger('weight_kg')->nullable()->unsigned()->index();
 
             $table->boolean('is_accent')->nullable();
             $table->boolean('is_ears_pierced')->nullable();
-            $table->boolean('is_faithbased_ads')->nullable();
-            $table->boolean('is_fur')->nullable();
-            $table->boolean('is_gambling_ads')->nullable();
+            $table->boolean('is_faithbased_ads')->nullable()->index();
+            $table->boolean('is_fur')->nullable()->index();
+            $table->boolean('is_gambling_ads')->nullable()->index();
             $table->boolean('is_lifestyle')->nullable();
-            $table->boolean('is_lingerie')->nullable();
-            $table->boolean('is_liquor_ads')->nullable();
-            $table->boolean('is_nude')->nullable();
-            $table->boolean('is_political_ads')->nullable();
-            $table->boolean('is_smoking_ads')->nullable();
-            $table->boolean('is_sports')->nullable();
-            $table->boolean('is_swimwear')->nullable();
-            $table->boolean('is_topless')->nullable();
-            $table->boolean('is_vegetarian')->nullable();
+            $table->boolean('is_lingerie')->nullable()->index();
+            $table->boolean('is_liquor_ads')->nullable()->index();
+            $table->boolean('is_nude')->nullable()->index();
+            $table->boolean('is_political_ads')->nullable()->index();
+            $table->boolean('is_smoking_ads')->nullable()->index();
+            $table->boolean('is_sports')->nullable()->index();
+            $table->boolean('is_swimwear')->nullable()->index();
+            $table->boolean('is_topless')->nullable()->index();
+            $table->boolean('is_vegetarian')->nullable()->index();
 
             $table->text('achievements')->nullable();
             $table->text('allergies')->nullable();
