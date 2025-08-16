@@ -1152,7 +1152,7 @@ class ContactControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['emails']);
+            ->assertJsonValidationErrors(['emails.0.info']);
     }
 
     public function test_store_contact_with_weblinks()
