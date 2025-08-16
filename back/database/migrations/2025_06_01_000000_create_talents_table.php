@@ -80,7 +80,7 @@ return new class extends Migration
 
         // TODO: Remove this if statement once we migrate tests to MySQL
         if (DB::getDriverName() !== 'sqlite') {
-            DB::statement('ALTER TABLE talents ADD CONSTRAINT first_name_or_last_name_required 
+            DB::statement('ALTER TABLE talents ADD CONSTRAINT talents_first_name_or_last_name_required 
                        CHECK (first_name IS NOT NULL OR last_name IS NOT NULL)');
         }
     }
