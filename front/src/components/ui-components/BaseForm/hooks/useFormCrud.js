@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useNotification } from 'components/notifications/NotificationProvider';
 import { transformValidationErrors } from 'helpers/form-utils';
@@ -41,13 +41,13 @@ export function useFormCrud({
     const isLoading = isFetching || isCreating || isUpdating || isDeleting;
     const error = createError || updateError || deleteError;
 
-    const clearFormErrors = () => {
+    const clearFormErrors = useCallback(() => {
         form.setFields(
             form.getFieldsError()
                 .filter(({ errors }) => errors.length > 0)
                 .map(({ name }) => ({ name, errors: [] }))
         );
-    };
+    }, [form]);
 
     const submitForm = (formValues) => {
         const values = formValues || form.getFieldsValue();
@@ -79,7 +79,7 @@ export function useFormCrud({
             onClose();
             resetCreate();
         }
-    }, [isCreateSuccess, createData, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage, resetCreate]);
+    }, [isCreateSuccess, createData, navigate, onClose, showNotification, onAfterSubmit, entityUrl, createSuccessMessage, resetCreate, clearFormErrors]);
 
     // Handle update response
     useEffect(() => {
@@ -90,7 +90,7 @@ export function useFormCrud({
             onClose();
             resetUpdate();
         }
-    }, [isUpdateSuccess, onClose, showNotification, onAfterSubmit, updateSuccessMessage, resetUpdate]);
+    }, [isUpdateSuccess, onClose, showNotification, onAfterSubmit, updateSuccessMessage, resetUpdate, clearFormErrors]);
 
     // Handle delete response
     useEffect(() => {
@@ -116,7 +116,7 @@ export function useFormCrud({
             resetUpdate();
             resetDelete();
         }
-    }, [error, form, showNotification, createError, updateError, deleteError, resetCreate, resetUpdate, resetDelete]);
+    }, [error, form, showNotification, createError, updateError, deleteError, resetCreate, resetUpdate, resetDelete, clearFormErrors]);
 
     return {
         isLoading,
