@@ -23,7 +23,7 @@ export const companiesApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: values,
             }),
-            invalidatesTags: ['Company'],
+            invalidatesTags: ['Company', 'CompanyManager'],
         }),
         updateCompany: builder.mutation({
             query: ({ id, values }) => ({
@@ -31,20 +31,25 @@ export const companiesApi = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: values,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Company', id }, 'Company'],
+            invalidatesTags: (result, error, { id }) => [{ type: 'Company', id }, 'Company', 'CompanyManager'],
         }),
         deleteCompany: builder.mutation({
             query: ({ id }) => ({
                 url: `/companies/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Company'],
+            invalidatesTags: ['Company', 'CompanyManager'],
+        }),
+        getCompanyManagers: builder.query({
+            query: () => '/companies/managers',
+            providesTags: ['CompanyManager'],
         }),
     }),
 });
 
 export const {
     useGetCompaniesQuery,
+    useGetCompanyManagersQuery,
     useGetCompanyQuery,
     useCreateCompanyMutation,
     useUpdateCompanyMutation,

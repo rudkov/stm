@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v1'], function () {
             ->name('communication-types.update');
 
         //companies
+        Route::get('companies/managers', 'CompanyController@managers')->name('companies.managers');
         Route::post('companies/search', 'CompanyController@search')->name('companies.search');
         Route::apiResource('companies', 'CompanyController')->except(['index']);
 

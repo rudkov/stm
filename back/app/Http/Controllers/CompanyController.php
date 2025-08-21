@@ -105,4 +105,18 @@ class CompanyController extends Controller
         $company->delete();
         return response()->json(null, 204);
     }
+
+    public function managers()
+    {
+        $this->authorize('viewAny', Company::class);
+
+        $uniqueManagers = DB::table('companies')
+            ->leftJoin('users', 'companies.manager_id', '=', 'users.id')
+            ->where('companies.team_id', Auth::user()->team_id)
+            ->whereNull('companies.deleted_at')
+            ->distinct()
+            ->orderBy('users.name')
+            ->get(['users.id', 'users.name']);
+        return $uniqueManagers;
+    }
 }

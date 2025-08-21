@@ -45,7 +45,7 @@ function CompanyForm({ isFormOpen, onClose, onAfterSubmit, companyId }) {
             ...initSocialMedias(values),
             ...initWeblinks(values),
         });
-    }, []);
+    }, [user_id]);
 
     const onProcessFormData = useCallback((values) => ({
         ...values,
