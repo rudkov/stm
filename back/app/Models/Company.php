@@ -14,6 +14,7 @@ use App\Models\Talent;
 use App\Traits\BelongsToTeam;
 use App\Traits\HasAddresses;
 use App\Traits\HasEmails;
+use App\Traits\HasManager;
 use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
 use App\Traits\HasSocialMedia;
@@ -29,6 +30,7 @@ class Company extends Model
     use BelongsToTeam;
     use HasAddresses;
     use HasEmails;
+    use HasManager;
     use HasMessengers;
     use HasPhones;
     use HasSocialMedia;
@@ -44,12 +46,8 @@ class Company extends Model
     protected $fillable = [
         'name',
         'notes',
+        'manager_id',
     ];
-
-    public function events()
-    {
-        return $this->hasMany(Event::class, 'client_id');
-    }
 
     public function contacts()
     {
@@ -57,6 +55,11 @@ class Company extends Model
             ->withPivot('job_title')
             ->orderBy('first_name', 'asc')
             ->orderBy('last_name', 'asc');
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'client_id');
     }
 
     public function talents()

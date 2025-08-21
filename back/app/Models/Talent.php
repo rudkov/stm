@@ -21,11 +21,11 @@ use App\Models\TalentShoeSize;
 use App\Models\TalentSkinColor;
 use App\Models\TalentSuitCut;
 use App\Models\TalentBoard;
-use App\Models\User;
 
 use App\Traits\BelongsToTeam;
 use App\Traits\HasAddresses;
 use App\Traits\HasEmails;
+use App\Traits\HasManager;
 use App\Traits\HasMessengers;
 use App\Traits\HasPhones;
 use App\Traits\HasSocialMedia;
@@ -41,6 +41,7 @@ class Talent extends Model
     use BelongsToTeam;
     use HasAddresses;
     use HasEmails;
+    use HasManager;
     use HasMessengers;
     use HasPhones;
     use HasSocialMedia;
@@ -185,11 +186,6 @@ class Talent extends Model
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'talent_language', 'talent_id', 'language_id');
-    }
-
-    public function manager()
-    {
-        return $this->belongsTo(User::class, 'manager_id');
     }
 
     public function motherAgency()

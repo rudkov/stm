@@ -58,6 +58,7 @@ class CompanyController extends Controller
             'contacts',
             'emails',
             'emails.type',
+            'manager',
             'messengers',
             'messengers.type',
             'phones',
