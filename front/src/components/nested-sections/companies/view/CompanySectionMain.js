@@ -10,6 +10,7 @@ function CompanySectionMain(props) {
             <div className='company-section-main__header'>
                 <div className='company-section-main__company_name'>{company.name}</div>
                 <div className='company-section-main__company_categories'>Category 1, Category 2, Category 3</div>
+                <div className='company-section-main__company_manager'>Manager: {company.manager?.name}</div>
             </div>
             {props.editAction && (
                 <div className='company-section-main__controls'>

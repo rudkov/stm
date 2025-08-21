@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 import BaseForm from 'components/ui-components/BaseForm';
 
+import { useCheckAuthQuery } from 'api/accountApi';
+
 import {
     useGetCompanyQuery,
     useCreateCompanyMutation,
@@ -26,11 +28,15 @@ import SharedSectionSocialMedia from 'components/nested-sections/shared/edit/Sha
 import CompanySectionPrimaryInfo from 'components/nested-sections/companies/edit/CompanySectionPrimaryInfo';
 
 function CompanyForm({ isFormOpen, onClose, onAfterSubmit, companyId }) {
+    const { data: authData } = useCheckAuthQuery();
+    const user_id = authData.user.id;
 
     const onInitForm = useCallback((values, form) => {
         form.setFieldsValue({
             name: values.name || '',
             notes: values.notes || '',
+
+            manager_id: values.manager?.id || user_id,
 
             ...initAddresses(values),
             ...initEmails(values),
