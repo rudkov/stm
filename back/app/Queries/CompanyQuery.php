@@ -49,6 +49,7 @@ class CompanyQuery
             ->get([
                 'companies.id',
                 'companies.name',
+                'companies.manager_id',
             ]);
     }
 }

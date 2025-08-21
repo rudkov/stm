@@ -4,7 +4,7 @@ import '../../helpers/shared.css';
 import { useState } from 'react';
 import { Outlet } from 'react-router';
 
-import { useGetTalentsQuery, useGetTalentManagersQuery } from 'api/talents/talentsApi';
+import { useGetTalentsQuery } from 'api/talents/talentsApi';
 import { useTalentsFilters, TalentsFilters } from '../talents/TalentsFilters';
 
 import TalentsList from '../talents/TalentsList';
@@ -16,7 +16,6 @@ function Talents() {
     const { filters, updateFilter } = useTalentsFilters();
 
     useGetTalentsQuery(filters);
-    useGetTalentManagersQuery();
 
     const createTalent = () => {
         setCurrentTalentId(null);

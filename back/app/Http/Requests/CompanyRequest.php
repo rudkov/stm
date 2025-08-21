@@ -3,8 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 use App\Rules\ValidateEach;
+
+use App\Models\User;
 
 class CompanyRequest extends FormRequest
 {
@@ -13,6 +16,8 @@ class CompanyRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'notes' => 'nullable|string',
+
+            'manager_id' => ['nullable', Rule::exists(User::class, 'id')],
 
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],

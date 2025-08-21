@@ -63,7 +63,7 @@ class TalentResource extends JsonResource
             'dress_size' => $this->whenLoaded('dressSize'),
             'skin_color' => $this->whenLoaded('skinColor'),
             'board' => $this->whenLoaded('board'),
-            'manager' => $this->whenLoaded('manager'),
+            'manager' => $this->whenLoaded('manager', fn() => new UserBasicResource($this->manager)),
             'mother_agency' => $this->whenLoaded('motherAgency'),
 
             // Collections

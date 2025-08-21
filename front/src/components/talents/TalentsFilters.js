@@ -1,15 +1,17 @@
 import './TalentsFilters.css';
 
+import { useGetTalentManagersQuery } from 'api/talents/talentsApi';
+
 import { useFilters } from '../filters/useFilters';
 import ScrollableView from '../ui-components/ScrollableView';
 
+import ManagersFilter from '../filters/shared/ManagersFilter';
 import NoContactsFilter from '../filters/shared/NoContactsFilter';
 
 import BoardFilter from '../filters/talents/BoardFilter';
 import BodyFilter from '../filters/talents/BodyFilter';
 import GendersFilter from '../filters/talents/GendersFilter';
 import LocationsFilter from '../filters/talents/LocationsFilter';
-import ManagersFilter from '../filters/talents/ManagersFilter';
 import NoRelativesFilter from '../filters/talents/NoRelativesFilter';
 import PreferencesFilter from '../filters/talents/PreferencesFilter';
 
@@ -57,6 +59,8 @@ export function useTalentsFilters() {
 }
 
 export function TalentsFilters({ filters, updateFilter }) {
+    const { data: managers } = useGetTalentManagersQuery();
+
     return (
         <ScrollableView>
             <ScrollableView.Body className='talents-filters'>
@@ -72,6 +76,7 @@ export function TalentsFilters({ filters, updateFilter }) {
                 />
                 <ManagersFilter
                     uniqueName={FILTERS_CONFIG.managers.name}
+                    data={managers}
                     selectedItems={filters.managers}
                     setFiltered={(value) => updateFilter('managers', value)}
                 />

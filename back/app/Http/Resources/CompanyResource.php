@@ -14,6 +14,8 @@ class CompanyResource extends JsonResource
             'name' => $this->name,
             'notes' => $this->notes,
 
+            'manager' => $this->whenLoaded('manager', fn() => new UserBasicResource($this->manager)),
+
             // Collections
             'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),
             'contacts' => $this->whenLoaded('contacts', fn() => ContactBasicResource::collection($this->contacts)),

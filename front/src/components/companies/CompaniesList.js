@@ -21,10 +21,11 @@ function CompaniesList({ createCompany, filters, updateFilter }) {
         return applyLocalFilters(
             [...fetchedCompanies],
             {
-                searchString: filters.search
+                searchString: filters.search,
+                managers: filters.managers
             }
         );
-    }, [fetchedCompanies, filters.search]);
+    }, [fetchedCompanies, filters.search, filters.managers]);
 
     const searchCompanies = (item) => {
         updateFilter('search', item.search);

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
 
             $table->foreignId('team_id')->constrained()->onDelete('cascade');
+            $table->foreignId('manager_id')->nullable()->constrained('users')->onDelete('set null');
 
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');

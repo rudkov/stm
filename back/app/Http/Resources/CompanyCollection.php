@@ -13,6 +13,7 @@ class CompanyCollection extends ResourceCollection
             return [
                 'id' => $company->id,
                 'name' => $company->name,
+                'manager_id' => $company->manager_id,
             ];
         })->toArray();
     }
