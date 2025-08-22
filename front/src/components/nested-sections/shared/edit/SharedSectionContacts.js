@@ -117,7 +117,7 @@ function SharedSectionContacts(props) {
                 <div className='shared-section-form-contacts__controls'>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
-                            const phonesList = props.form.getFieldValue('phones');
+                            const phonesList = props.form.getFieldValue('phones') || [];
                             props.form.setFieldsValue({
                                 phones: [...phonesList, { type: { id: null }, info: '' }]
                             });
@@ -125,7 +125,7 @@ function SharedSectionContacts(props) {
                     </Form.Item>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
-                            const emailsList = props.form.getFieldValue('emails');
+                            const emailsList = props.form.getFieldValue('emails') || [];
                             props.form.setFieldsValue({
                                 emails: [...emailsList, { type: { id: null }, info: '' }]
                             });
@@ -133,7 +133,7 @@ function SharedSectionContacts(props) {
                     </Form.Item>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
-                            const messengersList = props.form.getFieldValue('messengers');
+                            const messengersList = props.form.getFieldValue('messengers') || [];
                             props.form.setFieldsValue({
                                 messengers: [...messengersList, { type: { id: null }, info: '' }]
                             });
