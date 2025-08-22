@@ -78,7 +78,7 @@ function SharedSectionSocialMedia(props) {
                 <div className='shared-section-form-social-media__controls'>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
-                            const socialMediasList = props.form.getFieldValue('social_medias');
+                            const socialMediasList = props.form.getFieldValue('social_medias') || [];
                             props.form.setFieldsValue({
                                 social_medias: [...socialMediasList, { type: { id: null }, info: '' }]
                             });
@@ -86,7 +86,7 @@ function SharedSectionSocialMedia(props) {
                     </Form.Item>
                     <Form.Item>
                         <Button type='dashed' onClick={() => {
-                            const weblinksList = props.form.getFieldValue('weblinks');
+                            const weblinksList = props.form.getFieldValue('weblinks') || [];
                             props.form.setFieldsValue({
                                 weblinks: [...weblinksList, { info: '' }]
                             });
