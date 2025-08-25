@@ -12,7 +12,7 @@ class UserController extends Controller
     {
         $users = User::orderBy('name', 'asc')
             ->where('team_id', Auth::user()->team_id)
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'email']);
 
         return $users;
     }

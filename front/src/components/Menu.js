@@ -3,17 +3,18 @@ import './Menu.css';
 import { NavLink } from 'react-router';
 import { Tooltip } from 'antd';
 
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from 'context/ThemeContext';
 
-import { ReactComponent as IconTalents } from '../assets/icons/talents.svg';
-import { ReactComponent as IconCalendar } from '../assets/icons/calendar.svg';
-import { ReactComponent as IconCompanies } from '../assets/icons/companies.svg';
-import { ReactComponent as IconContacts } from '../assets/icons/contacts.svg';
-import { ReactComponent as IconLogout } from '../assets/icons/logout.svg';
-import { ReactComponent as IconLeftPanelOpen } from '../assets/icons/left-panel-open.svg';
-import { ReactComponent as IconLeftPanelClose } from '../assets/icons/left-panel-close.svg';
-import { ReactComponent as IconThemeLightMode } from '../assets/icons/theme-light-mode.svg';
-import { ReactComponent as IconThemeDarkMode } from '../assets/icons/theme-dark-mode.svg';
+import { ReactComponent as IconCalendar } from 'assets/icons/calendar.svg';
+import { ReactComponent as IconCompanies } from 'assets/icons/companies.svg';
+import { ReactComponent as IconContacts } from 'assets/icons/contacts.svg';
+import { ReactComponent as IconLeftPanelClose } from 'assets/icons/left-panel-close.svg';
+import { ReactComponent as IconLeftPanelOpen } from 'assets/icons/left-panel-open.svg';
+import { ReactComponent as IconLogout } from 'assets/icons/logout.svg';
+import { ReactComponent as IconSettings } from 'assets/icons/settings.svg';
+import { ReactComponent as IconTalents } from 'assets/icons/talents.svg';
+import { ReactComponent as IconThemeDarkMode } from 'assets/icons/theme-dark-mode.svg';
+import { ReactComponent as IconThemeLightMode } from 'assets/icons/theme-light-mode.svg';
 
 function Menu(props) {
     const { theme, toggleTheme } = useTheme();
@@ -48,6 +49,12 @@ function Menu(props) {
                     <NavLink to='contacts' className='menu-item'>
                         <div className='menu-item__icon'><IconContacts /></div>
                         <div className='menu-item__text'>Contacts</div>
+                    </NavLink>
+                </Tooltip>
+                <Tooltip title={props.isCollapsed ? 'Settings' : ''} placement='right' arrow={false} mouseEnterDelay={0.5}>
+                    <NavLink to='settings' className='menu-item'>
+                        <div className='menu-item__icon'><IconSettings /></div>
+                        <div className='menu-item__text'>Settings</div>
                     </NavLink>
                 </Tooltip>
             </div>

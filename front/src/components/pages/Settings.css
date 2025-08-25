@@ -1,0 +1,24 @@
+.settings-page {
+    padding: 12px 0;
+    margin: 0 auto;
+}
+
+.settings-page__content {
+    display: grid;
+    grid-template-columns: 180px 720px;
+    height: 100%;
+    border-radius: var(--border-radius-big);
+    background-color: var(--background-secondary);
+}
+
+.settings-page__left-column {
+    height: 100%;
+    border-right: 1px solid var(--divider-color);
+    padding: 12px;
+}
+
+.settings-page__right-column {
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+}

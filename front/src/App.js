@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 import { ConfigProvider, theme as AntdTheme } from 'antd';
 
 import { useTheme } from "./context/ThemeContext";
@@ -37,9 +37,13 @@ import ContactView from './components/contacts/ContactView';
 import Events from './components/pages/Events';
 import EventInfo from './components/events/EventInfo';
 
+import Settings from './components/pages/Settings';
+import SettingsPeople from './components/settings/SettingsPeople';
+
 import Talents from './components/pages/Talents';
 import TalentsZeroState from './components/talents/TalentsZeroState';
 import TalentView from './components/talents/TalentView';
+
 
 import Tmp from './components/pages/Tmp';
 
@@ -63,7 +67,7 @@ function App() {
                             <Route path='logout' element={<Logout />} />
                             <Route path='email-verify/:id/:hash' element={<EmailVerification />} />
                             <Route path='email-verify/resend' element={<ResendVerificationEmail />} />
-                            
+
                             <Route element={<RequireTeam />}>
 
                                 <Route path='app' element={<Main />}>
@@ -82,6 +86,11 @@ function App() {
                                         <Route path=':contactId' element={<ContactLayout />}>
                                             <Route path=':companyId' element={<CompanyView />} />
                                         </Route>
+                                    </Route>
+
+                                    <Route path='settings' element={<Settings />}>
+                                        <Route index element={<Navigate to='people' replace />} />
+                                        <Route path='people' element={<SettingsPeople />} />
                                     </Route>
 
                                     <Route path='talents' element={<Talents />}>
