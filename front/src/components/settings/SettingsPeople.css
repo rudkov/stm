@@ -1,0 +1,25 @@
+.settings-people__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 12px;
+}
+
+.settings-people__body {
+    padding: 0px 6px 12px 12px;
+}
+
+.settings-people-header__title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.settings-people__invitation-link-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
