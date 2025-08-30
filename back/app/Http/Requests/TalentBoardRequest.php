@@ -21,4 +21,13 @@ class TalentBoardRequest extends FormRequest
             ],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Please enter board name',
+            'name.max' => 'Board name is too long – max 255 characters',
+            'name.unique' => 'This board name is already taken',
+        ];
+    }
 }

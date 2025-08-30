@@ -30,12 +30,11 @@ class TalentRequest extends FormRequest
     {
         return [
             // Basic Information
-            'first_name' => 'required_without:last_name|string|max:255',
-            'last_name' => 'required_without:first_name|string|max:255',
+            'first_name' => 'required_without:last_name|nullable|string|max:255',
+            'last_name' => 'required_without:first_name|nullable|string|max:255',
             'legal_first_name' => 'nullable|string|max:255',
             'legal_last_name' => 'nullable|string|max:255',
             'birth_date' => 'nullable|date',
-            'location' => 'nullable|string|max:255',
 
             // Strings
             'achievements' => 'nullable|string',
@@ -60,6 +59,7 @@ class TalentRequest extends FormRequest
             'is_faithbased_ads' => 'nullable|boolean',
             'is_fur' => 'nullable|boolean',
             'is_gambling_ads' => 'nullable|boolean',
+            'is_lifestyle' => 'nullable|boolean',
             'is_lingerie' => 'nullable|boolean',
             'is_liquor_ads' => 'nullable|boolean',
             'is_nude' => 'nullable|boolean',
@@ -95,11 +95,43 @@ class TalentRequest extends FormRequest
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],
             'emails' => ['nullable', 'array', new ValidateEach(new EmailRequest())],
+            'emergency_contacts' => ['nullable', 'array', new ValidateEach(new TalentEmergencyContactRequest())],
             'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
             'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],
             'social_medias' => ['nullable', 'array', new ValidateEach(new SocialMediaRequest())],
-            'emergency_contacts' => ['nullable', 'array', new ValidateEach(new TalentEmergencyContactRequest())],
             'weblinks' => ['nullable', 'array', new ValidateEach(new WeblinkRequest())],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            // Basic Information
+            'first_name.required_without' => 'Please enter first or last name',
+            'first_name.max' => 'First name is too long – max 255 characters',
+
+            'last_name.required_without' => 'Please enter first or last name',
+            'last_name.max' => 'Last name is too long – max 255 characters',
+
+            'legal_first_name.max' => 'Legal first name is too long – max 255 characters',
+
+            'legal_last_name.max' => 'Legal last name is too long – max 255 characters',
+
+            // Physical Attributes
+            'bust_cm.min' => 'Bust should be at least :min cm',
+            'bust_cm.max' => 'Bust should be at most :max cm',
+
+            'height_cm.min' => 'Height should be at least :min cm',
+            'height_cm.max' => 'Height should be at most :max cm',
+
+            'hips_cm.min' => 'Hips should be at least :min cm',
+            'hips_cm.max' => 'Hips should be at most :max cm',
+
+            'waist_cm.min' => 'Waist should be at least :min cm',
+            'waist_cm.max' => 'Waist should be at most :max cm',
+
+            'weight_kg.min' => 'Weight should be at least :min kg',
+            'weight_kg.max' => 'Weight should be at most :max kg',
         ];
     }
 }

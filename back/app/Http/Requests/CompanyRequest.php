@@ -23,4 +23,12 @@ class CompanyRequest extends FormRequest
             'weblinks' => ['nullable', 'array', new ValidateEach(new WeblinkRequest())],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Please enter company name',
+            'name.max' => 'Company name is too long – max 255 characters',
+        ];
+    }
 }

@@ -22,4 +22,11 @@ class AddressRequest extends FormRequest
             'info' => 'required|string|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'info.max' => 'Address is too long – max 255 characters',
+        ];
+    }
 }

@@ -16,10 +16,17 @@ class PhoneRequest extends FormRequest
         return [
             'id' => ['sometimes', Rule::exists(Phone::class, 'id')],
             'communication_type_id' => [
-                'nullable', 
+                'nullable',
                 Rule::exists(CommunicationType::class, 'id')->where('team_id', Auth::user()->team_id)
             ],
             'info' => 'required|string|max:255',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'info.max' => 'Phone number is too long – max 255 characters',
         ];
     }
 }

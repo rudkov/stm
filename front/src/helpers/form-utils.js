@@ -2,7 +2,7 @@
  * Form utility functions for handling form data processing
  */
 
-import { sanitizeWeblinkForStorage } from '../components/ui-components/Weblink';
+import { sanitizeWeblinkForStorage } from 'components/ui-components/Weblink';
 
 /**
  * Checks if a field value is considered empty
@@ -77,13 +77,8 @@ const getNestedValue = (obj, path) => {
  * @returns {Array|null} - The filtered array with empty objects removed, or null if empty
  * 
  * @example
- * // For addresses/emails/phones/emergency_contacts (info required, type optional)
  * cleanCollection(values.addresses, { requiredAny: ['info'] })
- * 
- * // For social_medias/messengers (both type and info required)
- * cleanCollection(values.social_medias, { requiredAll: ['type.id', 'info'] })
- * 
- * // For complex nested fields
+ * cleanCollection(values.addresses, { requiredAll: ['type.id', 'info'] })
  * cleanCollection(values.addresses, { requiredAny: ['info'], requiredAll: ['type.id'] })
  */
 export const cleanCollection = (array, config = {}) => {
@@ -93,6 +88,27 @@ export const cleanCollection = (array, config = {}) => {
     return filtered.length === 0 ? null : filtered;
 };
 
+/**
+ * Helper function to transform validation errors from Laravel to Ant Design format
+ * 
+ * @param {Object} errors - The validation errors from Laravel
+ * @returns {Array} - The transformed errors for Ant Design setFields
+ */
+export const transformValidationErrors = (errors) => {
+    return Object.entries(errors).map(([field, messages]) => {
+        const namePath = field.includes('.')
+            ? field.split('.').map(part => {
+                const num = parseInt(part, 10);
+                return isNaN(num) ? part : num;
+            })
+            : field;
+
+        return {
+            name: namePath,
+            errors: messages,
+        };
+    });
+};
 
 /**
  * Functions to init and process form data
@@ -135,7 +151,7 @@ export const processMessengers = (values) => {
     if (values.messengers) {
         processed.messengers = values.messengers.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
     }
-    processed.messengers = cleanCollection(processed.messengers, { requiredAll: ['type.id', 'info'] });
+    processed.messengers = cleanCollection(processed.messengers, { requiredAny: ['type.id', 'info'] });
     return processed;
 };
 
@@ -179,7 +195,7 @@ export const processSocialMedias = (values) => {
     if (values.social_medias) {
         processed.social_medias = values.social_medias.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
     }
-    processed.social_medias = cleanCollection(processed.social_medias, { requiredAll: ['type.id', 'info'] });
+    processed.social_medias = cleanCollection(processed.social_medias, { requiredAny: ['type.id', 'info'] });
     return processed;
 };
 

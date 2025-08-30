@@ -16,4 +16,11 @@ class CompanyContactRequest extends FormRequest
             'job_title' => 'nullable|string|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'job_title.max' => 'Job title is too long – max 255 characters',
+        ];
+    }
 }

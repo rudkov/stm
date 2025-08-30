@@ -13,4 +13,12 @@ class TeamRequest extends FormRequest
             'name' => 'required|string|max:255',
         ];
     }
-} 
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Please enter team name',
+            'name.max' => 'Team name is too long – max 255 characters',
+        ];
+    }
+}
