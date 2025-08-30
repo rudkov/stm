@@ -65,6 +65,17 @@ class TalentQuery
             }
         }
 
+        // Apply noRelatives filter (talent younger than 18 and has no emergency contacts)
+        if (isset($request['noRelatives']) && filter_var($request['noRelatives'], FILTER_VALIDATE_BOOLEAN)) {
+            $this->query
+                ->whereDate('talents.birth_date', '>', now()->subYears(18)->toDateString())
+                ->whereNotExists(function ($sub) {
+                    $sub->select(DB::raw(1))
+                        ->from('talent_emergency_contacts')
+                        ->whereColumn('talent_emergency_contacts.talent_id', 'talents.id');
+                });
+        }
+
         return $this;
     }
 

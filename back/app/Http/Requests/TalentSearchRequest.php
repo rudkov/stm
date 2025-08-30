@@ -28,6 +28,7 @@ class TalentSearchRequest extends FormRequest
         return [
             // Search-specific parameters
             'noContacts' => 'nullable|boolean',
+            'noRelatives' => 'nullable|boolean',
             'preferences' => 'nullable|array',
 
             // Range filters (arrays for min/max values)
