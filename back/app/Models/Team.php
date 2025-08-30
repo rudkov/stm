@@ -15,10 +15,14 @@ use App\Models\Talent;
 use App\Models\TalentBoard;
 use App\Models\User;
 
+use App\Traits\HasUserTracking;
+
 class Team extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    use HasUserTracking;
 
     protected $hidden = [
         'id',

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Team;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Services\TeamInitializationService;
+
 use App\Http\Requests\TeamRequest;
+use App\Models\Team;
+use App\Models\User;
+use App\Services\TeamInitializationService;
 
 class TeamController extends Controller
 {
