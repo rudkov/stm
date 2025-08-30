@@ -15,25 +15,25 @@ class CommunicationTypeFactory extends Factory
         return [
             'name' => $this->faker->words(2, true),
             'type' => $this->faker->randomElement(CommunicationType::getDefaultTypes()),
-            'weight' => null, // Will be set in configure method if not explicitly provided
+            'sort_order' => null, // Will be set in configure method if not explicitly provided
             'team_id' => Team::factory(),
         ];
     }
 
     /**
-     * Configure the factory to set unique weights.
+     * Configure the factory to set unique sort_orders.
      */
     public function configure(): static
     {
         return $this->afterMaking(function (CommunicationType $communicationType) {
-            // Only calculate weight if it wasn't explicitly set
-            if ($communicationType->weight === null) {
-                // Calculate the next available weight for this type and team
-                $maxWeight = CommunicationType::where('type', $communicationType->type)
+            // Only calculate sort_order if it wasn't explicitly set
+            if ($communicationType->sort_order === null) {
+                // Calculate the next available sort_order for this type and team
+                $maxSortOrder = CommunicationType::where('type', $communicationType->type)
                     ->where('team_id', $communicationType->team_id)
-                    ->max('weight');
+                    ->max('sort_order');
                 
-                $communicationType->weight = ($maxWeight ?? -1) + 1;
+                $communicationType->sort_order = ($maxSortOrder ?? -1) + 1;
             }
         });
     }

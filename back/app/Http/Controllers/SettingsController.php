@@ -35,18 +35,18 @@ class SettingsController extends Controller
         $settings['messenger_types'] = MessengerType::orderBy('name', 'asc')->get();
         $settings['social_media_types'] = SocialMediaType::orderBy('name', 'asc')->get();
         $settings['talent_body'] = config('defaults.talent_body');
-        $settings['talent_cup_sizes'] = TalentCupSize::orderBy('weight', 'asc')->get();
-        $settings['talent_dress_sizes'] = TalentDressSize::orderBy('weight', 'asc')->get();
+        $settings['talent_cup_sizes'] = TalentCupSize::orderBy('sort_order', 'asc')->get();
+        $settings['talent_dress_sizes'] = TalentDressSize::orderBy('sort_order', 'asc')->get();
         $settings['talent_eye_colors'] = TalentEyeColor::orderBy('name', 'asc')->get();
         $settings['talent_genders'] = TalentGender::orderBy('name', 'asc')->get();
         $settings['talent_marital_statuses'] = TalentMaritalStatus::orderBy('name', 'asc')->get();
         $settings['talent_hair_colors'] = TalentHairColor::orderBy('name', 'asc')->get();
-        $settings['talent_hair_lengths'] = TalentHairLength::orderBy('weight', 'asc')->get();
+        $settings['talent_hair_lengths'] = TalentHairLength::orderBy('sort_order', 'asc')->get();
         $settings['talent_relative_types'] = TalentRelativeType::orderBy('name', 'asc')->get();
-        $settings['talent_shoe_sizes'] = TalentShoeSize::orderBy('weight', 'asc')->get();
+        $settings['talent_shoe_sizes'] = TalentShoeSize::orderBy('sort_order', 'asc')->get();
         $settings['talent_skin_colors'] = TalentSkinColor::orderBy('name', 'asc')->get();
-        $settings['talent_shirt_sizes'] = TalentShirtSize::orderBy('weight', 'asc')->get();
-        $settings['talent_suit_cuts'] = TalentSuitCut::orderBy('weight', 'asc')->get();
+        $settings['talent_shirt_sizes'] = TalentShirtSize::orderBy('sort_order', 'asc')->get();
+        $settings['talent_suit_cuts'] = TalentSuitCut::orderBy('sort_order', 'asc')->get();
         return $settings;
     }
 

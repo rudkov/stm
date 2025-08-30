@@ -18,7 +18,7 @@ class PhoneSeeder extends Seeder
     public function run(): void
     {
         $phoneTypes = CommunicationType::where('type', 'phone')
-            ->orderBy('weight')
+            ->orderBy('sort_order')
             ->get()
             ->groupBy('team_id');
 

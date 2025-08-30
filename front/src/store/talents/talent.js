@@ -165,7 +165,7 @@ const prepareTalent = (state, values) => {
     item.addresses = values.addresses.sort(
         (a, b) => {
             if (a.type && b.type) {
-                return a.type.weight - b.type.weight
+                return a.type.sort_order - b.type.sort_order
             }
             else
                 return -999999; //this hack is for sorting values without type (null values) at the bottom of the list
@@ -174,7 +174,7 @@ const prepareTalent = (state, values) => {
     item.phones = values.phones.sort(
         (a, b) => {
             if (a.type && b.type) {
-                return a.type.weight - b.type.weight
+                return a.type.sort_order - b.type.sort_order
             }
             else
                 return -999999; //this hack is for sorting values without type (null values) at the bottom of the list
@@ -183,7 +183,7 @@ const prepareTalent = (state, values) => {
     item.emails = values.emails.sort(
         (a, b) => {
             if (a.type && b.type) {
-                return a.type.weight - b.type.weight
+                return a.type.sort_order - b.type.sort_order
             }
             else
                 return -999999; //this hack is for sorting values without type (null values) at the bottom of the list

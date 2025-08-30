@@ -12,11 +12,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type')->index();
-            $table->tinyInteger('weight')->index();
+            $table->tinyInteger('sort_order')->index();
             $table->foreignId('team_id')->constrained()->onDelete('cascade');
 
             $table->unique(['name', 'type', 'team_id']);
-            $table->unique(['type', 'weight', 'team_id']);
+            $table->unique(['type', 'sort_order', 'team_id']);
         });
     }
 

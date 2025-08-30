@@ -170,7 +170,7 @@ class TeamInitializationServiceTest extends TestCase
                     'team_id' => $this->team->id,
                     'name' => $item['name'],
                     'type' => $type,
-                    'weight' => $item['weight'],
+                    'sort_order' => $item['sort_order'],
                 ]);
             }
         }
@@ -207,7 +207,7 @@ class TeamInitializationServiceTest extends TestCase
                     'team_id' => $this->team->id,
                     'name' => $item['name'],
                     'type' => $type,
-                    'weight' => $item['weight'],
+                    'sort_order' => $item['sort_order'],
                 ]);
             }
         }
@@ -281,16 +281,16 @@ class TeamInitializationServiceTest extends TestCase
             $this->assertNotNull($type->name);
             $this->assertNotEmpty($type->name);
             $this->assertNotNull($type->type);
-            $this->assertNotNull($type->weight);
+            $this->assertNotNull($type->sort_order);
             $this->assertEquals($this->team->id, $type->team_id);
 
             // Assert type is one of the expected types
             $expectedTypes = ['address', 'email', 'phone'];
             $this->assertContains($type->type, $expectedTypes);
 
-            // Assert weight is a non-negative integer
-            $this->assertIsInt($type->weight);
-            $this->assertGreaterThanOrEqual(0, $type->weight);
+            // Assert sort_order is a non-negative integer
+            $this->assertIsInt($type->sort_order);
+            $this->assertGreaterThanOrEqual(0, $type->sort_order);
         }
     }
 
@@ -312,23 +312,23 @@ class TeamInitializationServiceTest extends TestCase
         }
     }
 
-    public function test_communication_types_are_properly_ordered_by_weight()
+    public function test_communication_types_are_properly_ordered_by_sort_order()
     {
         $service = new TeamInitializationService($this->team);
         $service->createDefaultCommunicationTypes();
 
         $this->team->refresh();
 
-        // Group communication types by type and verify weight ordering
+        // Group communication types by type and verify sort_order ordering
         $typeGroups = $this->team->communicationTypes->groupBy('type');
 
         foreach ($typeGroups as $type => $items) {
-            $weights = $items->pluck('weight')->toArray();
-            $sortedWeights = $weights;
-            sort($sortedWeights);
+            $sortOrders = $items->pluck('sort_order')->toArray();
+            $sortedSortOrders = $sortOrders;
+            sort($sortedSortOrders);
 
-            // Verify the weights are in ascending order as configured
-            $this->assertEquals($sortedWeights, $weights, "Communication types of type '{$type}' should be ordered by weight");
+            // Verify the sort_orders are in ascending order as configured
+            $this->assertEquals($sortedSortOrders, $sortOrders, "Communication types of type '{$type}' should be ordered by sort_order");
         }
     }
 

@@ -167,7 +167,7 @@ class FirstTimeSeeder extends Seeder
         foreach ($items as $item) {
             $talentHairLength = new TalentHairLength();
             $talentHairLength->name = $item[0];
-            $talentHairLength->weight = $item[1];
+            $talentHairLength->sort_order = $item[1];
             $talentHairLength->save();
         }
     }
@@ -203,7 +203,7 @@ class FirstTimeSeeder extends Seeder
         foreach ($items as $item) {
             $talentCupSize = new TalentCupSize();
             $talentCupSize->name = $item[0];
-            $talentCupSize->weight = $item[1];
+            $talentCupSize->sort_order = $item[1];
             $talentCupSize->save();
         }
     }
@@ -255,7 +255,7 @@ class FirstTimeSeeder extends Seeder
             $talentShoeSize->size_adult_uk = $item[0];
             $talentShoeSize->size_adult_us_men = $item[1];
             $talentShoeSize->size_adult_us_women = $item[2];
-            $talentShoeSize->weight = $item[3];
+            $talentShoeSize->sort_order = $item[3];
             $talentShoeSize->save();
         }
     }
@@ -349,7 +349,7 @@ class FirstTimeSeeder extends Seeder
         foreach ($items as $item) {
             $talentShirtSize = new TalentShirtSize();
             $talentShirtSize->name = $item[0];
-            $talentShirtSize->weight = $item[1];
+            $talentShirtSize->sort_order = $item[1];
             $talentShirtSize->save();
         }
     }
@@ -365,7 +365,7 @@ class FirstTimeSeeder extends Seeder
         foreach ($items as $item) {
             $talentSuitCut = new TalentSuitCut();
             $talentSuitCut->name = $item[0];
-            $talentSuitCut->weight = $item[1];
+            $talentSuitCut->sort_order = $item[1];
             $talentSuitCut->save();
         }
     }
@@ -381,7 +381,7 @@ class FirstTimeSeeder extends Seeder
         foreach ($items as $item) {
             $talentDressSize = new TalentDressSize();
             $talentDressSize->name = $item[0];
-            $talentDressSize->weight = $item[1];
+            $talentDressSize->sort_order = $item[1];
             $talentDressSize->save();
         }
     }

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('size_adult_uk');
             $table->string('size_adult_us_men');
             $table->string('size_adult_us_women');
-            $table->tinyInteger('weight')->unsigned()->index();
+            $table->tinyInteger('sort_order')->unsigned()->index();
             $table->softDeletes();
             $table->timestamps();
 

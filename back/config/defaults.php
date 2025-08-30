@@ -12,19 +12,19 @@ return [
 
     'communication_types' => [
         'address' => [
-            ['name' => 'Primary', 'weight' => 0],
-            ['name' => 'Secondary', 'weight' => 1],
-            ['name' => 'Alternative', 'weight' => 2]
+            ['name' => 'Primary', 'sort_order' => 0],
+            ['name' => 'Secondary', 'sort_order' => 1],
+            ['name' => 'Alternative', 'sort_order' => 2]
         ],
         'email' => [
-            ['name' => 'Primary', 'weight' => 0],
-            ['name' => 'Secondary', 'weight' => 1],
-            ['name' => 'Alternative', 'weight' => 2]
+            ['name' => 'Primary', 'sort_order' => 0],
+            ['name' => 'Secondary', 'sort_order' => 1],
+            ['name' => 'Alternative', 'sort_order' => 2]
         ],
         'phone' => [
-            ['name' => 'Primary', 'weight' => 0],
-            ['name' => 'Secondary', 'weight' => 1],
-            ['name' => 'Alternative', 'weight' => 2]
+            ['name' => 'Primary', 'sort_order' => 0],
+            ['name' => 'Secondary', 'sort_order' => 1],
+            ['name' => 'Alternative', 'sort_order' => 2]
         ],
     ],
 
