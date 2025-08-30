@@ -140,7 +140,7 @@ class FactoryTestHelper
             'last_name' => 'Doe',
             'citizenships' => [],
             'languages' => [],
-            'relatives' => [],
+            'emergency_contacts' => [],
             'addresses' => [
                 array_merge(['type' => ['id' => $addressType->id]], $addressData),
                 array_merge(['type' => ['id' => $addressType->id]], Address::factory()->make()->only(['info']))

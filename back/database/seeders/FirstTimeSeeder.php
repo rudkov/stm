@@ -19,7 +19,6 @@ use App\Models\TalentGender;
 use App\Models\TalentHairColor;
 use App\Models\TalentHairLength;
 use App\Models\TalentMaritalStatus;
-use App\Models\TalentRelativeType;
 use App\Models\TalentShirtSize;
 use App\Models\TalentShoeSize;
 use App\Models\TalentSkinColor;
@@ -51,7 +50,6 @@ class FirstTimeSeeder extends Seeder
         $this->talentShoeSizes();
         $this->talentSkinColors();
         $this->talentMaritalStatuses();
-        $this->talentRelativeTypes();
         $this->talentGenders();
         $this->talentShirtSizes();
         $this->talentSuitCuts();
@@ -293,28 +291,6 @@ class FirstTimeSeeder extends Seeder
         }
     }
 
-    public function talentRelativeTypes()
-    {
-        $items = [
-            ['Father'],
-            ['Mother'],
-            ['Brother'],
-            ['Sister'],
-            ['Unkle'],
-            ['Aunt'],
-            ['Child'],
-            ['Grandmother'],
-            ['Grandfather'],
-            ['Husband'],
-            ['Wife']
-        ];
-
-        foreach ($items as $item) {
-            $talentRelativeType = new TalentRelativeType();
-            $talentRelativeType->name = $item[0];
-            $talentRelativeType->save();
-        }
-    }
     public function talentGenders()
     {
         $items = [

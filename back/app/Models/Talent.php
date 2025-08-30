@@ -11,11 +11,11 @@ use App\Models\Country;
 use App\Models\Event;
 use App\Models\TalentCupSize;
 use App\Models\TalentDressSize;
+use App\Models\TalentEmergencyContact;
 use App\Models\TalentEyeColor;
 use App\Models\TalentHairColor;
 use App\Models\TalentHairLength;
 use App\Models\TalentMaritalStatus;
-use App\Models\TalentRelative;
 use App\Models\TalentShirtSize;
 use App\Models\TalentShoeSize;
 use App\Models\TalentSkinColor;
@@ -172,9 +172,9 @@ class Talent extends Model
         return $this->belongsTo(TalentMaritalStatus::class);
     }
 
-    public function relatives()
+    public function emergencyContacts()
     {
-        return $this->hasMany(TalentRelative::class);
+        return $this->hasMany(TalentEmergencyContact::class);
     }
 
     public function citizenships()

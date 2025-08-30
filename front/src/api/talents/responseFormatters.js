@@ -65,21 +65,6 @@ export const formatTalentResponse = (values) => {
     item.performance_skills = values.performance_skills || '';
     item.biography = values.biography || '';
 
-    item.relatives = values.relatives.sort(
-        (a, b) => {
-            if (a.type && b.type) {
-                if (a.type.name > b.type.name) {
-                    return 1;
-                } else if (b.type.name > a.type.name) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            }
-            else
-                return -999999; //this hack is for sorting values without type (null values) at the bottom of the list
-        });
-
     item.addresses = values.addresses.sort(
         (a, b) => {
             if (a.type && b.type) {

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Country;
 use App\Models\Language;
 use App\Models\Talent;
-use App\Models\TalentRelative;
+use App\Models\TalentEmergencyContact;
 
 class TalentSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class TalentSeeder extends Seeder
         $talents = $this->createTalents();
         $this->createTalentCitizenships($talents);
         $this->createTalentLanguages($talents);
-        $this->createTalentRelatives();
+        $this->createTalentEmergencyContacts();
     }
 
     /**
@@ -73,10 +73,10 @@ class TalentSeeder extends Seeder
     }
 
     /**
-     * Create talent relatives using factory.
+     * Create talent emergency_contacts using factory.
      */
-    private function createTalentRelatives(): void
+    private function createTalentEmergencyContacts(): void
     {
-        TalentRelative::factory(150)->create();
+        TalentEmergencyContact::factory(150)->create();
     }
 }

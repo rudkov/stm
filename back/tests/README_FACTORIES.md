@@ -12,7 +12,6 @@ This guide demonstrates how to effectively use the newly created factories for m
 - ✅ `SocialMediaFactory` - For social media records (morphable)
 
 ### **Supporting Factories**
-- ✅ `TalentRelativeTypeFactory` - For talent relative types
 - ✅ `SocialMediaTypeFactory` - For social media types
 
 ## 🎯 Basic Usage Examples

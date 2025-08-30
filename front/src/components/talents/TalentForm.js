@@ -15,9 +15,9 @@ import {
 import {
     initAddresses, processAddresses,
     initEmails, processEmails,
+    initEmergencyContacts, processEmergencyContacts,
     initMessengers, processMessengers,
     initPhones, processPhones,
-    initRelatives, processRelatives,
     initSocialMedias, processSocialMedias,
     initWeblinks, processWeblinks
 } from 'helpers/form-utils';
@@ -30,12 +30,12 @@ import SharedSectionSocialMedia from 'components/nested-sections/shared/edit/Sha
 import TalentSectionAchievements from 'components/nested-sections/talents/edit/TalentSectionAchievements';
 import TalentSectionBiography from 'components/nested-sections/talents/edit/TalentSectionBiography';
 import TalentSectionBody from 'components/nested-sections/talents/edit/TalentSectionBody';
+import TalentSectionEmergencyContacts from 'components/nested-sections/talents/edit/TalentSectionEmergencyContacts';
 import TalentSectionFoodAllergies from 'components/nested-sections/talents/edit/TalentSectionFoodAllergies';
 import TalentSectionPerformanceSkills from 'components/nested-sections/talents/edit/TalentSectionPerformanceSkills';
 import TalentSectionPreferences from 'components/nested-sections/talents/edit/TalentSectionPreferences';
 import TalentSectionPrimaryInfo from 'components/nested-sections/talents/edit/TalentSectionPrimaryInfo';
 import TalentSectionRegionLanguages from 'components/nested-sections/talents/edit/TalentSectionRegionLanguages';
-import TalentSectionRelatives from 'components/nested-sections/talents/edit/TalentSectionRelatives';
 
 function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
     const { data: authData } = useCheckAuthQuery();
@@ -95,9 +95,9 @@ function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
 
             ...initAddresses(values),
             ...initEmails(values),
+            ...initEmergencyContacts(values),
             ...initMessengers(values),
             ...initPhones(values),
-            ...initRelatives(values),
             ...initSocialMedias(values),
             ...initWeblinks(values),
         });
@@ -127,9 +127,9 @@ function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
             ...processed,
             ...processAddresses(processed),
             ...processEmails(processed),
+            ...processEmergencyContacts(processed),
             ...processMessengers(processed),
             ...processPhones(processed),
-            ...processRelatives(processed),
             ...processSocialMedias(processed),
             ...processWeblinks(processed),
         };
@@ -166,7 +166,7 @@ function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
                 { key: 'preferences', href: '#preferences', title: 'Preferences' },
                 { key: 'social-media', href: '#social-media', title: 'Social Media' },
                 { key: 'addresses', href: '#addresses', title: 'Addresses' },
-                { key: 'relatives', href: '#relatives', title: 'Relatives' },
+                { key: 'emergency-contacts', href: '#emergency-contacts', title: 'Relatives & Emergency Contacts' },
                 { key: 'biography', href: '#biography', title: 'Biography' },
                 { key: 'achievements', href: '#achievements', title: 'Achievements' },
                 { key: 'performance-skills', href: '#performance-skills', title: 'Performance Skills' },
@@ -196,7 +196,7 @@ function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
             <TalentSectionPreferences id='preferences' />
             <SharedSectionSocialMedia id='social-media' />
             <SharedSectionAddresses id='addresses' />
-            <TalentSectionRelatives id='relatives' />
+            <TalentSectionEmergencyContacts id='emergency-contacts' />
             <TalentSectionBiography id='biography' />
             <TalentSectionAchievements id='achievements' />
             <TalentSectionPerformanceSkills id='performance-skills' />

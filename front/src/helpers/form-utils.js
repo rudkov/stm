@@ -77,7 +77,7 @@ const getNestedValue = (obj, path) => {
  * @returns {Array|null} - The filtered array with empty objects removed, or null if empty
  * 
  * @example
- * // For addresses/emails/phones/relatives (info required, type optional)
+ * // For addresses/emails/phones/emergency_contacts (info required, type optional)
  * cleanCollection(values.addresses, { requiredAny: ['info'] })
  * 
  * // For social_medias/messengers (both type and info required)
@@ -154,18 +154,18 @@ export const processPhones = (values) => {
     return processed;
 };
 
-export const initRelatives = (values) => ({
-    relatives: (values.relatives && values.relatives.length > 0)
-        ? values.relatives
-        : [{ type: { id: null }, info: '' }],
+export const initEmergencyContacts = (values) => ({
+    emergency_contacts: (values.emergency_contacts && values.emergency_contacts.length > 0)
+        ? values.emergency_contacts
+        : [{ info: '' }],
 });
 
-export const processRelatives = (values) => {
+export const processEmergencyContacts = (values) => {
     let processed = {};
-    if (values.relatives) {
-        processed.relatives = values.relatives.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+    if (values.emergency_contacts) {
+        processed.emergency_contacts = values.emergency_contacts.map(item => ({ ...item }));
     }
-    processed.relatives = cleanCollection(processed.relatives, { requiredAny: ['info'] });
+    processed.emergency_contacts = cleanCollection(processed.emergency_contacts, { requiredAny: ['info'] });
     return processed;
 };
 

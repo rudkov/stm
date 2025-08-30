@@ -21,7 +21,6 @@ use App\Models\TalentHairLength;
 use App\Models\TalentShoeSize;
 use App\Models\TalentSkinColor;
 use App\Models\TalentMaritalStatus;
-use App\Models\TalentRelativeType;
 use App\Models\TalentShirtSize;
 use App\Models\TalentSuitCut;
 
@@ -42,7 +41,6 @@ class SettingsController extends Controller
         $settings['talent_marital_statuses'] = TalentMaritalStatus::orderBy('name', 'asc')->get();
         $settings['talent_hair_colors'] = TalentHairColor::orderBy('name', 'asc')->get();
         $settings['talent_hair_lengths'] = TalentHairLength::orderBy('sort_order', 'asc')->get();
-        $settings['talent_relative_types'] = TalentRelativeType::orderBy('name', 'asc')->get();
         $settings['talent_shoe_sizes'] = TalentShoeSize::orderBy('sort_order', 'asc')->get();
         $settings['talent_skin_colors'] = TalentSkinColor::orderBy('name', 'asc')->get();
         $settings['talent_shirt_sizes'] = TalentShirtSize::orderBy('sort_order', 'asc')->get();

@@ -17,8 +17,7 @@ use App\Models\Messenger;
 use App\Models\MessengerType;
 use App\Models\SocialMediaType;
 use App\Models\Talent;
-use App\Models\TalentRelative;
-use App\Models\TalentRelativeType;
+use App\Models\TalentEmergencyContact;
 use App\Models\Team;
 use App\Models\User;
 
@@ -564,207 +563,177 @@ class RelationshipHelpersTest extends TestCase
 
     public function test_sync_relation_has_many_creates_new_records()
     {
-        // Create a relative type for testing
-        $relativeType = TalentRelativeType::factory()->create();
-
         $items = [
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'John Doe - Father'
             ],
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Jane Doe - Mother'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->emergencyContacts(), $items, ['info']);
 
         // Assert records were created
-        $this->assertDatabaseHas('talent_relatives', [
+        $this->assertDatabaseHas('talent_emergency_contacts', [
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'John Doe - Father'
         ]);
 
-        $this->assertDatabaseHas('talent_relatives', [
+        $this->assertDatabaseHas('talent_emergency_contacts', [
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Jane Doe - Mother'
         ]);
 
-        $this->assertEquals(2, $this->talent->relatives()->count());
+        $this->assertEquals(2, $this->talent->emergencyContacts()->count());
     }
 
     public function test_sync_relation_has_many_updates_existing_records()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
-        // Create existing relative
-        $existingRelative = TalentRelative::factory()->create([
+        // Create existing emergency_contact
+        $existingEmergencyContact = TalentEmergencyContact::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Original Info'
         ]);
 
         $items = [
             [
-                'id' => $existingRelative->id,
-                'relative_type_id' => $relativeType->id,
+                'id' => $existingEmergencyContact->id,
                 'info' => 'Updated Info'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->emergencyContacts(), $items, ['info']);
 
         // Assert record was updated
-        $this->assertDatabaseHas('talent_relatives', [
-            'id' => $existingRelative->id,
+        $this->assertDatabaseHas('talent_emergency_contacts', [
+            'id' => $existingEmergencyContact->id,
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Updated Info'
         ]);
 
-        $this->assertEquals(1, $this->talent->relatives()->count());
+        $this->assertEquals(1, $this->talent->emergencyContacts()->count());
     }
 
     public function test_sync_relation_has_many_deletes_removed_records()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
-        // Create existing relatives
-        $relative1 = TalentRelative::factory()->create([
+        // Create existing emergency_contacts
+        $emergencyContact1 = TalentEmergencyContact::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Keep This'
         ]);
 
-        $relative2 = TalentRelative::factory()->create([
+        $emergencyContact2 = TalentEmergencyContact::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Delete This'
         ]);
 
-        // Only keep the first relative
+        // Only keep the first emergency_contact
         $items = [
             [
-                'id' => $relative1->id,
-                'relative_type_id' => $relativeType->id,
+                'id' => $emergencyContact1->id,
                 'info' => 'Keep This'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->emergencyContacts(), $items, ['info']);
 
-        // Assert first relative still exists
-        $this->assertDatabaseHas('talent_relatives', [
-            'id' => $relative1->id,
+        // Assert first emergency_contact still exists
+        $this->assertDatabaseHas('talent_emergency_contacts', [
+            'id' => $emergencyContact1->id,
             'talent_id' => $this->talent->id
         ]);
 
-        // Assert second relative was deleted
-        $this->assertDatabaseMissing('talent_relatives', [
-            'id' => $relative2->id
+        // Assert second emergency_contact was deleted
+        $this->assertDatabaseMissing('talent_emergency_contacts', [
+            'id' => $emergencyContact2->id
         ]);
 
-        $this->assertEquals(1, $this->talent->relatives()->count());
+        $this->assertEquals(1, $this->talent->emergencyContacts()->count());
     }
 
     public function test_sync_relation_has_many_handles_empty_input()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
-        // Create existing relative
-        TalentRelative::factory()->create([
+        // Create existing emergency_contact
+        TalentEmergencyContact::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Should be deleted'
         ]);
 
         // Sync with empty array
-        sync_relation($this->talent->relatives(), [], ['relative_type_id', 'info']);
+        sync_relation($this->talent->emergencyContacts(), [], ['info']);
 
-        // Assert all relatives were deleted
-        $this->assertEquals(0, $this->talent->relatives()->count());
+        // Assert all emergency_contacts were deleted
+        $this->assertEquals(0, $this->talent->emergencyContacts()->count());
     }
 
     public function test_sync_relation_has_many_mixed_create_update_delete()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
-        // Create existing relatives
-        $existingRelative = TalentRelative::factory()->create([
+        // Create existing emergency_contacts
+        $existingEmergencyContact = TalentEmergencyContact::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'To Update'
         ]);
 
-        $toDeleteRelative = TalentRelative::factory()->create([
+        $toDeleteEmergencyContact = TalentEmergencyContact::factory()->create([
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'To Delete'
         ]);
 
         $items = [
             // Update existing
             [
-                'id' => $existingRelative->id,
-                'relative_type_id' => $relativeType->id,
+                'id' => $existingEmergencyContact->id,
                 'info' => 'Updated Info'
             ],
             // Create new
             [
-                'relative_type_id' => $relativeType->id,
-                'info' => 'New Relative'
+                'info' => 'New Emergency Contact'
             ]
-            // Note: toDeleteRelative is not included, so it should be deleted
+            // Note: toDeleteEmergencyContact is not included, so it should be deleted
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->emergencyContacts(), $items, ['info']);
 
         // Assert update
-        $this->assertDatabaseHas('talent_relatives', [
-            'id' => $existingRelative->id,
+        $this->assertDatabaseHas('talent_emergency_contacts', [
+            'id' => $existingEmergencyContact->id,
             'info' => 'Updated Info'
         ]);
 
         // Assert creation
-        $this->assertDatabaseHas('talent_relatives', [
+        $this->assertDatabaseHas('talent_emergency_contacts', [
             'talent_id' => $this->talent->id,
-            'info' => 'New Relative'
+            'info' => 'New Emergency Contact'
         ]);
 
         // Assert deletion
-        $this->assertDatabaseMissing('talent_relatives', [
-            'id' => $toDeleteRelative->id
+        $this->assertDatabaseMissing('talent_emergency_contacts', [
+            'id' => $toDeleteEmergencyContact->id
         ]);
 
-        $this->assertEquals(2, $this->talent->relatives()->count());
+        $this->assertEquals(2, $this->talent->emergencyContacts()->count());
     }
 
     public function test_sync_relation_has_many_respects_fillable_fields()
     {
-        $relativeType = TalentRelativeType::factory()->create();
-
         $items = [
             [
-                'relative_type_id' => $relativeType->id,
                 'info' => 'Test Info',
                 'non_fillable_field' => 'Should be ignored'
             ]
         ];
 
-        sync_relation($this->talent->relatives(), $items, ['relative_type_id', 'info']);
+        sync_relation($this->talent->emergencyContacts(), $items, ['info']);
 
         // Assert only fillable fields were saved
-        $this->assertDatabaseHas('talent_relatives', [
+        $this->assertDatabaseHas('talent_emergency_contacts', [
             'talent_id' => $this->talent->id,
-            'relative_type_id' => $relativeType->id,
             'info' => 'Test Info'
         ]);
 
         // The non_fillable_field shouldn't cause issues (Laravel will ignore it)
-        $this->assertEquals(1, $this->talent->relatives()->count());
+        $this->assertEquals(1, $this->talent->emergencyContacts()->count());
     }
 
     // ==================== morph_many Tests ====================

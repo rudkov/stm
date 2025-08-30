@@ -8,12 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('talent_relatives', function (Blueprint $table) {
+        Schema::create('talent_emergency_contacts', function (Blueprint $table) {
             $table->id();
             $table->text('info')->nullable();
 
             $table->foreignUuid('talent_id')->constrained('talents')->onDelete('cascade');
-            $table->foreignId('relative_type_id')->nullable()->constrained('talent_relative_types')->onDelete('set null');
 
             $table->timestamps();
         });
@@ -21,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('talent_relatives');
+        Schema::dropIfExists('talent_emergency_contacts');
     }
 };

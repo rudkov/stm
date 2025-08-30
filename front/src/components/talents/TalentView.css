@@ -11,7 +11,7 @@
         'notes              contacts         body'
         'primary-info       preferences      body'
         'region-languages   food-allergies   body'
-        'social-media       addresses        relatives'
+        'social-media       addresses        emergency-contacts'
         'biography          achievements     performance-skills'
         'system-info        system-info      system-info'
     ;
@@ -21,15 +21,15 @@
     .talent-profile__body {
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
-            'notes              notes'
-            'primary-info       body'
-            'food-allergies     body'
-            'contacts           body'
-            'region-languages   preferences'
-            'social-media       addresses'
-            'relatives          biography'
-            'achievements       performance-skills'
-            'system-info        system-info'
+            'notes                  notes'
+            'primary-info           body'
+            'food-allergies         body'
+            'contacts               body'
+            'region-languages       preferences'
+            'social-media           addresses'
+            'emergency-contacts     biography'
+            'achievements           performance-skills'
+            'system-info            system-info'
         ;
     }
 }
@@ -47,7 +47,7 @@
             'preferences'
             'social-media'
             'addresses'
-            'relatives'
+            'emergency-contacts'
             'biography'
             'achievements'
             'performance-skills'
@@ -88,8 +88,8 @@
     grid-area: social-media;
 }
 
-.talent-section__relatives {
-    grid-area: relatives;
+.talent-section__emergency-contacts {
+    grid-area: emergency-contacts;
 }
 
 .talent-section__preferences {
