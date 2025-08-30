@@ -49,6 +49,17 @@ Run unit tests:
 php artisan test
 ```
 
-
 ### Test Emails with MailHog
 MailHog is included in the Docker setup for local email testing. After running the project with `sail up -d`, you can view test emails sent by the application by opening your browser and navigating to [http://localhost:8025](http://localhost:8025). All outgoing emails will appear in the MailHog web interface.
+
+### Creating Database Indexes
+| Method | Index |
+| -------- | ------- |
+| `->id()` | Primary |
+| `->unique()` | Unique |
+| `->uuid()` | – |
+| `->uuid()->primary()` | Primary |
+| `->foreign()->references()->on()` | Index |
+| `->foreignId()` | – |
+| `->foreignId()->constrained()` | Index |
+| `->uuidMorphs()` | Index `[*_type, *_id]` |
