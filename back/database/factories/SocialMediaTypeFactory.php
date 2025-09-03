@@ -19,7 +19,7 @@ class SocialMediaTypeFactory extends Factory
             ['YouTube', 'https://www.youtube.com/', 'youtube'],
         ];
         
-        $type = $this->faker->randomElement($types);
+        $type = $this->faker->unique()->randomElement($types);
         
         return [
             'name' => $type[0],
