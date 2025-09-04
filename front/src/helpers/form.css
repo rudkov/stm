@@ -11,6 +11,9 @@
 }
 
 /* Override Antd styles */
+.ant-btn {
+    padding: 0px 10px;
+}
 
 .ant-btn-color-primary,
 .ant-btn-color-default,

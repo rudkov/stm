@@ -1,10 +1,17 @@
+.contact-section-companies__body {
+    margin: 0px 6px 6px 6px;
+}
+
+.contact-section-companies__grid {
+    gap: 2px;
+}
+
 .contact-section-companies__company {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: 12px;
+    padding: 6px;
     border-radius: var(--border-radius-medium);
-    border: 1px solid var(--divider-color);
 }
 
 .contact-section-companies__company:hover {
@@ -15,11 +22,11 @@
     background-color: var(--menu-item-background-color-active);
 }
 
-.contact-section-companies__company_name {
+.contact-section-companies__company-name {
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--accent);
 }
 
-.contact-section-companies__company_categories {
+.contact-section-companies__company-job-title {
     color: var(--text-secondary);
 }

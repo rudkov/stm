@@ -9,6 +9,7 @@ import { useGetContactsQuery } from 'api/contacts/contactsApi';
 import { applyLocalFilters } from 'components/filters/contacts/applyLocalFilters';
 
 import ScrollableView from 'components/ui-components/ScrollableView';
+import ContactListItem from './components/ContactListItem';
 
 import { ReactComponent as IconAdd } from 'assets/icons/add.svg';
 
@@ -37,7 +38,7 @@ function ContactsList({ createContact, filters, updateFilter }) {
         result = contacts.map((contact) => {
             return (
                 <NavLink className='contacts-list__item' key={'contact.' + contact.id} to={contact.id}>
-                    {contact.name}
+                    <ContactListItem contact={contact} />
                 </NavLink>
             );
         });
@@ -60,6 +61,7 @@ function ContactsList({ createContact, filters, updateFilter }) {
                         initialValues={{ search: filters.search }}
                         onValuesChange={searchContacts}
                         autoComplete='off'
+                        style={{ width: '100%' }}
                     >
                         <Form.Item name='search'>
                             <Input

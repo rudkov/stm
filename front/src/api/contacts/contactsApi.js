@@ -23,7 +23,11 @@ export const contactsApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: values,
             }),
-            invalidatesTags: ['Contact'],
+            invalidatesTags: (result, error, { companyIds = [] }) => [
+                'Contact',
+                ...companyIds.map((companyId) => ({ type: 'Company', id: companyId })),
+                'Company',
+            ],
         }),
         updateContact: builder.mutation({
             query: ({ id, values }) => ({
@@ -31,14 +35,23 @@ export const contactsApi = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: values,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Contact', id }, 'Contact'],
+            invalidatesTags: (result, error, { id, companyIds = [] }) => [
+                { type: 'Contact', id },
+                'Contact',
+                ...companyIds.map((companyId) => ({ type: 'Company', id: companyId })),
+                'Company',
+            ],
         }),
         deleteContact: builder.mutation({
             query: ({ id }) => ({
                 url: `/contacts/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Contact'],
+            invalidatesTags: (result, error, { companyIds = [] }) => [
+                'Contact',
+                ...companyIds.map((companyId) => ({ type: 'Company', id: companyId })),
+                'Company',
+            ],
         }),
     }),
 });

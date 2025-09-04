@@ -1,4 +1,5 @@
-import '../../../../helpers/shared.css';
+import './SharedSectionSystemInfo.css';
+import 'helpers/shared.css';
 
 import NestedSection from '../../NestedSection';
 
@@ -6,13 +7,13 @@ function SharedSectionSystemInfo(props) {
     const data = props.data;
 
     return (
-        <NestedSection className={`nested-section__system-info ${props.className}`}>
-            <NestedSection.Body>
-                <div className='nested-section__grid'>
-                    <div>
-                        Last updated by {data.updated_by?.name} on {data.updated_at}.
-                        Created by {data.created_by?.name} on {data.created_at}.
-                    </div>
+        <NestedSection className={`shared-section-system-info ${props.className}`}>
+            <NestedSection.Body className='shared-section-system-info__body'>
+                <div>
+                    Created: {data.created_by?.name}, {data.created_at}.
+                </div>
+                <div>
+                    Last updated: {data.updated_by?.name}, {data.updated_at}.
                 </div>
             </NestedSection.Body>
         </NestedSection>

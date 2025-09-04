@@ -13,6 +13,8 @@ class ContactCollection extends ResourceCollection
             return [
                 'id' => $contact->id,
                 'name' => trim($contact->first_name . ' ' . $contact->last_name),
+                'job_title' => $contact->job_title,
+                'companies' => $contact->companies,
             ];
         })->toArray();
     }

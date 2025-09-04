@@ -61,6 +61,27 @@ class RelationshipHelpersTest extends TestCase
         ]);
     }
 
+    public function test_sync_relation_skips_when_items_null()
+    {
+        $company = Company::factory()->create(['team_id' => $this->team->id]);
+
+        // Attach an initial relationship that must stay untouched
+        $this->contact->companies()->attach($company->id, ['job_title' => 'Existing']);
+
+        // Pass null as the items param (simulates the key being absent in validated data)
+        sync_relation($this->contact->companies(), null, ['job_title']);
+
+        // Assert pivot row still exists and is unchanged
+        $this->assertDatabaseHas('company_contact', [
+            'contact_id' => $this->contact->id,
+            'company_id' => $company->id,
+            'job_title'  => 'Existing',
+        ]);
+
+        // Assert no duplicates were created
+        $this->assertEquals(1, $this->contact->companies()->count());
+    }
+
     // ==================== belongs_to_many Tests ====================
 
     public function test_sync_relation_belongs_to_many_creates_new_records_with_direct_pivot_fields()

@@ -27,11 +27,9 @@ import ResetPassword from 'components/account/reset-password/ResetPassword';
 import Main from './components/Main';
 
 import Companies from './components/pages/Companies';
-import CompanyLayout from './components/companies/CompanyLayout';
 import CompanyView from './components/companies/CompanyView';
 
 import Contacts from './components/pages/Contacts';
-import ContactLayout from './components/contacts/ContactLayout';
 import ContactView from './components/contacts/ContactView';
 
 import Events from './components/pages/Events';
@@ -63,7 +61,7 @@ function App() {
                             <Route path='logout' element={<Logout />} />
                             <Route path='email-verify/:id/:hash' element={<EmailVerification />} />
                             <Route path='email-verify/resend' element={<ResendVerificationEmail />} />
-                            
+
                             <Route element={<RequireTeam />}>
 
                                 <Route path='app' element={<Main />}>
@@ -73,15 +71,11 @@ function App() {
                                     </Route>
 
                                     <Route path='companies' element={<Companies />}>
-                                        <Route path=':companyId' element={<CompanyLayout />}>
-                                            <Route path=':contactId' element={<ContactView />} />
-                                        </Route>
+                                        <Route path=':companyId' element={<CompanyView />} />
                                     </Route>
 
                                     <Route path='contacts' element={<Contacts />}>
-                                        <Route path=':contactId' element={<ContactLayout />}>
-                                            <Route path=':companyId' element={<CompanyView />} />
-                                        </Route>
+                                        <Route path=':contactId' element={<ContactView />} />
                                     </Route>
 
                                     <Route path='talents' element={<Talents />}>

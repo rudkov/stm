@@ -16,7 +16,8 @@ function FormHeader({
     headerTitleClass,
     headerControlsClass,
     headerThrobberClass,
-    getDeleteConfirmationText = () => 'Delete item?'
+    getDeleteConfirmationText = () => 'Delete item?',
+    bypassDeleteConfirm = false,
 }) {
     return (
         <>
@@ -26,14 +27,18 @@ function FormHeader({
             <div className={headerControlsClass}>
                 <LoadingOutlined className={`${headerThrobberClass} ${isLoading ? '' : 'hidden'}`} />
                 {enableDelete && (
-                    <Popconfirm
-                        title={getDeleteConfirmationText(entity)}
-                        onConfirm={onDelete}
-                        okText='Delete'
-                        cancelText='Cancel'
-                    >
-                        <Button danger>Delete</Button>
-                    </Popconfirm>
+                    bypassDeleteConfirm ? (
+                        <Button danger onClick={onDelete}>Delete</Button>
+                    ) : (
+                        <Popconfirm
+                            title={getDeleteConfirmationText(entity)}
+                            onConfirm={onDelete}
+                            okText='Delete'
+                            cancelText='Cancel'
+                        >
+                            <Button danger>Delete</Button>
+                        </Popconfirm>
+                    )
                 )}
                 <Button type='primary' onClick={onSubmit}>Save</Button>
                 <Button

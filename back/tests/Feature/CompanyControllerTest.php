@@ -115,10 +115,11 @@ class CompanyControllerTest extends TestCase
             'team_id' => $this->team->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
+            'job_title' => 'Developer',
         ]);
 
         // Attach contact with job title
-        $company->contacts()->attach($contact->id, ['job_title' => 'Developer']);
+        $company->contacts()->attach($contact->id, ['job_title' => 'Developer 2']);
 
         // Load the company with contacts
         $response = $this->actingAs($this->user)
@@ -753,7 +754,7 @@ class CompanyControllerTest extends TestCase
         $this->assertCount(1, $responseData['weblinks']);
     }
 
-    public function test_show_company_uses_contact_basic_resource()
+    public function test_show_company_embeds_full_contact_resource()
     {
         $company = Company::factory()->create([
             'team_id' => $this->team->id,
@@ -766,11 +767,12 @@ class CompanyControllerTest extends TestCase
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
             'first_name' => 'John',
-            'last_name' => 'Doe'
+            'last_name' => 'Doe',
+            'job_title' => 'Senior Developer',
         ]);
 
         // Attach contact with job title
-        $company->contacts()->attach($contact->id, ['job_title' => 'Senior Developer']);
+        $company->contacts()->attach($contact->id, ['job_title' => 'Senior Developer 2']);
 
         $response = $this->actingAs($this->user)
             ->getJson(route('companies.show', $company));
@@ -782,19 +784,18 @@ class CompanyControllerTest extends TestCase
                         'id' => $contact->id,
                         'first_name' => 'John',
                         'last_name' => 'Doe',
-                        'job_title' => 'Senior Developer'
+                        'job_title' => 'Senior Developer',
+                        // Full resource should include notes and timestamps
+                        'notes' => $contact->notes,
                     ]
                 ]
             ]);
 
-        // Verify ContactBasicResource structure (should only have id, first_name, last_name, job_title)
+        // Ensure additional fields like created_at are present when full ContactResource is embedded
         $contactData = $response->json('contacts.0');
-        $this->assertArrayHasKey('id', $contactData);
-        $this->assertArrayHasKey('first_name', $contactData);
-        $this->assertArrayHasKey('last_name', $contactData);
-        $this->assertArrayHasKey('job_title', $contactData);
-        $this->assertArrayNotHasKey('notes', $contactData); // Full contact data should not be included
-        $this->assertArrayNotHasKey('created_at', $contactData);
+        $this->assertArrayHasKey('notes', $contactData);
+        $this->assertArrayHasKey('created_at', $contactData);
+        $this->assertArrayHasKey('updated_at', $contactData);
     }
 
     public function test_store_company_with_empty_relationship_arrays()
@@ -822,5 +823,38 @@ class CompanyControllerTest extends TestCase
         $this->assertEquals(0, $company->messengers()->count());
         $this->assertEquals(0, $company->socialMedias()->count());
         $this->assertEquals(0, $company->weblinks()->count());
+    }
+
+    public function test_contacts_id_validation_passes_and_fails_correctly()
+    {
+        $company = Company::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+        ]);
+
+        // valid contact id
+        $this->actingAs($this->user)
+            ->patchJson(route('companies.update', $company), [
+                'contacts' => [
+                    ['id' => $contact->id, 'job_title' => 'Dev'],
+                ],
+            ])
+            ->assertStatus(200);
+
+        // invalid uuid
+        $this->actingAs($this->user)
+            ->patchJson(route('companies.update', $company), [
+                'contacts' => [
+                    ['id' => (string) \Illuminate\Support\Str::uuid(), 'job_title' => 'Dev'],
+                ],
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('contacts.0.id');
     }
 }

@@ -14,8 +14,12 @@
     margin-left: auto;
 }
 
-.contact-section-main__contact_name {
+.contact-section-main__contact-name {
     font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
+}
+
+.contact-section-main__contact-job_title {
+    color: var(--text-secondary);
 }

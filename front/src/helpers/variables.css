@@ -18,6 +18,9 @@
     --accent-light: rgba(0, 103, 199, 0.5);
     --red: #EC0A0A;
 
+    --warning-accent: oklch(82.8% 0.189 84.429 / 0.3);
+    --warning-light: oklch(82.8% 0.189 84.429 / 0.05);
+
     --menu-item-icon-color: rgba(0, 0, 0, 0.4);
     --menu-item-text-color: rgba(0, 0, 0, 0.6);
     --menu-item-background-color-active: rgba(0, 0, 0, 0.04);
@@ -34,7 +37,7 @@
     --drawer-background: #FFF;
     --drawer-mask: rgba(0, 0, 0, 0.55);
 
-    --divider-color: rgba(0, 0, 0, 0.1);
+    --divider-color: rgba(0, 0, 0, 0.08);
 
     --nested-section-highlighted: rgb(239, 239, 239);
 }
@@ -55,6 +58,9 @@
     --accent: #71bbff;
     --accent-light: rgba(113, 186, 255, 0.3);
     --red: #D71515;
+
+    --warning-accent: oklch(82.8% 0.189 84.429 / 0.2);
+    --warning-light: oklch(82.8% 0.189 84.429 / 0.03);
 
     --menu-item-icon-color: rgba(255, 255, 255, 0.4);
     --menu-item-text-color: rgba(255, 255, 255, 0.6);

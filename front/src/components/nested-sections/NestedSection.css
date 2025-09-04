@@ -1,19 +1,26 @@
 .nested-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 12px;
-    background-color: var(--background-tertiary);
     border-radius: var(--border-radius-big);
+    border: 1px solid var(--divider-color);
     color: var(--text-primary);
 }
 
-.nested-section__system-info .nested-section__grid {
-    color: var(--text-secondary);
+.nested-section__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin: 6px 6px 6px 12px;
+    min-height: 32px;
 }
 
-.nested-section__header {
-    font-weight: bold;
+.nested-section__header>div:first-child {
+    /* This is a hack to align a text with buttons */
+    padding-top: 1px;
+}
+
+.nested-section__body {
+    margin: 12px;
 }
 
 .nested-section__grid {
@@ -57,4 +64,9 @@
 .nested-section.highlighted {
     box-shadow: inset 0 0 0 2px var(--accent-light);
     transition: box-shadow 0.3s ease;
+}
+
+.nested-section__notes {
+    background-color: var(--warning-light);
+    border: 2px solid var(--warning-accent);
 }

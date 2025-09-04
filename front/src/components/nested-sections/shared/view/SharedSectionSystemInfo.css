@@ -1,0 +1,13 @@
+.shared-section-system-info {
+    margin-top: auto;
+    border: none;
+}
+
+.shared-section-system-info__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+}

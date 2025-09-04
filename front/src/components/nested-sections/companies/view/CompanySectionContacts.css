@@ -1,25 +1,39 @@
-.company-section-contacts__contact {
+.company-section-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+}
+
+.company-section-contacts__header {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.company-section-contacts__info {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: 12px;
-    border-radius: var(--border-radius-medium);
-    border: 1px solid var(--divider-color);
 }
 
-.company-section-contacts__contact:hover {
-    box-shadow: var(--menu-item-hover-box-shadow);
+.company-section-contacts__buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-left: auto;
 }
 
-.company-section-contacts__contact.active {
-    background-color: var(--menu-item-background-color-active);
+.company-section-contacts__job_title {
+    font-weight: 500;
 }
 
-.company-section-contacts__contact_name {
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.company-section-contacts__contact_job_title {
+.company-section-contacts__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-weight: 500;
     color: var(--text-secondary);
 }

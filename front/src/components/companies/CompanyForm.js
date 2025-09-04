@@ -21,9 +21,11 @@ import {
 } from 'helpers/form-utils';
 
 import SharedSectionAddresses from 'components/nested-sections/shared/edit/SharedSectionAddresses';
-import SharedSectionContacts from 'components/nested-sections/shared/edit/SharedSectionContacts';
-import SharedSectionNotes from 'components/nested-sections/shared/edit/SharedSectionNotes';
+import SharedSectionEmails from 'components/nested-sections/shared/edit/SharedSectionEmails';
+import SharedSectionMessengers from 'components/nested-sections/shared/edit/SharedSectionMessengers';
+import SharedSectionPhones from 'components/nested-sections/shared/edit/SharedSectionPhones';
 import SharedSectionSocialMedia from 'components/nested-sections/shared/edit/SharedSectionSocialMedia';
+import SharedSectionWeblinks from 'components/nested-sections/shared/edit/SharedSectionWeblinks';
 
 import CompanySectionPrimaryInfo from 'components/nested-sections/companies/edit/CompanySectionPrimaryInfo';
 
@@ -76,7 +78,7 @@ function CompanyForm({ isFormOpen, onClose, onAfterSubmit, companyId }) {
 
             enableDelete={true}
             enableAnchorNavigation={false}
-            formWidth={768}
+            formWidth={600}
 
             apiActions={{
                 query: useGetCompanyQuery,
@@ -93,10 +95,12 @@ function CompanyForm({ isFormOpen, onClose, onAfterSubmit, companyId }) {
             onClose={onClose}
             onAfterSubmit={onAfterSubmit}
         >
-            <SharedSectionNotes id='notes' />
             <CompanySectionPrimaryInfo id='primary-info' />
-            <SharedSectionContacts id='contacts' />
+            <SharedSectionEmails id='emails' />
+            <SharedSectionPhones id='phones' />
+            <SharedSectionMessengers id='messengers' />
             <SharedSectionSocialMedia id='social-media' />
+            <SharedSectionWeblinks id='weblinks' />
             <SharedSectionAddresses id='addresses' />
         </BaseForm>
     );

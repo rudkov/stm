@@ -8,16 +8,14 @@ import { useGetCompanyQuery } from 'api/companies/companiesApi';
 
 import ScrollableView from 'components/ui-components/ScrollableView';
 
-import SharedSectionAddresses from 'components/nested-sections/shared/view/SharedSectionAddresses';
-import SharedSectionContacts from 'components/nested-sections/shared/view/SharedSectionContacts';
 import SharedSectionNotes from 'components/nested-sections/shared/view/SharedSectionNotes';
-import SharedSectionSocialMedia from 'components/nested-sections/shared/view/SharedSectionSocialMedia';
 import SharedSectionSystemInfo from 'components/nested-sections/shared/view/SharedSectionSystemInfo';
 
+import CompanySectionPrimaryInfo from 'components/nested-sections/companies/view/CompanySectionPrimaryInfo';
 import CompanySectionContacts from 'components/nested-sections/companies/view/CompanySectionContacts';
 import CompanySectionMain from 'components/nested-sections/companies/view/CompanySectionMain';
 
-function CompanyView({ inLayout = false }) {
+function CompanyView() {
     const params = useParams();
     const scrollContainerRef = useRef(null);
     const context = useOutletContext();
@@ -35,15 +33,21 @@ function CompanyView({ inLayout = false }) {
         result =
             <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
-                    <CompanySectionMain data={company} editAction={context?.editCompany} />
+                    <CompanySectionMain
+                        data={company}
+                        editCompany={context?.editCompany}
+                        editContact={context?.editContact}
+                    />
                 </ScrollableView.Header>
-                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-view__body'>
+                <ScrollableView.Body scrollContainerRef={scrollContainerRef} className='company-view-layout'>
 
                     <SharedSectionNotes data={company} className='company-section__notes' />
-                    <SharedSectionContacts data={company} className='company-section__contacts' />
-                    <CompanySectionContacts data={company} inLayout={inLayout} className='company-section__contacts' />
-                    <SharedSectionAddresses data={company} className='company-section__addresses' />
-                    <SharedSectionSocialMedia data={company} className='company-section__social-media' />
+
+                    <div className='company-view-layout__content'>
+                        <CompanySectionPrimaryInfo data={company} className='company-section__primary-info' />
+                        <CompanySectionContacts data={company} editContact={context?.editContact} className='company-section__contacts' />
+                    </div>
+
                     <SharedSectionSystemInfo data={company} className='company-section__system-info' />
 
                 </ScrollableView.Body>
