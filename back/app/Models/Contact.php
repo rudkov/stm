@@ -46,6 +46,7 @@ class Contact extends Model
         'first_name',
         'last_name',
         'notes',
+        'job_title',
     ];
 
     public function companies()

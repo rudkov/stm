@@ -8,8 +8,8 @@ function ContactSectionMain(props) {
     return (
         <div className='contact-section-main'>
             <div className='contact-section-main__header'>
-                <div className='contact-section-main__contact_name'>{contact.first_name} {contact.last_name}</div>
-                <div className='contact-section-main__contact_categories'>Category 1, Category 2, Category 3</div>
+                <div className='contact-section-main__contact-name'>{contact.first_name} {contact.last_name}</div>
+                <div className='contact-section-main__contact-job_title'>{contact.job_title}</div>
             </div>
             {props.editAction && (
                 <div className='contact-section-main__controls'>

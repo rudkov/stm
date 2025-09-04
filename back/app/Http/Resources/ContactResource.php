@@ -14,6 +14,7 @@ class ContactResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'notes' => $this->notes,
+            'job_title' => $this->job_title,
 
             // Collections
             'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),

@@ -14,13 +14,14 @@ class CompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'notes' => 'nullable|string',
 
             'manager_id' => ['nullable', Rule::exists(User::class, 'id')],
 
             // Collections - Morph-many relationships (complex objects)
             'addresses' => ['nullable', 'array', new ValidateEach(new AddressRequest())],
+            'contacts' => ['nullable', 'array', new ValidateEach(new CompanyContactRequest())],
             'emails' => ['nullable', 'array', new ValidateEach(new EmailRequest())],
             'messengers' => ['nullable', 'array', new ValidateEach(new MessengerRequest())],
             'phones' => ['nullable', 'array', new ValidateEach(new PhoneRequest())],

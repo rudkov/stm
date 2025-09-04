@@ -85,7 +85,7 @@ export const cleanCollection = (array, config = {}) => {
     if (!Array.isArray(array)) return array;
 
     const filtered = array.filter(item => !isEmptyByConfig(item, config));
-    return filtered.length === 0 ? null : filtered;
+    return filtered.length === 0 ? [] : filtered;
 };
 
 /**
@@ -115,56 +115,84 @@ export const transformValidationErrors = (errors) => {
  */
 
 export const initAddresses = (values) => ({
-    addresses: (values.addresses && values.addresses.length > 0)
-        ? values.addresses
-        : [{ type: { id: null }, info: '' }],
+    addresses: values.addresses || []
 });
 
 export const processAddresses = (values) => {
     let processed = {};
     if (values.addresses) {
-        processed.addresses = values.addresses.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+        processed.addresses = values.addresses.map(item => ({ ...item, type: { id: item.type?.id ?? null } }));
     }
     processed.addresses = cleanCollection(processed.addresses, { requiredAny: ['info'] });
     return processed;
 };
 
+export const initCompanies = (values) => ({
+    companies: values.companies || []
+});
+
+export const processCompanies = (values) => {
+    let processed = {};
+    if (values.companies) {
+        processed.companies = values.companies.map(item => ({
+            id: item.id ?? null,
+            job_title: item.job_title ?? ''
+        }));
+    }
+    processed.companies = cleanCollection(processed.companies, { requiredAll: ['id'] });
+    return processed;
+};
+
+export const initContacts = (values) => ({
+    contacts: values.contacts || []
+});
+
+export const processContacts = (values) => {
+    let processed = {};
+    if (values.contacts) {
+        processed.contacts = values.contacts.map(item => ({
+            id: item.id ?? null,
+            job_title: item.job_title ?? ''
+        }));
+    }
+    processed.contacts = cleanCollection(processed.contacts, { requiredAll: ['id'] });
+    return processed;
+};
+
 export const initEmails = (values) => ({
-    emails: values.emails || null
+    emails: values.emails || []
 });
 
 export const processEmails = (values) => {
     let processed = {};
     if (values.emails) {
-        processed.emails = values.emails.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+        processed.emails = values.emails.map(item => ({ ...item, type: { id: item.type?.id ?? null } }));
     }
     processed.emails = cleanCollection(processed.emails, { requiredAny: ['info'] });
     return processed;
 };
 
 export const initMessengers = (values) => ({
-    messengers: values.messengers || null
+    messengers: values.messengers || []
 });
 
 export const processMessengers = (values) => {
     let processed = {};
     if (values.messengers) {
-        processed.messengers = values.messengers.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+        processed.messengers = values.messengers.map(item => ({ ...item, type: { id: item.type?.id ?? null } }));
     }
     processed.messengers = cleanCollection(processed.messengers, { requiredAny: ['type.id', 'info'] });
     return processed;
 };
 
 export const initPhones = (values) => ({
-    phones: (values.phones && values.phones.length > 0)
-        ? values.phones
-        : [{ type: { id: null }, info: '' }],
+    phones: values.phones || []
 });
 
 export const processPhones = (values) => {
     let processed = {};
     if (values.phones) {
-        processed.phones = values.phones.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+        processed.phones = values.phones.map(item => ({ ...item, type: { id: item.type?.id ?? null } }));
     }
     processed.phones = cleanCollection(processed.phones, { requiredAny: ['info'] });
     return processed;
@@ -186,21 +214,19 @@ export const processEmergencyContacts = (values) => {
 };
 
 export const initSocialMedias = (values) => ({
-    social_medias: (values.social_medias && values.social_medias.length > 0)
-        ? values.social_medias
-        : [{ type: { id: null }, info: '' }],
+    social_medias: values.social_medias || []
 });
 export const processSocialMedias = (values) => {
     let processed = {};
     if (values.social_medias) {
-        processed.social_medias = values.social_medias.map(item => ({ ...item, type: { id: item.type.id ?? null } }));
+        processed.social_medias = values.social_medias.map(item => ({ ...item, type: { id: item.type?.id ?? null } }));
     }
     processed.social_medias = cleanCollection(processed.social_medias, { requiredAny: ['type.id', 'info'] });
     return processed;
 };
 
 export const initWeblinks = (values) => ({
-    weblinks: values.weblinks || null
+    weblinks: values.weblinks || []
 });
 
 export const processWeblinks = (values) => {

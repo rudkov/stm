@@ -18,7 +18,7 @@ class CompanyResource extends JsonResource
 
             // Collections
             'addresses' => $this->whenLoaded('addresses', fn() => AddressResource::collection($this->addresses)),
-            'contacts' => $this->whenLoaded('contacts', fn() => ContactBasicResource::collection($this->contacts)),
+            'contacts' => $this->whenLoaded('contacts', fn() => ContactResource::collection($this->contacts)),
             'emails' => $this->whenLoaded('emails', fn() => EmailResource::collection($this->emails)),
             'messengers' => $this->whenLoaded('messengers', fn() => MessengerResource::collection($this->messengers)),
             'phones' => $this->whenLoaded('phones', fn() => PhoneResource::collection($this->phones)),

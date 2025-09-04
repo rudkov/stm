@@ -99,13 +99,19 @@ function scopedRelationQuery($relation)
  *  - $fields is a mapping describing how to take input values and map them onto DB columns
  *
  * @param BelongsToMany|HasMany|MorphMany $relation
- * @param array $items
+ * @param array|null $items Set to null when the client did not submit this relationship – the helper will then leave the relation untouched.
  * @param array $fields
  * @param array $options
  * @return void
  */
-function sync_relation($relation, array $items, array $fields = [], array $options = []): void
+function sync_relation($relation, ?array $items, array $fields = [], array $options = []): void
 {
+    // If the client omitted this relation entirely (null), do not touch existing data.
+    // Distinguish between "null" (not provided) and "empty array" (explicitly clear relation).
+    if ($items === null) {
+        return;
+    }
+
     // Normalise field mapping once for all relation types
     $mapping = normalizeFieldMapping($fields);
     // --------------------------------------------------

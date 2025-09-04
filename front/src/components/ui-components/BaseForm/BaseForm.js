@@ -19,12 +19,13 @@ import { cx } from '../../../helpers/classNames';
  * Reusable form component for CRUD operations
  * @param {Object} props - Component props
  * @param {string} props.entityName - Name of the entity (talent, company, contact)
+ * @param {string} props.entityUrl - API endpoint or base URL for the entity
  * @param {number|null} props.entityId - ID of the entity being edited
+ * @param {Object} props.apiActions - Object containing RTK Query hooks for CRUD operations (query, create, update, delete)
  * @param {number} props.formWidth - Width of the form drawer
  * @param {boolean} props.enableDelete - Whether delete functionality is enabled
  * @param {boolean} props.enableAnchorNavigation - Whether to show anchor navigation
  * @param {Array} props.anchorItems - Items for anchor navigation
- * @param {Object} props.apiActions - Object containing RTK Query hooks for CRUD operations (query, create, update, delete)
  * @param {Function} props.onInitForm - Custom form initialization function
  * @param {Function} props.onProcessFormData - Custom form data processing function
  * @param {Function} props.onAfterSubmit - Callback after successful submit
@@ -32,6 +33,16 @@ import { cx } from '../../../helpers/classNames';
  * @param {Function} props.onClose - Callback to close the form
  * @param {Function} props.onAnchorClick - Custom anchor click handler
  * @param {ReactNode} props.children - Form content sections
+ * @param {string} [props.createSuccessMessage] - Message shown after successful creation
+ * @param {string} [props.updateSuccessMessage] - Message shown after successful update
+ * @param {string} [props.deleteSuccessMessage] - Message shown after successful deletion
+ * @param {Function} [props.getTitle] - Function that returns a custom form title based on the entity data
+ * @param {Function} [props.getDeleteConfirmationText] - Function returning custom text for the delete confirmation dialog
+ * @param {Function} [props.customDeleteConfirm] - Async function that shows a custom confirmation modal; should resolve to a boolean indicating whether to proceed
+ * @param {Function} [props.getExtraArgs] - Function returning additional arguments to pass to the API actions
+ * @param {string} [props.redirectUrlAfterCreate] - URL to navigate to after successful creation
+ * @param {string} [props.redirectUrlAfterUpdate] - URL to navigate to after successful update
+ * @param {string} [props.redirectUrlAfterDelete] - URL to navigate to after successful deletion
  */
 function BaseForm({
     entityName,
@@ -42,8 +53,6 @@ function BaseForm({
     enableDelete = true,
     enableAnchorNavigation = false,
     anchorItems = [],
-    crudActions,
-    selectors,
     onInitForm,
     onProcessFormData,
     onAfterSubmit,
@@ -56,6 +65,11 @@ function BaseForm({
     deleteSuccessMessage,
     getTitle,
     getDeleteConfirmationText,
+    customDeleteConfirm,
+    getExtraArgs,
+    redirectUrlAfterCreate,
+    redirectUrlAfterUpdate,
+    redirectUrlAfterDelete,
     ...props
 }) {
     const [form] = Form.useForm();
@@ -78,7 +92,10 @@ function BaseForm({
         createSuccessMessage,
         updateSuccessMessage,
         deleteSuccessMessage,
-        isFormOpen: open
+        getExtraArgs,
+        redirectUrlAfterCreate,
+        redirectUrlAfterUpdate,
+        redirectUrlAfterDelete,
     });
 
     const {
@@ -128,6 +145,14 @@ function BaseForm({
     const bodyClass = cx('base-form__body', `${formClass}__body`);
     const sidebarClass = cx('base-form__sidebar', `${formClass}__sidebar`);
 
+    const handleDeleteRequest = async () => {
+        if (customDeleteConfirm) {
+            const proceed = await customDeleteConfirm(entity);
+            if (!proceed) return;
+        }
+        deleteEntity();
+    };
+
     return (
         <>
             <Form
@@ -152,7 +177,8 @@ function BaseForm({
                                 enableDelete={enableDelete && entityId}
                                 entity={entity}
                                 onSubmit={handleDrawerSubmit}
-                                onDelete={deleteEntity}
+                                onDelete={handleDeleteRequest}
+                                bypassDeleteConfirm={Boolean(customDeleteConfirm)}
                                 onClose={closeForm}
                                 headerTitleClass={headerTitleClass}
                                 headerControlsClass={headerControlsClass}

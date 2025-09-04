@@ -1,9 +1,23 @@
-.company-view__right-column {
-    height: 100vh;
+.company-view-layout {
+    padding: 0 6px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.company-view__body {
-    padding: 0 6px 12px 12px;
+.company-view-layout__header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.company-view-layout__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.company-view-layout__company,
+.company-view-layout__contacts {
     display: flex;
     flex-direction: column;
     gap: 12px;

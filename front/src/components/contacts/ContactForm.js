@@ -1,4 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useState, useRef } from 'react';
+
+import { Modal, Radio } from 'antd';
 
 import BaseForm from 'components/ui-components/BaseForm';
 
@@ -11,6 +13,7 @@ import {
 
 import {
     initAddresses, processAddresses,
+    initCompanies, processCompanies,
     initEmails, processEmails,
     initMessengers, processMessengers,
     initPhones, processPhones,
@@ -19,32 +22,56 @@ import {
 } from 'helpers/form-utils';
 
 import SharedSectionAddresses from 'components/nested-sections/shared/edit/SharedSectionAddresses';
-import SharedSectionContacts from 'components/nested-sections/shared/edit/SharedSectionContacts';
-import SharedSectionNotes from 'components/nested-sections/shared/edit/SharedSectionNotes';
+import SharedSectionEmails from 'components/nested-sections/shared/edit/SharedSectionEmails';
+import SharedSectionMessengers from 'components/nested-sections/shared/edit/SharedSectionMessengers';
+import SharedSectionPhones from 'components/nested-sections/shared/edit/SharedSectionPhones';
 import SharedSectionSocialMedia from 'components/nested-sections/shared/edit/SharedSectionSocialMedia';
+import SharedSectionWeblinks from 'components/nested-sections/shared/edit/SharedSectionWeblinks';
 
+import ContactSectionCompanies from 'components/nested-sections/contacts/edit/ContactSectionCompanies';
 import ContactSectionPrimaryInfo from 'components/nested-sections/contacts/edit/ContactSectionPrimaryInfo';
 
-function ContactForm({ isFormOpen, onClose, onAfterSubmit, contactId }) {
+const extractCompanyIds = (companies = []) =>
+    companies?.map((c) => c?.company_id ?? c?.id ?? null).filter((id) => id !== null && id !== undefined);
+
+function ContactForm({ isFormOpen, onClose, onAfterSubmit, companyId, contactId }) {
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [deleteAction, setDeleteAction] = useState(null);
+    const [contact, setContact] = useState(null);
+    const [triggerUpdate] = useUpdateContactMutation();
+    const [redirectUrlAfterCreate, setRedirectUrlAfterCreate] = useState();
+    const [redirectUrlAfterDelete, setRedirectUrlAfterDelete] = useState();
+    const deleteResolverRef = useRef(null);
 
     const onInitForm = useCallback((values, form) => {
-        form.setFieldsValue({
-            first_name: values.first_name || '',
-            last_name: values.last_name || '',
-            notes: values.notes || '',
+        // Pre-fill the companies list when creating a new contact directly from a company page
+        const initValues = { ...values };
 
-            ...initAddresses(values),
-            ...initEmails(values),
-            ...initMessengers(values),
-            ...initPhones(values),
-            ...initSocialMedias(values),
-            ...initWeblinks(values),
+        if ((!initValues.companies || initValues.companies.length === 0) && companyId) {
+            setRedirectUrlAfterCreate(null);
+            initValues.companies = [{ id: companyId, job_title: '' }];
+        }
+
+        form.setFieldsValue({
+            first_name: initValues.first_name || '',
+            last_name: initValues.last_name || '',
+            notes: initValues.notes || '',
+            job_title: initValues.job_title || '',
+
+            ...initAddresses(initValues),
+            ...initCompanies(initValues),
+            ...initEmails(initValues),
+            ...initMessengers(initValues),
+            ...initPhones(initValues),
+            ...initSocialMedias(initValues),
+            ...initWeblinks(initValues),
         });
-    }, []);
+    }, [companyId]);
 
     const onProcessFormData = useCallback((values) => ({
         ...values,
         ...processAddresses(values),
+        ...processCompanies(values),
         ...processEmails(values),
         ...processMessengers(values),
         ...processPhones(values),
@@ -63,37 +90,132 @@ function ContactForm({ isFormOpen, onClose, onAfterSubmit, contactId }) {
         return `Delete ${entity?.first_name + ' ' + entity?.last_name || 'contact'}?`;
     }, []);
 
+    const getExtraArgs = useCallback(({ values, originalEntity }) => {
+        const formIds = extractCompanyIds(values?.companies);
+        const originalIds = extractCompanyIds(originalEntity?.companies);
+
+        const companyIds = Array.from(new Set([...originalIds, ...formIds]));
+
+        return { companyIds };
+    }, []);
+
+    const customDeleteConfirm = useCallback((entity) => {
+        return new Promise((resolve) => {
+            deleteResolverRef.current = resolve;
+            setContact(entity);
+            setIsDeleteModalOpen(true);
+        });
+    }, []);
+
+    const onModalRadioChange = (e) => {
+        setDeleteAction(e.target.value);
+    };
+
+    const onModalProceed = async () => {
+        if (deleteAction === 'unlink') {
+            if (!contact) return;
+
+            const updatedCompanies = contact.companies.filter((c) => c.id !== companyId);
+
+            const values = onProcessFormData({
+                ...contact,
+                companies: updatedCompanies,
+            });
+
+            const companyIds = [...updatedCompanies.map((c) => c.id), companyId];
+
+            await triggerUpdate({ id: contact.id, values, companyIds });
+            setRedirectUrlAfterDelete(null);
+            deleteResolverRef.current?.(false);
+        } else if (deleteAction === 'delete') {
+            setRedirectUrlAfterDelete(null);
+            deleteResolverRef.current?.(true);
+        }
+        setIsDeleteModalOpen(false);
+        setDeleteAction(null);
+        onClose();
+    };
+
+    const onModalCancel = () => {
+        deleteResolverRef.current?.(false);
+        setIsDeleteModalOpen(false);
+        setDeleteAction(null);
+    };
+
     return (
-        <BaseForm
-            entityId={contactId}
-            entityName='contact'
-            entityUrl='/app/contacts'
+        <>
+            <BaseForm
+                entityId={contactId}
+                entityName='contact'
+                entityUrl='/app/contacts'
 
-            enableDelete={true}
-            enableAnchorNavigation={false}
-            formWidth={768}
+                enableDelete={true}
+                enableAnchorNavigation={false}
+                formWidth={600}
 
-            apiActions={{
-                query: useGetContactQuery,
-                create: useCreateContactMutation,
-                update: useUpdateContactMutation,
-                delete: useDeleteContactMutation,
-            }}
+                apiActions={{
+                    query: useGetContactQuery,
+                    create: useCreateContactMutation,
+                    update: useUpdateContactMutation,
+                    delete: useDeleteContactMutation,
+                }}
 
-            onInitForm={onInitForm}
-            onProcessFormData={onProcessFormData}
-            getTitle={getTitle}
-            getDeleteConfirmationText={getDeleteConfirmationText}
-            open={isFormOpen}
-            onClose={onClose}
-            onAfterSubmit={onAfterSubmit}
-        >
-            <SharedSectionNotes id='notes' />
-            <ContactSectionPrimaryInfo id='primary-info' />
-            <SharedSectionContacts id='contacts' />
-            <SharedSectionSocialMedia id='social-media' />
-            <SharedSectionAddresses id='addresses' />
-        </BaseForm>
+                onInitForm={onInitForm}
+                onProcessFormData={onProcessFormData}
+                getTitle={getTitle}
+                getDeleteConfirmationText={getDeleteConfirmationText}
+                customDeleteConfirm={customDeleteConfirm}
+                getExtraArgs={getExtraArgs}
+                redirectUrlAfterCreate={redirectUrlAfterCreate}
+                redirectUrlAfterDelete={redirectUrlAfterDelete}
+                open={isFormOpen}
+                onClose={onClose}
+                onAfterSubmit={onAfterSubmit}
+            >
+                <ContactSectionPrimaryInfo id='primary-info' />
+                <ContactSectionCompanies id='companies' />
+                <SharedSectionEmails id='emails' />
+                <SharedSectionPhones id='phones' />
+                <SharedSectionMessengers id='messengers' />
+                <SharedSectionSocialMedia id='social-media' />
+                <SharedSectionWeblinks id='weblinks' />
+                <SharedSectionAddresses id='addresses' />
+            </BaseForm>
+
+            <Modal
+                title='What do you want to do?'
+                closable={true}
+                open={isDeleteModalOpen}
+                zIndex={2000}
+                onOk={onModalProceed}
+                onCancel={onModalCancel}
+                okText='Proceed'
+                okButtonProps={{ danger: true }}
+            >
+                {contact?.companies?.length > 0 && (
+                    <>
+                        <p>{contact?.first_name} {contact?.last_name} is linked to the following companies:</p>
+                        <ul>
+                            {contact.companies.map((c) => (
+                                <li key={c.id}>{c.name}</li>
+                            ))}
+                        </ul>
+                    </>
+                )}
+
+                <p>
+                    <b>Please specify your action:</b>
+                </p>
+
+                <Radio.Group
+                    onChange={onModalRadioChange}
+                    options={[
+                        { value: 'unlink', label: 'Remove from "' + contact?.companies?.find((c) => c.id === companyId)?.name + '" only' },
+                        { value: 'delete', label: 'Delete entirely and remove from all companies' },
+                    ]}
+                />
+            </Modal >
+        </>
     );
 }
 

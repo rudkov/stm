@@ -22,12 +22,13 @@ class CompanyController extends Controller
 
     private function sync_relations(Company $company, array $validated)
     {
-        sync_relation($company->addresses(), $validated['addresses'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-        sync_relation($company->emails(), $validated['emails'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-        sync_relation($company->messengers(), $validated['messengers'] ?? [], ['messenger_type_id' => 'type.id', 'info']);
-        sync_relation($company->phones(), $validated['phones'] ?? [], ['communication_type_id' => 'type.id', 'info']);
-        sync_relation($company->socialMedias(), $validated['social_medias'] ?? [], ['social_media_type_id' => 'type.id', 'info']);
-        sync_relation($company->weblinks(), $validated['weblinks'] ?? [], ['info']);
+        sync_relation($company->addresses(), $validated['addresses'] ?? null, ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($company->contacts(), $validated['contacts'] ?? null, ['job_title']);
+        sync_relation($company->emails(), $validated['emails'] ?? null, ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($company->messengers(), $validated['messengers'] ?? null, ['messenger_type_id' => 'type.id', 'info']);
+        sync_relation($company->phones(), $validated['phones'] ?? null, ['communication_type_id' => 'type.id', 'info']);
+        sync_relation($company->socialMedias(), $validated['social_medias'] ?? null, ['social_media_type_id' => 'type.id', 'info']);
+        sync_relation($company->weblinks(), $validated['weblinks'] ?? null, ['info']);
     }
 
     public function index()
@@ -56,6 +57,18 @@ class CompanyController extends Controller
             'addresses',
             'addresses.type',
             'contacts',
+            'contacts.addresses',
+            'contacts.addresses.type',
+            'contacts.companies',
+            'contacts.emails',
+            'contacts.emails.type',
+            'contacts.messengers',
+            'contacts.messengers.type',
+            'contacts.phones',
+            'contacts.phones.type',
+            'contacts.socialMedias',
+            'contacts.socialMedias.type',
+            'contacts.weblinks',
             'emails',
             'emails.type',
             'manager',

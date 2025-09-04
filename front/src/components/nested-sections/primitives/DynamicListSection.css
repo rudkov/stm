@@ -1,0 +1,38 @@
+.dynamic-list-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dynamic-list-section_hidden {
+    display: none;
+}
+
+.dynamic-list-section__item {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.dynamic-list-section__item-data {
+    display: grid;
+    grid-template-columns: 136px auto;
+    gap: 4px;
+    width: 100%;
+}
+
+.dynamic-list-section__item-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.dynamic-list-section_vertical {
+    gap: 16px;
+}
+
+.dynamic-list-section_vertical .dynamic-list-section__item-data,
+.dynamic-list-section_no-type .dynamic-list-section__item-data {
+    grid-template-columns: auto;
+}

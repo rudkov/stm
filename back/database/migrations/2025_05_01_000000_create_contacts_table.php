@@ -13,6 +13,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
+            $table->string('job_title')->nullable();
             $table->text('notes')->nullable();
 
             $table->foreignId('team_id')->constrained()->onDelete('cascade');

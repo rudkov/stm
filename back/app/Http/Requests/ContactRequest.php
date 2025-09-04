@@ -13,6 +13,7 @@ class ContactRequest extends FormRequest
         return [
             'first_name' => 'required_without:last_name|nullable|string|max:255',
             'last_name' => 'required_without:first_name|nullable|string|max:255',
+            'job_title' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
 
             // Collections - Morph-many relationships (complex objects)

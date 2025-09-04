@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     padding: 12px;
+    align-items: center;
 }
 
 .company-section-main__header {
@@ -12,10 +13,19 @@
 
 .company-section-main__controls {
     margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
 }
 
-.company-section-main__company_name {
+.company-section-main__company-name {
     font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
+}
+
+.company-section-main__modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }

@@ -1466,4 +1466,45 @@ class ContactControllerTest extends TestCase
         $this->assertEquals('https://website1.com', $weblinks->find($weblink1->id)->info);
         $this->assertEquals('https://website2.com', $weblinks->find($weblink2->id)->info);
     }
+
+    public function test_index_contacts_includes_job_title_and_companies()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+            'job_title' => 'Developer',
+            'first_name' => 'Jane',
+        ]);
+        $company = Company::factory()->create(['team_id' => $this->team->id, 'name' => 'Acme']);
+        $contact->companies()->attach($company->id, ['job_title' => 'Senior Dev']);
+
+        $this->actingAs($this->user)
+            ->postJson(route('contacts.search'), [])
+            ->assertStatus(200)
+            ->assertJsonPath('0.id', $contact->id)
+            ->assertJsonPath('0.job_title', 'Developer')
+            ->assertJsonPath('0.companies.0.name', 'Acme')
+            ->assertJsonPath('0.companies.0.job_title', 'Senior Dev');
+    }
+
+    public function test_show_contact_returns_job_title()
+    {
+        $contact = Contact::factory()->create([
+            'team_id' => $this->team->id,
+            'created_by' => $this->user->id,
+            'updated_by' => $this->user->id,
+            'job_title' => 'Architect',
+            'first_name' => 'Bob',
+        ]);
+
+        $this->actingAs($this->user)
+            ->getJson(route('contacts.show', $contact))
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => $contact->id,
+                'first_name' => 'Bob',
+                'job_title' => 'Architect',
+            ]);
+    }
 }
