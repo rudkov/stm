@@ -1,10 +1,6 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import baseQuery from './baseQuery';
+import { apiSlice } from './apiSlice';
 
-export const accountApi = createApi({
-    reducerPath: 'accountApi',
-    baseQuery: baseQuery,
-    tagTypes: ['Auth'],
+export const accountApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         // Auth endpoints
         login: builder.mutation({
@@ -34,10 +30,10 @@ export const accountApi = createApi({
         }),
         // Register endpoints
         register: builder.mutation({
-            query: ({name, email, password}) => ({
+            query: ({ name, email, password }) => ({
                 url: '/register',
                 method: 'POST',
-                body: {name, email, password},
+                body: { name, email, password },
             })
         }),
         // Email verify endpoints
@@ -94,4 +90,4 @@ export const {
     useForgotPasswordMutation,
     useResetPasswordMutation,
     useCreateTeamMutation,
-} = accountApi; 
+} = accountApi;

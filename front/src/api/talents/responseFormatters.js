@@ -1,8 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import dayjs from 'dayjs';
-
-import measurementsConverter from '../../helpers/measurements-converter';
+import measurementsConverter from 'helpers/measurements-converter';
 
 //TODO: Below is a temporary solution. We need to place date format into user settings.
 //TODO: this format also appears in all date time antd controls. To double check
@@ -11,86 +8,7 @@ const inputDateFormat = 'YYYY-MM-DD';
 const outputDateFormat = 'DD.MM.YYYY';
 const dateTimeFormat = 'DD.MM.YYYY, HH:mm';
 
-const initialState = {
-    item: {},
-    createResponse: {},
-    updateResponse: {},
-    deleteResponse: {},
-    locationResponse: {},
-};
-
-export const fetchTalent = createAsyncThunk('talent/fetch', async (args) => {
-    const { id } = args;
-
-    try {
-        const response = await axios.get(`/api/v1/talents/${id}`);
-        return response.data;
-    } catch (err) {
-        return err.message;
-    }
-});
-
-export const createTalent = createAsyncThunk('talent/create', async (args) => {
-    const { values } = args;
-
-    try {
-        const response = await axios({
-            method: 'post',
-            url: '/api/v1/talents',
-            data: values,
-        });
-        return response.data;
-    } catch (err) {
-        console.log(err);
-        return err.message;
-    }
-});
-
-export const updateTalent = createAsyncThunk('talent/update', async (args) => {
-    const { id, values } = args;
-
-    try {
-        const response = await axios({
-            method: 'put',
-            url: `/api/v1/talents/${id}`,
-            data: values,
-        });
-        return response.data;
-    } catch (err) {
-        console.log(err);
-        return err.message;
-    }
-});
-
-export const deleteTalent = createAsyncThunk('talent/delete', async (args) => {
-    const { id } = args;
-
-    try {
-        const response = await axios({
-            method: 'delete',
-            url: `/api/v1/talents/${id}`,
-        });
-        return response.data;
-    } catch (err) {
-        console.log(err);
-        return err.message;
-    }
-});
-
-export const updateLocation = createAsyncThunk('talent/updateLocation', async (args) => {
-    const { id, value } = args;
-
-    try {
-        const response = await axios.put(`/api/v1/talents/${id}/locations/current`, {
-            location: value,
-        });
-        return response.data;
-    } catch (err) {
-        return err.message;
-    }
-});
-
-const prepareTalent = (state, values) => {
+export const formatTalentResponse = (values) => {
     let item = values;
 
     item.full_name = (values.first_name || '').concat(' ', values.last_name || '').trim();
@@ -222,79 +140,12 @@ const prepareTalent = (state, values) => {
     item.created_at = values.created_at ? dayjs(values.created_at).format(dateTimeFormat) : null;
     item.updated_at = values.updated_at ? dayjs(values.updated_at).format(dateTimeFormat) : null;
 
-    state.item = item;
+    return item;
 };
 
-const talentSlice = createSlice({
-    name: 'talent',
-    initialState: initialState,
-    reducers: {
-        resetState() {
-            return initialState;
-        },
-        resetResponse(state, responseName) {
-            switch (responseName.payload) {
-                case 'create':
-                    state.createResponse.status = null;
-                    break;
-                case 'update':
-                    state.updateResponse.status = null;
-                    break;
-                case 'delete':
-                    state.deleteResponse.status = null;
-                    break;
-                default:
-                    break;
-            }
-        }
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchTalent.fulfilled, (state, action) => {
-                prepareTalent(state, action.payload);
-            })
-
-            .addCase(createTalent.pending, (state, action) => {
-                state.createResponse.status = 'pending';
-            })
-            .addCase(createTalent.fulfilled, (state, action) => {
-                state.createResponse.status = 'fulfilled';
-                state.createResponse.id = action.payload.id;
-            })
-
-            .addCase(updateTalent.pending, (state, action) => {
-                state.updateResponse.status = 'pending';
-            })
-            .addCase(updateTalent.fulfilled, (state, action) => {
-                state.updateResponse.status = 'fulfilled';
-                prepareTalent(state, action.payload);
-            })
-
-            .addCase(deleteTalent.pending, (state, action) => {
-                state.deleteResponse.status = 'pending';
-            })
-            .addCase(deleteTalent.fulfilled, (state, action) => {
-                state.deleteResponse.status = 'fulfilled';
-            })
-
-            .addCase(updateLocation.pending, (state, action) => {
-                state.locationResponse.status = 'pending';
-            })
-            .addCase(updateLocation.fulfilled, (state, action) => {
-                state.locationResponse.status = 'fulfilled';
-                prepareTalent(state, action.payload);
-            })
-    }
-});
-
-export const getTalent = (state) => state.talent.item;
-
-export const getCreateResponse = (state) => state.talent.createResponse;
-export const getUpdateResponse = (state) => state.talent.updateResponse;
-export const getDeleteResponse = (state) => state.talent.deleteResponse;
-
-export const getLocationResponse = (state) => state.talent.locationResponse;
-
-export const talentActions = talentSlice.actions;
-
-export default talentSlice.reducer;
+export const formatTalentLocationsResponse = (locations) => {
+    return locations.map(location => ({
+        id: location.name,
+        name: location.name || 'In Town'
+    }));
+};

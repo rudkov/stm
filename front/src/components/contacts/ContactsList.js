@@ -1,31 +1,29 @@
 import './ContactsList.css';
-import '../../helpers/shared.css';
+import 'helpers/shared.css';
 
-import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useMemo, useRef } from 'react';
 import { NavLink } from 'react-router';
 import { Button, Empty, Form, Input } from 'antd';
 
-import { getContacts, filterContacts } from '../../store/contacts/contacts';
+import { useGetContactsQuery } from 'api/contacts/contactsApi';
+import { applyLocalFilters } from 'components/filters/contacts/applyLocalFilters';
 
-import ScrollableView from '../ui-components/ScrollableView';
+import ScrollableView from 'components/ui-components/ScrollableView';
 
-import { ReactComponent as IconAdd } from '../../assets/icons/add.svg';
+import { ReactComponent as IconAdd } from 'assets/icons/add.svg';
 
 function ContactsList({ createContact, filters, updateFilter }) {
     const [form] = Form.useForm();
-    const fetchedContacts = useSelector(getContacts);
-    const [contacts, setContacts] = useState([]);
     const scrollContainerRef = useRef(null);
 
-    useEffect(() => {
-        setContacts(
-            filterContacts(
-                [...fetchedContacts],
-                {
-                    searchString: filters.search
-                }
-            )
+    const { data: fetchedContacts = [] } = useGetContactsQuery(filters);
+
+    const contacts = useMemo(() => {
+        return applyLocalFilters(
+            [...fetchedContacts],
+            {
+                searchString: filters.search
+            }
         );
     }, [fetchedContacts, filters.search]);
 
@@ -35,7 +33,7 @@ function ContactsList({ createContact, filters, updateFilter }) {
 
     let result = null;
 
-    if (contacts && Object.keys(contacts).length > 0) {
+    if (contacts && contacts.length > 0) {
         result = contacts.map((contact) => {
             return (
                 <NavLink className='contacts-list__item' key={'contact.' + contact.id} to={contact.id}>

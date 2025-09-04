@@ -1,37 +1,22 @@
 import './Talents.css';
 import '../../helpers/shared.css';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { Outlet } from 'react-router';
 
-import { fetchTalents, fetchTalentsManagers } from '../../store/talents/talents';
+import { useGetTalentsQuery, useGetTalentManagersQuery } from 'api/talents/talentsApi';
 import { useTalentsFilters, TalentsFilters } from '../talents/TalentsFilters';
 
 import TalentsList from '../talents/TalentsList';
 import TalentForm from '../talents/TalentForm';
 
 function Talents() {
-    const dispatch = useDispatch();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentTalentId, setCurrentTalentId] = useState(null);
     const { filters, updateFilter } = useTalentsFilters();
 
-    // Fetch talents when filters change (only filtered results)
-    useEffect(() => {
-        dispatch(fetchTalents(filters));
-    }, [dispatch, filters]);
-
-    // Fetch managers once on component mount
-    useEffect(() => {
-        dispatch(fetchTalentsManagers());
-    }, [dispatch]);
-
-    // Function to call both API endpoints after talent save/update
-    const handleSubmit = useCallback(() => {
-        dispatch(fetchTalents(filters));
-        dispatch(fetchTalentsManagers());
-    }, [dispatch, filters]);
+    useGetTalentsQuery(filters);
+    useGetTalentManagersQuery();
 
     const createTalent = () => {
         setCurrentTalentId(null);
@@ -70,7 +55,6 @@ function Talents() {
                 isFormOpen={isFormOpen}
                 onClose={handleClose}
                 talentId={currentTalentId}
-                onAfterSubmit={handleSubmit}
             />
         </>
     );

@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
-
 import dayjs from 'dayjs';
 
-import BaseForm from '../ui-components/BaseForm';
+import { useCheckAuthQuery } from 'api/accountApi';
+
+import BaseForm from 'components/ui-components/BaseForm';
 
 import {
-    fetchTalent, getTalent,
-    createTalent, getCreateResponse,
-    updateTalent, getUpdateResponse,
-    deleteTalent, getDeleteResponse,
-    talentActions
-} from '../../store/talents/talent';
+    useGetTalentQuery,
+    useCreateTalentMutation,
+    useUpdateTalentMutation,
+    useDeleteTalentMutation,
+} from 'api/talents/talentsApi';
 
 import {
     initAddresses, processAddresses,
@@ -20,23 +20,22 @@ import {
     initRelatives, processRelatives,
     initSocialMedias, processSocialMedias,
     initWeblinks, processWeblinks
-} from '../../helpers/form-utils';
+} from 'helpers/form-utils';
 
-import SharedSectionAddresses from '../nested-sections/shared/edit/SharedSectionAddresses';
-import SharedSectionContacts from '../nested-sections/shared/edit/SharedSectionContacts';
-import SharedSectionNotes from '../nested-sections/shared/edit/SharedSectionNotes';
-import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSectionSocialMedia';
+import SharedSectionAddresses from 'components/nested-sections/shared/edit/SharedSectionAddresses';
+import SharedSectionContacts from 'components/nested-sections/shared/edit/SharedSectionContacts';
+import SharedSectionNotes from 'components/nested-sections/shared/edit/SharedSectionNotes';
+import SharedSectionSocialMedia from 'components/nested-sections/shared/edit/SharedSectionSocialMedia';
 
-import TalentSectionAchievements from '../nested-sections/talents/edit/TalentSectionAchievements';
-import TalentSectionBiography from '../nested-sections/talents/edit/TalentSectionBiography';
-import TalentSectionBody from '../nested-sections/talents/edit/TalentSectionBody';
-import TalentSectionFoodAllergies from '../nested-sections/talents/edit/TalentSectionFoodAllergies';
-import TalentSectionPerformanceSkills from '../nested-sections/talents/edit/TalentSectionPerformanceSkills';
-import TalentSectionPreferences from '../nested-sections/talents/edit/TalentSectionPreferences';
-import TalentSectionPrimaryInfo from '../nested-sections/talents/edit/TalentSectionPrimaryInfo';
-import TalentSectionRegionLanguages from '../nested-sections/talents/edit/TalentSectionRegionLanguages';
-import TalentSectionRelatives from '../nested-sections/talents/edit/TalentSectionRelatives';
-import { useCheckAuthQuery } from '../../api/accountApi';
+import TalentSectionAchievements from 'components/nested-sections/talents/edit/TalentSectionAchievements';
+import TalentSectionBiography from 'components/nested-sections/talents/edit/TalentSectionBiography';
+import TalentSectionBody from 'components/nested-sections/talents/edit/TalentSectionBody';
+import TalentSectionFoodAllergies from 'components/nested-sections/talents/edit/TalentSectionFoodAllergies';
+import TalentSectionPerformanceSkills from 'components/nested-sections/talents/edit/TalentSectionPerformanceSkills';
+import TalentSectionPreferences from 'components/nested-sections/talents/edit/TalentSectionPreferences';
+import TalentSectionPrimaryInfo from 'components/nested-sections/talents/edit/TalentSectionPrimaryInfo';
+import TalentSectionRegionLanguages from 'components/nested-sections/talents/edit/TalentSectionRegionLanguages';
+import TalentSectionRelatives from 'components/nested-sections/talents/edit/TalentSectionRelatives';
 
 function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
     const { data: authData } = useCheckAuthQuery();
@@ -173,19 +172,11 @@ function TalentForm({ isFormOpen, onClose, onAfterSubmit, talentId }) {
                 { key: 'performance-skills', href: '#performance-skills', title: 'Performance Skills' },
             ]}
 
-            crudActions={{
-                fetch: fetchTalent,
-                create: createTalent,
-                update: updateTalent,
-                delete: deleteTalent,
-                resetResponse: talentActions.resetResponse
-            }}
-
-            selectors={{
-                entity: getTalent,
-                createResponse: getCreateResponse,
-                updateResponse: getUpdateResponse,
-                deleteResponse: getDeleteResponse
+            apiActions={{
+                query: useGetTalentQuery,
+                create: useCreateTalentMutation,
+                update: useUpdateTalentMutation,
+                delete: useDeleteTalentMutation,
             }}
 
             onInitForm={onInitForm}

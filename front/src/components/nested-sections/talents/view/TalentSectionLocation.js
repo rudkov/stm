@@ -1,28 +1,21 @@
-import '../../../../helpers/shared.css';
-import '../../../../helpers/form.css';
+import 'helpers/shared.css';
+import 'helpers/form.css';
 
 import { Form, Input, Button, Modal } from 'antd';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { ReactComponent as IconClose } from '../../../../assets/icons/close.svg';
+import { useUpdateTalentLocationMutation } from 'api/talents/talentsApi';
 
-import { updateLocation, getLocationResponse } from '../../../../store/talents/talent';
-import { fetchTalents, fetchTalentsLocations } from '../../../../store/talents/talents';
-import { useTalentsFilters } from '../../../talents/TalentsFilters';
+import TalentLocation from 'components/talents/components/TalentLocation';
 
-import TalentLocation from '../../../talents/components/TalentLocation';
+import { ReactComponent as IconClose } from 'assets/icons/close.svg';
 
 function TalentSectionLocation(props) {
-
-    const dispatch = useDispatch();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false);
-    const { filters } = useTalentsFilters();
+    const [updateLocation, { isLoading, isSuccess }] = useUpdateTalentLocationMutation();
 
     const talent = props.talent;
-    const locationResponse = useSelector(getLocationResponse);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -37,8 +30,7 @@ function TalentSectionLocation(props) {
     };
 
     const onFormSubmit = (values) => {
-        setLoading(true);
-        dispatch(updateLocation({ id: talent.id, value: values.location }));
+        updateLocation({ id: talent.id, location: values.location });
     };
 
     useEffect(() => {
@@ -48,13 +40,10 @@ function TalentSectionLocation(props) {
     }, [talent, form]);
 
     useEffect(() => {
-        setLoading(false);
-        if (locationResponse.status === 'fulfilled') {
-            dispatch(fetchTalents(filters));
-            dispatch(fetchTalentsLocations());
+        if (isSuccess) {
             setIsModalOpen(false);
         }
-    }, [locationResponse, dispatch, filters]);
+    }, [isSuccess]);
 
     return (
         <>
@@ -68,16 +57,16 @@ function TalentSectionLocation(props) {
             <Modal
                 forceRender
                 destroyOnClose
-                title="Current location"
+                title='Current location'
                 open={isModalOpen}
                 closeIcon={<IconClose />}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
-                    <Button key="back" onClick={handleCancel}>
+                    <Button key='back' onClick={handleCancel}>
                         Cancel
                     </Button>,
-                    <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                    <Button key='submit' type='primary' loading={isLoading} onClick={handleOk}>
                         Save
                     </Button>,
                 ]}
@@ -89,7 +78,7 @@ function TalentSectionLocation(props) {
                     preserve={false}
                 >
                     <Form.Item name='location'>
-                        <Input placeholder="Specify current location" allowClear />
+                        <Input placeholder='Specify current location' allowClear />
                     </Form.Item>
                     <p>The talent is set "In town" if the field above is empty.</p>
                 </Form>

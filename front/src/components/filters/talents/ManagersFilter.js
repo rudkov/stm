@@ -1,16 +1,8 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { getTalentsManagers, fetchTalentsManagers } from '../../../store/talents/talents';
+import { useGetTalentManagersQuery } from 'api/talents/talentsApi';
 import CheckboxFilter from '../CheckboxFilter';
 
 function ManagersFilter(props) {
-    const dispatch = useDispatch();
-    const managers = useSelector(getTalentsManagers);
-
-    useEffect(() => {
-        dispatch(fetchTalentsManagers());
-    }, [dispatch]);
+    const { data: managers } = useGetTalentManagersQuery();
 
     return (
         <CheckboxFilter

@@ -3,8 +3,8 @@ import './BaseForm.css';
 import { Form } from 'antd';
 import { Children, cloneElement, useRef } from 'react';
 
-import CustomDrawer from '../CustomDrawer';
-import ScrollableView from '../ScrollableView';
+import CustomDrawer from 'components/ui-components/CustomDrawer';
+import ScrollableView from 'components/ui-components/ScrollableView';
 
 import { useFormCrud } from './hooks/useFormCrud';
 import { useFormLifecycle } from './hooks/useFormLifecycle';
@@ -24,8 +24,7 @@ import { cx } from '../../../helpers/classNames';
  * @param {boolean} props.enableDelete - Whether delete functionality is enabled
  * @param {boolean} props.enableAnchorNavigation - Whether to show anchor navigation
  * @param {Array} props.anchorItems - Items for anchor navigation
- * @param {Object} props.crudActions - CRUD action creators
- * @param {Object} props.selectors - Redux selectors
+ * @param {Object} props.apiActions - Object containing RTK Query hooks for CRUD operations (query, create, update, delete)
  * @param {Function} props.onInitForm - Custom form initialization function
  * @param {Function} props.onProcessFormData - Custom form data processing function
  * @param {Function} props.onAfterSubmit - Callback after successful submit
@@ -38,6 +37,7 @@ function BaseForm({
     entityName,
     entityUrl,
     entityId,
+    apiActions,
     formWidth = 768,
     enableDelete = true,
     enableAnchorNavigation = false,
@@ -68,10 +68,9 @@ function BaseForm({
         submitForm,
         deleteEntity,
     } = useFormCrud({
-        crudActions,
-        selectors,
         entityUrl,
         entityId,
+        apiActions,
         onAfterSubmit,
         onClose,
         onProcessFormData,

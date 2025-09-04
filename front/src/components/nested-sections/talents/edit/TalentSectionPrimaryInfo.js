@@ -1,16 +1,14 @@
 import { DatePicker, Form, Input, Select, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { createTalentBoard, getCreateResponse as getCreateTalentBoardResponse, talentBoardActions } from '../../../../store/talents/talentBoard';
-import { fetchTalentBoards, getTalentBoards } from '../../../../store/talents/talentBoards';
-import { fetchUsers, getUsers } from '../../../../store/users/users';
-import { fetchCompanies, getCompanies } from '../../../../store/companies/companies';
+import { useGetTalentBoardsQuery, useCreateTalentBoardMutation } from 'api/talents/talentBoardsApi';
+import { useGetCompaniesQuery } from 'api/companies/companiesApi';
+import { useGetUsersQuery } from 'api/usersApi';
 
-import { useSettings } from '../../../../context/SettingsContext';
+import { useSettings } from 'context/SettingsContext';
 
-import CustomSelect from '../../../ui-components/CustomSelect';
-import NestedSection from '../../NestedSection';
+import CustomSelect from 'components/ui-components/CustomSelect';
+import NestedSection from 'components/nested-sections/NestedSection';
 
 const lifestyleOrFashion = [
     {
@@ -25,50 +23,25 @@ const lifestyleOrFashion = [
 
 function TalentSectionPrimaryInfo(props) {
     const { settings } = useSettings();
-    const outputDateFormat = 'DD.MM.YYYY';
-    const dispatch = useDispatch();
-    const fetchedCompanies = useSelector(getCompanies);
-    const [companies, setCompanies] = useState([]);
-    const fetchedTalentBoards = useSelector(getTalentBoards);
-    const [boards, setBoards] = useState([]);
-    const fetchedUsers = useSelector(getUsers);
-    const [managers, setManagers] = useState([]);
-    const createTalentBoardResponse = useSelector(getCreateTalentBoardResponse);
+    const outputDateFormat = 'DD.MM.YYYY'; //TODO: move to settings
     const [isAddBoardInputOpen, setIsAddBoardInputOpen] = useState(false);
-    const [isAddBoardInputLoading, setIsAddBoardInputLoading] = useState(false);
 
-    useEffect(() => {
-        dispatch(fetchCompanies());
-        dispatch(fetchTalentBoards());
-        dispatch(fetchUsers());
-    }, [dispatch]);
+    const { data: boards = [] } = useGetTalentBoardsQuery();
+    const [createBoard, { data: newBoard, isLoading: isCreateBoardLoading, isSuccess: isCreateBoardSuccess }] = useCreateTalentBoardMutation();
 
-    useEffect(() => {
-        setCompanies([...fetchedCompanies]);
-    }, [fetchedCompanies]);
-
-    useEffect(() => {
-        setBoards([...fetchedTalentBoards]);
-    }, [fetchedTalentBoards]);
-
-    useEffect(() => {
-        setManagers([...fetchedUsers]);
-    }, [fetchedUsers]);
+    const { data: companies = [] } = useGetCompaniesQuery();
+    const { data: managers = [] } = useGetUsersQuery();
 
     const handleAddBoard = (boardName) => {
-        setIsAddBoardInputLoading(true);
-        dispatch(createTalentBoard({ values: { name: boardName } }));
+        createBoard({ values: { name: boardName } });
     };
 
     useEffect(() => {
-        if (createTalentBoardResponse.status === 'fulfilled') {
-            props.form.setFieldsValue({ board_id: createTalentBoardResponse.item.id });
-            dispatch(fetchTalentBoards());
-            dispatch(talentBoardActions.resetResponse('create'));
-            setIsAddBoardInputLoading(false);
+        if (isCreateBoardSuccess) {
+            props.form.setFieldsValue({ board_id: newBoard.id });
             setIsAddBoardInputOpen(false);
         }
-    }, [createTalentBoardResponse, props.form, dispatch]);
+    }, [isCreateBoardSuccess, newBoard, props.form]);
 
     return (
         <NestedSection className={props.className} id={props.id}>
@@ -118,7 +91,7 @@ function TalentSectionPrimaryInfo(props) {
                         onAddItem={handleAddBoard}
                         inputPlaceholder='Enter new board name'
                         addButtonText='Add Board'
-                        isAddInputLoading={isAddBoardInputLoading}
+                        isAddInputLoading={isCreateBoardLoading}
                     />
                 </Form.Item>
                 <Form.Item className='base-form-row__left-label' label='Manager' name='manager_id'>

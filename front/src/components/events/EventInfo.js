@@ -2,13 +2,11 @@ import './EventInfo.css';
 import '../../helpers/form.css';
 
 import { useParams, useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useCallback } from 'react';
-
 import { Form, Drawer } from 'antd';
 
+import { useGetEventQuery } from 'api/events/eventsApi';
 
-import { getEvent, fetchEventById } from '../../store/events/event';
 // import { fetchEvents } from '../../store/events/events';
 
 // import { useNotification } from '../notifications/NotificationProvider';
@@ -26,19 +24,17 @@ import EventSectionSystemInfo from './sections/EventSectionSystemInfo';
 import TalentView from '../talents/TalentView';
 
 function EventInfo(props) {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const params = useParams();
     const [form] = Form.useForm();
     // const showNotification = useNotification();
 
-    const event = useSelector(getEvent);
+    const { data: event } = useGetEventQuery({ id: params.id }, { skip: !params.id });
     // const createResponse = useSelector(getCreateResponse);
     // const updateResponse = useSelector(getUpdateResponse);
     // const deleteResponse = useSelector(getDeleteResponse);
 
     const [editMode, setEditMode] = useState(props.newEvent ? true : false);
-    const [eventId, setEventId] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const toggleForm = () => {
@@ -46,15 +42,17 @@ function EventInfo(props) {
     };
 
     const initForm = useCallback(() => {
-        // console.log(event);
-        form.setFieldsValue({
-            title: event.title || '',
-            event_type_id: event.event_type_id,
-            notes: event.notes || '',
-
-            talents: event.talents || null,
-        });
-    }, [event, form]);
+        if (props.newEvent) {
+            form.resetFields();
+        } else if (event) {
+            form.setFieldsValue({
+                title: event.title || '',
+                event_type_id: event.event_type_id,
+                notes: event.notes || '',
+                talents: event.talents || null,
+            });
+        }
+    }, [event, form, props.newEvent]);
 
     const handleCancel = () => {
         form.resetFields();
@@ -101,16 +99,8 @@ function EventInfo(props) {
     // }, [params, dispatch]);
 
     useEffect(() => {
-        if (params.id && eventId !== params.id) {
-            dispatch(fetchEventById(params.id));
-        }
-        setEventId(params.id);
-
-    }, [eventId, params.id, dispatch]);
-
-    useEffect(() => {
         initForm();
-    }, [event, form, initForm]);
+    }, [initForm]);
 
     // useEffect(() => {
     //   setLoading(false);

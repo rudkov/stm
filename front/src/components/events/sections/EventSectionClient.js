@@ -1,23 +1,13 @@
-import '../../../helpers/form.css';
-import '../../../helpers/info-panel.css';
-import '../../../helpers/shared.css';
-
-// import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
-// import { Form, Select, Space } from 'antd';
-
-import { getEvent } from '../../../store/events/event';
-
-// import DataCell from '../../ui-components/DataCell';
-
-// import { ReactComponent as IconCrossInCircle } from '../../../assets/icons/cross-in-circle.svg';
-
-// import Button from '../../buttons/Button';
+import { useParams } from 'react-router';
+import { useGetEventQuery } from 'api/events/eventsApi';
 
 function EventSectionClient(props) {
-    // const dispatch = useDispatch();
-    const event = useSelector(getEvent);
+    const params = useParams();
+    const { data: event } = useGetEventQuery({ id: params.id }, { skip: !params.id });
+
+    if (!event) {
+        return null;
+    }
 
     return (
         <div className='info-panel--section'>

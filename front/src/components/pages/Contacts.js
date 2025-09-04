@@ -1,28 +1,20 @@
 import './Contacts.css';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { Outlet } from 'react-router';
 
-import { fetchContacts } from '../../store/contacts/contacts';
-import { useContactsFilters, ContactsFilters } from '../contacts/ContactsFilters';
+import { useGetContactsQuery } from 'api/contacts/contactsApi';
+import { useContactsFilters, ContactsFilters } from 'components/contacts/ContactsFilters';
 
-import ContactsList from '../contacts/ContactsList';
-import ContactForm from '../contacts/ContactForm';
+import ContactsList from 'components/contacts/ContactsList';
+import ContactForm from 'components/contacts/ContactForm';
 
 function Contacts() {
-    const dispatch = useDispatch();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentContactId, setCurrentContactId] = useState(null);
     const { filters, updateFilter } = useContactsFilters();
 
-    useEffect(() => {
-        dispatch(fetchContacts(filters));
-    }, [dispatch, filters]);
-
-    const handleSubmit = useCallback(() => {
-        dispatch(fetchContacts(filters));
-    }, [dispatch, filters]);
+    useGetContactsQuery(filters);
 
     const createContact = () => {
         setCurrentContactId(null);
@@ -59,7 +51,6 @@ function Contacts() {
                 isFormOpen={isFormOpen}
                 onClose={handleClose}
                 contactId={currentContactId}
-                onAfterSubmit={handleSubmit}
             />
         </>
     );

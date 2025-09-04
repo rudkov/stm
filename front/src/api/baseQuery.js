@@ -23,7 +23,33 @@ const baseQuery = async (args, api, extraOptions) => {
         },
     });
 
-    return await fetch(args, api, extraOptions);
+    const result = await fetch(args, api, extraOptions);
+
+    if (result.error) {
+        const status = result.error.status;
+        switch (status) {
+            case 401: {
+                if (window.location.pathname !== '/login') {
+                    window.location.href = '/login';
+                }
+                break;
+            }
+            case 419: {
+                try {
+                    await window.fetch(`${process.env.REACT_APP_URL}/sanctum/csrf-cookie`, {
+                        credentials: 'include',
+                    });
+                    return await fetch(args, api, extraOptions);
+                } catch (e) {
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    return result;
 };
 
 export default baseQuery;

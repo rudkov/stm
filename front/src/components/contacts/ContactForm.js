@@ -1,14 +1,13 @@
 import { useCallback } from 'react';
 
-import BaseForm from '../ui-components/BaseForm';
+import BaseForm from 'components/ui-components/BaseForm';
 
 import {
-    fetchContact, getContact,
-    createContact, getCreateResponse,
-    updateContact, getUpdateResponse,
-    deleteContact, getDeleteResponse,
-    contactActions
-} from '../../store/contacts/contact';
+    useGetContactQuery,
+    useCreateContactMutation,
+    useUpdateContactMutation,
+    useDeleteContactMutation,
+} from 'api/contacts/contactsApi';
 
 import {
     initAddresses, processAddresses,
@@ -17,14 +16,14 @@ import {
     initPhones, processPhones,
     initSocialMedias, processSocialMedias,
     initWeblinks, processWeblinks
-} from '../../helpers/form-utils';
+} from 'helpers/form-utils';
 
-import SharedSectionAddresses from '../nested-sections/shared/edit/SharedSectionAddresses';
-import SharedSectionContacts from '../nested-sections/shared/edit/SharedSectionContacts';
-import SharedSectionNotes from '../nested-sections/shared/edit/SharedSectionNotes';
-import SharedSectionSocialMedia from '../nested-sections/shared/edit/SharedSectionSocialMedia';
+import SharedSectionAddresses from 'components/nested-sections/shared/edit/SharedSectionAddresses';
+import SharedSectionContacts from 'components/nested-sections/shared/edit/SharedSectionContacts';
+import SharedSectionNotes from 'components/nested-sections/shared/edit/SharedSectionNotes';
+import SharedSectionSocialMedia from 'components/nested-sections/shared/edit/SharedSectionSocialMedia';
 
-import ContactSectionPrimaryInfo from '../nested-sections/contacts/edit/ContactSectionPrimaryInfo';
+import ContactSectionPrimaryInfo from 'components/nested-sections/contacts/edit/ContactSectionPrimaryInfo';
 
 function ContactForm({ isFormOpen, onClose, onAfterSubmit, contactId }) {
 
@@ -74,19 +73,11 @@ function ContactForm({ isFormOpen, onClose, onAfterSubmit, contactId }) {
             enableAnchorNavigation={false}
             formWidth={768}
 
-            crudActions={{
-                fetch: fetchContact,
-                create: createContact,
-                update: updateContact,
-                delete: deleteContact,
-                resetResponse: contactActions.resetResponse
-            }}
-
-            selectors={{
-                entity: getContact,
-                createResponse: getCreateResponse,
-                updateResponse: getUpdateResponse,
-                deleteResponse: getDeleteResponse
+            apiActions={{
+                query: useGetContactQuery,
+                create: useCreateContactMutation,
+                update: useUpdateContactMutation,
+                delete: useDeleteContactMutation,
             }}
 
             onInitForm={onInitForm}

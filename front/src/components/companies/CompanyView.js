@@ -1,33 +1,28 @@
 import './CompanyView.css';
-import '../../helpers/shared.css';
+import 'helpers/shared.css';
 
 import { useParams, useOutletContext } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 
-import { getCompany, fetchCompany } from '../../store/companies/company';
+import { useGetCompanyQuery } from 'api/companies/companiesApi';
 
-import ScrollableView from '../ui-components/ScrollableView';
+import ScrollableView from 'components/ui-components/ScrollableView';
 
-import SharedSectionAddresses from '../nested-sections/shared/view/SharedSectionAddresses';
-import SharedSectionContacts from '../nested-sections/shared/view/SharedSectionContacts';
-import SharedSectionNotes from '../nested-sections/shared/view/SharedSectionNotes';
-import SharedSectionSocialMedia from '../nested-sections/shared/view/SharedSectionSocialMedia';
-import SharedSectionSystemInfo from '../nested-sections/shared/view/SharedSectionSystemInfo';
+import SharedSectionAddresses from 'components/nested-sections/shared/view/SharedSectionAddresses';
+import SharedSectionContacts from 'components/nested-sections/shared/view/SharedSectionContacts';
+import SharedSectionNotes from 'components/nested-sections/shared/view/SharedSectionNotes';
+import SharedSectionSocialMedia from 'components/nested-sections/shared/view/SharedSectionSocialMedia';
+import SharedSectionSystemInfo from 'components/nested-sections/shared/view/SharedSectionSystemInfo';
 
-import CompanySectionContacts from '../nested-sections/companies/view/CompanySectionContacts';
-import CompanySectionMain from '../nested-sections/companies/view/CompanySectionMain';
+import CompanySectionContacts from 'components/nested-sections/companies/view/CompanySectionContacts';
+import CompanySectionMain from 'components/nested-sections/companies/view/CompanySectionMain';
 
 function CompanyView({ inLayout = false }) {
-    const dispatch = useDispatch();
     const params = useParams();
-    const company = useSelector(getCompany);
     const scrollContainerRef = useRef(null);
     const context = useOutletContext();
 
-    useEffect(() => {
-        dispatch(fetchCompany({ id: params.companyId }));
-    }, [dispatch, params.companyId]);
+    const { data: company } = useGetCompanyQuery({ id: params.companyId }, { skip: !params.companyId });
 
     useEffect(() => {
         if (scrollContainerRef.current)
@@ -36,7 +31,7 @@ function CompanyView({ inLayout = false }) {
 
     let result = null;
 
-    if (company && Object.getPrototypeOf(company) === Object.prototype) {
+    if (company) {
         result =
             <ScrollableView className='section-primary'>
                 <ScrollableView.Header scrollContainerRef={scrollContainerRef}>
