@@ -1,32 +1,23 @@
 export const applyLocalFilters = (items, query) => {
-    if (query.searchString !== '') {
-        const searchString = query.searchString.toLowerCase();
+  let filtered = items;
 
-        items = items.filter((item) => {
-            let r = false;
-            if (item.name?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            return r;
-        });
-    }
+  const { searchString, locations, managers } = query;
 
-    if (query.locations && Object.keys(query.locations).length > 0) {
-        const locations = query.locations;
-        items = items.filter((item) => {
-            if (locations.includes(null) && item.location === null) {
-                return true;
-            }
-            return item.location !== null && locations.includes(item.location);
-        });
-    }
+  if (searchString) {
+    const lowerSearch = searchString.toLowerCase();
+    filtered = filtered.filter(item => item.name?.toLowerCase().includes(lowerSearch));
+  }
 
-    if (query.managers && Object.keys(query.managers).length > 0) {
-        const managers = query.managers;
-        items = items.filter((item) => {
-            return item.manager_id && managers.includes(item.manager_id);
-        });
-    }
+  if (locations && locations.length > 0) {
+    filtered = filtered.filter(item =>
+      (locations.includes(null) && item.location === null) ||
+      (item.location !== null && locations.includes(item.location))
+    );
+  }
 
-    return items;
+  if (managers && managers.length > 0) {
+    filtered = filtered.filter(item => item.manager_id && managers.includes(item.manager_id));
+  }
+
+  return filtered;
 };

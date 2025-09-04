@@ -1,25 +1,10 @@
 export const applyLocalFilters = (items, query) => {
-    if (query.searchString !== '') {
-        const searchString = query.searchString.toLowerCase();
+  if (!query.searchString) return items;
 
-        items = items.filter((item) => {
-            let r = false;
+  const searchString = query.searchString.toLowerCase();
+  const fields = ['name', 'location', 'email', 'phone'];
 
-            if (item.name?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            else if (item.location?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            else if (item.email?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            else if (item.phone?.toLowerCase().includes(searchString)) {
-                r = true;
-            }
-            return r;
-        });
-    }
-
-    return items;
+  return items.filter(item =>
+    fields.some(field => item[field]?.toLowerCase().includes(searchString))
+  );
 };
